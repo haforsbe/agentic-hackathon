@@ -1,0 +1,10 @@
+# Consolidated direct dependencies for the entire workspace
+# This file intentionally excludes most transitive dependencies.
+
+agent-framework>=1.0.0b251112,<=1.0.0rc2
+agent-framework-azurefunctions>=1.0.0b0
+azure-ai-projects>=2.0.0b3,<3.0.0
+azure-identity==1.25.1
+pydantic==2.12.5
+python-dotenv>=1.0.0,<2.0.0
+typing_extensions==4.15.0
