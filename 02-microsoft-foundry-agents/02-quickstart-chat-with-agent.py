@@ -26,17 +26,21 @@ conversation = openai_client.conversations.create()
 print(f"Created conversation (id: {conversation.id})")
 
 # Chat with the agent to answer questions
+message = "What is the size of France in square miles?"
+print(f"\nUser: {message}")
 response = openai_client.responses.create(
     conversation=conversation.id, #Optional conversation context for multi-turn
     extra_body={"agent": {"name": agent_name, "type": "agent_reference"}},
-    input="What is the size of France in square miles?",
+    input=message,
 )
-print(f"Response output: {response.output_text}")
+print(f"\nAgent: {response.output_text}")
 
 # Optional Step: Ask a follow-up question in the same conversation
+message = "And what is the capital city?"
+print(f"\nUser: {message}")
 response = openai_client.responses.create(
     conversation=conversation.id,
     extra_body={"agent": {"name": agent_name, "type": "agent_reference"}},
-    input="And what is the capital city?",
+    input=message,
 )
-print(f"Response output: {response.output_text}")
+print(f"\nAgent: {response.output_text}")

@@ -98,15 +98,21 @@ async def main() -> None:
     session = agent.create_session()
 
     # The provider doesn't know the user yet — it will ask for a name
-    result = await agent.run("Hello! What's the square root of 9?", session=session)
+    message = "Hello! What's the square root of 9?"
+    print(f"User: {message}\n")
+    result = await agent.run(message, session=session)
     print(f"Agent: {result}\n")
 
     # Now provide the name — the provider extracts and stores it
-    result = await agent.run("My name is Alice", session=session)
+    message = "My name is Alice"
+    print(f"User: {message}\n")
+    result = await agent.run(message, session=session)
     print(f"Agent: {result}\n")
 
     # Subsequent calls are personalized
-    result = await agent.run("What is 2 + 2?", session=session)
+    message = "What is 2 + 2?"
+    print(f"User: {message}\n")
+    result = await agent.run(message, session=session)
     print(f"Agent: {result}\n")
 
     print(f"[Memory] Stored user name: {memory.user_name}")

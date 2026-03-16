@@ -54,11 +54,15 @@ async def main() -> None:
     session = agent.create_session()
 
     # First turn
-    result = await agent.run("My name is Alice and I love hiking.", session=session)
+    message = "My name is Alice and I love hiking."
+    print(f"User: {message}\n")
+    result = await agent.run(message, session=session)
     print(f"Agent: {result}\n")
 
     # Second turn — the agent should remember the user's name and hobby
-    result = await agent.run("What do you remember about me?", session=session)
+    message = "What do you remember about me?"
+    print(f"User: {message}\n")
+    result = await agent.run(message, session=session)
     print(f"Agent: {result}")
     # </multi_turn>
 
