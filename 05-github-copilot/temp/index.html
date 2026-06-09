@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<div class="container">
+        <h1>IT Support Tickets</h1>
+        <form id="ticket-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+            <label for="issue">Issue Description:</label><br>
+            <textarea id="issue" name="issue" rows="4" cols="50" required></textarea><br><br>
+            <input type="submit" value="Submit Ticket">
+        </form>
+        <div id="response"></div>
+    </div>
+    <script>
+        document.getElementById('ticket-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const issue = document.getElementById('issue').value;
+
+            // Here you can add code to send the ticket data to your server or API
+            // For demonstration, we'll just display the data in the response div
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = `<p>Ticket submitted successfully!</p>
+                                     <p><strong>Name:</strong> ${name}</p>
+                                     <p><strong>Email:</strong> ${email}</p>
+                                     <p><strong>Issue:</strong> ${issue}</p>`;
+        });
+    </script>
+</html>

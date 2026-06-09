@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IT Support Ticketing System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header">
+      <div class="container">
+        <div class="header-row">
+          <div>
+            <h1>IT Support Ticketing System</h1>
+            <p class="subtitle">Create, update, and close support tickets from a single dashboard.</p>
+          </div>
+          <button id="theme-toggle" class="secondary" type="button" aria-pressed="false">Dark Mode</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="container layout" aria-label="Ticket management interface">
+      <section class="panel" aria-labelledby="ticket-form-heading">
+        <h2 id="ticket-form-heading">Ticket Form</h2>
+        <form id="ticket-form" novalidate>
+          <input type="hidden" id="ticket-id" />
+
+          <div class="field">
+            <label for="title">Title</label>
+            <input id="title" name="title" type="text" maxlength="120" required />
+          </div>
+
+          <div class="field">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" maxlength="800" required></textarea>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="priority">Priority</label>
+              <select id="priority" name="priority" required>
+                <option value="">Select priority</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="status">Status</label>
+              <select id="status" name="status" required>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="technician">Assigned Technician</label>
+            <input id="technician" name="technician" type="text" maxlength="80" required />
+          </div>
+
+          <div class="actions">
+            <button id="save-btn" type="submit">Create Ticket</button>
+            <button id="cancel-btn" class="secondary" type="button" hidden>Cancel Edit</button>
+          </div>
+          <p id="form-note" class="note" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="tickets-heading">
+        <div class="tickets-header">
+          <h2 id="tickets-heading">Tickets</h2>
+          <p id="ticket-count" aria-live="polite"></p>
+        </div>
+
+        <div class="filters" aria-label="Ticket filters">
+          <div class="filter-group" role="group" aria-label="Filter by status" id="status-filters">
+            <span class="filter-label">Status</span>
+            <button type="button" class="filter-btn is-active" data-filter-type="status" data-filter-value="All" aria-pressed="true">All</button>
+            <button type="button" class="filter-btn" data-filter-type="status" data-filter-value="Open" aria-pressed="false">Open</button>
+            <button type="button" class="filter-btn" data-filter-type="status" data-filter-value="In Progress" aria-pressed="false">In Progress</button>
+            <button type="button" class="filter-btn" data-filter-type="status" data-filter-value="Resolved" aria-pressed="false">Resolved</button>
+            <button type="button" class="filter-btn" data-filter-type="status" data-filter-value="Closed" aria-pressed="false">Closed</button>
+          </div>
+
+          <div class="filter-group" role="group" aria-label="Filter by priority" id="priority-filters">
+            <span class="filter-label">Priority</span>
+            <button type="button" class="filter-btn is-active" data-filter-type="priority" data-filter-value="All" aria-pressed="true">All</button>
+            <button type="button" class="filter-btn" data-filter-type="priority" data-filter-value="Low" aria-pressed="false">Low</button>
+            <button type="button" class="filter-btn" data-filter-type="priority" data-filter-value="Medium" aria-pressed="false">Medium</button>
+            <button type="button" class="filter-btn" data-filter-type="priority" data-filter-value="High" aria-pressed="false">High</button>
+            <button type="button" class="filter-btn" data-filter-type="priority" data-filter-value="Critical" aria-pressed="false">Critical</button>
+          </div>
+
+          <div class="filter-actions">
+            <button id="clear-filters" class="secondary" type="button">Clear Filters</button>
+          </div>
+        </div>
+
+        <ul id="ticket-list" class="ticket-list" aria-label="List of support tickets"></ul>
+        <p id="empty-state" class="empty-state" hidden>No tickets found.</p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <small>Demo application for local development.</small>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

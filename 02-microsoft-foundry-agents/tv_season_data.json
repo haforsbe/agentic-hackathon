@@ -1,0 +1,121 @@
+{
+  "series": [
+    {
+      "title": "Breaking Bad",
+      "seasons": [
+        {
+          "season_number": 1,
+          "episodes": 7,
+          "overview": "A high school chemistry teacher begins manufacturing methamphetamine after a life-changing diagnosis.",
+          "major_turning_points": [
+            "Walter and Jesse form an uneasy partnership.",
+            "The pair face escalating danger from local distributors.",
+            "Walter increasingly accepts a criminal identity to protect his family financially."
+          ],
+          "ending_status": "Walter has crossed major moral lines and is committed to expanding the operation.",
+          "next_season_hook": "The business grows, drawing stronger competition and greater risk.",
+          "themes": [
+            "identity",
+            "morality",
+            "survival"
+          ]
+        },
+        {
+          "season_number": 2,
+          "episodes": 13,
+          "overview": "The drug operation expands, relationships deteriorate, and consequences become harder to contain.",
+          "major_turning_points": [
+            "Walter and Jesse scale production while struggling with trust.",
+            "Personal losses reshape Jesse's outlook.",
+            "Walter's decisions trigger far-reaching collateral damage."
+          ],
+          "ending_status": "The fallout reaches beyond the core characters and signals a darker phase ahead.",
+          "next_season_hook": "A more organized criminal world emerges, forcing new alliances and enemies.",
+          "themes": [
+            "consequence",
+            "control",
+            "family"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Office",
+      "seasons": [
+        {
+          "season_number": 1,
+          "episodes": 6,
+          "overview": "A documentary crew captures awkward day-to-day life in a paper company branch.",
+          "major_turning_points": [
+            "Michael's leadership style creates recurring workplace tension.",
+            "Jim and Pam's bond is established through small, meaningful moments.",
+            "Team morale fluctuates under uncertainty about company direction."
+          ],
+          "ending_status": "The office dynamic is set, with early conflicts and relationships clearly in motion.",
+          "next_season_hook": "Longer arcs deepen romance, rivalry, and the cost of staying comfortable.",
+          "themes": [
+            "workplace culture",
+            "belonging",
+            "awkward humor"
+          ]
+        },
+        {
+          "season_number": 2,
+          "episodes": 22,
+          "overview": "With more time and confidence, the branch's relationships and ambitions become more layered.",
+          "major_turning_points": [
+            "Jim and Pam's unresolved feelings intensify.",
+            "Dwight seeks status and authority with mixed results.",
+            "Michael alternates between insecurity and sincere care for the team."
+          ],
+          "ending_status": "Several relationships reach emotional turning points without full resolution.",
+          "next_season_hook": "Career choices and romantic decisions begin to force major life changes.",
+          "themes": [
+            "friendship",
+            "ambition",
+            "emotional risk"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Stranger Things",
+      "seasons": [
+        {
+          "season_number": 1,
+          "episodes": 8,
+          "overview": "A small town investigates a disappearance while confronting mysterious supernatural forces.",
+          "major_turning_points": [
+            "The group of friends uncovers signs of a hidden parallel threat.",
+            "A girl with unusual abilities becomes central to the search.",
+            "Families and local authorities collide over competing explanations."
+          ],
+          "ending_status": "The immediate crisis is contained, but evidence suggests the danger is not fully gone.",
+          "next_season_hook": "Residual effects and unresolved mysteries reopen the conflict.",
+          "themes": [
+            "friendship",
+            "fear",
+            "loyalty"
+          ]
+        },
+        {
+          "season_number": 2,
+          "episodes": 9,
+          "overview": "The town deals with lingering trauma as a broader threat emerges from the same supernatural source.",
+          "major_turning_points": [
+            "Characters face personal aftereffects from the prior season.",
+            "New alliances form to respond to an expanding threat.",
+            "The group coordinates a high-stakes defense of the town."
+          ],
+          "ending_status": "A temporary victory restores calm while hinting at a much larger conflict.",
+          "next_season_hook": "The enemy's scale appears greater than previously understood.",
+          "themes": [
+            "resilience",
+            "community",
+            "coming of age"
+          ]
+        }
+      ]
+    }
+  ]
+}
