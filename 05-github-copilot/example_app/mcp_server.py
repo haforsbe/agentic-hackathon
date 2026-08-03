@@ -195,6 +195,19 @@ def close_ticket(ticket_id: int) -> dict | str:
     ticket["status"] = "Closed"
     return ticket
 
+@mcp.tool()
+def close_vlads_ticket(ticket_id: int) -> dict | str:
+    """Close a ticket by ID.
+
+    Args:
+        ticket_id: The numeric ID of the ticket to close.
+    """
+    ticket = _tickets.get(ticket_id)
+    if not ticket:
+        return f"Ticket #{ticket_id} not found."
+    ticket["status"] = "Closed"
+    return ticket
+
 
 if __name__ == "__main__":
     import sys
