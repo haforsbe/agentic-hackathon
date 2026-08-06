@@ -4,17 +4,16 @@ import asyncio
 import os
 from typing import Any
 
-from agent_framework import Agent
-from agent_framework._sessions import AgentSession, BaseContextProvider, SessionContext
-from agent_framework.azure import AzureOpenAIResponsesClient
-from azure.identity import AzureCliCredential
+from agent_framework import Agent, AgentSession, ContextProvider, SessionContext
+from agent_framework.openai import OpenAIChatCompletionClient
+from azure.identity import AzureCliCredential, get_bearer_token_provider
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv(override=True)
 
 """
-Agent Memory with Context Providers
+Agent Memory with Context Providers with Agent Framework 1.13.0
 
 Context providers let you inject dynamic instructions and context into each
 agent invocation. This sample defines a simple provider that tracks the user's
@@ -22,21 +21,20 @@ name and enriches every request with personalization instructions.
 
 Environment variables:
     AZURE_AI_PROJECT_ENDPOINT        — Your Azure AI project endpoint
-    PROJECT_ENDPOINT                 — Compatibility alias for project endpoint
   AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME — Model deployment name (e.g. gpt-4o)
         AZURE_CLI_PROCESS_TIMEOUT        — Optional Azure CLI token timeout in seconds (default: 60)
 """
 
 
 def _resolve_project_endpoint() -> str:
-    project_endpoint = os.getenv("AZURE_AI_PROJECT_ENDPOINT") or os.getenv("PROJECT_ENDPOINT")
+    project_endpoint = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
     if project_endpoint:
         return project_endpoint
-    raise ValueError("Missing project endpoint configuration. Set AZURE_AI_PROJECT_ENDPOINT or PROJECT_ENDPOINT.")
+    raise ValueError("Missing project endpoint configuration. Set AZURE_AI_PROJECT_ENDPOINT in .env.")
 
 
 # <context_provider>
-class UserNameProvider(BaseContextProvider):
+class UserNameProvider(ContextProvider):
     """A simple context provider that remembers the user's name."""
 
     def __init__(self) -> None:
@@ -78,16 +76,18 @@ async def main() -> None:
     # <create_agent>
     cli_timeout = int(os.getenv("AZURE_CLI_PROCESS_TIMEOUT", "60"))
     credential = AzureCliCredential(process_timeout=cli_timeout)
-    client = AzureOpenAIResponsesClient(
-        project_endpoint=_resolve_project_endpoint(),
-        deployment_name=os.environ["AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME"],
-        credential=credential,
+
+    token_provider = get_bearer_token_provider(credential, "https://ai.azure.com/.default")
+    chat_client = OpenAIChatCompletionClient(
+        model=os.environ["AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME"],
+        base_url=f"{_resolve_project_endpoint().rstrip('/')}/openai/v1/",
+        api_key=lambda: asyncio.to_thread(token_provider),
     )
 
     memory = UserNameProvider()
 
     agent = Agent(
-        client=client,
+        client=chat_client,
         name="MemoryAgent",
         instructions="You are a friendly assistant.",
         context_providers=[memory],

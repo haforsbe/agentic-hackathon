@@ -4,37 +4,35 @@ import asyncio
 import os
 
 from agent_framework import Agent
-from agent_framework.azure import AzureOpenAIResponsesClient
-from azure.identity import AzureCliCredential
+from agent_framework.openai import OpenAIChatCompletionClient
+from azure.identity import AzureCliCredential, get_bearer_token_provider
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv(override=True)
 
 """
-Hello Agent — Simplest possible agent
+Hello Agent — Simplest possible agent with Agent Framework 1.13.0
 
-This sample creates a minimal agent using AzureOpenAIResponsesClient via an
-Azure AI Foundry project endpoint, and runs it in both non-streaming and streaming modes.
+This sample creates a minimal agent using an Azure AI Foundry project endpoint,
+and runs it in both non-streaming and streaming modes.
 
 There are XML tags in all of the get started samples, those are used to display the same code in the docs repo.
 
 Environment variables:
         AZURE_AI_PROJECT_ENDPOINT        — Your Azure AI project endpoint
-        PROJECT_ENDPOINT                 — Compatibility alias for project endpoint
   AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME — Model deployment name (e.g. gpt-4o)
     AZURE_CLI_PROCESS_TIMEOUT        — Optional Azure CLI token timeout in seconds (default: 60)
 """
 
 
 def _resolve_project_endpoint() -> str:
-    project_endpoint = os.getenv("AZURE_AI_PROJECT_ENDPOINT") or os.getenv("PROJECT_ENDPOINT")
+    project_endpoint = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
     if project_endpoint:
         return project_endpoint
 
     raise ValueError(
-        "Missing project endpoint configuration. Set AZURE_AI_PROJECT_ENDPOINT "
-        "or PROJECT_ENDPOINT in .env."
+        "Missing project endpoint configuration. Set AZURE_AI_PROJECT_ENDPOINT in .env."
     )
 
 
@@ -42,14 +40,16 @@ async def main() -> None:
     # <create_agent>
     cli_timeout = int(os.getenv("AZURE_CLI_PROCESS_TIMEOUT", "60"))
     credential = AzureCliCredential(process_timeout=cli_timeout)
-    client = AzureOpenAIResponsesClient(
-        project_endpoint=_resolve_project_endpoint(),
-        deployment_name=os.environ["AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME"],
-        credential=credential,
+
+    token_provider = get_bearer_token_provider(credential, "https://ai.azure.com/.default")
+    chat_client = OpenAIChatCompletionClient(
+        model=os.environ["AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME"],
+        base_url=f"{_resolve_project_endpoint().rstrip('/')}/openai/v1/",
+        api_key=lambda: asyncio.to_thread(token_provider),
     )
 
     agent = Agent(
-        client=client,
+        client=chat_client,
         name="HelloAgent",
         instructions="You are a friendly assistant. Keep your answers brief.",
     )
@@ -57,8 +57,8 @@ async def main() -> None:
 
     # <run_agent>
     # Non-streaming: get the complete response at once
-    result = await agent.run("What is the capital of France?")
-    print(f"Agent: {result}")
+    response = await agent.run("What is the capital of France?")
+    print(f"Agent: {response}")
     # </run_agent>
 
     # <run_agent_streaming>

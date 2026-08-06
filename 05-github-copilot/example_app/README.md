@@ -69,7 +69,7 @@ Create or update `.vscode/mcp.json` in your workspace root:
   "servers": {
     "ticketing": {
       "command": "${workspaceFolder}/.venv/Scripts/python.exe",
-      "args": ["${workspaceFolder}/05-github-copilot/app/mcp_server.py"],
+      "args": ["${workspaceFolder}/05-github-copilot/example_app/mcp_server.py"],
       "env": {}
     }
   }
@@ -83,7 +83,7 @@ Then restart VS Code or reload the window. The ticketing tools will be available
 ## Project Structure
 
 ```
-app/
+example_app/
 ├── index.html       # Markup (semantic HTML5)
 ├── styles.css       # Styling (modern CSS, responsive)
 ├── script.js        # Application logic (vanilla JS)

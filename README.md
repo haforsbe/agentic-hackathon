@@ -84,6 +84,8 @@ Key variables (see [example.env](example.env) for all options):
 |----------|-------------|
 | `AZURE_AI_PROJECT_ENDPOINT` | Your Azure AI Foundry project endpoint |
 | `AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME` | Model deployment name (e.g. `gpt-4.1`) |
+| `AGENT_NAME` | Foundry prompt agent name, used by Lab 02 agent samples |
+| `AZURE_CLI_PROCESS_TIMEOUT` | Optional Azure CLI token timeout in seconds, used by Labs 01 and 05 |
 
 ### 6) Run your first agent
 

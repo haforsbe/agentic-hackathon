@@ -1,3 +1,8 @@
+"""Quickstart: chat with an existing Microsoft Foundry agent over a conversation.
+
+Requires the Microsoft Foundry SDK (azure-ai-projects 2.4.0+).
+"""
+
 import os
 from dotenv import load_dotenv
 from azure.identity import DefaultAzureCredential
@@ -7,7 +12,7 @@ load_dotenv(override=True)
 
 
 def _resolve_project_endpoint() -> str:
-    return os.environ.get("AZURE_AI_PROJECT_ENDPOINT") or os.environ["PROJECT_ENDPOINT"]
+    return os.environ["AZURE_AI_PROJECT_ENDPOINT"]
 
 
 def _resolve_agent_name() -> str:
@@ -29,8 +34,8 @@ print(f"Created conversation (id: {conversation.id})")
 message = "What is the size of France in square miles?"
 print(f"\nUser: {message}")
 response = openai_client.responses.create(
-    conversation=conversation.id, #Optional conversation context for multi-turn
-    extra_body={"agent": {"name": agent_name, "type": "agent_reference"}},
+    conversation=conversation.id,  # Optional conversation context for multi-turn
+    extra_body={"agent_reference": {"name": agent_name, "type": "agent_reference"}},
     input=message,
 )
 print(f"\nAgent: {response.output_text}")
@@ -40,7 +45,7 @@ message = "And what is the capital city?"
 print(f"\nUser: {message}")
 response = openai_client.responses.create(
     conversation=conversation.id,
-    extra_body={"agent": {"name": agent_name, "type": "agent_reference"}},
+    extra_body={"agent_reference": {"name": agent_name, "type": "agent_reference"}},
     input=message,
 )
 print(f"\nAgent: {response.output_text}")

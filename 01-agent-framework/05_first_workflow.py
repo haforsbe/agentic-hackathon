@@ -12,7 +12,7 @@ from agent_framework import (
 from typing_extensions import Never
 
 """
-First Workflow — Chain executors with edges
+First Workflow — Chain executors with edges using Agent Framework 1.13.0
 
 This sample builds a minimal workflow with two steps:
 1. Convert text to uppercase (class-based executor)
