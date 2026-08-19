@@ -5,7 +5,7 @@ Requires the Microsoft Foundry SDK (azure-ai-projects 2.4.0+).
 
 import os
 from dotenv import load_dotenv
-from azure.identity import DefaultAzureCredential
+from azure.identity import AzureCliCredential
 from azure.ai.projects import AIProjectClient
 
 load_dotenv(override=True)
@@ -20,7 +20,7 @@ def _resolve_agent_name() -> str:
 
 project_client = AIProjectClient(
     endpoint=_resolve_project_endpoint(),
-    credential=DefaultAzureCredential(),
+    credential=AzureCliCredential(),
 )
 
 agent_name = _resolve_agent_name()

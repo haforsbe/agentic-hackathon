@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "title": "Email server not responding",
+    "description": "Multiple users report they cannot send or receive emails since 9 AM. Exchange server appears to be down.",
+    "priority": "Critical",
+    "status": "Open",
+    "assignee": "Alice Johnson",
+    "createdAt": "2026-08-07T12:19:23.246057+00:00"
+  },
+  {
+    "id": 2,
+    "title": "VPN connection drops frequently",
+    "description": "Remote employees are experiencing intermittent VPN disconnections throughout the day, especially during video calls.",
+    "priority": "High",
+    "status": "In Progress",
+    "assignee": "Bob Smith",
+    "createdAt": "2026-08-07T12:19:23.246057+00:00"
+  },
+  {
+    "id": 3,
+    "title": "New laptop setup for onboarding",
+    "description": "Set up a new Dell laptop for the incoming marketing hire starting next Monday. Install standard software suite.",
+    "priority": "Medium",
+    "status": "Open",
+    "assignee": "Carol Davis",
+    "createdAt": "2026-08-07T12:19:23.246057+00:00"
+  },
+  {
+    "id": 4,
+    "title": "Printer on 3rd floor is jamming",
+    "description": "The HP LaserJet on the 3rd floor keeps jamming when printing double-sided documents.",
+    "priority": "Low",
+    "status": "Open",
+    "assignee": "Dan Wilson",
+    "createdAt": "2026-08-07T12:19:23.246057+00:00"
+  },
+  {
+    "id": 5,
+    "title": "Password reset request",
+    "description": "User locked out of Active Directory account after too many failed login attempts. Needs password reset.",
+    "priority": "Medium",
+    "status": "Resolved",
+    "assignee": "Eve Martinez",
+    "createdAt": "2026-08-07T12:19:23.246057+00:00"
+  },
+  {
+    "id": 6,
+    "title": "Software license expired - Adobe Creative Suite",
+    "description": "The design team cannot use Photoshop or Illustrator. License renewal needed ASAP.",
+    "priority": "High",
+    "status": "In Progress",
+    "assignee": "Alice Johnson",
+    "createdAt": "2026-08-07T12:19:23.246057+00:00"
+  },
+  {
+    "id": 7,
+    "title": "Conference room display not working",
+    "description": "The HDMI connection in Conference Room B does not display laptop screens. Adapter and cables tested.",
+    "priority": "Low",
+    "status": "Closed",
+    "assignee": "Bob Smith",
+    "createdAt": "2026-08-07T12:19:23.246057+00:00"
+  },
+  {
+    "id": 8,
+    "title": "MCP shared store verification",
+    "description": "Created through the MCP agent integration test.",
+    "priority": "High",
+    "status": "Open",
+    "assignee": "Alice Johnson",
+    "createdAt": "2026-08-07T12:19:23.253425+00:00"
+  }
+]

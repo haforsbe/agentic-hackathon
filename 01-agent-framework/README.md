@@ -9,10 +9,11 @@ concepts of **Agent Framework** one step at a time.
 pip install -r ../requirements.txt
 ```
 
-Use **Entra ID authentication** (no API keys):
+These samples use `AzureCliCredential` exclusively. Sign in with Azure CLI (no API keys or fallback credential types):
 
 ```bash
 az login
+az account show
 ```
 
 Set the required environment variables:
@@ -28,7 +29,7 @@ export AZURE_CLI_PROCESS_TIMEOUT="60"   # optional
 ```
 
 Notes:
-- The samples use `OpenAIChatCompletionClient` with the Foundry project OpenAI route and Entra ID authentication.
+- The samples use `OpenAIChatCompletionClient` with the Foundry project OpenAI route and authenticate only through the active Azure CLI session.
 - `AZURE_CLI_PROCESS_TIMEOUT` is optional and defaults to `60` seconds.
 
 ## What These Scripts Do

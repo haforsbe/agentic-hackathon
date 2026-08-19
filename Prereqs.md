@@ -47,6 +47,21 @@ You need an Azure subscription with access to Azure AI Foundry and model deploym
    - Bing Grounding connection (for web-search sample)
    - Optional Foundry MCP tool connection id (for foundry-tools sample)
 
+### Authenticate local Foundry samples with Azure CLI
+
+The local Python samples in `01-agent-framework` and `02-microsoft-foundry-agents` use `AzureCliCredential` exclusively. They do not fall back to browser broker, environment, managed identity, or other credential types.
+
+```powershell
+az login
+az account show
+```
+
+If you have multiple subscriptions, select the subscription that contains your Foundry project:
+
+```powershell
+az account set --subscription "<subscription-name-or-id>"
+```
+
 
 
 ---

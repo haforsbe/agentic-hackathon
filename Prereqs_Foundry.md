@@ -58,7 +58,9 @@ You need an Azure subscription with access to Azure AI Foundry and model deploym
 
 ---
 
-## 4) Authenticate to Azure (Entra ID)
+## 4) Authenticate with Azure CLI
+
+The local Python samples in Labs 01 and 02 use `AzureCliCredential` exclusively. They do not fall back to browser broker, environment, managed identity, or other credential types.
 
 In the VS Code terminal:
 
@@ -122,7 +124,7 @@ AGENT_NAME=MyAgent
 Notes:
 - `PROJECT_ENDPOINT` works as compatibility alias for `AZURE_AI_PROJECT_ENDPOINT`.
 - `MODEL_DEPLOYMENT_NAME` works as compatibility alias for `AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME`.
-- Current samples are set up for **Entra auth** (no API keys required).
+- Labs 01 and 02 authenticate only through the active Azure CLI session (no API keys required).
 
 ---
 

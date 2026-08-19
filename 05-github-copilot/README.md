@@ -265,7 +265,7 @@ The [Model Context Protocol (MCP)](https://code.visualstudio.com/docs/copilot/cu
     "servers": {
         "ticketing": {
         "command": "${workspaceFolder}/.venv/Scripts/python.exe",
-        "args": ["${workspaceFolder}/05-github-copilot/example_app/mcp_server.py"],
+            "args": ["${workspaceFolder}/06-Agent Examples/04-support-ticket-system/mcp_server.py"],
         "env": {}
         }
     }
@@ -305,7 +305,7 @@ Now that your ticketing system is exposed via MCP, you can connect it to an AI a
         )
     ```
 
-1. Using that example as a reference, create a new file called `agent_with_mcp.py` in the `05-github-copilot/example_app/` folder. Enter the following prompt in the Chat view with **Agent** selected:
+1. Using that example as a reference, create a new file called `agent_with_mcp.py` in the `06-Agent Examples/04-support-ticket-system/` folder. Enter the following prompt in the Chat view with **Agent** selected:
 
     ```text
     Create a Python script called agent_with_mcp.py that uses the Microsoft Agent Framework to build

@@ -1,0 +1,15 @@
+{
+  "project": "Hackathon Operations",
+  "generatedFor": "Synthetic hackathon use only",
+  "availableHours": 6,
+  "tasks": [
+    {"id":"T-201","title":"Resolve customer escalation","due":"2026-08-12T10:00:00Z","priority":1,"estimatedMinutes":90,"impact":"High","blockedBy":null,"status":"Open"},
+    {"id":"T-202","title":"Finish renewal proposal","due":"2026-08-12T15:00:00Z","priority":1,"estimatedMinutes":120,"impact":"High","blockedBy":null,"status":"Open"},
+    {"id":"T-203","title":"Confirm distributor inventory","due":"2026-08-13T09:00:00Z","priority":2,"estimatedMinutes":30,"impact":"Medium","blockedBy":"Waiting for supplier export","status":"Blocked"},
+    {"id":"T-204","title":"Request supplier inventory export","due":"2026-08-12T11:00:00Z","priority":1,"estimatedMinutes":15,"impact":"Medium","blockedBy":null,"status":"Open"},
+    {"id":"T-205","title":"Prepare weekly pipeline notes","due":"2026-08-14T12:00:00Z","priority":3,"estimatedMinutes":45,"impact":"Medium","blockedBy":null,"status":"Open"},
+    {"id":"T-206","title":"Archive outdated campaign files","due":null,"priority":4,"estimatedMinutes":60,"impact":"Low","blockedBy":null,"status":"Open"},
+    {"id":"T-207","title":"Review partner onboarding feedback","due":"2026-08-15T15:00:00Z","priority":3,"estimatedMinutes":45,"impact":"Medium","blockedBy":null,"status":"Open"},
+    {"id":"T-208","title":"Update internal contact list","due":null,"priority":4,"estimatedMinutes":30,"impact":"Low","blockedBy":null,"status":"Open"}
+  ]
+}

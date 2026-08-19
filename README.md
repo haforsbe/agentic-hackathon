@@ -13,6 +13,7 @@ A hands-on hackathon for building AI agents with the **Microsoft Agent Framework
 | [02 — Foundry Agents](02-microsoft-foundry-agents/) | Azure AI Foundry | Responses API, chat with agents, create prompt agents |
 | [03 — Hosted Agents](03-microsoft-foundry-hosted-agents/) | Deployment scenarios | Echo agent, web search, RAG, workflows, human-in-the-loop |
 | [05 — GitHub Copilot](05-github-copilot/) | Copilot + MCP | Build a ticketing app with inline suggestions, agents, MCP server, and Agent Framework integration |
+| [06 — Agent Examples](06-Agent%20Examples/) | Agent examples | Build Foundry prompt agents or run an MCP-enabled support ticket system |
 
 Each folder has its own README with detailed instructions and sample descriptions.
 
@@ -28,7 +29,7 @@ For complete step-by-step setup instructions, see:
 
 | Guide | Scope |
 |-------|-------|
-| [Prereqs_Foundry.md](Prereqs_Foundry.md) | Labs 01–03 (Agent Framework + Foundry) |
+| [Prereqs_Foundry.md](Prereqs_Foundry.md) | Labs 01–03 and 06 (Agent Framework + Foundry) |
 | [Prereqs_GHCP.md](Prereqs_GHCP.md) | Lab 05 (GitHub Copilot Enterprise + Azure add-ons) |
 | [Prereqs.md](Prereqs.md) | Combined guide (all labs) |
 
@@ -66,9 +67,14 @@ pip install -r requirements.txt
 
 ### 4) Authenticate to Azure
 
+Labs 01 and 02 use `AzureCliCredential` exclusively, so the active Azure CLI session is their only authentication source:
+
 ```bash
 az login
+az account show
 ```
+
+If needed, select the subscription that contains your Foundry project with `az account set --subscription "<subscription-name-or-id>"`.
 
 ### 5) Configure environment variables
 
@@ -101,6 +107,7 @@ agentic-hackathon/
 ├── 02-microsoft-foundry-agents/ # Azure AI Foundry quickstarts (3 scripts)
 ├── 03-microsoft-foundry-hosted-agents/  # Hosted agent deployment scenarios
 ├── 05-github-copilot/           # Copilot tutorial with MCP integration
+├── 06-Agent Examples/            # Foundry challenges and MCP support ticket system
 ├── example.env                  # Environment variable template
 ├── requirements.txt             # Python dependencies (all labs)
 ├── Prereqs.md                   # Combined setup guide

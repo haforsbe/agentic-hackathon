@@ -10,10 +10,17 @@ Built against the **Microsoft Foundry SDK** (`azure-ai-projects` 2.4.0).
 pip install -r ../requirements.txt
 ```
 
-Use **Entra ID authentication** (no API keys):
+These quickstarts use `AzureCliCredential` exclusively. Sign in with Azure CLI (no API keys, browser broker, environment credential, or managed identity fallback):
 
 ```bash
 az login
+az account show
+```
+
+If you have multiple subscriptions, select the subscription that contains your Foundry project:
+
+```bash
+az account set --subscription "<subscription-name-or-id>"
 ```
 
 Set the required environment variables:

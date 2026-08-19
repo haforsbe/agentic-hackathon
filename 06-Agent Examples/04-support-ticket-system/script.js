@@ -2,8 +2,6 @@
 
 // ─── State ──────────────────────────────────────────────────────────
 let tickets = [];
-let nextId = 1;
-let editingId = null;
 
 // ─── DOM References ─────────────────────────────────────────────────
 const ticketForm = document.getElementById('ticket-form');
@@ -16,63 +14,9 @@ const editModal = document.getElementById('edit-modal');
 const editForm = document.getElementById('edit-form');
 const modalCancel = document.getElementById('modal-cancel');
 
-// ─── Sample Data ────────────────────────────────────────────────────
-const SAMPLE_TICKETS = [
-  {
-    title: 'Email server not responding',
-    description: 'Multiple users report they cannot send or receive emails since 9 AM. Exchange server appears to be down.',
-    priority: 'Critical',
-    status: 'Open',
-    assignee: 'Alice Johnson',
-  },
-  {
-    title: 'VPN connection drops frequently',
-    description: 'Remote employees are experiencing intermittent VPN disconnections throughout the day, especially during video calls.',
-    priority: 'High',
-    status: 'In Progress',
-    assignee: 'Bob Smith',
-  },
-  {
-    title: 'New laptop setup for onboarding',
-    description: 'Set up a new Dell laptop for the incoming marketing hire starting next Monday. Install standard software suite.',
-    priority: 'Medium',
-    status: 'Open',
-    assignee: 'Carol Davis',
-  },
-  {
-    title: 'Printer on 3rd floor is jamming',
-    description: 'The HP LaserJet on the 3rd floor keeps jamming when printing double-sided documents.',
-    priority: 'Low',
-    status: 'Open',
-    assignee: 'Dan Wilson',
-  },
-  {
-    title: 'Password reset request',
-    description: 'User locked out of Active Directory account after too many failed login attempts. Needs password reset.',
-    priority: 'Medium',
-    status: 'Resolved',
-    assignee: 'Eve Martinez',
-  },
-  {
-    title: 'Software license expired — Adobe Creative Suite',
-    description: 'The design team cannot use Photoshop or Illustrator. License renewal needed ASAP.',
-    priority: 'High',
-    status: 'In Progress',
-    assignee: 'Alice Johnson',
-  },
-  {
-    title: 'Conference room display not working',
-    description: 'The HDMI connection in Conference Room B does not display laptop screens. Adapter and cables tested.',
-    priority: 'Low',
-    status: 'Closed',
-    assignee: 'Bob Smith',
-  },
-];
-
 // ─── Initialise ─────────────────────────────────────────────────────
-function init() {
-  SAMPLE_TICKETS.forEach((t) => addTicket(t, true));
-  renderTickets();
+async function init() {
+  await loadTickets();
   ticketForm.addEventListener('submit', handleCreate);
   cancelBtn.addEventListener('click', resetForm);
   editForm.addEventListener('submit', handleEditSave);
@@ -86,39 +30,37 @@ function init() {
 }
 
 // ─── Ticket CRUD ────────────────────────────────────────────────────
-function addTicket(data, silent) {
-  const ticket = {
-    id: nextId++,
-    title: data.title.trim(),
-    description: data.description.trim(),
-    priority: data.priority,
-    status: data.status || 'Open',
-    assignee: data.assignee || '',
-    createdAt: new Date().toISOString(),
-  };
-  tickets.push(ticket);
-  if (!silent) renderTickets();
-  return ticket;
+async function loadTickets() {
+  const response = await fetch('/api/tickets');
+  if (!response.ok) throw new Error('Unable to load tickets');
+  tickets = await response.json();
+  renderTickets();
 }
 
-function updateTicket(id, data) {
-  const ticket = tickets.find((t) => t.id === id);
-  if (!ticket) return;
-  Object.assign(ticket, {
-    title: data.title.trim(),
-    description: data.description.trim(),
-    priority: data.priority,
-    status: data.status,
-    assignee: data.assignee,
+async function createTicket(data) {
+  const response = await fetch('/api/tickets', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
   });
-  renderTickets();
+  if (!response.ok) throw new Error('Unable to create ticket');
+  await loadTickets();
 }
 
-function closeTicket(id) {
-  const ticket = tickets.find((t) => t.id === id);
-  if (!ticket) return;
-  ticket.status = 'Closed';
-  renderTickets();
+async function updateTicket(id, data) {
+  const response = await fetch(`/api/tickets/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error('Unable to update ticket');
+  await loadTickets();
+}
+
+async function closeTicket(id) {
+  const response = await fetch(`/api/tickets/${id}/close`, { method: 'POST' });
+  if (!response.ok) throw new Error('Unable to close ticket');
+  await loadTickets();
 }
 
 // ─── Rendering ──────────────────────────────────────────────────────
@@ -174,7 +116,7 @@ function ticketCardHTML(ticket) {
 }
 
 // ─── Form Handling ──────────────────────────────────────────────────
-function handleCreate(e) {
+async function handleCreate(e) {
   e.preventDefault();
 
   const title = document.getElementById('ticket-title');
@@ -190,7 +132,7 @@ function handleCreate(e) {
 
   if (!valid) return;
 
-  addTicket({
+  await createTicket({
     title: title.value,
     description: description.value,
     priority: priority.value,
@@ -239,7 +181,7 @@ function closeModal() {
   editModal.hidden = true;
 }
 
-function handleEditSave(e) {
+async function handleEditSave(e) {
   e.preventDefault();
   const id = parseInt(document.getElementById('edit-id').value, 10);
   const title = document.getElementById('edit-title').value.trim();
@@ -247,7 +189,7 @@ function handleEditSave(e) {
 
   if (!title || !description) return;
 
-  updateTicket(id, {
+  await updateTicket(id, {
     title,
     description,
     priority: document.getElementById('edit-priority').value,
@@ -259,7 +201,7 @@ function handleEditSave(e) {
 }
 
 // ─── Ticket Action Dispatcher ───────────────────────────────────────
-function handleTicketAction(e) {
+async function handleTicketAction(e) {
   const action = e.currentTarget.dataset.action;
   const id = parseInt(e.currentTarget.dataset.id, 10);
 

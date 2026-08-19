@@ -5,7 +5,7 @@ Requires the Microsoft Foundry SDK (azure-ai-projects 2.4.0+).
 
 import os
 from dotenv import load_dotenv
-from azure.identity import DefaultAzureCredential
+from azure.identity import AzureCliCredential
 from azure.ai.projects import AIProjectClient
 from azure.ai.projects.models import PromptAgentDefinition
 
@@ -25,7 +25,7 @@ def _resolve_agent_name() -> str:
 
 project_client = AIProjectClient(
     endpoint=_resolve_project_endpoint(),
-    credential=DefaultAzureCredential(),
+    credential=AzureCliCredential(),
 )
 
 agent = project_client.agents.create_version(
