@@ -42,7 +42,7 @@ Interpreter supports consistent scoring and transparent financial scenarios.
 Choose this example if your company explores new markets, builds partner propositions,
 prepares customer conversations, monitors competitors, or evaluates where to invest next.
 
-### [Support Ticket System](04-support-ticket-system/)
+### [Support Ticket System Advanced](04-support-ticket-system%20ADVANCED/)
 
 Run a complete IT support ticketing application with a browser interface, shared local
 ticket store, and MCP server. Agents can list, create, update, and close tickets through
@@ -120,7 +120,7 @@ dependencies, Azure sign-in, `.env` file, Foundry V2 project, and model deployme
 already be ready.
 
 Before starting, confirm that the existing examples in
-[02-microsoft-foundry-agents](../02-microsoft-foundry-agents/) still run. You also need:
+[01-microsoft-foundry-agents](../01-microsoft-foundry-agents/) still run. You also need:
 
 - a unique `AGENT_NAME` for your new prompt agent
 - `Foundry User` to create and test agents

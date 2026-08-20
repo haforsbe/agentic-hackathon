@@ -6,7 +6,7 @@ implemented reference system rather than a Foundry prompt-agent challenge.
 
 ## Before you begin
 
-- Complete the shared [Lab 06 prerequisites](../README.md#prerequisites).
+- Complete the shared [Lab 04 prerequisites](../README.md#prerequisites).
 - Install the root dependencies from this folder with `pip install -r requirements.txt`.
 - Sign in with `az login`; the Agent Framework client uses `AzureCliCredential` exclusively.
 - Configure `AZURE_AI_PROJECT_ENDPOINT` and
@@ -78,7 +78,7 @@ Create or update `.vscode/mcp.json` in the repository root:
   "servers": {
     "ticketing": {
       "command": "${workspaceFolder}/.venv/Scripts/python.exe",
-      "args": ["${workspaceFolder}/06-Agent Examples/04-support-ticket-system/mcp_server.py"],
+      "args": ["${workspaceFolder}/04-Agent Examples/04-support-ticket-system ADVANCED/mcp_server.py"],
       "env": {}
     }
   }
@@ -157,7 +157,7 @@ operations still work, and its behavior is documented here.
 ## Project structure
 
 ```text
-04-support-ticket-system/
+04-support-ticket-system ADVANCED/
 |-- index.html       # Accessible browser interface
 |-- styles.css       # Responsive styling
 |-- script.js        # Browser behavior and API calls

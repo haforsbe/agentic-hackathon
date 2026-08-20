@@ -265,7 +265,7 @@ The [Model Context Protocol (MCP)](https://code.visualstudio.com/docs/copilot/cu
     "servers": {
         "ticketing": {
         "command": "${workspaceFolder}/.venv/Scripts/python.exe",
-            "args": ["${workspaceFolder}/06-Agent Examples/04-support-ticket-system/mcp_server.py"],
+            "args": ["${workspaceFolder}/04-Agent Examples/04-support-ticket-system ADVANCED/mcp_server.py"],
         "env": {}
         }
     }
@@ -288,7 +288,7 @@ MCP bridges the gap between your AI assistant and your application's data. Once 
 
 Now that your ticketing system is exposed via MCP, you can connect it to an AI agent built with the [Microsoft Agent Framework](https://github.com/microsoft/agent-framework). This lets you create a standalone Python agent that can manage tickets autonomously — outside of VS Code.
 
-1. Review the example in [`01-agent-framework/06_remote_mcp.py`](../01-agent-framework/06_remote_mcp.py). It shows how to connect an Agent Framework agent to a remote MCP server using `MCPStreamableHTTPTool`:
+1. Review the example in [`02-agent-framework ADVANCED/06_remote_mcp.py`](../02-agent-framework%20ADVANCED/06_remote_mcp.py). It shows how to connect an Agent Framework agent to a remote MCP server using `MCPStreamableHTTPTool`:
 
     ```python
     async with (
@@ -305,12 +305,12 @@ Now that your ticketing system is exposed via MCP, you can connect it to an AI a
         )
     ```
 
-1. Using that example as a reference, create a new file called `agent_with_mcp.py` in the `06-Agent Examples/04-support-ticket-system/` folder. Enter the following prompt in the Chat view with **Agent** selected:
+1. Using that example as a reference, create a new file called `agent_with_mcp.py` in the `04-Agent Examples/04-support-ticket-system ADVANCED/` folder. Enter the following prompt in the Chat view with **Agent** selected:
 
     ```text
     Create a Python script called agent_with_mcp.py that uses the Microsoft Agent Framework to build
     an AI agent connected to the local ticketing MCP server at http://localhost:8000/mcp.
-    Use 01-agent-framework/06_remote_mcp.py as a reference for how to set up MCPStreamableHTTPTool.
+    Use 02-agent-framework ADVANCED/06_remote_mcp.py as a reference for how to set up MCPStreamableHTTPTool.
     The agent should:
     - Connect to the ticketing MCP server via streamable HTTP
     - Accept user input in a loop (multi-turn conversation)

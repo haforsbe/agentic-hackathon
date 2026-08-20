@@ -4,4 +4,3 @@ __pycache__/
 .env
 .DS_Store
 Thumbs.db
-05-github-copilot/example_app/tickets.json

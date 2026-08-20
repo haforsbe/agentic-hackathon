@@ -5,16 +5,16 @@ conflicting sources, and ranks commercial opportunities without hiding uncertain
 
 ## Before you begin
 
-- Complete the shared [Lab 06 prerequisites](../README.md#prerequisites).
+- Complete the shared [Lab 04 prerequisites](../README.md#prerequisites).
 - Review the synthetic research brief in [sample-data.json](sample-data.json).
 
 ## 1. Create the agent in VS Code with GitHub Copilot
 
 Start from these existing examples:
 
-- [01-quickstart-responses.py](../../02-microsoft-foundry-agents/01-quickstart-responses.py)
+- [01-quickstart-responses.py](../../01-microsoft-foundry-agents/01-quickstart-responses.py)
   for local model testing.
-- [02-quickstart-create-agent.py](../../02-microsoft-foundry-agents/02-quickstart-create-agent.py)
+- [02-quickstart-create-agent.py](../../01-microsoft-foundry-agents/02-quickstart-create-agent.py)
   for creating the prompt-agent version.
 
 Ask Copilot to explain both examples, then create your own copies in this folder. Leave the
@@ -31,7 +31,7 @@ explain. The instructions describe a research method, not answers to the supplie
 
 ## 2. Test it locally
 
-Use [01-quickstart-responses.py](../../02-microsoft-foundry-agents/01-quickstart-responses.py)
+Use [01-quickstart-responses.py](../../01-microsoft-foundry-agents/01-quickstart-responses.py)
 as the starting point for the local test:
 
 1. Create your own copy of the quickstart in this scenario folder and leave the original
@@ -56,12 +56,12 @@ the JSON, refuses false precision, and clearly says that live evidence is still 
 ## 3. Deploy it to Foundry
 
 1. Adapt your copy of
-  [02-quickstart-create-agent.py](../../02-microsoft-foundry-agents/02-quickstart-create-agent.py)
+  [02-quickstart-create-agent.py](../../01-microsoft-foundry-agents/02-quickstart-create-agent.py)
   so it loads the tested instruction file.
 2. Set a unique `AGENT_NAME` in `.env`, run the script, and record the printed agent name
   and version.
 3. Copy and adapt
-  [03-quickstart-chat-with-agent.py](../../02-microsoft-foundry-agents/03-quickstart-chat-with-agent.py)
+  [03-quickstart-chat-with-agent.py](../../01-microsoft-foundry-agents/03-quickstart-chat-with-agent.py)
   to invoke that agent by name. Replace its questions about France with one research
   question from Step 2.
 4. Open it under **Microsoft Foundry > Build > Agents** and verify its displayed

@@ -3,9 +3,9 @@
 This guide is a **full sequence** for running the examples in this repo from a machine that does not have Python or VS Code installed.
 
 Scope covered:
-- `01-agent-framework`
-- `02-microsoft-foundry-agents`
-- `03-microsoft-foundry-hosted-agents` (**optional**)
+- `01-microsoft-foundry-agents`
+- `02-agent-framework ADVANCED`
+- `04-Agent Examples`
 
 ---
 
@@ -128,28 +128,28 @@ Notes:
 
 ---
 
-## 8) Run examples in `01-agent-framework`
+## 8) Run examples in `01-microsoft-foundry-agents`
 
 ```powershell
-cd 01-agent-framework
+cd 01-microsoft-foundry-agents
+python 01-quickstart-responses.py
+python 02-quickstart-create-agent.py
+python 03-quickstart-chat-with-agent.py
+cd ..
+```
+
+---
+
+## 9) Run examples in `02-agent-framework ADVANCED`
+
+```powershell
+cd "02-agent-framework ADVANCED"
 python 01_hello_agent.py
 python 02_add_tools.py
 python 03_multi_turn.py
 python 04_memory.py
 python 05_first_workflow.py
 python 06_remote_mcp.py
-cd ..
-```
-
----
-
-## 9) Run examples in `02-microsoft-foundry-agents`
-
-```powershell
-cd 02-microsoft-foundry-agents
-python 01-quickstart-responses.py
-python 02-quickstart-chat-with-agent.py
-python 03-quickstart-create-agent.py
 cd ..
 ```
 
@@ -171,13 +171,12 @@ cd ..
 
 ## 11) Recommended run order
 
-1. `01-agent-framework/01_hello_agent.py`
-2. `01-agent-framework/02_add_tools.py`
-3. `01-agent-framework/03_multi_turn.py`
-4. `02-microsoft-foundry-agents/01-quickstart-responses.py`
-5. `02-microsoft-foundry-agents/03-quickstart-create-agent.py`
-6. *(Optional)* `03.../agent-with-local-tools/main.py`
-7. *(Optional)* `03.../agents-in-workflow/main.py`
-8. *(Optional)* Remaining `03` samples as needed
+1. `01-microsoft-foundry-agents/01-quickstart-responses.py`
+2. `01-microsoft-foundry-agents/02-quickstart-create-agent.py`
+3. `01-microsoft-foundry-agents/03-quickstart-chat-with-agent.py`
+4. `02-agent-framework ADVANCED/01_hello_agent.py`
+5. `02-agent-framework ADVANCED/02_add_tools.py`
+6. `02-agent-framework ADVANCED/03_multi_turn.py`
+7. Continue with the remaining advanced Agent Framework samples as needed.
 
-This sequence gives the smoothest ramp-up from simplest to more advanced scenarios. Steps 6-8 are optional and only needed if you want to run hosted-agent examples.
+This sequence starts with Foundry quickstarts and then moves into the advanced Agent Framework scenarios.

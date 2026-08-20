@@ -6,7 +6,7 @@ GitHub Copilot.
 
 ## Before you begin
 
-- Complete the shared [Lab 06 prerequisites](../README.md#prerequisites).
+- Complete the shared [Lab 04 prerequisites](../README.md#prerequisites).
 - Review [sample-data.json](sample-data.json), which contains synthetic tasks.
 
 ## When to use the sample data
@@ -28,9 +28,9 @@ The JSON file is not imported into Todoist automatically.
 
 Start from these existing examples:
 
-- [01-quickstart-responses.py](../../02-microsoft-foundry-agents/01-quickstart-responses.py)
+- [01-quickstart-responses.py](../../01-microsoft-foundry-agents/01-quickstart-responses.py)
   for local model testing.
-- [02-quickstart-create-agent.py](../../02-microsoft-foundry-agents/02-quickstart-create-agent.py)
+- [02-quickstart-create-agent.py](../../01-microsoft-foundry-agents/02-quickstart-create-agent.py)
   for creating the prompt-agent version.
 
 Ask Copilot to explain both examples, then create your own copies in this folder. Leave the
@@ -49,7 +49,7 @@ explain. The instructions would still work with a different task list.
 ## 2. Test it locally
 
 1. Adapt your copy of
-  [01-quickstart-responses.py](../../02-microsoft-foundry-agents/01-quickstart-responses.py).
+  [01-quickstart-responses.py](../../01-microsoft-foundry-agents/01-quickstart-responses.py).
 2. Load [sample-data.json](sample-data.json) with Python's JSON support. Resolve it relative
   to the script, not the terminal's current folder.
 3. Load the instruction file from Step 1 and pass it as the request's instructions.
@@ -67,12 +67,12 @@ available capacity, identifies an unblock action, and never claims to have used 
 ## 3. Deploy it to Foundry
 
 1. Adapt your copy of
-  [02-quickstart-create-agent.py](../../02-microsoft-foundry-agents/02-quickstart-create-agent.py)
+  [02-quickstart-create-agent.py](../../01-microsoft-foundry-agents/02-quickstart-create-agent.py)
   so it loads the tested instruction file.
 2. Set a unique `AGENT_NAME` in `.env`, run the script, and record the printed agent name
   and version.
 3. Copy and adapt
-  [03-quickstart-chat-with-agent.py](../../02-microsoft-foundry-agents/03-quickstart-chat-with-agent.py)
+  [03-quickstart-chat-with-agent.py](../../01-microsoft-foundry-agents/03-quickstart-chat-with-agent.py)
   to invoke that agent by name. Replace its questions about France with one planning
   question from Step 2.
 4. Open it under **Microsoft Foundry > Build > Agents** and compare its displayed

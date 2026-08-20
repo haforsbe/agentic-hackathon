@@ -99,11 +99,11 @@ AZURE_CLI_PROCESS_TIMEOUT=60
 3. **Run a sample:**
    ```bash
    # Workflow sample (no Azure setup required)
-   python 01-agent-framework/05_first_workflow.py
+    python "02-agent-framework ADVANCED/05_first_workflow.py"
    
    # Agent samples (require Azure AI Foundry setup)
-   python 01-agent-framework/01_hello_agent.py
-   python 01-agent-framework/02_add_tools.py
+    python "02-agent-framework ADVANCED/01_hello_agent.py"
+    python "02-agent-framework ADVANCED/02_add_tools.py"
    ```
 
 ## API Compatibility

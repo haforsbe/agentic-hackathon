@@ -3,9 +3,9 @@
 This guide is a **full sequence** for running the examples in this repo from a machine that does not have Python or VS Code installed.
 
 Scope covered:
-- `01-agent-framework`
-- `02-microsoft-foundry-agents`
-- `03-microsoft-foundry-hosted-agents` (**optional**)
+- `01-microsoft-foundry-agents`
+- `02-agent-framework ADVANCED`
+- `04-Agent Examples`
 
 ---
 
@@ -49,7 +49,7 @@ You need an Azure subscription with access to Azure AI Foundry and model deploym
 
 ### Authenticate local Foundry samples with Azure CLI
 
-The local Python samples in `01-agent-framework` and `02-microsoft-foundry-agents` use `AzureCliCredential` exclusively. They do not fall back to browser broker, environment, managed identity, or other credential types.
+The local Python samples in `01-microsoft-foundry-agents` and `02-agent-framework ADVANCED` use `AzureCliCredential` exclusively. They do not fall back to browser broker, environment, managed identity, or other credential types.
 
 ```powershell
 az login

@@ -6,7 +6,7 @@ data. You receive the challenge and sample data, but you build the agent yoursel
 
 ## Before you begin
 
-- Complete the shared [Lab 06 prerequisites](../README.md#prerequisites).
+- Complete the shared [Lab 04 prerequisites](../README.md#prerequisites).
 - Review [sample-data.json](sample-data.json), which contains synthetic records only.
 - Do not use real customer or personal data.
 
@@ -14,9 +14,9 @@ data. You receive the challenge and sample data, but you build the agent yoursel
 
 Start from these existing examples:
 
-- [01-quickstart-responses.py](../../02-microsoft-foundry-agents/01-quickstart-responses.py)
+- [01-quickstart-responses.py](../../01-microsoft-foundry-agents/01-quickstart-responses.py)
   shows how to call the Foundry model while developing locally.
-- [02-quickstart-create-agent.py](../../02-microsoft-foundry-agents/02-quickstart-create-agent.py)
+- [02-quickstart-create-agent.py](../../01-microsoft-foundry-agents/02-quickstart-create-agent.py)
   shows how to define and create a persistent prompt-agent version.
 
 Ask Copilot to explain where each example reads configuration, sends model input, and sets
@@ -45,7 +45,7 @@ Copilot can explain each file, and the original quickstarts are unchanged.
 
 ## 2. Test it locally
 
-Use [01-quickstart-responses.py](../../02-microsoft-foundry-agents/01-quickstart-responses.py)
+Use [01-quickstart-responses.py](../../01-microsoft-foundry-agents/01-quickstart-responses.py)
 as the starting point for the local test:
 
 1. Create your own copy of the quickstart in this scenario folder. Keep the original
@@ -79,13 +79,13 @@ used Notion.
 ## 3. Deploy it to Foundry
 
 1. Adapt your copy of
-  [02-quickstart-create-agent.py](../../02-microsoft-foundry-agents/02-quickstart-create-agent.py)
+  [02-quickstart-create-agent.py](../../01-microsoft-foundry-agents/02-quickstart-create-agent.py)
   so it loads the same tested instruction file used locally.
 2. Set a unique `AGENT_NAME` in `.env` and run the script once.
 3. Record the agent name and version printed by the script. Re-running after changes can
   create another immutable version.
 4. Copy and adapt
-  [03-quickstart-chat-with-agent.py](../../02-microsoft-foundry-agents/03-quickstart-chat-with-agent.py)
+  [03-quickstart-chat-with-agent.py](../../01-microsoft-foundry-agents/03-quickstart-chat-with-agent.py)
   to test the deployed agent by name. Replace its questions about France with one of the
   coordinator test questions from Step 2.
 5. Open the agent under **Microsoft Foundry > Build > Agents** and confirm the displayed
