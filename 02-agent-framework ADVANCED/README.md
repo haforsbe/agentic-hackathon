@@ -24,7 +24,7 @@ In the Foundry portal, open your V2 project and copy `AZURE_AI_PROJECT_ENDPOINT`
 
 ```bash
 export AZURE_AI_PROJECT_ENDPOINT="https://your-project-endpoint"
-export AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME="gpt-4o"
+export AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME="gpt-4.1"
 export AZURE_CLI_PROCESS_TIMEOUT="60"   # optional
 ```
 
@@ -67,4 +67,4 @@ Run any sample with:
 python 01_hello_agent.py
 ```
 
-These samples use Azure AI Foundry models through the Chat Completions API so Agent Framework can invoke local and MCP tools.
+These samples use Microsoft Foundry models through the Chat Completions API so Agent Framework can invoke local and MCP tools.

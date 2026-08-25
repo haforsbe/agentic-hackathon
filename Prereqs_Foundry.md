@@ -11,7 +11,7 @@ Scope covered:
 
 ## 1) Install required software (in this order)
 
-1. **Visual Studio Code**
+1. **Visual Studio Code (latest stable release)**
    - Download: https://code.visualstudio.com/Download
 
 2. **Python 3.12+**
@@ -34,12 +34,12 @@ Scope covered:
 
 ## 2) Create/prepare Azure resources
 
-You need an Azure subscription with access to Azure AI Foundry and model deployments.
+You need a working Microsoft Foundry project in an Azure subscription. Your account must have sufficient access rights in that project to deploy models and create or manage agents. If an administrator controls project access, ask them to grant these permissions before the workshop.
 
 1. Sign in to Azure portal: https://portal.azure.com/
-2. Open Azure AI Foundry: https://ai.azure.com/
-3. Create or use an existing **Foundry project**.
-4. Deploy a chat model (for example, `gpt-4o` or `gpt-4.1-mini`).
+2. Open Microsoft Foundry: https://ai.azure.com/
+3. Create or use an existing **Microsoft Foundry V2 project** and confirm that you can deploy models and create agents in it. Foundry V1 projects are not supported by these samples.
+4. Deploy a chat model that supports the samples (for example, `gpt-4.1`). Use the deployment name, which can differ from the model name, in your `.env` file.
 5. Copy these values (you will use them later):
    - **Project endpoint** (example: `https://<resource>.services.ai.azure.com/api/projects/<project>`)
    - **Model deployment name**
@@ -104,6 +104,18 @@ From repo root:
 pip install -r requirements.txt
 ```
 
+The repository pins a tested, mutually compatible package set. Key versions are:
+
+| Package | Tested version |
+|---|---:|
+| `agent-framework-core` | `1.13.0` |
+| `agent-framework-openai` | `1.12.0` |
+| `azure-ai-projects` | `2.4.0` |
+| `azure-identity` | `1.25.3` |
+| `mcp` | `1.26.0` |
+
+Do not upgrade packages independently during the workshop. Reinstall from `requirements.txt` if your environment differs.
+
 ---
 
 ## 7) Configure environment variables for 01 and 02
@@ -164,7 +176,8 @@ cd ..
 - Azure Developer CLI (`azd`) install: https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd
 - Docker Desktop download: https://www.docker.com/products/docker-desktop/
 - Azure portal: https://portal.azure.com/
-- Azure AI Foundry portal: https://ai.azure.com/
+- Microsoft Foundry portal: https://ai.azure.com/
+- Microsoft Foundry documentation: https://learn.microsoft.com/azure/foundry/
 - Hosted agents docs: https://learn.microsoft.com/en-us/azure/ai-foundry/agents/concepts/hosted-agents?view=foundry&tabs=cli
 
 ---

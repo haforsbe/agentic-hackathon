@@ -57,18 +57,18 @@ instructions, tools, scoring rules, and test prompts to fit your company.
 ## How to work with GitHub Copilot in this lab
 
 You are not expected to write every line from memory. You are expected to direct GitHub
-Copilot, understand the proposed changes, and verify the result.
+GitHub Copilot, understand the proposed changes, and verify the result.
 
 For examples 01-03:
 
-1. Open the referenced quickstart and ask Copilot to explain it before changing anything.
+1. Open the referenced quickstart and ask GitHub Copilot to explain it before changing anything.
 2. Copy the quickstart into your selected scenario folder. Do not edit the original example.
-3. In Copilot Chat, select **Agent** mode and describe one small change at a time.
-4. Review the proposed file changes. Ask Copilot about any line you do not understand.
+3. In GitHub Copilot Chat, select **Agent** mode and describe one small change at a time.
+4. Review the proposed file changes. Ask GitHub Copilot about any line you do not understand.
 5. Run the script and read the complete output. Do not continue while it has an error.
 6. Compare the result with the checkpoint in the scenario README.
 
-Copilot can make plausible but incorrect changes. A successful run and the expected agent
+GitHub Copilot can make plausible but incorrect changes. A successful run and the expected agent
 behavior are both required; generated code alone is not completion.
 
 ## Terms used in this lab
@@ -133,12 +133,12 @@ secrets out of source control.
 ## If you get stuck
 
 1. Read the complete error, including the first line that names your own file.
-2. Ask Copilot to explain the error before asking it to make changes.
+2. Ask GitHub Copilot to explain the error before asking it to make changes.
 3. Compare your copy with the original quickstart to find what changed.
 4. Check that the virtual environment is active and the required `.env` values still exist.
 5. Make one correction and rerun the same test. Avoid changing several things at once.
 
-Never paste credentials, access tokens, or the contents of `.env` into Copilot Chat.
+Never paste credentials, access tokens, or the contents of `.env` into GitHub Copilot Chat.
 
 ## What "local" and "deploy" mean
 

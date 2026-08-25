@@ -86,7 +86,7 @@ Create or update `.vscode/mcp.json` in the repository root:
 ```
 
 On macOS or Linux, use `${workspaceFolder}/.venv/bin/python`. Reload the VS Code window,
-open Copilot Chat in Agent mode, and confirm that the five ticket tools are available.
+open GitHub Copilot Chat in Agent mode, and confirm that the five ticket tools are available.
 
 Test read operations first:
 
@@ -94,7 +94,7 @@ Test read operations first:
 2. Ask for the details of one returned ticket ID.
 3. Compare the result with the browser and [tickets.json](tickets.json).
 
-Then test a write with synthetic data. Ask Copilot to create a Low-priority ticket named
+Then test a write with synthetic data. Ask GitHub Copilot to create a Low-priority ticket named
 `Workshop MCP verification`, inspect the exact tool arguments, and confirm the result in
 the browser. MCP writes persist immediately; this local server does not implement its own
 approval workflow.
@@ -145,7 +145,7 @@ Choose one small extension:
 - add a ticket history field and display it in the edit dialog
 - add focused tests for invalid priorities, statuses, and missing required fields
 
-Ask Copilot to identify the affected files before editing. Review the proposed data shape,
+Ask GitHub Copilot to identify the affected files before editing. Review the proposed data shape,
 make one change at a time, and repeat the relevant checkpoint. Keep MCP tool descriptions
 specific enough that an agent can select the correct tool without guessing.
 

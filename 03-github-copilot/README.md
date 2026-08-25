@@ -12,7 +12,7 @@ By the end of this tutorial, you'll have both a working web application and a pe
 
 * Access to GitHub Copilot. Follow these steps to [Set up GitHub Copilot in VS Code](https://code.visualstudio.com/docs/copilot/setup).
 
-    > **Tip:** If you don't have a Copilot subscription, you can sign up to use Copilot for free directly from within VS Code and get a monthly limit of inline suggestions and chat interactions.
+    > **Tip:** If you don't have a GitHub Copilot subscription, you can sign up to use GitHub Copilot for free directly from within VS Code and get a monthly limit of inline suggestions and chat interactions.
 
 ## Step 1: Experience inline suggestions
 
@@ -28,7 +28,7 @@ AI-powered inline suggestions appear as you type, helping you write code faster 
     <!DOCTYPE html>
     ```
 
-    ![Screenshot showing Copilot suggesting HTML structure inline suggestion.](https://code.visualstudio.com/assets/docs/copilot/getting-started/html-completion.png)
+    ![Screenshot showing GitHub Copilot suggesting an HTML structure inline.](https://code.visualstudio.com/assets/docs/copilot/getting-started/html-completion.png)
 
     You might see different suggestions because large language models are [nondeterministic](https://code.visualstudio.com/docs/copilot/concepts/language-models#key-characteristics).
 
@@ -238,7 +238,7 @@ Smart actions like commit message generation demonstrate how AI integrates natur
 
 ## Step 6: Add an MCP interface to the ticketing app
 
-The [Model Context Protocol (MCP)](https://code.visualstudio.com/docs/copilot/customization/mcp-servers) lets AI agents interact with external tools and services. In this step, you'll use GitHub Copilot to add an MCP server to your ticketing app, so that Copilot (or any MCP-compatible agent) can create, query, and update tickets programmatically.
+The [Model Context Protocol (MCP)](https://code.visualstudio.com/docs/copilot/customization/mcp-servers) lets AI agents interact with external tools and services. In this step, you'll use GitHub Copilot to add an MCP server to your ticketing app, so that GitHub Copilot (or any MCP-compatible agent) can create, query, and update tickets programmatically.
 
 1. Open the Chat view and make sure **Agent** is selected.
 
@@ -344,7 +344,7 @@ You can further enhance your AI's capabilities by exploring other customization 
 
 ## Related resources
 
-* [How GitHub Copilot works](https://code.visualstudio.com/docs/copilot/concepts/overview): Core concepts, terminology, and the architecture behind Copilot's features
+* [How GitHub Copilot works](https://code.visualstudio.com/docs/copilot/concepts/overview): Core concepts, terminology, and the architecture behind GitHub Copilot's features
 
 * [Agents tutorial](https://code.visualstudio.com/docs/copilot/agents/agents-tutorial): Hands-on tutorial for working with different agent types
 
