@@ -24,7 +24,6 @@ virtual environment is active, `az login` has completed, and the root `.env` con
 ```dotenv
 AZURE_AI_PROJECT_ENDPOINT=your-project-endpoint
 AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=your-model-deployment
-AGENT_NAME=microsoft-cloud-guidance-advisor-yourname
 ```
 
 Keep real values private. Microsoft Learn MCP is public and needs no key or OAuth setup.
@@ -39,10 +38,10 @@ Keep real values private. Microsoft Learn MCP is public and needs no key or OAut
 There is no sample-data file. Current documentation reaches the agent only through the
 MCP tool after it is connected in Foundry.
 
-## 1. Review the instructions
+## 1. Create the instructions
 
-Open [agent-instructions.md](agent-instructions.md). Ask GitHub Copilot to explain the
-source boundary, research workflow, response format, and integrity rules.
+Create `agent-instructions.md` in this folder. Ask GitHub Copilot to draft it with a source
+boundary, research workflow, response format, and integrity rules.
 
 Confirm the instructions require:
 
@@ -89,18 +88,12 @@ method, and asks for material missing context.
 
 ## 3. Create the prompt agent in Foundry
 
-1. Set a unique `AGENT_NAME` in `.env`.
-2. Run:
-
-   ```powershell
-   & .\.venv\Scripts\python.exe ".\04-Agent Examples\03-microsoft-cloud-guidance-advisor\02-quickstart-create-agent.py"
-   ```
-
-3. Record the printed agent name and version.
-4. Open **Microsoft Foundry > Build > Agents**.
-5. Select the agent and confirm its instructions match
-   [agent-instructions.md](agent-instructions.md).
-6. Ask for current official guidance once. Confirm the agent discloses that no
+1. Open **Microsoft Foundry > Build > Agents**.
+2. Select **Create agent** and choose your deployed model.
+3. Name the agent `microsoft-cloud-guidance-advisor-yourname`.
+4. Paste the complete contents of your `agent-instructions.md` into **Instructions**.
+5. Save the first version without adding a tool.
+6. Ask for current official guidance. Confirm the agent discloses that no
    documentation tool is connected.
 
 **Checkpoint:** The first immutable version contains instructions and no tools.
@@ -168,25 +161,7 @@ The final request should not bypass the source requirement for a current limit.
 **Checkpoint:** Current claims and code are grounded in visible Microsoft Learn results,
 and citations use returned titles and URLs.
 
-## 5. Test with the Python chat client
-
-The Python script has no interactive approval handler. After inspecting the three
-allow-listed read operations in the playground, edit the agent, change approval for only
-those operations to **Never**, and save a new runtime version. Do not expand the allow-list.
-
-[03-quickstart-chat-with-agent.py](03-quickstart-chat-with-agent.py) sends only the
-technical question; it does not embed documentation.
-
-Confirm `AGENT_NAME` names the MCP-backed agent, then run:
-
-```powershell
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\03-microsoft-cloud-guidance-advisor\03-quickstart-chat-with-agent.py"
-```
-
-Open the run trace in Foundry. Confirm it contains documentation search and full-page
-fetch calls before detailed current guidance.
-
-## 6. Publish and test in website
+## 5. Publish and test in website
 
 1. Select the tested MCP-backed version and choose **Publish**.
 2. Create or update the managed Agent Application.
@@ -229,6 +204,7 @@ Do not add credentials because the endpoint is unauthenticated.
 ## Done when
 
 - Local tests use only instructions and questions.
+- The student-created `agent-instructions.md` remains in the local working copy only.
 - The no-tool test discloses that official documentation was not retrieved.
 - A new Foundry version has all three read-only Learn operations.
 - Traces show search, fetch, and code-sample calls where appropriate.

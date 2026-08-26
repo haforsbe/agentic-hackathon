@@ -23,7 +23,6 @@ virtual environment is active, `az login` has completed, and `.env` contains:
 ```dotenv
 AZURE_AI_PROJECT_ENDPOINT=your-project-endpoint
 AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=your-model-deployment
-AGENT_NAME=cultural-travel-planner-yourname
 ```
 
 Keep your real values private. The travel MCP needs no account, key, or OAuth connection.
@@ -38,9 +37,9 @@ Keep your real values private. The travel MCP needs no account, key, or OAuth co
 There is no sample-data file. Data enters the agent only through the MCP tool after it is
 connected in Foundry.
 
-## 1. Review the instructions
+## 1. Create the instructions
 
-Open [agent-instructions.md](agent-instructions.md). Ask GitHub Copilot to explain the
+Create `agent-instructions.md` in this folder. Ask GitHub Copilot to draft it with a role,
 tool boundary, planning workflow, response format, and booking limitation.
 
 Confirm the instructions require the agent to:
@@ -85,18 +84,12 @@ live data, and refuses to claim a reservation.
 
 ## 3. Create the prompt agent in Foundry
 
-1. Set a unique `AGENT_NAME` in the root `.env`.
-2. Run:
-
-   ```powershell
-   & .\.venv\Scripts\python.exe ".\04-Agent Examples\02-cultural-travel-planner\02-quickstart-create-agent.py"
-   ```
-
-3. Record the printed agent name and version.
-4. Open **Microsoft Foundry > Build > Agents**.
-5. Select the agent and confirm its instructions match
-   [agent-instructions.md](agent-instructions.md).
-6. Ask for current museum hours once. Confirm it still reports that no live tool is
+1. Open **Microsoft Foundry > Build > Agents**.
+2. Select **Create agent** and choose your deployed model.
+3. Name the agent `cultural-travel-planner-yourname`.
+4. Paste the complete contents of your `agent-instructions.md` into **Instructions**.
+5. Save the first version without adding a tool.
+6. Ask for current museum hours. Confirm it still reports that no live tool is
    available.
 
 **Checkpoint:** The first immutable version exists with instructions and no tools.
@@ -164,26 +157,7 @@ The final request must still be refused because the tool is read-only.
 **Checkpoint:** The response uses visible MCP results, labels assumptions, fits the stated
 time, and never claims a booking.
 
-## 5. Test with the Python chat client
-
-The Python script cannot display Foundry's interactive approval prompt. After you have
-inspected all three read operations in the playground, edit the agent, keep only those
-allow-listed operations, change their approval setting to **Never**, and save a new runtime
-version. The MCP exposes no booking operation to this agent.
-
-[03-quickstart-chat-with-agent.py](03-quickstart-chat-with-agent.py) sends only a travel
-question. It does not supply venue data.
-
-Confirm `AGENT_NAME` names the MCP-backed agent, then run:
-
-```powershell
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\02-cultural-travel-planner\03-quickstart-chat-with-agent.py"
-```
-
-Open the run trace in Foundry. Confirm it contains a travel MCP call and returned sources.
-If it does not, verify that the tool is attached to the latest agent version.
-
-## 6. Publish and test in website
+## 5. Publish and test in website
 
 1. Select the tested MCP-backed version and choose **Publish**.
 2. Create or update the managed Agent Application.
@@ -222,6 +196,7 @@ not add credentials or weaken the agent boundaries.
 ## Done when
 
 - Local tests contain no travel data.
+- The student-created `agent-instructions.md` remains in the local working copy only.
 - The no-tool and booking tests pass.
 - A new Foundry version uses only the three allow-listed read operations.
 - Traces show MCP results before current travel claims.

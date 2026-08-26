@@ -3,9 +3,9 @@
 This lab contains three Microsoft Foundry prompt agents and one advanced MCP application.
 Examples 01-03 follow the same beginner-friendly pattern:
 
-1. review reusable agent instructions
+1. create reusable agent instructions from the scenario requirements
 2. test only those instructions locally
-3. create a prompt-agent version in Foundry
+3. create a prompt agent in Foundry and paste in the tested instructions
 4. connect a read-only MCP tool in Foundry
 5. inspect tool calls and results in traces
 6. publish the tested version and use **Test in website**
@@ -73,36 +73,31 @@ The root `.env` needs these values:
 ```dotenv
 AZURE_AI_PROJECT_ENDPOINT=your-project-endpoint
 AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=your-model-deployment
-AGENT_NAME=a-unique-agent-name
 ```
 
-Change `AGENT_NAME` when moving between examples. Never paste real `.env` values into a
-README, prompt, or chat message.
+Never paste real `.env` values into a README, prompt, or chat message.
 
 No third-party account or API key is required for the three MCP tools. Microsoft Foundry
 model usage and published Agent Applications can still incur Azure charges.
 
-## Files in each prompt-agent example
+## Starter files in each prompt-agent example
 
 | File | Purpose |
 |------|---------|
-| `agent-instructions.md` | Persistent role, workflow, output, grounding, and safety rules. |
-| `local_test.py` | Sends the instructions and one test question directly to the deployed model. No MCP or data is attached. |
-| `02-quickstart-create-agent.py` | Creates an immutable prompt-agent version from the tested instruction file. |
-| `03-quickstart-chat-with-agent.py` | Invokes the named prompt agent after its MCP tool is connected in Foundry. |
-| `README.md` | Exact setup, test, tool, trace, publishing, and troubleshooting steps. |
+| `README.md` | Requirements and exact setup, test, tool, trace, and publishing steps. |
+| `local_test.py` | Tests the instruction file that the student creates. No MCP or data is attached. |
 
-The Python files are already complete. Students should read them with GitHub Copilot,
-change the instructions thoughtfully, run the tests, and inspect behavior rather than
-retyping boilerplate.
+Each folder intentionally starts without `agent-instructions.md` or scenario quickstart
+scripts. Students create the instruction file from the README, test it with the supplied
+runner, and configure the agent in the Foundry portal.
 
 ## Common journey
 
 ### 1. Test the instructions locally
 
-The local runner sends the contents of `agent-instructions.md` as model instructions and
-one fixed acceptance prompt as user input. It sends no external data and gives the model
-no tools.
+Create `agent-instructions.md` in the scenario folder by following its README. The local
+runner sends that file as model instructions and one fixed acceptance prompt as user
+input. It sends no external data and gives the model no tools.
 
 Run a scenario's `no-tool` test first. A good response clearly says that live data was not
 retrieved. If the model invents live facts, improve the instructions and rerun the same
@@ -113,12 +108,10 @@ Microsoft Foundry project.
 
 ### 2. Create the first Foundry version
 
-Set a unique `AGENT_NAME`, run the scenario's `02-quickstart-create-agent.py`, and record
-the printed version. This first version contains only the tested instructions.
-
-Open **Microsoft Foundry > Build > Agents** and verify the displayed instructions. Run a
-no-tool prompt in the playground before adding MCP. This gives you a clean behavioral
-baseline.
+Open **Microsoft Foundry > Build > Agents**, create a prompt agent, choose the deployed
+model, and paste in the contents of the tested `agent-instructions.md`. Save the first
+version without tools and run a no-tool prompt in the playground. This gives you a clean
+behavioral baseline.
 
 ### 3. Connect MCP in Foundry
 
@@ -145,11 +138,6 @@ arguments, and whether the operation is expected and read-only.
 
 After the run completes, open its trace and confirm the tool result appears before the
 response makes current factual claims. A fluent answer is not proof that a tool ran.
-
-The included Python chat clients do not handle interactive approvals. After you have
-inspected every allow-listed operation in the playground, create a runtime version with
-approval set to **Never** for only those read operations. Never use this shortcut for a
-write operation or a broader, unreviewed allow-list.
 
 ### 5. Publish and test
 

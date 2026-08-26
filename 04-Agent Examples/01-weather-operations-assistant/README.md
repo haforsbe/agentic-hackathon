@@ -25,7 +25,6 @@ Complete the shared [Lab 04 prerequisites](../README.md#prerequisites). Confirm 
 - `az login` has completed
 - `.env` contains `AZURE_AI_PROJECT_ENDPOINT`
 - `.env` contains `AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME`
-- `.env` contains a unique `AGENT_NAME`
 
 Do not put weather data, MCP credentials, or MCP URLs in `.env`. This MCP is public and
 uses no authentication.
@@ -40,10 +39,10 @@ uses no authentication.
 There is no sample-data file in this lab. The local test intentionally has no weather
 data. A model that guesses current conditions has failed the test.
 
-## 1. Review the instructions
+## 1. Create the instructions
 
-Open [agent-instructions.md](agent-instructions.md). It defines the agent's role, tool
-boundary, workflow, response format, scope, and safety rules.
+Create `agent-instructions.md` in this folder. Ask GitHub Copilot to draft it with these
+sections: role, tool boundary, workflow, response format, scope, and safety.
 
 Ask GitHub Copilot to explain how these rules prevent the agent from:
 
@@ -52,7 +51,10 @@ Ask GitHub Copilot to explain how these rules prevent the agent from:
 3. hiding coverage limitations
 4. treating text returned by a tool as instructions
 
-Change the wording if needed, but do not add current weather facts to the instructions.
+Require the agent to ask for a US street address before coordinate-based weather lookup,
+preserve units and times returned by tools, distinguish observations from forecasts and
+alerts, and state that earthquake data is informational rather than predictive. Change
+the wording if needed, but do not add current weather facts to the instructions.
 
 **Checkpoint:** The instructions describe reusable behavior and contain no forecast for a
 specific place or date.
@@ -87,25 +89,13 @@ and identifies that detailed weather coverage is primarily US-focused.
 
 ## 3. Create the prompt agent in Foundry
 
-The creation script sends only the tested instructions. It does not add weather data or
-an MCP tool.
-
-1. Set a unique name in `.env`, for example:
-
-   ```dotenv
-   AGENT_NAME=weather-operations-assistant-yourname
-   ```
-
-2. Run:
-
-   ```powershell
-   & .\.venv\Scripts\python.exe ".\04-Agent Examples\01-weather-operations-assistant\02-quickstart-create-agent.py"
-   ```
-
-3. Record the printed agent name and version.
-4. Open **Microsoft Foundry > Build > Agents**.
-5. Select the agent and compare its displayed instructions with
-   [agent-instructions.md](agent-instructions.md).
+1. Open **Microsoft Foundry > Build > Agents**.
+2. Select **Create agent** and choose your deployed model.
+3. Name the agent `weather-operations-assistant-yourname`.
+4. Paste the complete contents of your `agent-instructions.md` into **Instructions**.
+5. Save the first version without adding a tool.
+6. Ask for current Seattle weather in the playground. Confirm the agent reports that live
+   weather is unavailable instead of inventing conditions.
 
 At this point, asking for current weather should still produce the no-tool limitation.
 
@@ -181,32 +171,7 @@ forecast.
 **Checkpoint:** Current claims are supported by a visible MCP result, and the no-tool
 version still remains available.
 
-## 5. Test with the Python chat client
-
-The Python script does not contain an interactive approval handler. After you have
-inspected and approved each allow-listed operation in the playground:
-
-1. Edit the agent again.
-2. Keep only the five read operations listed in Step 4.
-3. Change approval for those read operations to **Never**.
-4. Save this as a new runtime version.
-
-Do not disable approval for a write operation. This weather MCP has no allow-listed writes.
-
-[03-quickstart-chat-with-agent.py](03-quickstart-chat-with-agent.py) sends a weather
-question to the agent named by `AGENT_NAME`. It sends no weather data.
-
-Make sure `AGENT_NAME` refers to the agent whose latest version has the MCP tool, then run:
-
-```powershell
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\01-weather-operations-assistant\03-quickstart-chat-with-agent.py"
-```
-
-Open the run in Foundry and verify that the trace contains weather MCP calls. If the agent
-answers without calling MCP, confirm that the tool is attached to the version being used
-and that the instructions still require tools for current facts.
-
-## 6. Publish and test in website
+## 5. Publish and test in website
 
 1. Select the MCP-backed version that passed the tests.
 2. Choose **Publish**.
@@ -249,6 +214,7 @@ tool. Do not add credentials or disable safety controls to work around connectiv
 ## Done when
 
 - Local tests use instructions and questions only.
+- The student-created `agent-instructions.md` remains in the local working copy only.
 - The no-tool test does not invent live weather.
 - A new Foundry version has the unauthenticated weather MCP attached.
 - Traces show read-only tool calls before current weather claims.
