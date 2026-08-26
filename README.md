@@ -12,7 +12,7 @@ A hands-on hackathon for building AI agents with the **Microsoft Agent Framework
 | [01 — Foundry Agents](01-microsoft-foundry-agents/) | Microsoft Foundry | Responses API, chat with agents, create prompt agents |
 | [02 — Agent Framework Advanced](02-agent-framework%20ADVANCED/) | Core SDK concepts | Agents, tools, multi-turn sessions, memory, workflows, remote MCP |
 | [03 — GitHub Copilot](03-github-copilot/) | GitHub Copilot + MCP | Build a ticketing app with inline suggestions, agents, MCP server, and Agent Framework integration |
-| [04 — Agent Examples](04-Agent%20Examples/) | Agent examples | Build Foundry prompt agents or run an advanced MCP-enabled support ticket system |
+| [04 — Agent Examples](04-Agent%20Examples/) | GitHub Copilot + Foundry | Generate Foundry agent tasks in VS Code or run an advanced MCP support system |
 
 Each folder has its own README with detailed instructions and sample descriptions.
 
@@ -22,14 +22,14 @@ Each folder has its own README with detailed instructions and sample description
 - **VS Code** — [code.visualstudio.com](https://code.visualstudio.com/)
 - **Azure CLI** — [Install docs](https://learn.microsoft.com/cli/azure/install-azure-cli)
 - **Microsoft Foundry project** with a compatible deployed chat model (the tested example uses `gpt-4.1`)
-- **GitHub Copilot** access (for Lab 03)
+- **GitHub Copilot** access (for Labs 03 and 04)
 
 For complete step-by-step setup instructions, see:
 
 | Guide | Scope |
 |-------|-------|
 | [Prereqs_Foundry.md](Prereqs_Foundry.md) | Labs 01, 02, and 04 (Foundry + Agent Framework) |
-| [Prereqs_GHCP.md](Prereqs_GHCP.md) | Lab 03 (GitHub Copilot + Azure add-ons) |
+| [Prereqs_GHCP.md](Prereqs_GHCP.md) | Labs 03 and 04 (GitHub Copilot + Azure add-ons) |
 | [Prereqs.md](Prereqs.md) | Combined guide (all labs) |
 
 ## Quickstart
@@ -66,7 +66,7 @@ pip install -r requirements.txt
 
 ### 4) Authenticate to Azure
 
-Labs 01 and 02 use `AzureCliCredential` exclusively, so the active Azure CLI session is their only authentication source:
+Labs 01, 02, and 04 use `AzureCliCredential` exclusively, so the active Azure CLI session is their only authentication source:
 
 ```bash
 az login
@@ -105,7 +105,7 @@ agentic-hackathon/
 ├── 01-microsoft-foundry-agents/  # Microsoft Foundry quickstarts (3 scripts)
 ├── 02-agent-framework ADVANCED/  # Advanced Agent Framework samples (6 scripts)
 ├── 03-github-copilot/            # GitHub Copilot tutorial with MCP integration
-├── 04-Agent Examples/            # Foundry challenges and advanced MCP support ticket system
+├── 04-Agent Examples/            # Copilot-built Foundry agents and advanced MCP system
 ├── example.env                  # Environment variable template
 ├── requirements.txt             # Python dependencies (all labs)
 ├── Prereqs.md                   # Combined setup guide

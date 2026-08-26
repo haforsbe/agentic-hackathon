@@ -1,8 +1,8 @@
 # Cultural Travel Planner
 
 Build a Microsoft Foundry prompt agent that plans museum visits, art events, and cultural
-layovers. First test it in Foundry without tools. Then connect a public read-only MCP tool
-for current cultural travel information.
+layovers. Use GitHub Copilot in VS Code to create the agent files from the Foundry
+quickstart tasks, then connect a public read-only MCP tool for current travel information.
 
 ## What you will build
 
@@ -17,15 +17,16 @@ It cannot search general flights or hotels, buy tickets, or make reservations.
 
 ## Before you begin
 
-Complete the shared [Lab 04 prerequisites](../README.md#prerequisites). Confirm that you
-can open the intended Foundry project, select a deployed model, and create and test agents.
-The travel MCP needs no account, key, or OAuth connection.
+Complete the shared [Lab 04 prerequisites](../README.md#prerequisites). Confirm that the
+virtual environment is active, `az login` has completed, and `.env` contains the project
+endpoint, model deployment, and `AGENT_NAME=cultural-travel-planner-yourname`. The travel
+MCP needs no account, key, or OAuth connection.
 
 ## Understand the two stages
 
 | Stage | What the agent receives | Expected behavior |
 |-------|-------------------------|-------------------|
-| Foundry baseline | Instructions and one question | Explain its planning method and refuse invented current details or bookings. |
+| VS Code baseline | Student-created instructions and chat script, without tools | Explain its planning method and refuse invented current details or bookings. |
 | Foundry | The same instructions plus travel MCP | Search the catalog before using current venue or event facts. |
 
 There is no sample-data file. Data enters the agent only through the MCP tool after it is
@@ -33,8 +34,9 @@ connected in Foundry.
 
 ## 1. Create the instructions
 
-Create `agent-instructions.md` in this folder. Ask GitHub Copilot to draft it with a role,
-tool boundary, planning workflow, response format, and booking limitation.
+In VS Code, open GitHub Copilot Chat in **Agent** mode. Ask it to create
+`agent-instructions.md` in this folder with a role, tool boundary, planning workflow,
+response format, and booking limitation.
 
 Confirm the instructions require the agent to:
 
@@ -49,25 +51,52 @@ Do not add venue hours, prices, or events to the instruction file.
 **Checkpoint:** The instructions work for any supported destination and contain no static
 travel data.
 
-## 2. Create and test the prompt agent in Foundry
+## 2. Create the Python tasks with GitHub Copilot
 
-1. Open **Microsoft Foundry > Build > Agents**.
-2. Select **Create agent** and choose your deployed model.
-3. Name the agent `cultural-travel-planner-yourname`.
-4. Paste the complete contents of your `agent-instructions.md` into **Instructions**.
-5. Save the first version without adding a tool.
-6. Ask each baseline question in the playground:
-   - `Plan an art-focused Saturday in Paris next month using current museum details.`
-   - `How would you create a realistic six-hour museum itinerary after a tool is connected?`
-   - `Book two Louvre tickets for Saturday and confirm the reservation.`
-7. Confirm the agent does not invent current details, explains a sound planning method,
-   and refuses to claim a booking.
-8. If a response fails, improve `agent-instructions.md`, update the agent in a new version,
-   and repeat the same question.
+Use these options in order:
 
-**Checkpoint:** The first immutable version exists with instructions and no tools.
+1. **Try it yourself first:** Write your own prompt for GitHub Copilot Agent mode. Think
+   about which Lab 01 files are templates, which files Copilot must create, what behavior
+   is unique to this scenario, and what must not be hard-coded.
+2. **Use the example second:** After your own attempt, compare it with the prompt below.
+   You can refine your prompt or use the example as is if you need more guidance.
 
-## 3. Connect the cultural travel MCP
+Whichever option you use, review Copilot's plan before accepting changes.
+
+```text
+Use 01-microsoft-foundry-agents/02-quickstart-create-agent.py as a template to create
+04-Agent Examples/02-cultural-travel-planner/02-quickstart-create-agent.py. Preserve the
+template's Microsoft Foundry SDK, AzureCliCredential, model, endpoint, and AGENT_NAME
+environment-variable pattern. Load instructions from agent-instructions.md beside the new
+script instead of hard-coding them. Do not add tools or credentials.
+
+Use 01-microsoft-foundry-agents/03-quickstart-chat-with-agent.py as a template to create
+04-Agent Examples/02-cultural-travel-planner/03-quickstart-chat-with-agent.py. Keep the
+agent-reference conversation pattern. Ask for a current art-focused Paris plan, the method
+for a realistic six-hour itinerary, and a confirmed Louvre ticket booking. Do not provide
+venue or event data in the script.
+```
+
+Review both generated files. They must read the existing `.env` values and contain no
+endpoint, credential, current venue facts, expected answers, or MCP implementation.
+
+## 3. Create and test the no-tool agent from VS Code
+
+From the workspace root, run:
+
+```powershell
+& .\.venv\Scripts\python.exe ".\04-Agent Examples\02-cultural-travel-planner\02-quickstart-create-agent.py"
+& .\.venv\Scripts\python.exe ".\04-Agent Examples\02-cultural-travel-planner\03-quickstart-chat-with-agent.py"
+```
+
+Confirm the agent does not invent current details, explains a sound planning method, and
+refuses to claim a booking. If a response fails, improve `agent-instructions.md`, rerun
+the creation script to create a new version, and repeat the chat script.
+
+**Checkpoint:** The student-created scripts run in VS Code, and the first immutable
+Foundry version has instructions but no tools.
+
+## 4. Connect the cultural travel MCP
 
 The travel.art MCP exposes a public cultural travel catalog over Streamable HTTP. It is a
 third-party service, so verify availability before using this lab in a workshop.
@@ -130,7 +159,16 @@ The final request must still be refused because the tool is read-only.
 **Checkpoint:** The response uses visible MCP results, labels assumptions, fits the stated
 time, and never claims a booking.
 
-## 4. Publish and test in website
+## 5. Test the MCP-backed agent from VS Code
+
+The generated chat script cannot approve a tool call interactively. After inspecting the
+three allow-listed read operations in the playground, edit the agent again, set approval
+to **Never** for only those operations, and save a new runtime version.
+
+Rerun `03-quickstart-chat-with-agent.py` from Step 3. Inspect the trace and confirm current
+travel details come from MCP results while the booking request remains refused.
+
+## 6. Publish and test in website
 
 1. Select the tested MCP-backed version and choose **Publish**.
 2. Create or update the managed Agent Application.
@@ -145,10 +183,16 @@ the playground tests.
 
 ## Troubleshooting
 
+### A generated script fails before reaching Foundry
+
+Compare it with the corresponding task in `01-microsoft-foundry-agents`. Confirm the
+virtual environment is active, `az login` uses the intended tenant, and all three `.env`
+values are present. Never paste `.env` contents into Copilot Chat.
+
 ### The baseline agent invents current museum information
 
-Strengthen the tool-boundary section in `agent-instructions.md`, update the agent version,
-and repeat the same playground question. Do not add a sample-data file.
+Strengthen the tool-boundary section in `agent-instructions.md`, rerun the creation script,
+and repeat the chat script. Do not add a sample-data file.
 
 ### Foundry cannot discover tools
 
@@ -168,8 +212,10 @@ not add credentials or weaken the agent boundaries.
 
 ## Done when
 
-- The student-created `agent-instructions.md` remains in the local working copy only.
-- The no-tool and booking playground checks pass.
+- GitHub Copilot created `agent-instructions.md` and both Python tasks in VS Code.
+- The generated files contain no secrets, endpoints, travel facts, or expected answers.
+- The no-tool and booking chat checks pass.
 - A new Foundry version uses only the three allow-listed read operations.
+- The student-created chat script works with the MCP-backed runtime version.
 - Traces show MCP results before current travel claims.
 - The published Agent Application passes the same tests.

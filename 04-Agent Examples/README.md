@@ -1,11 +1,11 @@
-# Agent Examples: Instructions First, Tools in Foundry
+# Agent Examples: Build with GitHub Copilot in VS Code
 
 This lab contains three Microsoft Foundry prompt agents and one advanced MCP application.
 Examples 01-03 follow the same beginner-friendly pattern:
 
-1. create reusable agent instructions from the scenario requirements
-2. create a prompt agent in Foundry without tools
-3. test the instruction boundary in the Foundry playground
+1. use GitHub Copilot in VS Code to create reusable agent instructions
+2. use the Python tasks in `01-microsoft-foundry-agents` as templates
+3. create and chat with the prompt agent by running student-created Python scripts
 4. connect a read-only MCP tool in a new agent version
 5. inspect tool calls and results in traces
 6. publish the tested MCP-backed version and use **Test in website**
@@ -59,8 +59,12 @@ working UI, and an Agent Framework client.
 
 Complete the earlier Foundry quickstarts first. Before starting examples 01-03, confirm:
 
-- you can open the intended Microsoft Foundry project
-- a compatible model is deployed in the project
+- Python dependencies from the root `requirements.txt` are installed
+- the workspace virtual environment is active
+- `az login` completed for the tenant containing the Foundry project
+- `.env` contains `AZURE_AI_PROJECT_ENDPOINT`
+- `.env` contains `AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME`
+- `.env` contains a unique `AGENT_NAME` for the scenario
 - you have `Foundry User` to create and test agents
 - you have `Foundry Project Manager` to publish an Agent Application
 
@@ -74,19 +78,42 @@ model usage and published Agent Applications can still incur Azure charges.
 | `README.md` | Requirements and exact setup, test, tool, trace, and publishing steps. |
 
 Each folder intentionally starts with only `README.md`. Students create the instruction
-file from the README and configure and test the agent in the Foundry portal.
+and Python files with GitHub Copilot in VS Code. Do not copy completed files from another
+student or add starter implementations to these folders.
+
+For every student-created task, first reason through the requirements and try your own
+Copilot prompt. Only after that attempt, compare your approach with the supplied example
+or use the example as is. The examples are a second option, not the starting point.
 
 ## Common journey
 
-### 1. Create and test the first Foundry version
+### 1. Create the scenario files with GitHub Copilot
 
-Open **Microsoft Foundry > Build > Agents**, create a prompt agent, choose the deployed
-model, and paste in the contents of your `agent-instructions.md`. Save the first
-version without tools. Run the scenario's baseline prompts in the playground. A good
-response clearly says that live data was not retrieved. If the model invents live facts,
-improve the instructions, save a new version, and rerun the same prompt.
+Open the scenario folder in VS Code and use GitHub Copilot Agent mode to create:
 
-### 2. Connect MCP in Foundry
+| Student-created file | Template or source |
+|----------------------|--------------------|
+| `agent-instructions.md` | The requirements in the scenario README |
+| `02-quickstart-create-agent.py` | `01-microsoft-foundry-agents/02-quickstart-create-agent.py` |
+| `03-quickstart-chat-with-agent.py` | `01-microsoft-foundry-agents/03-quickstart-chat-with-agent.py` |
+
+Ask Copilot to preserve `AzureCliCredential`, the existing environment-variable names,
+and the Microsoft Foundry SDK pattern from the templates. The creation script must load
+the local instruction file instead of hard-coding instructions. The chat script must use
+the scenario's acceptance prompts and send no fabricated tool data.
+
+Review every generated change before running it. The files must not contain endpoint
+values, credentials, current facts, or expected answers.
+
+### 2. Create and test the first Foundry version from VS Code
+
+Run the student-created creation script from the workspace root. It creates the first
+prompt-agent version with instructions and no tools. Then run the student-created chat
+script to test the scenario boundary. A good response clearly says that current data was
+not retrieved. If the model invents current facts, improve `agent-instructions.md`, run
+the creation script again, and repeat the same chat test.
+
+### 3. Connect MCP in Foundry
 
 Each scenario README supplies the exact endpoint and allow-list. The common portal flow is:
 
@@ -104,7 +131,7 @@ Each scenario README supplies the exact endpoint and allow-list. The common port
 Do not choose **Key-based** or **OAuth Identity Passthrough** for these endpoints. Do not
 put keys, tokens, headers, or query parameters in the endpoint URL.
 
-### 3. Inspect approvals and traces
+### 4. Inspect approvals and traces
 
 When a tool call pauses for approval, inspect the MCP server name, operation name,
 arguments, and whether the operation is expected and read-only.
@@ -112,7 +139,12 @@ arguments, and whether the operation is expected and read-only.
 After the run completes, open its trace and confirm the tool result appears before the
 response makes current factual claims. A fluent answer is not proof that a tool ran.
 
-### 4. Publish and test
+### 5. Test from VS Code and publish
+
+The Python chat template does not handle interactive tool approval. After inspecting the
+allow-listed read operations in the playground, save a runtime version with approval set
+to **Never** for only those operations. Rerun the student-created chat script and confirm
+the trace contains the expected MCP results.
 
 Saving an agent version and publishing an Agent Application are different actions:
 
@@ -158,18 +190,21 @@ third-party availability.
 
 ## If you get stuck
 
-1. Read the complete portal error.
-2. Confirm you opened the intended Foundry project and selected a deployed model.
-3. Repeat one playground question, not every acceptance prompt.
-4. If baseline behavior is wrong, edit the instructions and save a new version.
-5. If MCP fails, verify the exact endpoint, **Unauthenticated** selection, allow-list, and attached agent version.
-6. Open the trace before guessing where a tool workflow failed.
+1. Read the complete terminal or portal error.
+2. Compare generated code with its template in `01-microsoft-foundry-agents`.
+3. Confirm the virtual environment, `az login`, and the three required `.env` values.
+4. Repeat one chat question, not every acceptance prompt.
+5. If baseline behavior is wrong, edit the instructions and create a new version.
+6. If MCP fails, verify the exact endpoint, **Unauthenticated** selection, allow-list, and attached agent version.
+7. Open the trace before guessing where a tool workflow failed.
 
 ## Completion checklist
 
 - The first Foundry version passes its baseline prompts without tools.
+- GitHub Copilot created the instruction, creation, and chat files from the stated tasks.
 - The no-tool version remains available as a behavioral baseline.
 - The second version has the correct unauthenticated MCP and read-only allow-list.
+- The student-created chat script works against the MCP-backed runtime version.
 - Playground traces prove that current claims use MCP results.
 - Read-only and source-integrity boundaries still hold after tools are connected.
 - The tested MCP-backed version is published and passes **Test in website**.

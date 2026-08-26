@@ -60,7 +60,7 @@ You need a working Microsoft Foundry project in an Azure subscription. Your acco
 
 ## 4) Authenticate with Azure CLI
 
-The local Python samples in Labs 01 and 02 use `AzureCliCredential` exclusively. They do not fall back to browser broker, environment, managed identity, or other credential types.
+The local Python samples in Labs 01, 02, and 04 use `AzureCliCredential` exclusively. They do not fall back to browser broker, environment, managed identity, or other credential types.
 
 In the VS Code terminal:
 
@@ -136,7 +136,7 @@ AGENT_NAME=MyAgent
 Notes:
 - `PROJECT_ENDPOINT` works as compatibility alias for `AZURE_AI_PROJECT_ENDPOINT`.
 - `MODEL_DEPLOYMENT_NAME` works as compatibility alias for `AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME`.
-- Labs 01 and 02 authenticate only through the active Azure CLI session (no API keys required).
+- Labs 01, 02, and 04 authenticate only through the active Azure CLI session (no API keys required).
 
 ---
 

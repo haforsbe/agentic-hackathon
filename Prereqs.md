@@ -50,7 +50,7 @@ You need an Azure subscription with access to Microsoft Foundry and model deploy
 
 ### Authenticate local Foundry samples with Azure CLI
 
-The local Python samples in `01-microsoft-foundry-agents` and `02-agent-framework ADVANCED` use `AzureCliCredential` exclusively. They do not fall back to browser broker, environment, managed identity, or other credential types.
+The local Python samples in `01-microsoft-foundry-agents`, `02-agent-framework ADVANCED`, and `04-Agent Examples` use `AzureCliCredential` exclusively. They do not fall back to browser broker, environment, managed identity, or other credential types.
 
 ```powershell
 az login
