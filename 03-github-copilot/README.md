@@ -241,13 +241,13 @@ Smart actions like commit message generation demonstrate how AI integrates natur
 
 ## Next steps
 
-Congratulations! You've built a complete IT support ticketing system and learned how to work effectively with AI across VS Code's core capabilities.
+Congratulations! You've explored GitHub Copilot's core capabilities in VS Code and learned how to apply them in your own projects.
 
 You can further enhance your AI's capabilities by exploring other customization options:
 
+* [Build with agents in VS Code](https://code.visualstudio.com/docs/agents/overview)
 * Add more specialized agents for different tasks like planning, debugging, or documentation.
 * Create custom instructions for specific programming languages or frameworks.
-* [Build with agents in VS Code](https://code.visualstudio.com/docs/agents/overview)
 
 ## Related resources
 
