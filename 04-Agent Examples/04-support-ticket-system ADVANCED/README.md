@@ -1,14 +1,14 @@
 # Support Ticket System
 
 Explore a complete IT support application that combines a browser interface, shared local
-storage, an MCP server, and an Agent Framework client. Unlike examples 01-03, this is an
-implemented reference system rather than a Foundry prompt-agent challenge.
+storage, a local MCP server, and a local Agent Framework agent. Unlike Examples 01-03,
+this is an implemented reference system rather than a Foundry prompt-agent challenge.
 
 ## Before you begin
 
-- Complete the shared [Lab 04 prerequisites](../README.md#prerequisites).
+- Complete the repository setup in [Prereqs_Foundry.md](../../Prereqs_Foundry.md).
 - Install the root dependencies from this folder with `pip install -r requirements.txt`.
-- Sign in with `az login`; the Agent Framework client uses `AzureCliCredential` exclusively.
+- Sign in with `az login`; the local Agent Framework agent uses `AzureCliCredential` exclusively.
 - Configure `AZURE_AI_PROJECT_ENDPOINT` and
   `AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME` in the repository root `.env` file.
 - Use synthetic ticket data only. Tool calls update [tickets.json](tickets.json) immediately.
@@ -18,7 +18,7 @@ implemented reference system rather than a Foundry prompt-agent challenge.
 - how a browser and MCP server can share one ticket store
 - how MCP exposes application operations as agent tools
 - how VS Code connects to a local MCP server over stdio
-- how an Agent Framework client connects over streamable HTTP
+- how a local Agent Framework agent connects to a local MCP server over HTTP
 - how to verify tool actions in both the terminal and browser
 
 ## 1. Explore the system
@@ -32,7 +32,7 @@ Review these files before running anything:
 | [web_server.py](web_server.py) | Static web server and ticket API on port 3000 |
 | [ticket_store.py](ticket_store.py) | Validation and JSON persistence shared by both servers |
 | [mcp_server.py](mcp_server.py) | MCP tools over stdio or streamable HTTP |
-| [agent_with_mcp.py](agent_with_mcp.py) | Interactive Agent Framework client |
+| [agent_with_mcp.py](agent_with_mcp.py) | Local interactive Agent Framework agent connected to MCP |
 | [tickets.json](tickets.json) | Synthetic local ticket records |
 
 The server exposes these tools:
@@ -102,9 +102,10 @@ approval workflow.
 **Checkpoint:** VS Code discovers all five tools, read results match the browser, and a
 created ticket appears after the browser reloads.
 
-## 4. Run the Agent Framework client
+## 4. Run the local Agent Framework agent
 
-The interactive client uses the same MCP tools over streamable HTTP. Keep the web server
+The agent process runs locally and uses the same local MCP tools over streamable HTTP.
+Its model requests use the Foundry endpoint configured in `.env`. Keep the web server
 running and use two more terminals from this folder.
 
 Terminal 2:
@@ -133,8 +134,8 @@ Try this sequence:
 Reload the browser between actions. The agent should confirm each action and preserve the
 conversation context when you refer to "that ticket."
 
-**Checkpoint:** The client authenticates through the active Azure CLI session, calls the
-HTTP MCP server, and every confirmed mutation appears in the browser.
+**Checkpoint:** The local agent authenticates through the active Azure CLI session, calls
+the local HTTP MCP server, and every confirmed mutation appears in the browser.
 
 ## 5. Extend it with GitHub Copilot
 
@@ -165,7 +166,7 @@ operations still work, and its behavior is documented here.
 |-- ticket_store.py  # Shared validation and storage
 |-- web_server.py    # Web application and API server
 |-- mcp_server.py    # MCP server (stdio or streamable HTTP)
-|-- agent_with_mcp.py # Interactive Agent Framework client
+|-- agent_with_mcp.py # Local interactive Agent Framework agent
 |-- requirements.txt # References the repository root requirements
 `-- README.md        # Workshop instructions
 ```
@@ -176,5 +177,5 @@ operations still work, and its behavior is documented here.
 - VS Code discovers all five MCP tools over stdio.
 - Read results match the shared ticket store.
 - MCP and Agent Framework mutations appear in the browser after reload.
-- The Agent Framework client authenticates only through Azure CLI.
+- The local Agent Framework agent authenticates only through Azure CLI.
 - All test data remains synthetic.

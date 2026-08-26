@@ -15,7 +15,19 @@ agent respects its boundaries and refuses to invent live facts. Current data bec
 available only after the MCP tool is attached to a new agent version.
 
 Examples 01-03 use Microsoft Foundry prompt agents, not Microsoft Agent Framework hosted
-agents. Example 04 runs locally with Agent Framework and its own MCP server.
+agents. Example 04 runs an Agent Framework agent and its MCP server locally.
+
+## Two different learning paths
+
+| Examples | Learning path |
+|----------|---------------|
+| 01-03 | Student-built Foundry prompt agents. Create the files with GitHub Copilot, create the agent from VS Code, connect a remote MCP tool in Foundry, and publish the tested agent. |
+| 04 | Advanced implemented reference application. Run and extend a local web app, local MCP server, and local Agent Framework agent. |
+
+Example 04 does **not** use the Lab 01 prompt-agent templates, create a Foundry prompt
+agent, attach its MCP server in Foundry, or publish an Agent Application. The Agent
+Framework process and MCP server run locally and connect directly over HTTP. Model
+inference still uses the deployment and project endpoint configured in `.env`.
 
 ## Choose an example
 
@@ -46,18 +58,19 @@ documents it for Microsoft Foundry.
 Choose this example to practice search-and-fetch workflows, source-grounded comparisons,
 official code samples, citations, and identifying missing technical context.
 
-### [Support Ticket System Advanced](04-support-ticket-system%20ADVANCED/)
+### [Support Ticket System (Advanced)](04-support-ticket-system%20ADVANCED/)
 
 Run a complete IT support ticket application with a browser interface, shared local ticket
 store, and MCP server. Agents can list, create, update, and close tickets while the web
 interface reflects the same data.
 
 Choose this example to explore an end-to-end MCP application with local persistence, a
-working UI, and an Agent Framework client.
+working UI, and a local Agent Framework agent.
 
 ## Prerequisites
 
-Complete the earlier Foundry quickstarts first. Before starting examples 01-03, confirm:
+These shared prerequisites apply to Examples 01-03. Complete the earlier Foundry
+quickstarts first, then confirm:
 
 - Python dependencies from the root `requirements.txt` are installed
 - the workspace virtual environment is active
@@ -71,7 +84,7 @@ Complete the earlier Foundry quickstarts first. Before starting examples 01-03, 
 No third-party account or API key is required for the three MCP tools. Microsoft Foundry
 model usage and published Agent Applications can still incur Azure charges.
 
-## Starter file in each prompt-agent example
+## Starter file in Examples 01-03
 
 | File | Purpose |
 |------|---------|
@@ -85,7 +98,10 @@ For every student-created task, first reason through the requirements and try yo
 Copilot prompt. Only after that attempt, compare your approach with the supplied example
 or use the example as is. The examples are a second option, not the starting point.
 
-## Common journey
+## Common journey for Examples 01-03
+
+The steps in this section apply only to the three student-built Foundry prompt-agent
+examples. They do not apply to the advanced support ticket system in Example 04.
 
 ### 1. Create the scenario files with GitHub Copilot
 
@@ -166,7 +182,22 @@ If a tool works in the playground but not in **Test in website**, confirm that t
 application uses the correct version and can reach the MCP endpoint. Do not add credentials
 to an unauthenticated tool or remove safety rules as a workaround.
 
-## Terms used in this lab
+## Advanced journey for Example 04
+
+Example 04 starts with an implemented application instead of an empty challenge folder.
+Follow its own [Support Ticket System instructions](04-support-ticket-system%20ADVANCED/):
+
+1. Review the browser, API, ticket store, MCP server, and local Agent Framework agent.
+2. Run the local web application and verify ticket changes in the browser.
+3. Connect the local MCP server directly to GitHub Copilot in VS Code.
+4. Run the local Agent Framework agent and connect it to the local MCP server over HTTP.
+5. Ask GitHub Copilot to implement and verify one extension across the affected interfaces.
+
+There is no Foundry prompt-agent creation, MCP attachment in the Foundry portal, trace
+approval exercise, or Agent Application publishing step in this advanced path. Only the
+model request leaves the local machine for the configured Foundry model endpoint.
+
+## Terms used in Examples 01-03
 
 - **Prompt agent:** A Foundry-managed agent defined by a model, instructions, and tools.
 - **Instructions:** Persistent rules that define the agent's role and behavior.
@@ -204,7 +235,7 @@ third-party availability.
 6. If MCP fails, verify the exact endpoint, **Unauthenticated** selection, allow-list, and attached agent version.
 7. Open the trace before guessing where a tool workflow failed.
 
-## Completion checklist
+## Completion checklist for Examples 01-03
 
 - The first Foundry version passes its baseline prompts without tools.
 - GitHub Copilot created the instruction, creation, and chat files from the stated tasks.
