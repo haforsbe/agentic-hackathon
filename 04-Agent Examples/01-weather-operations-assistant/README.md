@@ -91,7 +91,17 @@ an endpoint, credential, current weather fact, expected answer, or MCP implement
 
 ## 3. Create and test the no-tool agent from VS Code
 
-From the workspace root, run:
+In VS Code, select **Terminal > New Terminal**. A PowerShell terminal should open at the
+repository root, `agentic-hackathon`. Run `Get-Location` and confirm the displayed path
+ends with `\agentic-hackathon`. If it does not, run the command below after replacing the
+example path with the folder where you cloned this repository:
+
+```powershell
+Set-Location "C:\path\to\agentic-hackathon"
+```
+
+Paste the following commands into that terminal one at a time and press **Enter** after
+each command:
 
 ```powershell
 & .\.venv\Scripts\python.exe ".\04-Agent Examples\01-weather-operations-assistant\02-quickstart-create-agent.py"

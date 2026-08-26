@@ -107,11 +107,17 @@ values, credentials, current facts, or expected answers.
 
 ### 2. Create and test the first Foundry version from VS Code
 
-Run the student-created creation script from the workspace root. It creates the first
-prompt-agent version with instructions and no tools. Then run the student-created chat
-script to test the scenario boundary. A good response clearly says that current data was
-not retrieved. If the model invents current facts, improve `agent-instructions.md`, run
-the creation script again, and repeat the same chat test.
+In VS Code, select **Terminal > New Terminal**. Use the integrated PowerShell terminal that
+opens at the repository root, the folder containing this README and `requirements.txt`.
+Run `Get-Location` to check. If needed, run
+`Set-Location "C:\path\to\agentic-hackathon"`, replacing the example path with the folder
+where you cloned this repository.
+
+Paste each command from the scenario README into that terminal and press **Enter**. Run
+the creation command first; it creates the first prompt-agent version with instructions
+and no tools. Then run the chat command to test the scenario boundary. A good response
+clearly says that current data was not retrieved. If the model invents current facts,
+improve `agent-instructions.md`, run the creation script again, and repeat the chat test.
 
 ### 3. Connect MCP in Foundry
 
