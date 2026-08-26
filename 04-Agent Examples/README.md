@@ -58,7 +58,7 @@ documents it for Microsoft Foundry.
 Choose this example to practice search-and-fetch workflows, source-grounded comparisons,
 official code samples, citations, and identifying missing technical context.
 
-### [Support Ticket System (Advanced)](04-support-ticket-system%20ADVANCED/)
+### [Support Ticket System (Advanced)](04-support-ticket-system%20%28ADVANCED%29/)
 
 Run a complete IT support ticket application with a browser interface, shared local ticket
 store, and MCP server. Agents can list, create, update, and close tickets while the web
@@ -185,7 +185,7 @@ to an unauthenticated tool or remove safety rules as a workaround.
 ## Advanced journey for Example 04
 
 Example 04 starts with an implemented application instead of an empty challenge folder.
-Follow its own [Support Ticket System instructions](04-support-ticket-system%20ADVANCED/):
+Follow its own [Support Ticket System instructions](04-support-ticket-system%20%28ADVANCED%29/):
 
 1. Review the browser, API, ticket store, MCP server, and local Agent Framework agent.
 2. Run the local web application and verify ticket changes in the browser.

@@ -78,7 +78,7 @@ Create or update `.vscode/mcp.json` in the repository root:
   "servers": {
     "ticketing": {
       "command": "${workspaceFolder}/.venv/Scripts/python.exe",
-      "args": ["${workspaceFolder}/04-Agent Examples/04-support-ticket-system ADVANCED/mcp_server.py"],
+      "args": ["${workspaceFolder}/04-Agent Examples/04-support-ticket-system (ADVANCED)/mcp_server.py"],
       "env": {}
     }
   }
@@ -158,7 +158,7 @@ operations still work, and its behavior is documented here.
 ## Project structure
 
 ```text
-04-support-ticket-system ADVANCED/
+04-support-ticket-system (ADVANCED)/
 |-- index.html       # Accessible browser interface
 |-- styles.css       # Responsive styling
 |-- script.js        # Browser behavior and API calls
