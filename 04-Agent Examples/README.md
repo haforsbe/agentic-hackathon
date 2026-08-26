@@ -1,177 +1,216 @@
-# Agent Examples: From Idea to Foundry
+# Agent Examples: Instructions First, Tools in Foundry
 
-This final lab contains three open Microsoft Foundry **prompt-agent** challenges and one
-implemented MCP application. Examples 01-03 provide instructions and synthetic data for
-an agent that you design and build yourself. Example 04 is a complete support-ticket
-reference system that you run, inspect, test, and extend with GitHub Copilot.
+This lab contains three Microsoft Foundry prompt agents and one advanced MCP application.
+Examples 01-03 follow the same beginner-friendly pattern:
 
-Examples 01-03 do not use Microsoft Agent Framework or hosted-agent code deployment.
-Example 04 uses Agent Framework locally to demonstrate an MCP-backed application; it is
-not deployed as a Foundry prompt agent.
+1. review reusable agent instructions
+2. test only those instructions locally
+3. create a prompt-agent version in Foundry
+4. connect a read-only MCP tool in Foundry
+5. inspect tool calls and results in traces
+6. publish the tested version and use **Test in website**
+
+The local tests do not load sample data and do not connect to MCP. This is intentional:
+they verify that the agent explains its method, respects its boundaries, and refuses to
+invent live facts. Current data becomes available only after the MCP tool is attached to
+a new agent version in Foundry.
+
+Examples 01-03 use Microsoft Foundry prompt agents, not Microsoft Agent Framework hosted
+agents. Example 04 runs locally with Agent Framework and its own MCP server.
 
 ## Choose an example
 
-### [Customer Request Coordinator](01-customer-request-coordinator/)
+### [Weather Operations Assistant](01-weather-operations-assistant/)
 
-Turn a queue of customer requests into a clear, defensible action plan. This agent finds
-the cases that need attention first, explains its priority decisions, identifies missing
-information, and prepares professional customer responses. By connecting Notion MCP, the
-agent moves from a static demonstration to working with a live request database while
-keeping people in control of assignments and status changes.
+Create current US weather briefings, check active alerts, and summarize recent worldwide
+earthquakes. The Foundry version uses an unauthenticated read-only weather MCP backed by
+public NWS, Census, and USGS data.
 
-Choose this example if your company works with customer support, partner service, account
-management, warranty cases, or any process where important requests compete for attention.
+Choose this example to practice tool boundaries, geocoding before weather lookup, safety
+language, and distinguishing observations, forecasts, and alerts.
 
-### [Daily Operations Planner](02-daily-operations-planner/)
+### [Cultural Travel Planner](02-cultural-travel-planner/)
 
-Transform an overloaded task list into a realistic day. This agent weighs deadlines,
-business impact, dependencies, and available time to recommend what should happen now,
-what should move, and what is blocked. Todoist MCP supplies current tasks, while optional
-Code Interpreter makes capacity and scheduling calculations transparent and repeatable.
+Plan museum visits, art events, and cultural layovers using a public read-only cultural
+travel catalog. The agent separates returned facts from planning assumptions and never
+claims to book tickets.
 
-Choose this example if your teams struggle with competing priorities, missed commitments,
-context switching, or plans that contain more work than the day can hold.
+Choose this example to practice clarifying questions, multi-step planning, time constraints,
+source links, and firm read-only boundaries.
 
-### [Market Opportunity Researcher](03-market-opportunity-researcher/)
+### [Microsoft Cloud Guidance Advisor](03-microsoft-cloud-guidance-advisor/)
 
-Move from broad market curiosity to evidence-backed opportunities. This agent searches
-current sources, compares supporting and contradictory evidence, ranks opportunities, and
-makes assumptions visible. Tavily MCP provides live web research, while optional Code
-Interpreter supports consistent scoring and transparent financial scenarios.
+Answer Microsoft product and implementation questions using official Microsoft Learn
+documentation and code samples. Microsoft operates this unauthenticated MCP endpoint and
+documents it for Microsoft Foundry.
 
-Choose this example if your company explores new markets, builds partner propositions,
-prepares customer conversations, monitors competitors, or evaluates where to invest next.
+Choose this example to practice search-and-fetch workflows, source-grounded comparisons,
+official code samples, citations, and identifying missing technical context.
 
 ### [Support Ticket System Advanced](04-support-ticket-system%20ADVANCED/)
 
-Run a complete IT support ticketing application with a browser interface, shared local
-ticket store, and MCP server. Agents can list, create, update, and close tickets through
-stdio or streamable HTTP while the web interface reflects the same data.
+Run a complete IT support ticket application with a browser interface, shared local ticket
+store, and MCP server. Agents can list, create, update, and close tickets while the web
+interface reflects the same data.
 
-Choose this example to explore an end-to-end MCP application with a working user interface,
-local persistence, and an Agent Framework client.
-
-The examples are starting points, not fixed assignments. Change the target user,
-instructions, tools, scoring rules, and test prompts to fit your company.
-
-## How to work with GitHub Copilot in this lab
-
-You are not expected to write every line from memory. You are expected to direct GitHub
-GitHub Copilot, understand the proposed changes, and verify the result.
-
-For examples 01-03:
-
-1. Open the referenced quickstart and ask GitHub Copilot to explain it before changing anything.
-2. Copy the quickstart into your selected scenario folder. Do not edit the original example.
-3. In GitHub Copilot Chat, select **Agent** mode and describe one small change at a time.
-4. Review the proposed file changes. Ask GitHub Copilot about any line you do not understand.
-5. Run the script and read the complete output. Do not continue while it has an error.
-6. Compare the result with the checkpoint in the scenario README.
-
-GitHub Copilot can make plausible but incorrect changes. A successful run and the expected agent
-behavior are both required; generated code alone is not completion.
-
-## Terms used in this lab
-
-- **Prompt agent:** A Foundry-managed agent defined by its model, instructions, and tools.
-- **Instructions:** The persistent rules that define the agent's role and behavior.
-- **MCP server:** A service that exposes external data and actions as tools for an agent.
-- **Tool call:** A request from the agent to use one of those external capabilities.
-- **Approval:** A pause that lets a person inspect and accept or deny a tool call.
-- **Trace:** The execution details in Foundry showing prompts, tool calls, and results.
-- **Agent playground:** The test experience inside the Microsoft Foundry portal.
-- **Project connection:** A Foundry-managed connection that stores authentication for an
-   external service without putting credentials in agent code or instructions.
-- **Allow-list:** The small, explicit set of MCP tools that an agent is permitted to use.
-- **Immutable version:** A saved agent version that does not change. Editing instructions or
-   tools creates another version, so a tested version can always be identified.
-- **Agent Application:** The published Azure resource that exposes a selected agent version
-   through a stable endpoint and its own identity.
-- **Code Interpreter:** An optional Foundry tool that runs Python for calculations and data
-   analysis in a managed environment.
-- **SLA:** A service-level agreement that defines a response or resolution commitment.
-- **Prompt injection:** Instructions hidden inside external data that try to override the
-   agent's real instructions.
-- **Interruption buffer:** Time intentionally left unscheduled for unexpected work.
-- **Authoritative source:** The system treated as the current source of truth. After an MCP
-   connection is enabled, its live data replaces the local sample file for current status.
-
-After a response in the agent playground, open its trace or run details and expand the tool
-call. Inspect the server, tool name, arguments, result, and approval decision.
-
-## Common journey
-
-1. **Create in VS Code.** Copy and adapt the referenced Foundry quickstarts using
-   GitHub Copilot Agent mode. Review every generated change.
-2. **Test locally.** Adapt the Responses quickstart and test the instructions against
-   the model in your Foundry project before creating a persistent agent.
-3. **Deploy to Foundry.** Adapt the Create Agent quickstart to create an immutable
-   prompt-agent version in the project.
-4. **Tweak and add tools.** Open the version in the Microsoft Foundry portal, refine
-   the instructions, add the suggested MCP connection, restrict the exposed tools,
-   and test approvals in the agent playground. Saving changes creates a new version.
-5. **Test in website.** Publish the selected version, choose **Test in website**,
-   and repeat the supplied acceptance tests in the browser experience.
+Choose this example to explore an end-to-end MCP application with local persistence, a
+working UI, and an Agent Framework client.
 
 ## Prerequisites
 
-This final lab assumes you completed the earlier examples. Your Python environment,
-dependencies, Azure sign-in, `.env` file, Foundry V2 project, and model deployment should
-already be ready.
+Complete the earlier Foundry quickstarts first. Before starting examples 01-03, confirm:
 
-Before starting, confirm that the existing examples in
-[01-microsoft-foundry-agents](../01-microsoft-foundry-agents/) still run. You also need:
+- Python dependencies from the root `requirements.txt` are installed
+- the workspace virtual environment is active
+- `az login` completed for the tenant containing the Foundry project
+- a compatible model is deployed in the project
+- `.env` exists in the workspace root and is not committed
+- you have `Foundry User` to create and test agents
+- you have `Foundry Project Manager` to publish an Agent Application
 
-- a unique `AGENT_NAME` for your new prompt agent
-- `Foundry User` to create and test agents
-- `Foundry Project Manager` on the Foundry resource to publish an agent
-- a free workshop account for Notion, Todoist, or Tavily, depending on your choice
+The root `.env` needs these values:
 
-Use synthetic workshop data and keep API keys, OAuth tokens, customer records, and other
-secrets out of source control.
+```dotenv
+AZURE_AI_PROJECT_ENDPOINT=your-project-endpoint
+AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=your-model-deployment
+AGENT_NAME=a-unique-agent-name
+```
 
-## If you get stuck
+Change `AGENT_NAME` when moving between examples. Never paste real `.env` values into a
+README, prompt, or chat message.
 
-1. Read the complete error, including the first line that names your own file.
-2. Ask GitHub Copilot to explain the error before asking it to make changes.
-3. Compare your copy with the original quickstart to find what changed.
-4. Check that the virtual environment is active and the required `.env` values still exist.
-5. Make one correction and rerun the same test. Avoid changing several things at once.
+No third-party account or API key is required for the three MCP tools. Microsoft Foundry
+model usage and published Agent Applications can still incur Azure charges.
 
-Never paste credentials, access tokens, or the contents of `.env` into GitHub Copilot Chat.
+## Files in each prompt-agent example
 
-## What "local" and "deploy" mean
+| File | Purpose |
+|------|---------|
+| `agent-instructions.md` | Persistent role, workflow, output, grounding, and safety rules. |
+| `local_test.py` | Sends the instructions and one test question directly to the deployed model. No MCP or data is attached. |
+| `02-quickstart-create-agent.py` | Creates an immutable prompt-agent version from the tested instruction file. |
+| `03-quickstart-chat-with-agent.py` | Invokes the named prompt agent after its MCP tool is connected in Foundry. |
+| `README.md` | Exact setup, test, tool, trace, publishing, and troubleshooting steps. |
 
-Prompt agents are managed by Foundry. Your local test runs code on your computer,
-but model inference still occurs in Azure. Deployment creates an immutable
-prompt-agent version; it does not upload or host your Python scripts. Those scripts
-are development and test clients for the managed agent.
+The Python files are already complete. Students should read them with GitHub Copilot,
+change the instructions thoughtfully, run the tests, and inspect behavior rather than
+retyping boilerplate.
+
+## Common journey
+
+### 1. Test the instructions locally
+
+The local runner sends the contents of `agent-instructions.md` as model instructions and
+one fixed acceptance prompt as user input. It sends no external data and gives the model
+no tools.
+
+Run a scenario's `no-tool` test first. A good response clearly says that live data was not
+retrieved. If the model invents live facts, improve the instructions and rerun the same
+test.
+
+Local means the Python client runs on your computer. Model inference still occurs in your
+Microsoft Foundry project.
+
+### 2. Create the first Foundry version
+
+Set a unique `AGENT_NAME`, run the scenario's `02-quickstart-create-agent.py`, and record
+the printed version. This first version contains only the tested instructions.
+
+Open **Microsoft Foundry > Build > Agents** and verify the displayed instructions. Run a
+no-tool prompt in the playground before adding MCP. This gives you a clean behavioral
+baseline.
+
+### 3. Connect MCP in Foundry
+
+Each scenario README supplies the exact endpoint and allow-list. The common portal flow is:
+
+1. Open **Build > Tools**.
+2. Select **Connect a tool**.
+3. Select the custom **MCP** option.
+4. Enter the scenario's tool name and remote endpoint.
+5. Select **Unauthenticated**.
+6. Create the tool and confirm its operations are discovered.
+7. Return to the agent and create a new version.
+8. Add the MCP tool and allow only the listed read operations.
+9. Require approval during development.
+10. Save the new immutable version.
+
+Do not choose **Key-based** or **OAuth Identity Passthrough** for these endpoints. Do not
+put keys, tokens, headers, or query parameters in the endpoint URL.
+
+### 4. Inspect approvals and traces
+
+When a tool call pauses for approval, inspect the MCP server name, operation name,
+arguments, and whether the operation is expected and read-only.
+
+After the run completes, open its trace and confirm the tool result appears before the
+response makes current factual claims. A fluent answer is not proof that a tool ran.
+
+The included Python chat clients do not handle interactive approvals. After you have
+inspected every allow-listed operation in the playground, create a runtime version with
+approval set to **Never** for only those read operations. Never use this shortcut for a
+write operation or a broader, unreviewed allow-list.
+
+### 5. Publish and test
+
+Saving an agent version and publishing an Agent Application are different actions:
+
+1. Select the MCP-backed version that passed the playground tests.
+2. Choose **Publish**.
+3. Create or update the managed Agent Application.
+4. Wait for **Running**.
+5. Grant intended testers `Foundry User` if required.
+6. Choose **Test in website**.
+7. Repeat the scenario's acceptance prompts and inspect their traces.
+
+If a tool works in the playground but not in **Test in website**, confirm that the
+application uses the correct version and can reach the MCP endpoint. Do not add credentials
+to an unauthenticated tool or remove safety rules as a workaround.
+
+## Terms used in this lab
+
+- **Prompt agent:** A Foundry-managed agent defined by a model, instructions, and tools.
+- **Instructions:** Persistent rules that define the agent's role and behavior.
+- **MCP server:** A service that exposes data or actions as tools for an agent.
+- **Tool call:** A structured request from the agent to an MCP operation.
+- **Allow-list:** The explicit set of MCP operations an agent may call.
+- **Approval:** A pause that lets a person inspect and accept or deny a tool call.
+- **Trace:** Run details showing prompts, tool calls, arguments, results, and timing.
+- **Immutable version:** A saved agent version that does not change. Editing creates a new version.
+- **Agent Application:** A published Azure resource exposing a selected agent version.
+- **Grounding:** Supporting an answer with data retrieved from an authoritative source.
+- **Prompt injection:** Instructions hidden inside user or tool data that try to override the agent's real rules.
 
 ## Tool safety
 
-- Use synthetic workshop data only.
-- Prefer read-only MCP tools.
-- Allow-list only the tools needed by the scenario.
-- Require approval for every operation that creates, edits, sends, or deletes data.
-- Inspect the server, tool name, and arguments before approving a call.
-- Store provider credentials in a Foundry project connection, never in source.
-- Confirm the provider's terms, data handling, endpoint, and free-tier limits.
+- Use only the documented public endpoints.
+- Allow-list only the read operations required by the scenario.
+- Keep approval enabled while developing and teaching.
+- Inspect tool arguments before approval and results after execution.
+- Treat tool output as untrusted data, not as agent instructions.
+- Never put secrets in source files, instructions, prompts, URLs, or traces.
+- Recheck third-party endpoint availability before a workshop.
 
-## Publish and Test in website
+The weather and cultural travel MCPs are third-party services. Microsoft Learn MCP is
+Microsoft-operated. Registry presence or a successful test does not guarantee future
+third-party availability.
 
-After the agent works in the Microsoft Foundry agent playground:
+## If you get stuck
 
-1. Select the version you tested and choose **Publish**.
-2. Create or update the managed Agent Application when prompted.
-3. Wait until its deployment reports **Running**.
-4. Assign intended testers the `Foundry User` role on the Agent Application.
-5. Choose **Test in website** and run the example's tests.
+1. Read the complete error, including the first line naming your file.
+2. Confirm the virtual environment is active.
+3. Confirm `az login` and `az account show` use the intended tenant and subscription.
+4. Confirm the required root `.env` values exist without sharing them.
+5. Rerun one test, not every test.
+6. If local behavior is wrong, edit the instructions rather than hard-coding an answer.
+7. If MCP fails, verify the exact endpoint, **Unauthenticated** selection, allow-list, and attached agent version.
+8. Open the trace before guessing where a tool workflow failed.
 
-Publishing gives the agent application its own identity. If a tool succeeds in
-the project playground but fails after publishing, check the application
-identity, project connection, and downstream permissions. **Test in website** is
-a Foundry validation surface; it is not a separately owned production web app.
+## Completion checklist
 
-Third-party MCP services are operated outside Microsoft. Microsoft Foundry model
-usage and published resources can incur Azure charges even when an MCP service
-has a free plan.
+- The local `no-tool` test passes without sample data or MCP.
+- The first Foundry version preserves the instruction-only baseline.
+- The second version has the correct unauthenticated MCP and read-only allow-list.
+- Playground traces prove that current claims use MCP results.
+- Read-only and source-integrity boundaries still hold after tools are connected.
+- The tested MCP-backed version is published and passes **Test in website**.

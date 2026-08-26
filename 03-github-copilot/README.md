@@ -6,6 +6,9 @@ GitHub Copilot transforms how you write code in Visual Studio Code. In this hand
 
 By the end of this tutorial, you'll have both a working web application and a personalized AI coding setup that adapts to your development style.
 
+This tutorial is self-contained. Start it in a new project folder; it does not require
+files or code from any other workshop exercise.
+
 ## Prerequisites
 
 * VS Code installed on your machine. Download it from the [Visual Studio Code website](https://code.visualstudio.com/).
@@ -236,102 +239,6 @@ Smart actions provide AI functionality directly integrated within VS Code's inte
 
 Smart actions like commit message generation demonstrate how AI integrates naturally into your existing workflow without requiring you to context-switch to chat interfaces. VS Code has many other smart actions to help you with debugging, testing, and more.
 
-## Step 6: Add an MCP interface to the ticketing app
-
-The [Model Context Protocol (MCP)](https://code.visualstudio.com/docs/copilot/customization/mcp-servers) lets AI agents interact with external tools and services. In this step, you'll use GitHub Copilot to add an MCP server to your ticketing app, so that GitHub Copilot (or any MCP-compatible agent) can create, query, and update tickets programmatically.
-
-1. Open the Chat view and make sure **Agent** is selected.
-
-1. Enter the following prompt:
-
-    ```text
-    Add an MCP server to the ticketing app that exposes the ticketing system as tools via streamable HTTP and stdio. Use the Model Context Protocol SDK for TypeScript or Python (whichever fits the project). The MCP server should expose these tools:
-    - list_tickets: List all tickets, with optional filters for status and priority
-    - get_ticket: Get details of a specific ticket by ID
-    - create_ticket: Create a new ticket with title, description, priority, and assignee
-    - update_ticket: Update a ticket's status or assignee
-    - close_ticket: Close a ticket by ID
-    Modify the README to explain how to start the MCP server and configure it in VS Code.
-    ```
-
-1. Review the generated code. The agent should create an MCP server file that imports your app's ticket data and exposes it through MCP tool definitions.
-
-1. Accept the changes and follow the generated README instructions to start the MCP server.
-
-1. Configure VS Code to use your new MCP server. Create or update `.vscode/mcp.json` in your project with the connection details from the generated README. For example:
-
-    ```json
-    {
-    "servers": {
-        "ticketing": {
-        "command": "${workspaceFolder}/.venv/Scripts/python.exe",
-            "args": ["${workspaceFolder}/04-Agent Examples/04-support-ticket-system ADVANCED/mcp_server.py"],
-        "env": {}
-        }
-    }
-    }
-    ```
-
-    > **Note:** The exact configuration depends on the language and transport the agent chose. Refer to the generated README for the correct command and arguments.
-
-1. Test the MCP tools by asking the agent a question that requires interacting with your tickets:
-
-    ```text
-    List all open high-priority tickets and create a new critical ticket titled "Email server down" assigned to Alice.
-    ```
-
-    The agent should use the MCP tools to read from and write to your ticketing system directly from chat.
-
-MCP bridges the gap between your AI assistant and your application's data. Once configured, any agent in VS Code can use these tools to interact with your ticketing system without you having to copy-paste data or switch contexts.
-
-## Step 7: Integrate the MCP server with a custom agent using Agent Framework
-
-Now that your ticketing system is exposed via MCP, you can connect it to an AI agent built with the [Microsoft Agent Framework](https://github.com/microsoft/agent-framework). This lets you create a standalone Python agent that can manage tickets autonomously — outside of VS Code.
-
-1. Review the example in [`02-agent-framework ADVANCED/06_remote_mcp.py`](../02-agent-framework%20ADVANCED/06_remote_mcp.py). It shows how to connect an Agent Framework agent to a remote MCP server using `MCPStreamableHTTPTool`:
-
-    ```python
-    async with (
-        MCPStreamableHTTPTool(
-            name="Microsoft Learn MCP",
-            url="https://learn.microsoft.com/api/mcp",
-        ) as mcp_server,
-    ):
-        agent = Agent(
-            client=client,
-            name="DocsAgent",
-            instructions="You are a helpful assistant that answers questions using Microsoft documentation.",
-            tools=[mcp_server],
-        )
-    ```
-
-1. Using that example as a reference, create a new file called `agent_with_mcp.py` in the `04-Agent Examples/04-support-ticket-system ADVANCED/` folder. Enter the following prompt in the Chat view with **Agent** selected:
-
-    ```text
-    Create a Python script called agent_with_mcp.py that uses the Microsoft Agent Framework to build
-    an AI agent connected to the local ticketing MCP server at http://localhost:8000/mcp.
-    Use 02-agent-framework ADVANCED/06_remote_mcp.py as a reference for how to set up MCPStreamableHTTPTool.
-    The agent should:
-    - Connect to the ticketing MCP server via streamable HTTP
-    - Accept user input in a loop (multi-turn conversation)
-    - Be able to list, create, update, and close tickets using the MCP tools
-    - Have instructions that describe it as an IT support assistant
-    ```
-
-1. Make sure the MCP server is running in HTTP mode before starting the agent. Refer to the app's readme for details.
-
-1. Try interacting with the agent:
-
-    ```text
-    User: List all open high-priority tickets
-    User: Create a new critical ticket titled "Database backup failing" assigned to Carol Davis
-    User: Close ticket #4
-    ```
-
-    The agent will use the MCP tools to read from and write to your ticketing system, just like the VS Code agent does — but running as a standalone Python application.
-
-This step demonstrates how MCP creates a universal interface: the same ticketing server you configured for VS Code can also power custom agents, chatbots, or automation scripts built with the Agent Framework.
-
 ## Next steps
 
 Congratulations! You've built a complete IT support ticketing system and learned how to work effectively with AI across VS Code's core capabilities.
@@ -340,7 +247,7 @@ You can further enhance your AI's capabilities by exploring other customization 
 
 * Add more specialized agents for different tasks like planning, debugging, or documentation.
 * Create custom instructions for specific programming languages or frameworks.
-* Extend the AI's capabilities with extra tools from MCP (Model Context Protocol) servers or VS Code extensions.
+* [Build with agents in VS Code](https://code.visualstudio.com/docs/agents/overview)
 
 ## Related resources
 
@@ -353,5 +260,3 @@ You can further enhance your AI's capabilities by exploring other customization 
 * [Chat documentation](https://code.visualstudio.com/docs/copilot/chat/copilot-chat) - Deep dive into autonomous coding in VS Code
 
 * [Customization guide](https://code.visualstudio.com/docs/copilot/customization/overview) - Advanced personalization techniques
-
-* [MCP tools](https://code.visualstudio.com/docs/copilot/customization/mcp-servers) - Extend agents with external APIs and services
