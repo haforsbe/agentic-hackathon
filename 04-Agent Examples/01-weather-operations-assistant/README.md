@@ -1,8 +1,8 @@
 # Weather Operations Assistant
 
 Build a Microsoft Foundry prompt agent that creates weather briefings from current public
-data. You first test only its instructions. You add live weather data later by connecting
-a read-only MCP tool in Microsoft Foundry.
+data. You first test it in Foundry without tools. You add live weather data later by
+connecting a read-only MCP tool.
 
 ## What you will build
 
@@ -21,23 +21,21 @@ the only source for safety-critical decisions.
 
 Complete the shared [Lab 04 prerequisites](../README.md#prerequisites). Confirm that:
 
-- the workspace virtual environment is active
-- `az login` has completed
-- `.env` contains `AZURE_AI_PROJECT_ENDPOINT`
-- `.env` contains `AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME`
+- you can open the intended Foundry project
+- a compatible model is deployed
+- you can create and test agents
 
-Do not put weather data, MCP credentials, or MCP URLs in `.env`. This MCP is public and
-uses no authentication.
+This MCP is public and uses no authentication. Do not add credentials to its connection.
 
 ## Understand the two stages
 
 | Stage | What the agent receives | Expected behavior |
 |-------|-------------------------|-------------------|
-| Local test | Instructions and a test question only | Explain its method and refuse to invent live weather. |
+| Foundry baseline | Instructions and a test question only | Explain its method and refuse to invent live weather. |
 | Foundry | The same instructions plus the weather MCP tool | Call the tool before reporting current weather. |
 
-There is no sample-data file in this lab. The local test intentionally has no weather
-data. A model that guesses current conditions has failed the test.
+There is no sample-data file in this lab. The first agent version intentionally has no
+weather data or tools. A model that guesses current conditions has failed the test.
 
 ## 1. Create the instructions
 
@@ -59,49 +57,27 @@ the wording if needed, but do not add current weather facts to the instructions.
 **Checkpoint:** The instructions describe reusable behavior and contain no forecast for a
 specific place or date.
 
-## 2. Test only the instructions locally
-
-[local_test.py](local_test.py) loads `agent-instructions.md` and sends one question to the
-model. It does not load sample data and does not connect to MCP.
-
-From the workspace root, run:
-
-```powershell
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\01-weather-operations-assistant\local_test.py" --test no-tool
-```
-
-The response should say that live weather is unavailable in the session. It should not
-invent Seattle conditions or claim to have checked alerts.
-
-Run the remaining tests:
-
-```powershell
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\01-weather-operations-assistant\local_test.py" --test method
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\01-weather-operations-assistant\local_test.py" --test scope
-```
-
-Use `--test all` to run all three. Improve the instructions if a response guesses live
-facts, hides limitations, or claims tool access. Do not hard-code an expected answer in
-Python.
-
-**Checkpoint:** The agent explains how it would work, refuses unsupported live claims,
-and identifies that detailed weather coverage is primarily US-focused.
-
-## 3. Create the prompt agent in Foundry
+## 2. Create and test the prompt agent in Foundry
 
 1. Open **Microsoft Foundry > Build > Agents**.
 2. Select **Create agent** and choose your deployed model.
 3. Name the agent `weather-operations-assistant-yourname`.
 4. Paste the complete contents of your `agent-instructions.md` into **Instructions**.
 5. Save the first version without adding a tool.
-6. Ask for current Seattle weather in the playground. Confirm the agent reports that live
-   weather is unavailable instead of inventing conditions.
+6. Ask each baseline question in the playground:
+   - `What are the current conditions and active weather alerts for Seattle right now?`
+   - `How would you prepare a weather briefing after a weather tool is connected?`
+   - `Give me tomorrow's detailed weather forecast for Stockholm, Sweden.`
+7. Confirm the agent reports that live weather is unavailable, explains its method, and
+   identifies the US forecast limitation instead of inventing conditions.
+8. If a response fails, improve `agent-instructions.md`, paste the revision into a new
+   agent version, and repeat the same question.
 
 At this point, asking for current weather should still produce the no-tool limitation.
 
 **Checkpoint:** Version 1 exists in Foundry and has instructions but no tools.
 
-## 4. Connect the weather MCP tool
+## 3. Connect the weather MCP tool
 
 The MCP server reads public data from the US National Weather Service, US Census geocoder,
 and US Geological Survey. It requires no account or API key.
@@ -171,7 +147,7 @@ forecast.
 **Checkpoint:** Current claims are supported by a visible MCP result, and the no-tool
 version still remains available.
 
-## 5. Publish and test in website
+## 4. Publish and test in website
 
 1. Select the MCP-backed version that passed the tests.
 2. Choose **Publish**.
@@ -187,24 +163,15 @@ tested MCP-backed version, not the no-tool baseline.
 
 ## Troubleshooting
 
-### The local test reports missing environment variables
-
-Confirm `.env` is in the workspace root and contains the three values listed under
-**Before you begin**. Never paste the contents of `.env` into chat.
-
-### The local test cannot authenticate
-
-Run `az login`, select the correct tenant and subscription, and rerun the same test.
-
 ### Foundry cannot discover the MCP operations
 
 Confirm the endpoint is exactly `https://weather.datakoot.com/mcp` and authentication is
 **Unauthenticated**. The service is third-party; check its availability before a workshop.
 
-### The agent invents current weather locally
+### The baseline agent invents current weather
 
-Strengthen the tool-boundary rules in `agent-instructions.md`, then rerun `--test no-tool`.
-Do not fix this by adding weather data to the prompt.
+Strengthen the tool-boundary rules in `agent-instructions.md`, update the agent version,
+and repeat the same playground question. Do not add weather data to the prompt.
 
 ### The playground works but Test in website fails
 
@@ -213,9 +180,8 @@ tool. Do not add credentials or disable safety controls to work around connectiv
 
 ## Done when
 
-- Local tests use instructions and questions only.
 - The student-created `agent-instructions.md` remains in the local working copy only.
-- The no-tool test does not invent live weather.
+- The no-tool Foundry version does not invent live weather.
 - A new Foundry version has the unauthenticated weather MCP attached.
 - Traces show read-only tool calls before current weather claims.
 - The published Agent Application passes the same tests in **Test in website**.

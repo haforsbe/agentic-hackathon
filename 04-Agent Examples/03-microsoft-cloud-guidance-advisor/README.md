@@ -1,8 +1,8 @@
 # Microsoft Cloud Guidance Advisor
 
 Build a Microsoft Foundry prompt agent that answers technical questions with current,
-official Microsoft documentation and code samples. Test its instructions locally first,
-then connect the Microsoft Learn MCP tool in Foundry.
+official Microsoft documentation and code samples. Test it in Foundry without tools
+first, then connect the Microsoft Learn MCP tool.
 
 ## What you will build
 
@@ -18,21 +18,15 @@ Microsoft operates this MCP endpoint and documents it for use with Microsoft Fou
 
 ## Before you begin
 
-Complete the shared [Lab 04 prerequisites](../README.md#prerequisites). Confirm that the
-virtual environment is active, `az login` has completed, and the root `.env` contains:
-
-```dotenv
-AZURE_AI_PROJECT_ENDPOINT=your-project-endpoint
-AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=your-model-deployment
-```
-
-Keep real values private. Microsoft Learn MCP is public and needs no key or OAuth setup.
+Complete the shared [Lab 04 prerequisites](../README.md#prerequisites). Confirm that you
+can open the intended Foundry project, select a deployed model, and create and test agents.
+Microsoft Learn MCP is public and needs no key or OAuth setup.
 
 ## Understand the two stages
 
 | Stage | What the agent receives | Expected behavior |
 |-------|-------------------------|-------------------|
-| Local test | Instructions and one question | Explain its research method and disclose that official docs were not retrieved. |
+| Foundry baseline | Instructions and one question | Explain its research method and disclose that official docs were not retrieved. |
 | Foundry | The same instructions plus Microsoft Learn MCP | Search and fetch official sources before making current product claims. |
 
 There is no sample-data file. Current documentation reaches the agent only through the
@@ -56,49 +50,25 @@ Do not paste product documentation or code samples into the instruction file.
 **Checkpoint:** The instructions describe a reusable research process and contain no
 hard-coded product answer.
 
-## 2. Test only the instructions locally
-
-[local_test.py](local_test.py) loads the instructions and sends a question directly to
-the model. It has no documentation tool and no sample data.
-
-Run:
-
-```powershell
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\03-microsoft-cloud-guidance-advisor\local_test.py" --test no-tool
-```
-
-The response should disclose that it did not retrieve current Microsoft Learn pages. It
-must not invent links or claim that a documentation search occurred.
-
-Run the other tests:
-
-```powershell
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\03-microsoft-cloud-guidance-advisor\local_test.py" --test method
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\03-microsoft-cloud-guidance-advisor\local_test.py" --test code
-```
-
-The code test should ask which Microsoft service is intended instead of inventing a
-sample. Use `--test all` to run all three.
-
-If a test fails, improve `agent-instructions.md` and rerun it. Do not add documentation,
-URLs, or expected answers to the Python runner.
-
-**Checkpoint:** The agent is honest about missing tools, explains a defensible research
-method, and asks for material missing context.
-
-## 3. Create the prompt agent in Foundry
+## 2. Create and test the prompt agent in Foundry
 
 1. Open **Microsoft Foundry > Build > Agents**.
 2. Select **Create agent** and choose your deployed model.
 3. Name the agent `microsoft-cloud-guidance-advisor-yourname`.
 4. Paste the complete contents of your `agent-instructions.md` into **Instructions**.
 5. Save the first version without adding a tool.
-6. Ask for current official guidance. Confirm the agent discloses that no
-   documentation tool is connected.
+6. Ask each baseline question in the playground:
+   - `Give me current documented steps and official links for managed identity in Azure Container Apps.`
+   - `How would you compare Azure Container Apps and Azure App Service after Learn tools are connected?`
+   - `Provide the latest official Python SDK code for a Microsoft service.`
+7. Confirm the agent discloses that documentation was not retrieved, explains a sound
+   research method, and asks which service is intended rather than inventing a sample.
+8. If a response fails, improve `agent-instructions.md`, update the agent in a new version,
+   and repeat the same question.
 
 **Checkpoint:** The first immutable version contains instructions and no tools.
 
-## 4. Connect Microsoft Learn MCP
+## 3. Connect Microsoft Learn MCP
 
 ### Create the tool
 
@@ -161,7 +131,7 @@ The final request should not bypass the source requirement for a current limit.
 **Checkpoint:** Current claims and code are grounded in visible Microsoft Learn results,
 and citations use returned titles and URLs.
 
-## 5. Publish and test in website
+## 4. Publish and test in website
 
 1. Select the tested MCP-backed version and choose **Publish**.
 2. Create or update the managed Agent Application.
@@ -176,10 +146,10 @@ the playground checks.
 
 ## Troubleshooting
 
-### The local test invents citations
+### The baseline agent invents citations
 
-Strengthen the source-boundary rules and rerun `--test no-tool`. Do not add URLs to the
-test prompt to make it pass.
+Strengthen the source-boundary rules, update the agent version, and repeat the same
+playground question. Do not add URLs to the test prompt to make it pass.
 
 ### Foundry cannot discover Microsoft Learn tools
 
@@ -203,9 +173,8 @@ Do not add credentials because the endpoint is unauthenticated.
 
 ## Done when
 
-- Local tests use only instructions and questions.
 - The student-created `agent-instructions.md` remains in the local working copy only.
-- The no-tool test discloses that official documentation was not retrieved.
+- The no-tool playground check discloses that official documentation was not retrieved.
 - A new Foundry version has all three read-only Learn operations.
 - Traces show search, fetch, and code-sample calls where appropriate.
 - The published Agent Application gives source-grounded answers in **Test in website**.

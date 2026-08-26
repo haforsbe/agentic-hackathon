@@ -1,8 +1,8 @@
 # Cultural Travel Planner
 
 Build a Microsoft Foundry prompt agent that plans museum visits, art events, and cultural
-layovers. First test its instructions without data. Then connect a public read-only MCP
-tool in Foundry for current cultural travel information.
+layovers. First test it in Foundry without tools. Then connect a public read-only MCP tool
+for current cultural travel information.
 
 ## What you will build
 
@@ -17,21 +17,15 @@ It cannot search general flights or hotels, buy tickets, or make reservations.
 
 ## Before you begin
 
-Complete the shared [Lab 04 prerequisites](../README.md#prerequisites). Confirm that the
-virtual environment is active, `az login` has completed, and `.env` contains:
-
-```dotenv
-AZURE_AI_PROJECT_ENDPOINT=your-project-endpoint
-AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=your-model-deployment
-```
-
-Keep your real values private. The travel MCP needs no account, key, or OAuth connection.
+Complete the shared [Lab 04 prerequisites](../README.md#prerequisites). Confirm that you
+can open the intended Foundry project, select a deployed model, and create and test agents.
+The travel MCP needs no account, key, or OAuth connection.
 
 ## Understand the two stages
 
 | Stage | What the agent receives | Expected behavior |
 |-------|-------------------------|-------------------|
-| Local test | Instructions and one question | Explain its planning method and refuse invented current details or bookings. |
+| Foundry baseline | Instructions and one question | Explain its planning method and refuse invented current details or bookings. |
 | Foundry | The same instructions plus travel MCP | Search the catalog before using current venue or event facts. |
 
 There is no sample-data file. Data enters the agent only through the MCP tool after it is
@@ -55,46 +49,25 @@ Do not add venue hours, prices, or events to the instruction file.
 **Checkpoint:** The instructions work for any supported destination and contain no static
 travel data.
 
-## 2. Test only the instructions locally
-
-[local_test.py](local_test.py) loads only the instruction file and a selected prompt. Run:
-
-```powershell
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\02-cultural-travel-planner\local_test.py" --test no-tool
-```
-
-The response should not invent current Paris exhibitions, opening hours, or prices. It
-should state that live cultural travel data is unavailable without the tool.
-
-Run two more tests:
-
-```powershell
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\02-cultural-travel-planner\local_test.py" --test method
-& .\.venv\Scripts\python.exe ".\04-Agent Examples\02-cultural-travel-planner\local_test.py" --test booking
-```
-
-The booking test must explain that the agent cannot buy or reserve tickets. Use `--test
-all` to run every prompt.
-
-If a response fails, improve `agent-instructions.md` and rerun the same test. Do not add
-sample travel facts or hard-coded answers to Python.
-
-**Checkpoint:** The local agent explains a sound planning process, identifies missing
-live data, and refuses to claim a reservation.
-
-## 3. Create the prompt agent in Foundry
+## 2. Create and test the prompt agent in Foundry
 
 1. Open **Microsoft Foundry > Build > Agents**.
 2. Select **Create agent** and choose your deployed model.
 3. Name the agent `cultural-travel-planner-yourname`.
 4. Paste the complete contents of your `agent-instructions.md` into **Instructions**.
 5. Save the first version without adding a tool.
-6. Ask for current museum hours. Confirm it still reports that no live tool is
-   available.
+6. Ask each baseline question in the playground:
+   - `Plan an art-focused Saturday in Paris next month using current museum details.`
+   - `How would you create a realistic six-hour museum itinerary after a tool is connected?`
+   - `Book two Louvre tickets for Saturday and confirm the reservation.`
+7. Confirm the agent does not invent current details, explains a sound planning method,
+   and refuses to claim a booking.
+8. If a response fails, improve `agent-instructions.md`, update the agent in a new version,
+   and repeat the same question.
 
 **Checkpoint:** The first immutable version exists with instructions and no tools.
 
-## 4. Connect the cultural travel MCP
+## 3. Connect the cultural travel MCP
 
 The travel.art MCP exposes a public cultural travel catalog over Streamable HTTP. It is a
 third-party service, so verify availability before using this lab in a workshop.
@@ -157,7 +130,7 @@ The final request must still be refused because the tool is read-only.
 **Checkpoint:** The response uses visible MCP results, labels assumptions, fits the stated
 time, and never claims a booking.
 
-## 5. Publish and test in website
+## 4. Publish and test in website
 
 1. Select the tested MCP-backed version and choose **Publish**.
 2. Create or update the managed Agent Application.
@@ -172,10 +145,10 @@ the playground tests.
 
 ## Troubleshooting
 
-### The local test invents current museum information
+### The baseline agent invents current museum information
 
-Strengthen the tool-boundary section in `agent-instructions.md` and rerun `--test no-tool`.
-Do not add a sample-data file.
+Strengthen the tool-boundary section in `agent-instructions.md`, update the agent version,
+and repeat the same playground question. Do not add a sample-data file.
 
 ### Foundry cannot discover tools
 
@@ -195,9 +168,8 @@ not add credentials or weaken the agent boundaries.
 
 ## Done when
 
-- Local tests contain no travel data.
 - The student-created `agent-instructions.md` remains in the local working copy only.
-- The no-tool and booking tests pass.
+- The no-tool and booking playground checks pass.
 - A new Foundry version uses only the three allow-listed read operations.
 - Traces show MCP results before current travel claims.
 - The published Agent Application passes the same tests.

@@ -4,16 +4,15 @@ This lab contains three Microsoft Foundry prompt agents and one advanced MCP app
 Examples 01-03 follow the same beginner-friendly pattern:
 
 1. create reusable agent instructions from the scenario requirements
-2. test only those instructions locally
-3. create a prompt agent in Foundry and paste in the tested instructions
-4. connect a read-only MCP tool in Foundry
+2. create a prompt agent in Foundry without tools
+3. test the instruction boundary in the Foundry playground
+4. connect a read-only MCP tool in a new agent version
 5. inspect tool calls and results in traces
-6. publish the tested version and use **Test in website**
+6. publish the tested MCP-backed version and use **Test in website**
 
-The local tests do not load sample data and do not connect to MCP. This is intentional:
-they verify that the agent explains its method, respects its boundaries, and refuses to
-invent live facts. Current data becomes available only after the MCP tool is attached to
-a new agent version in Foundry.
+The first Foundry version has instructions but no tools. This baseline verifies that the
+agent respects its boundaries and refuses to invent live facts. Current data becomes
+available only after the MCP tool is attached to a new agent version.
 
 Examples 01-03 use Microsoft Foundry prompt agents, not Microsoft Agent Framework hosted
 agents. Example 04 runs locally with Agent Framework and its own MCP server.
@@ -60,60 +59,34 @@ working UI, and an Agent Framework client.
 
 Complete the earlier Foundry quickstarts first. Before starting examples 01-03, confirm:
 
-- Python dependencies from the root `requirements.txt` are installed
-- the workspace virtual environment is active
-- `az login` completed for the tenant containing the Foundry project
+- you can open the intended Microsoft Foundry project
 - a compatible model is deployed in the project
-- `.env` exists in the workspace root and is not committed
 - you have `Foundry User` to create and test agents
 - you have `Foundry Project Manager` to publish an Agent Application
-
-The root `.env` needs these values:
-
-```dotenv
-AZURE_AI_PROJECT_ENDPOINT=your-project-endpoint
-AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=your-model-deployment
-```
-
-Never paste real `.env` values into a README, prompt, or chat message.
 
 No third-party account or API key is required for the three MCP tools. Microsoft Foundry
 model usage and published Agent Applications can still incur Azure charges.
 
-## Starter files in each prompt-agent example
+## Starter file in each prompt-agent example
 
 | File | Purpose |
 |------|---------|
 | `README.md` | Requirements and exact setup, test, tool, trace, and publishing steps. |
-| `local_test.py` | Tests the instruction file that the student creates. No MCP or data is attached. |
 
-Each folder intentionally starts without `agent-instructions.md` or scenario quickstart
-scripts. Students create the instruction file from the README, test it with the supplied
-runner, and configure the agent in the Foundry portal.
+Each folder intentionally starts with only `README.md`. Students create the instruction
+file from the README and configure and test the agent in the Foundry portal.
 
 ## Common journey
 
-### 1. Test the instructions locally
-
-Create `agent-instructions.md` in the scenario folder by following its README. The local
-runner sends that file as model instructions and one fixed acceptance prompt as user
-input. It sends no external data and gives the model no tools.
-
-Run a scenario's `no-tool` test first. A good response clearly says that live data was not
-retrieved. If the model invents live facts, improve the instructions and rerun the same
-test.
-
-Local means the Python client runs on your computer. Model inference still occurs in your
-Microsoft Foundry project.
-
-### 2. Create the first Foundry version
+### 1. Create and test the first Foundry version
 
 Open **Microsoft Foundry > Build > Agents**, create a prompt agent, choose the deployed
-model, and paste in the contents of the tested `agent-instructions.md`. Save the first
-version without tools and run a no-tool prompt in the playground. This gives you a clean
-behavioral baseline.
+model, and paste in the contents of your `agent-instructions.md`. Save the first
+version without tools. Run the scenario's baseline prompts in the playground. A good
+response clearly says that live data was not retrieved. If the model invents live facts,
+improve the instructions, save a new version, and rerun the same prompt.
 
-### 3. Connect MCP in Foundry
+### 2. Connect MCP in Foundry
 
 Each scenario README supplies the exact endpoint and allow-list. The common portal flow is:
 
@@ -131,7 +104,7 @@ Each scenario README supplies the exact endpoint and allow-list. The common port
 Do not choose **Key-based** or **OAuth Identity Passthrough** for these endpoints. Do not
 put keys, tokens, headers, or query parameters in the endpoint URL.
 
-### 4. Inspect approvals and traces
+### 3. Inspect approvals and traces
 
 When a tool call pauses for approval, inspect the MCP server name, operation name,
 arguments, and whether the operation is expected and read-only.
@@ -139,7 +112,7 @@ arguments, and whether the operation is expected and read-only.
 After the run completes, open its trace and confirm the tool result appears before the
 response makes current factual claims. A fluent answer is not proof that a tool ran.
 
-### 5. Publish and test
+### 4. Publish and test
 
 Saving an agent version and publishing an Agent Application are different actions:
 
@@ -185,19 +158,17 @@ third-party availability.
 
 ## If you get stuck
 
-1. Read the complete error, including the first line naming your file.
-2. Confirm the virtual environment is active.
-3. Confirm `az login` and `az account show` use the intended tenant and subscription.
-4. Confirm the required root `.env` values exist without sharing them.
-5. Rerun one test, not every test.
-6. If local behavior is wrong, edit the instructions rather than hard-coding an answer.
-7. If MCP fails, verify the exact endpoint, **Unauthenticated** selection, allow-list, and attached agent version.
-8. Open the trace before guessing where a tool workflow failed.
+1. Read the complete portal error.
+2. Confirm you opened the intended Foundry project and selected a deployed model.
+3. Repeat one playground question, not every acceptance prompt.
+4. If baseline behavior is wrong, edit the instructions and save a new version.
+5. If MCP fails, verify the exact endpoint, **Unauthenticated** selection, allow-list, and attached agent version.
+6. Open the trace before guessing where a tool workflow failed.
 
 ## Completion checklist
 
-- The local `no-tool` test passes without sample data or MCP.
-- The first Foundry version preserves the instruction-only baseline.
+- The first Foundry version passes its baseline prompts without tools.
+- The no-tool version remains available as a behavioral baseline.
 - The second version has the correct unauthenticated MCP and read-only allow-list.
 - Playground traces prove that current claims use MCP results.
 - Read-only and source-integrity boundaries still hold after tools are connected.
