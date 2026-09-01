@@ -1,13 +1,19 @@
 # Support Ticket System
 
 Explore a complete IT support application that combines a browser interface, shared local
-storage, a local MCP server, and a local Agent Framework agent. Unlike Examples 01-03,
+storage, a local MCP server, and a local Agent Framework agent. Unlike Examples 01-04,
 this is an implemented reference system rather than a Foundry prompt-agent challenge.
 
 ## Before you begin
 
-- Complete the repository setup in [Prereqs_Foundry.md](../../Prereqs_Foundry.md).
-- Install the root dependencies from this folder with `pip install -r requirements.txt`.
+- Complete the repository setup in [Prereqs_Participant.md](../../Prereqs_Participant.md).
+- From the repository root, move into this example folder:
+
+  ```powershell
+  Set-Location ".\04-Agent Examples\05-support-ticket-system (ADVANCED)"
+  ```
+
+- Install the dependencies from this folder with `pip install -r requirements.txt`.
 - Sign in with `az login`; the local Agent Framework agent uses `AzureCliCredential` exclusively.
 - Configure `AZURE_AI_PROJECT_ENDPOINT` and
   `AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME` in the repository root `.env` file.
@@ -78,7 +84,7 @@ Create or update `.vscode/mcp.json` in the repository root:
   "servers": {
     "ticketing": {
       "command": "${workspaceFolder}/.venv/Scripts/python.exe",
-      "args": ["${workspaceFolder}/04-Agent Examples/04-support-ticket-system (ADVANCED)/mcp_server.py"],
+      "args": ["${workspaceFolder}/04-Agent Examples/05-support-ticket-system (ADVANCED)/mcp_server.py"],
       "env": {}
     }
   }
@@ -158,7 +164,7 @@ operations still work, and its behavior is documented here.
 ## Project structure
 
 ```text
-04-support-ticket-system (ADVANCED)/
+05-support-ticket-system (ADVANCED)/
 |-- index.html       # Accessible browser interface
 |-- styles.css       # Responsive styling
 |-- script.js        # Browser behavior and API calls

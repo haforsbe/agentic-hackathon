@@ -135,12 +135,8 @@ the endpoint URL.
 1. Return to **Build > Agents** and open your cultural travel agent.
 2. Choose **Edit** or create a new version from the existing version.
 3. Select **Add tool** and choose `cultural-travel`.
-4. Allow only these read operations:
-   - `find_art_events`
-   - `find_museum_guide`
-   - `find_layover_itinerary`
-5. Require approval during development.
-6. Save the configuration as a new immutable version.
+4. Require approval during development.
+5. Save the configuration as a new immutable version.
 
 Keep the original no-tool version. It is your baseline for comparing behavior.
 
@@ -166,14 +162,16 @@ Also test:
 
 The final request must still be refused because the tool is read-only.
 
-**Checkpoint:** The response uses visible MCP results, labels assumptions, fits the stated
-time, and never claims a booking.
+**Checkpoint:** Inspect the run trace and verify that the cultural travel MCP was called,
+its result appears before the current travel claims, and those claims are based on the
+returned data rather than the model's own knowledge. The response must also label
+assumptions, fit the stated time, and never claim a booking.
 
 ## 5. Test the MCP-backed agent from VS Code
 
 The generated chat script cannot approve a tool call interactively. After inspecting the
-three allow-listed read operations in the playground, edit the agent again, set approval
-to **Never** for only those operations, and save a new runtime version.
+MCP calls in the playground, edit the agent again, set approval to **Never** for the
+connected MCP tool, and save a new runtime version.
 
 Rerun `03-quickstart-chat-with-agent.py` from Step 3. Inspect the trace and confirm current
 travel details come from MCP results while the booking request remains refused.
@@ -225,7 +223,26 @@ not add credentials or weaken the agent boundaries.
 - GitHub Copilot created `agent-instructions.md` and both Python tasks in VS Code.
 - The generated files contain no secrets, endpoints, travel facts, or expected answers.
 - The no-tool and booking chat checks pass.
-- A new Foundry version uses only the three allow-listed read operations.
+- A new Foundry version has the cultural travel MCP attached.
 - The student-created chat script works with the MCP-backed runtime version.
 - Traces show MCP results before current travel claims.
 - The published Agent Application passes the same tests.
+
+## Optional next challenge
+
+Extend the planner without following a prescribed implementation:
+
+1. **Second MCP**
+   - **What:** Another Model Context Protocol server that gives the agent access to complementary travel or cultural data or actions.
+   - **Why:** A useful itinerary often depends on more than cultural attraction data. A second MCP lets the planner combine distinct, authoritative capabilities into a richer recommendation.
+   - **Challenge:** Choose and add a second MCP that makes the cultural travel planner more useful.
+2. **Foundry memory store**
+   - **What:** A managed store that allows selected information to persist beyond a single conversation.
+   - **Why:** Remembering appropriate details, such as stable accessibility needs or travel preferences, can improve future plans without repeatedly asking the traveler for them.
+   - **Challenge:** Add a memory store with a clearly defined purpose, scope, and boundary for what should and should not be remembered.
+3. **Skill for both MCPs**
+   - **What:** Reusable instructions and guidance that teach the agent how to apply its MCP capabilities consistently.
+   - **Why:** With two MCPs, the agent needs clear decision rules for selecting one, using both, resolving conflicts, and combining results without losing source boundaries.
+   - **Challenge:** Add a skill that improves how the planner coordinates the two MCPs.
+4. **Validate the extension**
+   - Test that MCP selection, memory use, source boundaries, and existing travel-planning behavior remain correct, then inspect the traces.

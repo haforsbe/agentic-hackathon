@@ -145,14 +145,8 @@ credentials.
 1. Return to **Build > Agents** and open the weather agent.
 2. Choose **Edit** or create a new version from the existing version.
 3. Select **Add tool** and choose `weather-intelligence`.
-4. Allow only these read operations:
-   - `geocode`
-   - `weather_current`
-   - `weather_forecast`
-   - `weather_alerts`
-   - `earthquakes`
-5. Require approval during development so you can inspect each call.
-6. Save. Foundry creates a new immutable agent version.
+4. Require approval during development so you can inspect each call.
+5. Save. Foundry creates a new immutable agent version.
 
 Do not overwrite your no-tool baseline. Version 1 demonstrates the instruction boundary;
 the new version demonstrates grounded tool use.
@@ -183,18 +177,19 @@ Also test:
 The final prompt should expose the US weather limitation rather than produce a fabricated
 forecast.
 
-**Checkpoint:** Current claims are supported by a visible MCP result, and the no-tool
-version still remains available.
+**Checkpoint:** Inspect the run trace and verify that the weather MCP was called, its
+result appears before the current claims, and those claims are based on the returned
+data rather than the model's own knowledge. The no-tool version must still remain
+available.
 
 ## 5. Test the MCP-backed agent from VS Code
 
-The generated chat script cannot approve a tool call interactively. After inspecting all
-five allow-listed read operations in the playground, edit the agent again, set approval
-to **Never** for only those operations, and save a new runtime version.
+The generated chat script cannot approve a tool call interactively. After inspecting the
+MCP calls in the playground, edit the agent again, set approval to **Never** for the
+connected MCP tool, and save a new runtime version.
 
 Rerun `03-quickstart-chat-with-agent.py` from Step 3. Open the run's trace in Foundry and
-confirm the response used weather MCP results. Do not disable approval for an operation
-outside the allow-list.
+confirm the response used weather MCP results.
 
 ## 6. Publish and test in website
 
@@ -242,3 +237,22 @@ tool. Do not add credentials or disable safety controls to work around connectiv
 - The student-created chat script works with the MCP-backed runtime version.
 - Traces show read-only tool calls before current weather claims.
 - The published Agent Application passes the same tests in **Test in website**.
+
+## Optional next challenge
+
+Extend the assistant without following a prescribed implementation:
+
+1. **Second MCP**
+   - **What:** Another Model Context Protocol server that gives the agent access to complementary operational or geographic data or actions.
+   - **Why:** Weather alone may not provide enough context for an operational decision. A second MCP lets the assistant combine live weather with another authoritative capability.
+   - **Challenge:** Choose and add a second MCP that makes the weather assistant more useful.
+2. **Foundry memory store**
+   - **What:** A managed store that allows selected information to persist beyond a single conversation.
+   - **Why:** Remembering appropriate details, such as stable user preferences or operational context, can make later briefings more relevant without asking for the same information again.
+   - **Challenge:** Add a memory store with a clearly defined purpose, scope, and boundary for what should and should not be remembered.
+3. **Skill for both MCPs**
+   - **What:** Reusable instructions and guidance that teach the agent how to apply its MCP capabilities consistently.
+   - **Why:** With two MCPs, the agent needs clear decision rules for selecting one, using both, resolving conflicts, and combining results without losing source boundaries.
+   - **Challenge:** Add a skill that improves how the agent coordinates the two MCPs.
+4. **Validate the extension**
+   - Test that MCP selection, memory use, source boundaries, and existing weather behavior remain correct, then inspect the traces.

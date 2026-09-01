@@ -134,12 +134,8 @@ or query string to the endpoint.
 1. Return to **Build > Agents** and open the guidance agent.
 2. Choose **Edit** or create a new version from the existing one.
 3. Select **Add tool** and choose `microsoft-learn`.
-4. Allow these read-only operations:
-   - `microsoft_docs_search`
-   - `microsoft_docs_fetch`
-   - `microsoft_code_sample_search`
-5. Require approval during development so each search is visible.
-6. Save the configuration as a new immutable version.
+4. Require approval during development so each search is visible.
+5. Save the configuration as a new immutable version.
 
 Keep the first no-tool version as a behavioral baseline.
 
@@ -168,14 +164,16 @@ Also test:
 
 The final request should not bypass the source requirement for a current limit.
 
-**Checkpoint:** Current claims and code are grounded in visible Microsoft Learn results,
-and citations use returned titles and URLs.
+**Checkpoint:** Inspect the run trace and verify that the Microsoft Learn MCP was called,
+its result appears before current claims or code, and the response is based on the
+returned content rather than the model's own knowledge. Citations must use returned
+titles and URLs.
 
 ## 5. Test the MCP-backed agent from VS Code
 
 The generated chat script cannot approve a tool call interactively. After inspecting the
-three allow-listed read operations in the playground, edit the agent again, set approval
-to **Never** for only those operations, and save a new runtime version.
+MCP calls in the playground, edit the agent again, set approval to **Never** for the
+connected MCP tool, and save a new runtime version.
 
 Rerun `03-quickstart-chat-with-agent.py` from Step 3. Inspect the trace and confirm current
 claims use Learn MCP results with returned titles and URLs.
@@ -213,8 +211,7 @@ is **Unauthenticated**. Remove any headers, keys, or query parameters.
 
 ### The agent searches but does not fetch pages
 
-Confirm `microsoft_docs_fetch` is allow-listed and the instructions require fetching
-high-value pages before detailed guidance.
+Confirm the instructions require fetching high-value pages before detailed guidance.
 
 ### Citations do not support the answer
 
@@ -231,7 +228,26 @@ Do not add credentials because the endpoint is unauthenticated.
 - GitHub Copilot created `agent-instructions.md` and both Python tasks in VS Code.
 - The generated files contain no secrets, endpoints, documentation, or expected answers.
 - The no-tool chat check discloses that official documentation was not retrieved.
-- A new Foundry version has all three read-only Learn operations.
+- A new Foundry version has the Microsoft Learn MCP attached.
 - The student-created chat script works with the MCP-backed runtime version.
 - Traces show search, fetch, and code-sample calls where appropriate.
 - The published Agent Application gives source-grounded answers in **Test in website**.
+
+## Optional next challenge
+
+Extend the advisor without following a prescribed implementation:
+
+1. **Second MCP**
+   - **What:** Another Model Context Protocol server that gives the agent access to complementary engineering or project knowledge or actions.
+   - **Why:** Microsoft Learn explains supported platform capabilities, but practical guidance may also depend on project-specific context. A second MCP lets the advisor ground recommendations in both kinds of information.
+   - **Challenge:** Choose and add a second MCP that makes the cloud guidance advisor more useful.
+2. **Foundry memory store**
+   - **What:** A managed store that allows selected information to persist beyond a single conversation.
+   - **Why:** Remembering appropriate details, such as stable architecture constraints or technology preferences, can make future guidance more relevant without repeatedly gathering the same context.
+   - **Challenge:** Add a memory store with a clearly defined purpose, scope, and boundary for what should and should not be remembered.
+3. **Skill for both MCPs**
+   - **What:** Reusable instructions and guidance that teach the agent how to apply its MCP capabilities consistently.
+   - **Why:** With two MCPs, the agent needs clear decision rules for selecting one, using both, resolving conflicts, and combining results while preserving citations and source boundaries.
+   - **Challenge:** Add a skill that improves how the advisor coordinates the two MCPs.
+4. **Validate the extension**
+   - Test that MCP selection, memory use, source boundaries, and existing guidance behavior remain correct, then inspect the traces.

@@ -28,9 +28,7 @@ For complete step-by-step setup instructions, see:
 
 | Guide | Scope |
 |-------|-------|
-| [Prereqs_Foundry.md](Prereqs_Foundry.md) | Labs 01, 02, and 04 (Foundry + Agent Framework) |
-| [Prereqs_GHCP.md](Prereqs_GHCP.md) | Labs 03 and 04 (GitHub Copilot + Azure add-ons) |
-| [Prereqs.md](Prereqs.md) | Combined guide (all labs) |
+| [Prereqs_Participant.md](Prereqs_Participant.md) | Laptop, access, Foundry, Agent Framework, and GitHub Copilot setup for training participants |
 
 ## Quickstart
 
@@ -66,7 +64,8 @@ pip install -r requirements.txt
 
 ### 4) Authenticate to Azure
 
-Labs 01, 02, and 04 use `AzureCliCredential` exclusively, so the active Azure CLI session is their only authentication source:
+Labs 01, 02, and 04 use Microsoft Entra authentication through the Azure Identity
+library. Sign in with Azure CLI before running them:
 
 ```bash
 az login
@@ -74,6 +73,9 @@ az account show
 ```
 
 If needed, select the subscription that contains your Foundry project with `az account set --subscription "<subscription-name-or-id>"`.
+
+Lab 01 also includes an optional Responses-only API-key sample. Its project client still
+uses Azure CLI authentication; keep the API key only in `.env`.
 
 ### 5) Configure environment variables
 
@@ -108,7 +110,5 @@ agentic-hackathon/
 ├── 04-Agent Examples/            # Copilot-built Foundry agents and advanced MCP system
 ├── example.env                  # Environment variable template
 ├── requirements.txt             # Python dependencies (all labs)
-├── Prereqs.md                   # Combined setup guide
-├── Prereqs_Foundry.md           # Setup for Labs 01, 02, and 04
-└── Prereqs_GHCP.md              # Setup for Lab 03 (GitHub Copilot)
+└── Prereqs_Participant.md       # Participant setup and access checklist
 ```

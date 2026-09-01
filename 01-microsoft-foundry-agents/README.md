@@ -10,7 +10,9 @@ Built against the **Microsoft Foundry SDK** (`azure-ai-projects` 2.4.0).
 pip install -r ../requirements.txt
 ```
 
-These quickstarts use `AzureCliCredential` exclusively. Sign in with Azure CLI (no API keys, browser broker, environment credential, or managed identity fallback):
+The prompt-agent quickstarts use `AzureCliCredential`. The default Responses quickstart
+uses `DefaultAzureCredential`, and its API-key alternative uses an API key only for the
+OpenAI Responses client. Sign in with Azure CLI before running the samples:
 
 ```bash
 az login
@@ -52,6 +54,7 @@ These quickstarts show the core Microsoft Foundry agent workflow:
 | # | File | What you'll learn |
 |---|------|-------------------|
 | 1 | [01-quickstart-responses.py](01-quickstart-responses.py) | Call the Responses API through a Microsoft Foundry project client. |
+| 1a | [01-quickstart-responses-api-key.py](01-quickstart-responses-api-key.py) | Call only the Responses API with `AIProjectClient` and an API key. |
 | 2 | [02-quickstart-create-agent.py](02-quickstart-create-agent.py) | Create a new prompt agent version in your Foundry project. |
 | 3 | [03-quickstart-chat-with-agent.py](03-quickstart-chat-with-agent.py) | Chat with an existing Foundry agent reference in a conversation. |
 
@@ -62,3 +65,17 @@ python 01-quickstart-responses.py
 ```
 
 You can substitute `01-quickstart-responses.py` with any of the other quickstart filenames.
+
+### API-key alternative for Task 1
+
+To run the API-key copy, add `AZURE_AI_API_KEY` to the root `.env`, then run:
+
+```powershell
+python 01-quickstart-responses-api-key.py
+```
+
+This alternative uses `AzureCliCredential` for the project client and the API key only
+for the OpenAI Responses client returned by
+`AIProjectClient.get_openai_client(api_key=...)`. Other `AIProjectClient` operations,
+including creating agent versions, still require Microsoft Entra authentication. Keep
+the real API key only in `.env`; never commit it or paste it into source code or chat.

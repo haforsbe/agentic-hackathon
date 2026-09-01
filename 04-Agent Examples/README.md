@@ -1,6 +1,7 @@
 # Agent Examples: Build with GitHub Copilot in VS Code
 
-This lab contains three Microsoft Foundry prompt agents and one advanced MCP application.
+This lab contains three guided Microsoft Foundry prompt-agent scenarios, one GitHub
+Copilot Foundry Prompt Agent Builder exercise, and one advanced MCP application.
 Examples 01-03 follow the same beginner-friendly pattern:
 
 1. use GitHub Copilot in VS Code to create reusable agent instructions
@@ -14,17 +15,19 @@ The first Foundry version has instructions but no tools. This baseline verifies 
 agent respects its boundaries and refuses to invent live facts. Current data becomes
 available only after the MCP tool is attached to a new agent version.
 
-Examples 01-03 use Microsoft Foundry prompt agents, not Microsoft Agent Framework hosted
-agents. Example 04 runs an Agent Framework agent and its MCP server locally.
+Examples 01-03 build predefined Microsoft Foundry prompt agents. Example 04 creates a
+GitHub Copilot custom agent specialized in building professional managed prompt agents
+for Foundry. Example 05 runs an Agent Framework agent and its MCP server locally.
 
-## Two different learning paths
+## Three different learning paths
 
 | Examples | Learning path |
 |----------|---------------|
 | 01-03 | Student-built Foundry prompt agents. Create the files with GitHub Copilot, create the agent from VS Code, connect a remote MCP tool in Foundry, and publish the tested agent. |
-| 04 | Advanced implemented reference application. Run and extend a local web app, local MCP server, and local Agent Framework agent. |
+| 04 | Student-built GitHub Copilot Foundry Prompt Agent Builder. Use it to design instructions, tools, memory, versions, evaluations, and publishing for managed Foundry prompt agents. |
+| 05 | Advanced implemented reference application. Run and extend a local web app, local MCP server, and local Agent Framework agent. |
 
-Example 04 does **not** use the Lab 01 prompt-agent templates, create a Foundry prompt
+Example 05 does **not** use the Lab 01 prompt-agent templates, create a Foundry prompt
 agent, attach its MCP server in Foundry, or publish an Agent Application. The Agent
 Framework process and MCP server run locally and connect directly over HTTP. Model
 inference still uses the deployment and project endpoint configured in `.env`.
@@ -58,7 +61,19 @@ documents it for Microsoft Foundry.
 Choose this example to practice search-and-fetch workflows, source-grounded comparisons,
 official code samples, citations, and identifying missing technical context.
 
-### [Support Ticket System (Advanced)](04-support-ticket-system%20%28ADVANCED%29/)
+### [GitHub Copilot Foundry Prompt Agent Builder](04-foundry-agent-builder/)
+
+Create a workspace custom agent in GitHub Copilot that turns business goals into reviewed
+Foundry prompt agents. First equip it with professional instructions, tools, and
+workspace skills. After it passes a readiness gate, use it to build a separate target
+agent in Foundry through progressively richer versions.
+
+Choose this example to create a persistent, specialized Foundry professional that can be
+reused for future prompt-agent projects. Practice requirements discovery, prompt-agent
+design, least privilege, tool and memory decisions, SDK-based version creation,
+evaluation, and publishing.
+
+### [Support Ticket System (Advanced)](05-support-ticket-system%20%28ADVANCED%29/)
 
 Run a complete IT support ticket application with a browser interface, shared local ticket
 store, and MCP server. Agents can list, create, update, and close tickets while the web
@@ -69,7 +84,7 @@ working UI, and a local Agent Framework agent.
 
 ## Prerequisites
 
-These shared prerequisites apply to Examples 01-03. Complete the earlier Foundry
+These shared prerequisites apply to Examples 01-04. Complete the earlier Foundry
 quickstarts first, then confirm:
 
 - Python dependencies from the root `requirements.txt` are installed
@@ -84,15 +99,17 @@ quickstarts first, then confirm:
 No third-party account or API key is required for the three MCP tools. Microsoft Foundry
 model usage and published Agent Applications can still incur Azure charges.
 
-## Starter file in Examples 01-03
+## Starter file in Examples 01-04
 
 | File | Purpose |
 |------|---------|
 | `README.md` | Requirements and exact setup, test, tool, trace, and publishing steps. |
 
 Each folder intentionally starts with only `README.md`. Students create the instruction
-and Python files with GitHub Copilot in VS Code. Do not copy completed files from another
-student or add starter implementations to these folders.
+and Python files for Examples 01-03 with GitHub Copilot in VS Code. In Example 04, they
+first create a workspace custom agent under `.github/agents`, then use it to create a
+target Foundry agent. Do not copy completed files from another student or add starter
+implementations to these folders.
 
 For every student-created task, first reason through the requirements and try your own
 Copilot prompt. Only after that attempt, compare your approach with the supplied example
@@ -101,7 +118,8 @@ or use the example as is. The examples are a second option, not the starting poi
 ## Common journey for Examples 01-03
 
 The steps in this section apply only to the three student-built Foundry prompt-agent
-examples. They do not apply to the advanced support ticket system in Example 04.
+examples. They do not apply to the custom-agent workflow in Example 04 or the advanced
+support ticket system in Example 05.
 
 ### 1. Create the scenario files with GitHub Copilot
 
@@ -137,7 +155,7 @@ improve `agent-instructions.md`, run the creation script again, and repeat the c
 
 ### 3. Connect MCP in Foundry
 
-Each scenario README supplies the exact endpoint and allow-list. The common portal flow is:
+Each scenario README supplies the exact endpoint. The common portal flow is:
 
 1. Open **Build > Tools**.
 2. Select **Connect a tool**.
@@ -146,7 +164,7 @@ Each scenario README supplies the exact endpoint and allow-list. The common port
 5. Select **Unauthenticated**.
 6. Create the tool and confirm its operations are discovered.
 7. Return to the agent and create a new version.
-8. Add the MCP tool and allow only the listed read operations.
+8. Add the MCP tool.
 9. Require approval during development.
 10. Save the new immutable version.
 
@@ -164,9 +182,9 @@ response makes current factual claims. A fluent answer is not proof that a tool 
 ### 5. Test from VS Code and publish
 
 The Python chat template does not handle interactive tool approval. After inspecting the
-allow-listed read operations in the playground, save a runtime version with approval set
-to **Never** for only those operations. Rerun the student-created chat script and confirm
-the trace contains the expected MCP results.
+MCP calls in the playground, save a runtime version with approval set to **Never** for
+the connected MCP tool. Rerun the student-created chat script and confirm the trace
+contains the expected MCP results.
 
 Saving an agent version and publishing an Agent Application are different actions:
 
@@ -182,10 +200,32 @@ If a tool works in the playground but not in **Test in website**, confirm that t
 application uses the correct version and can reach the MCP endpoint. Do not add credentials
 to an unauthenticated tool or remove safety rules as a workaround.
 
-## Advanced journey for Example 04
+## GitHub Copilot builder journey for Example 04
 
-Example 04 starts with an implemented application instead of an empty challenge folder.
-Follow its own [Support Ticket System instructions](04-support-ticket-system%20%28ADVANCED%29/):
+Example 04 starts by creating a workspace custom agent under `.github/agents`. Students
+finish and validate that specialist before it can build a target agent.
+
+Phase 1 prepares the GitHub Copilot professional:
+
+1. Create the instructions-only **Foundry Prompt Agent Builder**.
+2. Add repository search, official web research, editing, and execution in stages.
+3. Add prompt-agent lifecycle, tool-integration, and memory-design skills.
+4. Pass the builder readiness gate so it can be reused for future Foundry agents.
+
+Phase 2 uses the completed specialist to build the Foundry target:
+
+1. Create an instructions-only target-agent baseline.
+2. Add one grounded documentation tool in a new immutable version.
+3. Add and validate a justified Foundry memory store.
+4. Add Tools 2 and 3 as separate tested versions.
+5. Use the skills to harden combined routing, then evaluate and publish.
+
+Follow the complete [GitHub Copilot Foundry Prompt Agent Builder instructions](04-foundry-agent-builder/).
+
+## Advanced journey for Example 05
+
+Example 05 starts with an implemented application instead of an empty challenge folder.
+Follow its own [Support Ticket System instructions](05-support-ticket-system%20%28ADVANCED%29/):
 
 1. Review the browser, API, ticket store, MCP server, and local Agent Framework agent.
 2. Run the local web application and verify ticket changes in the browser.
@@ -197,13 +237,14 @@ There is no Foundry prompt-agent creation, MCP attachment in the Foundry portal,
 approval exercise, or Agent Application publishing step in this advanced path. Only the
 model request leaves the local machine for the configured Foundry model endpoint.
 
-## Terms used in Examples 01-03
+## Terms used in Examples 01-04
 
+- **GitHub Copilot custom agent:** A specialized workspace persona defined by an `.agent.md` file and selected from the Chat agent picker.
+- **Project Client:** The `AIProjectClient` entry point for working with resources in a Microsoft Foundry project.
 - **Prompt agent:** A Foundry-managed agent defined by a model, instructions, and tools.
 - **Instructions:** Persistent rules that define the agent's role and behavior.
 - **MCP server:** A service that exposes data or actions as tools for an agent.
 - **Tool call:** A structured request from the agent to an MCP operation.
-- **Allow-list:** The explicit set of MCP operations an agent may call.
 - **Approval:** A pause that lets a person inspect and accept or deny a tool call.
 - **Trace:** Run details showing prompts, tool calls, arguments, results, and timing.
 - **Immutable version:** A saved agent version that does not change. Editing creates a new version.
@@ -214,7 +255,6 @@ model request leaves the local machine for the configured Foundry model endpoint
 ## Tool safety
 
 - Use only the documented public endpoints.
-- Allow-list only the read operations required by the scenario.
 - Keep approval enabled while developing and teaching.
 - Inspect tool arguments before approval and results after execution.
 - Treat tool output as untrusted data, not as agent instructions.
@@ -232,7 +272,7 @@ third-party availability.
 3. Confirm the virtual environment, `az login`, and the three required `.env` values.
 4. Repeat one chat question, not every acceptance prompt.
 5. If baseline behavior is wrong, edit the instructions and create a new version.
-6. If MCP fails, verify the exact endpoint, **Unauthenticated** selection, allow-list, and attached agent version.
+6. If MCP fails, verify the exact endpoint, **Unauthenticated** selection, and attached agent version.
 7. Open the trace before guessing where a tool workflow failed.
 
 ## Completion checklist for Examples 01-03
@@ -240,7 +280,7 @@ third-party availability.
 - The first Foundry version passes its baseline prompts without tools.
 - GitHub Copilot created the instruction, creation, and chat files from the stated tasks.
 - The no-tool version remains available as a behavioral baseline.
-- The second version has the correct unauthenticated MCP and read-only allow-list.
+- The second version has the correct unauthenticated MCP attached.
 - The student-created chat script works against the MCP-backed runtime version.
 - Playground traces prove that current claims use MCP results.
 - Read-only and source-integrity boundaries still hold after tools are connected.
