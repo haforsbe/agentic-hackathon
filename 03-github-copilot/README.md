@@ -2,7 +2,7 @@
 
 > **Note:** This readme has been adapted from https://code.visualstudio.com/docs/copilot/getting-started.
 
-GitHub Copilot transforms how you write code in Visual Studio Code. In this hands-on tutorial, you build a complete IT support ticketing system while discovering VS Code's AI capabilities: autonomous agents that implement features across multiple files, intelligent inline suggestions, precise editing with inline chat, integrated smart actions, and powerful customization options.
+GitHub Copilot transforms how you write code in Visual Studio Code. In this hands-on tutorial, you build a small favorite-places web page while discovering VS Code's AI capabilities: autonomous agents that implement features across multiple files, intelligent inline suggestions, precise editing with inline chat, integrated smart actions, and powerful customization options.
 
 By the end of this tutorial, you'll have both a working web application and a personalized AI coding setup that adapts to your development style.
 
@@ -19,7 +19,7 @@ files or code from any other workshop exercise.
 
 ## Step 1: Experience inline suggestions
 
-AI-powered inline suggestions appear as you type, helping you write code faster and with fewer errors. Let's start building the foundation of your IT support ticketing system.
+AI-powered inline suggestions appear as you type, helping you write code faster and with fewer errors. Let's start building the foundation of your favorite-places page.
 
 1. Create a new folder for your project and open it in VS Code.
 
@@ -43,8 +43,8 @@ AI-powered inline suggestions appear as you type, helping you write code faster 
 
     ```html
     <div class="container">
-        <h1>IT Support Tickets</h1>
-        <form id="ticket-form">
+        <h1>Favorite Places</h1>
+        <form id="place-form">
     ```
 
     Notice how VS Code continues suggesting relevant HTML elements as you build your application structure.
@@ -57,7 +57,7 @@ Inline suggestions work automatically as you type, learning from your patterns a
 
 ## Step 2: Build complete features with agents
 
-AI Agents are VS Code's most powerful AI capability. Given a natural language prompt, they autonomously plan and implement complex features across multiple files. Let's use them to create the core functionality of your IT support ticketing application.
+AI Agents are VS Code's most powerful AI capability. Given a natural language prompt, they autonomously plan and implement complex features across multiple files. Let's use them to create the favorite-places page.
 
 1. Open the Chat view by pressing `Ctrl+Shift+I` or by selecting the chat icon in the VS Code title bar.
 
@@ -72,7 +72,7 @@ AI Agents are VS Code's most powerful AI capability. Given a natural language pr
 1. Enter the following prompt and press `Enter`. The agent analyzes your request and begins implementing the solution.
 
     ```text
-    Create a directory called `app`. Within that directory, create a demo IT support ticketing system web application. Each ticket should have a title, description, priority level (Low, Medium, High, Critical), status (Open, In Progress, Resolved, Closed), and an assigned technician field. Include the ability to create, edit, and close tickets. Populate the app with several existing tickets. Include modern CSS styling and make it responsive. Use semantic HTML and ensure it's accessible. Separate markup, styles, and scripts into their own files. Provide instructions on how to serve the app on localhost.
+    Create a directory called `app`. Within that directory, create a small favorite-places web page. Each place should have a name, short description, and category (Nature, Culture, Food, or Other). Include a form for adding places and display several sample places as cards. Include modern CSS styling and make it responsive. Use semantic HTML and ensure it's accessible. Separate markup, styles, and scripts into their own files. Provide instructions on how to serve the page on localhost.
     ```
 
     Watch as the agent generates the necessary files and code to implement your request. You should see it update the `index.html` file, create a `styles.css` file for styling, and a `script.js` file for functionality.
@@ -81,12 +81,12 @@ AI Agents are VS Code's most powerful AI capability. Given a natural language pr
 
 1. Review the generated files and select **Keep** to accept all the changes.
 
-1. Open your `index.html` file in the integrated browser VS Code by right-clicking the file and selecting **Show Preview**. You can create new tickets, update their status, and close them.
+1. Open your `index.html` file in the integrated browser in VS Code by right-clicking the file and selecting **Show Preview**. Add a place and confirm that it appears in the gallery.
 
 1. Now, let's add an extra feature. Enter the following prompt in the chat input box:
 
     ```text
-    Add a filter system with buttons to filter tickets by status (All, Open, In Progress, Resolved, Closed) and by priority (All, Low, Medium, High, Critical). Update the styling to match the existing design.
+    Add filter buttons for All, Nature, Culture, Food, and Other. Selecting a category should show only matching place cards. Update the styling to match the existing design.
     ```
 
     Notice how the agent coordinates changes across multiple files to implement this feature completely.
@@ -95,9 +95,9 @@ Agents excel at understanding high-level requirements and translating them into 
 
 ## Step 3: Make precise adjustments with inline chat
 
-While agents handle large features, editor inline chat is perfect for targeted improvements to specific code sections within a file. Let's use it to enhance the ticketing app.
+While agents handle large features, editor inline chat is perfect for targeted improvements to specific code sections within a file. Let's use it to improve the favorite-places page.
 
-1. Open your JavaScript file and locate the code that creates new tickets.
+1. Open your JavaScript file and locate the code that creates new place cards.
 
 1. Select the code block and then press `Ctrl+I` to open editor inline chat.
 
@@ -108,7 +108,7 @@ While agents handle large features, editor inline chat is perfect for targeted i
 1. Enter the following prompt:
 
     ```text
-    Add input validation to prevent submitting tickets with empty titles, ensure a priority is selected, and trim whitespace from all text fields.
+    Add input validation to prevent submitting places with empty names or descriptions, ensure a category is selected, and trim whitespace from all text fields.
     ```
 
     Notice how inline chat focuses specifically on the selected code and makes targeted improvements.
@@ -157,7 +157,7 @@ Custom instructions tell the AI about your coding preferences and standards. The
 1. Test the custom instructions by asking the agent to add a new feature:
 
     ```text
-    Add a dark mode toggle button to the ticketing system.
+    Add a dark mode toggle button to the favorite-places page.
     ```
 
     Notice how the generated code follows the guidelines you specified. VS Code supports more advanced custom instructions like applying instructions for specific file types.
