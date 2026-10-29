@@ -117,7 +117,17 @@ Keep the two connections distinct:
 2. **Toolbox-authentication connection:** a separate `RemoteTool` record points
    to the verified, version-specific Foundry Toolbox endpoint. The current
    official prompt-agent example uses `UserEntraToken` with audience
-   `https://ai.azure.com`. Explain caller-identity passthrough and obtain approval
+   `https://ai.azure.com`. Set the required authentication field
+   `properties.audience`, not only `properties.metadata.audience`, and
+   independently read back the authentication field. Metadata alone does not
+   configure token acquisition: the observed metadata-only connection saved
+   successfully but failed at invocation with "Missing required query parameter:
+   audience". Follow the current connection schema; where its example includes
+   both fields, preserve both. See [user-delegation connection properties](https://learn.microsoft.com/azure/foundry/agents/how-to/configure-user-delegation#configure-userentratoken)
+   and the [prompt-agent Toolbox attachment example](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/model-context-protocol).
+   This method uses the incoming caller's Microsoft identity on their behalf;
+   it is not authentication as the agent's own identity. Explain this distinction
+   and obtain approval
    before creating it. Never reuse the anonymous upstream connection for
    this authenticated endpoint or forward a Foundry token to the public server.
 3. **Agent binding:** replace the candidate's direct public-MCP binding with
@@ -151,6 +161,18 @@ prompt-runtime execution/approval. An empty portal Tools panel despite a
 saved tool is an unresolved rendering/integration discrepancy, not proof of
 runtime failure or success. Preserve failed attempts, stop speculative
 version creation, and obtain separate paid-call approval for runtime diagnosis.
+An audience repair and successful read-back establish configuration only:
+do not claim runtime authentication, approval or forecast success until a
+separately approved test produces that evidence.
+
+For an approval-capable prompt-agent test, create and retain a managed
+Conversation before the initial request and record its identifier alongside
+the exact agent version, response and approval-request identifiers. Continue
+the approved or denied tool request in that same Conversation using the
+current supported API. A `store=false` response without a Conversation is not
+a verified resumable approval context. If that context is missing, stop;
+obtain separate approval for a replacement test rather than silently replaying
+history, sending a new prompt or retrying the original call.
 
 ## Coach execution and inspection
 
