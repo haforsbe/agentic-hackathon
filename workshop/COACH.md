@@ -987,6 +987,16 @@ project assets and blast radius are shared. CI workload identity is distinct
 from the participant/runtime identity. A GitHub Environment approval never
 stands in for human approval of the actual MCP tool and arguments.
 
+For this optional lab only, support an explicitly selected
+[schema 2 direct-MCP manifest](weather-delivery/README.md#explicit-direct-mcp-alternative)
+alongside the unchanged schema 1 Toolbox contract. Explain that direct MCP
+removes the intermediary Toolbox but still uses the Microsoft Foundry prompt
+agent's human approval flow. Read back its exact complete definition, Weather
+URL, server label, allowlist and `require_approval=always`; do not invent a
+Toolbox connection or switch routes silently. The same identity, memory,
+approval/denial and release gates apply. This is not a core Toolbox substitute,
+progress migration, runtime pass or authorization for live work.
+
 The implementation tests manifest/evidence contracts offline and provides four
 manually dispatched cloud stages: capture, prepare, start-validation and
 continue-validation. These are mock-tested, not live-rehearsed; the workflow

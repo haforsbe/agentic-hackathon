@@ -16,6 +16,9 @@ from urllib.request import Request, urlopen
 from workshop.weather_delivery.contract import (
     ContractError,
     canonical_sha256,
+    effective_tools,
+    is_direct_mcp,
+    validate_direct_definition,
     validate_manifest,
     validate_manifest_files,
     validate_validation_evidence,
@@ -291,10 +294,20 @@ def _definition_from_file(path, manifest):
     definition = configuration["definition"]
     _reject_credentials(definition)
     _validate_tool_binding(definition, manifest)
+    _require(
+        hashlib.sha256(Path(path).read_bytes()).hexdigest() == manifest["configuration_sha256"],
+        "Agent file hash differs from the reviewed manifest",
+    )
     return definition
 
 
 def _validate_tool_binding(definition, manifest):
+    validate_manifest(manifest)
+    if is_direct_mcp(manifest):
+        try:
+            return validate_direct_definition(definition, manifest)
+        except ContractError as error:
+            raise StageBlocked(str(error)) from error
     _require(
         isinstance(definition, dict)
         and definition.get("kind") == "prompt"
@@ -348,7 +361,11 @@ def capture_agent(api, agent_name, version, output):
 def prepare_candidate(api, manifest, definition_path, *, binding_verified, approved):
     _require(
         binding_verified is True,
-        "Verify the current-project Toolbox-authentication connection before candidate creation",
+        (
+            "Verify the direct MCP definition and binding from service read-back before candidate creation"
+            if is_direct_mcp(manifest)
+            else "Verify the current-project Toolbox-authentication connection before candidate creation"
+        ),
     )
     _require(approved is True, "Validation-agent creation requires explicit current-step approval")
     validate_manifest(manifest)
@@ -384,7 +401,10 @@ def prepare_candidate(api, manifest, definition_path, *, binding_verified, appro
         version = latest["version"]
     _require(isinstance(version, (str, int)) and str(version), "Foundry returned no candidate version")
     observed = api.get_version(candidate_name, str(version))
-    _require(observed.get("definition") == definition, "Candidate version read-back differs from reviewed configuration")
+    _require(
+        str(observed.get("version")) == str(version) and observed.get("definition") == definition,
+        "Candidate version read-back differs from reviewed configuration",
+    )
     return {
         "candidate_agent": candidate_name,
         "candidate_version": str(version),
@@ -407,7 +427,10 @@ def prepare_release_version(api, manifest, definition_path, validation_evidence,
     version = created.get("version")
     _require(isinstance(version, (str, int)) and str(version), "Foundry returned no release version")
     observed = api.get_version(release_name, str(version))
-    _require(observed.get("definition") == definition, "Release version read-back differs from reviewed configuration")
+    _require(
+        str(observed.get("version")) == str(version) and observed.get("definition") == definition,
+        "Release version read-back differs from reviewed configuration",
+    )
     return {"released_agent": release_name, "released_version": str(version), "configuration_sha256": manifest["configuration_sha256"]}
 
 
@@ -425,8 +448,8 @@ def _pending_approval(response, manifest, expected_server_label=None):
     requests = [item for item in output if item.get("type") == "mcp_approval_request"]
     _require(len(requests) == 1, "Expected exactly one pending human MCP approval request")
     item = requests[0]
-    allowed = set(manifest["toolbox"]["tool_map"].values())
-    _require(item.get("name") in allowed, "Pending request names a tool outside the reviewed Toolbox allowlist")
+    allowed = set(effective_tools(manifest))
+    _require(item.get("name") in allowed, "Pending request names a tool outside the reviewed MCP allowlist")
     _require(item.get("server_label"), "Pending request has no server label")
     _require(
         isinstance(response.get("id"), str)
@@ -581,11 +604,20 @@ def continue_tool_call(
     }
     if approve:
         _require(len(tool_calls) == 1, "Expected exactly one approved MCP execution")
+        if is_direct_mcp(manifest):
+            _require(
+                tool_calls[0].get("name") == pending["tool_name"]
+                and tool_calls[0].get("server_label") == binding["server_label"],
+                "Execution tool or server differs from the approved direct MCP request",
+            )
         execution_id = tool_calls[0].get("id")
         _require(isinstance(execution_id, str) and execution_id, "Approved call omitted its execution ID")
         result["execution_id"] = execution_id
     else:
         result["execution_id"] = None
+    if is_direct_mcp(manifest):
+        result["server_label"] = binding["server_label"]
+        result["binding_sha256"] = canonical_sha256(manifest["direct_mcp"])
     _require(
         isinstance(result["response_id"], str) and result["response_id"],
         "Approval continuation omitted its response ID",

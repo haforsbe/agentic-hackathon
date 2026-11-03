@@ -60,19 +60,70 @@ def validation_cases_sha256():
     return canonical_sha256(cases)
 
 
+WEATHER_MCP_URL = "https://weather.datakoot.com/mcp"
+DIRECT_WEATHER_TOOLS = {"geocode", "weather_forecast", "weather_current", "weather_alerts"}
+
+
+def is_direct_mcp(manifest):
+    return isinstance(manifest, dict) and manifest.get("schema_version") == 2
+
+
+def effective_tools(manifest):
+    if is_direct_mcp(manifest):
+        return manifest["direct_mcp"]["allowed_tools"]
+    return list(manifest["toolbox"]["tool_map"].values())
+
+
+def mcp_url(manifest):
+    if is_direct_mcp(manifest):
+        return manifest["direct_mcp"]["server_url"]
+    return manifest["toolbox"]["mcp_url"]
+
+
+def _validate_direct_mcp(binding):
+    _object(
+        binding,
+        {"server_label", "server_url", "allowed_tools", "require_approval",
+         "endpoint_source", "unverified_bindings"},
+        "direct_mcp",
+    )
+    _text(binding["server_label"], "direct_mcp.server_label")
+    if binding["server_url"] != WEATHER_MCP_URL:
+        raise ContractError("Use the selected public Weather MCP server")
+    if binding["endpoint_source"] != "service-read-back":
+        raise ContractError("The direct MCP binding must come from service read-back")
+    tools = binding["allowed_tools"]
+    if (
+        not isinstance(tools, list)
+        or not all(isinstance(tool, str) for tool in tools)
+        or len(set(tools)) != len(tools)
+        or "weather_forecast" not in tools
+        or not set(tools).issubset(DIRECT_WEATHER_TOOLS)
+    ):
+        raise ContractError("Direct MCP requires an explicit Weather tool allowlist")
+    if binding["require_approval"] != "always":
+        raise ContractError("Every MCP call must retain per-call approval")
+    if binding["unverified_bindings"] != []:
+        raise ContractError("Unsupported or unverified bindings must block this manifest")
+
+
 def validate_manifest(manifest):
+    direct = is_direct_mcp(manifest)
     _object(
         manifest,
         {
             "schema_version", "lab", "project_ref", "released_agent",
             "validation_agent", "configuration_source_path",
             "configuration_sha256", "model_policy",
-            "instructions", "toolbox", "skill", "memory", "unverified_bindings",
-        },
+            "instructions", "skill", "memory", "unverified_bindings",
+        } | ({"direct_mcp", "definition_sha256"} if direct else {"toolbox"}),
         "manifest",
     )
-    if type(manifest["schema_version"]) is not int or manifest["schema_version"] != 1:
+    if type(manifest["schema_version"]) is not int or manifest["schema_version"] not in {1, 2}:
         raise ContractError("Unsupported manifest schema_version")
+    if direct:
+        _sha256(manifest["definition_sha256"], "definition_sha256")
+        _validate_direct_mcp(manifest["direct_mcp"])
 
     lab = _object(
         manifest["lab"],
@@ -137,8 +188,44 @@ def validate_manifest(manifest):
         raise ContractError("instructions.source_path must be a safe path under student/")
     _sha256(instructions["sha256"], "instructions.sha256")
 
+    if direct and stable_parts.geturl() == mcp_url(manifest):
+        raise ContractError("An MCP endpoint is not a stable agent consumer endpoint")
+    if not direct:
+        _validate_toolbox(manifest["toolbox"], stable_parts)
+
+    skill = _object(manifest["skill"], {"revision", "delivery", "sha256"}, "skill")
+    for key in ("revision", "delivery"):
+        _text(skill[key], f"skill.{key}")
+    _sha256(skill["sha256"], "skill.sha256")
+
+    memory = _object(
+        manifest["memory"],
+        {
+            "configuration_sha256", "released_scope_ref", "validation_scope_ref",
+            "contents_included",
+        },
+        "memory",
+    )
+    _sha256(memory["configuration_sha256"], "memory.configuration_sha256")
+    released_memory = _text(memory["released_scope_ref"], "memory.released_scope_ref")
+    validation_memory = _text(memory["validation_scope_ref"], "memory.validation_scope_ref")
+    if memory["contents_included"] is not False:
+        raise ContractError("Memory contents must never be captured")
+    if (
+        released_memory == validation_memory
+        or candidate_memory != validation_memory
+        or released_memory == project_ref
+        or validation_memory == project_ref
+    ):
+        raise ContractError("Candidate and release memory scopes must be explicitly distinct")
+    if manifest["unverified_bindings"] != []:
+        raise ContractError("Unsupported or unverified bindings must block this manifest")
+    return manifest
+
+
+def _validate_toolbox(toolbox, stable_parts):
     toolbox = _object(
-        manifest["toolbox"],
+        toolbox,
         {
             "name", "version", "mcp_url", "endpoint_source",
             "upstream_connection_ref", "upstream_target", "upstream_auth",
@@ -192,35 +279,6 @@ def validate_manifest(manifest):
         or len(set(tool_map.values())) != len(tool_map)
     ):
         raise ContractError("Record a one-to-one mapping for the discovered Weather tool names")
-
-    skill = _object(manifest["skill"], {"revision", "delivery", "sha256"}, "skill")
-    for key in ("revision", "delivery"):
-        _text(skill[key], f"skill.{key}")
-    _sha256(skill["sha256"], "skill.sha256")
-
-    memory = _object(
-        manifest["memory"],
-        {
-            "configuration_sha256", "released_scope_ref", "validation_scope_ref",
-            "contents_included",
-        },
-        "memory",
-    )
-    _sha256(memory["configuration_sha256"], "memory.configuration_sha256")
-    released_memory = _text(memory["released_scope_ref"], "memory.released_scope_ref")
-    validation_memory = _text(memory["validation_scope_ref"], "memory.validation_scope_ref")
-    if memory["contents_included"] is not False:
-        raise ContractError("Memory contents must never be captured")
-    if (
-        released_memory == validation_memory
-        or candidate_memory != validation_memory
-        or released_memory == project_ref
-        or validation_memory == project_ref
-    ):
-        raise ContractError("Candidate and release memory scopes must be explicitly distinct")
-    if manifest["unverified_bindings"] != []:
-        raise ContractError("Unsupported or unverified bindings must block this manifest")
-    return manifest
 
 
 def validate_ci_run(run, manifest, *, repository, default_branch, current_commit, latest_sha, latest_attempt):
@@ -329,6 +387,12 @@ def validate_validation_evidence(
         latest_attempt=latest_attempt,
     )
 
+    direct = is_direct_mcp(manifest)
+    binding_keys = {
+        "toolbox_name", "toolbox_version", "toolbox_mcp_url",
+        "toolbox_auth_type", "toolbox_auth_evidence_ref",
+        "upstream_connection_ref", "toolbox_auth_connection_ref",
+    }
     runtime = _object(
         evidence["runtime"],
         {
@@ -337,16 +401,35 @@ def validate_validation_evidence(
             "validation_config_sha256", "validation_memory_scope_ref",
             "released_agent_name", "released_config_sha256",
             "released_agent_version", "released_memory_scope_ref",
-            "toolbox_name", "toolbox_version", "toolbox_mcp_url",
-            "toolbox_auth_type", "toolbox_auth_evidence_ref",
-            "upstream_connection_ref", "toolbox_auth_connection_ref",
             "upstream_target", "upstream_tools", "instructions_sha256",
             "model_deployment_ref", "model_name", "model_version",
             "skill_revision", "skill_delivery", "skill_sha256",
             "memory_configuration_sha256", "effective_tool_names", "unverified_bindings",
-        },
+        } | ({"direct_mcp", "definition_sha256"} if direct else binding_keys),
         "runtime",
     )
+    if direct:
+        if (
+            runtime["direct_mcp"] != manifest["direct_mcp"]
+            or runtime["definition_sha256"] != manifest["definition_sha256"]
+        ):
+            raise ContractError("Runtime direct MCP binding or reviewed definition differs")
+        upstream_target = manifest["direct_mcp"]["server_url"]
+        upstream_tools = sorted(effective_tools(manifest))
+    else:
+        toolbox = manifest["toolbox"]
+        for key in binding_keys:
+            manifest_key = {
+                "toolbox_name": "name", "toolbox_version": "version",
+                "toolbox_mcp_url": "mcp_url",
+            }.get(key, key)
+            if runtime[key] != toolbox[manifest_key]:
+                raise ContractError("Runtime pinned dependencies differ")
+            if key != "toolbox_mcp_url":
+                _text(runtime[key], f"runtime.{key}")
+        _https_url(runtime["toolbox_mcp_url"], "runtime.toolbox_mcp_url")
+        upstream_target = toolbox["upstream_target"]
+        upstream_tools = sorted(toolbox["tool_map"])
     if (
         runtime["project_ref"] != manifest["project_ref"]
         or runtime["validation_agent_name"] != manifest["validation_agent"]["name"]
@@ -359,15 +442,8 @@ def validate_validation_evidence(
         or runtime["validation_memory_scope_ref"] == runtime["released_memory_scope_ref"]
         or runtime["memory_configuration_sha256"] != manifest["memory"]["configuration_sha256"]
         or runtime["ci_identity_ref"] == runtime["runtime_identity_ref"]
-        or runtime["toolbox_name"] != manifest["toolbox"]["name"]
-        or runtime["toolbox_version"] != manifest["toolbox"]["version"]
-        or runtime["toolbox_mcp_url"] != manifest["toolbox"]["mcp_url"]
-        or runtime["toolbox_auth_type"] != manifest["toolbox"]["toolbox_auth_type"]
-        or runtime["toolbox_auth_evidence_ref"] != manifest["toolbox"]["toolbox_auth_evidence_ref"]
-        or runtime["upstream_connection_ref"] != manifest["toolbox"]["upstream_connection_ref"]
-        or runtime["toolbox_auth_connection_ref"] != manifest["toolbox"]["toolbox_auth_connection_ref"]
-        or runtime["upstream_target"] != manifest["toolbox"]["upstream_target"]
-        or runtime["upstream_tools"] != sorted(manifest["toolbox"]["tool_map"])
+        or runtime["upstream_target"] != upstream_target
+        or runtime["upstream_tools"] != upstream_tools
         or runtime["instructions_sha256"] != manifest["instructions"]["sha256"]
         or runtime["model_deployment_ref"] != manifest["model_policy"]["deployment_ref"]
         or runtime["model_name"] != manifest["model_policy"]["model"]
@@ -375,7 +451,7 @@ def validate_validation_evidence(
         or runtime["skill_revision"] != manifest["skill"]["revision"]
         or runtime["skill_delivery"] != manifest["skill"]["delivery"]
         or runtime["skill_sha256"] != manifest["skill"]["sha256"]
-        or runtime["effective_tool_names"] != sorted(manifest["toolbox"]["tool_map"].values())
+        or runtime["effective_tool_names"] != sorted(effective_tools(manifest))
         or runtime["unverified_bindings"] != []
     ):
         raise ContractError(
@@ -385,10 +461,8 @@ def validate_validation_evidence(
         "project_ref", "ci_identity_ref", "runtime_identity_ref",
         "validation_agent_name", "validation_agent_version",
         "validation_memory_scope_ref", "released_agent_name",
-        "released_agent_version", "released_memory_scope_ref", "toolbox_name",
-        "toolbox_version", "upstream_connection_ref",
-        "toolbox_auth_connection_ref", "toolbox_auth_type",
-        "toolbox_auth_evidence_ref", "model_deployment_ref", "model_name",
+        "released_agent_version", "released_memory_scope_ref",
+        "model_deployment_ref", "model_name",
         "model_version", "skill_revision", "skill_delivery",
     ):
         _text(runtime[key], f"runtime.{key}")
@@ -397,7 +471,6 @@ def validate_validation_evidence(
     _sha256(runtime["memory_configuration_sha256"], "runtime.memory_configuration_sha256")
     _sha256(runtime["instructions_sha256"], "runtime.instructions_sha256")
     _sha256(runtime["skill_sha256"], "runtime.skill_sha256")
-    _https_url(runtime["toolbox_mcp_url"], "runtime.toolbox_mcp_url")
     _https_url(runtime["upstream_target"], "runtime.upstream_target")
     if not isinstance(runtime["upstream_tools"], list) or not all(
         isinstance(item, str) and item for item in runtime["upstream_tools"]
@@ -424,15 +497,15 @@ def validate_validation_evidence(
     decisions = set()
     approval_ids = set()
     response_ids = set()
-    allowed = set(manifest["toolbox"]["tool_map"].values())
+    allowed = set(effective_tools(manifest))
     for index, call in enumerate(tool_calls):
         _object(
             call,
             {
                 "decision", "tool_name", "arguments_sha256", "response_id",
                 "conversation_id", "approval_request_id", "trace_id",
-                "continuation_conversation_id", "execution_id", "toolbox_version",
-            },
+                "continuation_conversation_id", "execution_id",
+            } | ({"server_label", "binding_sha256"} if direct else {"toolbox_version"}),
             f"tool_calls[{index}]",
         )
         decision = call["decision"]
@@ -456,7 +529,12 @@ def validate_validation_evidence(
             raise ContractError("Each approval and response must identify a distinct tool request")
         approval_ids.add(call["approval_request_id"])
         response_ids.add(call["response_id"])
-        if call["toolbox_version"] != manifest["toolbox"]["version"]:
+        if direct and (
+            call["server_label"] != manifest["direct_mcp"]["server_label"]
+            or call["binding_sha256"] != canonical_sha256(manifest["direct_mcp"])
+        ):
+            raise ContractError("Tool call used a different direct MCP binding")
+        if not direct and call["toolbox_version"] != manifest["toolbox"]["version"]:
             raise ContractError("Tool call used an unpinned Toolbox version")
         if decision == "approved":
             _evidence_id(call["execution_id"], f"tool_calls[{index}].execution_id")
@@ -519,7 +597,7 @@ def validate_release_evidence(
         or release["release_config_sha256"] != manifest["configuration_sha256"]
         or release["stable_endpoint"] != manifest["released_agent"]["stable_endpoint"]
         or release["endpoint_source"] != "service-read-back"
-        or release["stable_endpoint"] == manifest["toolbox"]["mcp_url"]
+        or release["stable_endpoint"] == mcp_url(manifest)
         or consumer["status"] != "passed"
         or consumer["agent_version"] != released_version
     ):
@@ -560,7 +638,36 @@ def validate_manifest_files(manifest, root="."):
         actual = hashlib.sha256(path.read_bytes()).hexdigest()
         if actual != hash_value:
             raise ContractError(f"{label} file hash differs from the reviewed manifest")
+        if label == "configuration" and is_direct_mcp(manifest):
+            configuration = _read(path)
+            _object(configuration, {"schema_version", "definition"}, "configuration")
+            if type(configuration["schema_version"]) is not int or configuration["schema_version"] != 1:
+                raise ContractError("Unsupported configuration schema_version")
+            if canonical_sha256(configuration["definition"]) != manifest["definition_sha256"]:
+                raise ContractError("Captured definition hash differs from the reviewed manifest")
+            validate_direct_definition(configuration["definition"], manifest)
     return manifest
+
+
+def validate_direct_definition(definition, manifest):
+    """Check the saved and runtime definition against the same reviewed direct binding."""
+    binding = manifest["direct_mcp"]
+    expected = {
+        "type": "mcp",
+        **{key: binding[key] for key in (
+            "server_label", "server_url", "allowed_tools", "require_approval",
+        )},
+    }
+    if (
+        not isinstance(definition, dict)
+        or definition.get("kind") != "prompt"
+        or definition.get("model") != manifest["model_policy"]["deployment_ref"]
+        or not isinstance(definition.get("instructions"), str)
+        or definition.get("tools") != [expected]
+        or canonical_sha256(definition) != manifest["definition_sha256"]
+    ):
+        raise ContractError("Direct MCP binding or exact definition differs from the manifest")
+    return expected
 
 
 def write_ci_record(commit, manifest_path, output_path):

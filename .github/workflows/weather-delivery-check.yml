@@ -48,7 +48,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Run offline contract and progress-state tests
+      - name: Run Toolbox and direct-MCP contracts, cloud mocks and progress-state tests
         run: python -S -m unittest discover -s workshop/weather_delivery -p "test_*.py" -v
       - name: Record source and contract hashes only
         run: |

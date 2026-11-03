@@ -92,6 +92,58 @@ def manifest():
     }
 
 
+def direct_definition():
+    return {
+        "kind": "prompt",
+        "model": "participant-selected-model",
+        "instructions": "Weather instructions with static skill composition.",
+        "tools": [{
+            "type": "mcp",
+            "server_label": "weather_intelligence",
+            "server_url": "https://weather.datakoot.com/mcp",
+            "allowed_tools": ["geocode", "weather_forecast", "weather_current", "weather_alerts"],
+            "require_approval": "always",
+        }],
+    }
+
+
+def direct_manifest():
+    config = manifest()
+    del config["toolbox"]
+    config["schema_version"] = 2
+    config["definition_sha256"] = canonical_sha256(direct_definition())
+    config["direct_mcp"] = {
+        key: value for key, value in direct_definition()["tools"][0].items() if key != "type"
+    }
+    config["direct_mcp"].update(endpoint_source="service-read-back", unverified_bindings=[])
+    return config
+
+
+def direct_validation_evidence(config):
+    evidence = validation_evidence(manifest())
+    evidence["manifest_sha256"] = canonical_sha256(config)
+    evidence["ci_run"] = ci_run(config)
+    runtime = evidence["runtime"]
+    for key in (
+        "toolbox_name", "toolbox_version", "toolbox_mcp_url", "toolbox_auth_type",
+        "toolbox_auth_evidence_ref", "upstream_connection_ref", "toolbox_auth_connection_ref",
+    ):
+        del runtime[key]
+    runtime["direct_mcp"] = copy.deepcopy(config["direct_mcp"])
+    runtime["definition_sha256"] = config["definition_sha256"]
+    runtime["validation_config_sha256"] = config["configuration_sha256"]
+    runtime["upstream_tools"] = sorted(config["direct_mcp"]["allowed_tools"])
+    runtime["effective_tool_names"] = sorted(config["direct_mcp"]["allowed_tools"])
+    for call in evidence["tool_calls"]:
+        del call["toolbox_version"]
+        call.update(
+            tool_name="weather_forecast",
+            server_label=config["direct_mcp"]["server_label"],
+            binding_sha256=canonical_sha256(config["direct_mcp"]),
+        )
+    return evidence
+
+
 def ci_run(config):
     return {
         "id": "1234",
@@ -463,6 +515,99 @@ class ValidationEvidenceTests(unittest.TestCase):
             validate_release_evidence(
                 self.manifest, self.evidence, release, **self.context,
             )
+
+
+class DirectManifestTests(unittest.TestCase):
+    def test_missing_or_nonobject_contract_is_rejected(self):
+        for config in (None, [], {"schema_version": 2}):
+            with self.subTest(config=config), self.assertRaises(ContractError):
+                validate_manifest(config)
+
+    def test_explicit_direct_contract_passes_without_toolbox_references(self):
+        config = direct_manifest()
+        self.assertEqual(validate_manifest(config), config)
+        self.assertNotIn("toolbox", config)
+
+    def test_wrong_endpoint_extra_tools_and_missing_approval_are_rejected(self):
+        for key, value in (
+            ("server_url", "https://wrong.example/mcp"),
+            ("server_url", "https://weather.datakoot.com/mcp?token=secret"),
+            ("allowed_tools", ["weather_forecast", "unreviewed"]),
+            ("allowed_tools", ["weather_forecast", "weather_forecast"]),
+            ("allowed_tools", "weather_forecast"),
+            ("require_approval", "never"),
+            ("require_approval", None),
+            ("unverified_bindings", ["runtime-unverified"]),
+            ("endpoint_source", "constructed"),
+        ):
+            with self.subTest(key=key, value=value):
+                config = direct_manifest()
+                config["direct_mcp"][key] = value
+                with self.assertRaises(ContractError):
+                    validate_manifest(config)
+
+    def test_mixed_or_invented_toolbox_references_fail_closed(self):
+        for field in ("toolbox", "project_connection_id"):
+            config = direct_manifest()
+            if field == "toolbox":
+                config["toolbox"] = manifest()["toolbox"]
+            else:
+                config["direct_mcp"][field] = "invented"
+            with self.assertRaises(ContractError):
+                validate_manifest(config)
+
+    def test_offline_ci_checks_file_hash_definition_hash_and_binding(self):
+        import json
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            folder = root / "student/weather-delivery"
+            folder.mkdir(parents=True)
+            source = folder / "agent-definition.json"
+            instructions = folder / "instructions.md"
+            instructions.write_text(direct_definition()["instructions"])
+            config = direct_manifest()
+            config["instructions"]["sha256"] = hashlib.sha256(instructions.read_bytes()).hexdigest()
+            source.write_text(json.dumps({"schema_version": 1, "definition": direct_definition()}))
+            config["configuration_sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
+            self.assertEqual(validate_manifest_files(config, root), config)
+            definition = direct_definition()
+            definition["tools"][0]["require_approval"] = "never"
+            source.write_text(json.dumps({"schema_version": 1, "definition": definition}))
+            with self.assertRaisesRegex(ContractError, "file hash"):
+                validate_manifest_files(config, root)
+            config["configuration_sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
+            with self.assertRaisesRegex(ContractError, "definition hash"):
+                validate_manifest_files(config, root)
+            config["definition_sha256"] = canonical_sha256(definition)
+            with self.assertRaisesRegex(ContractError, "binding"):
+                validate_manifest_files(config, root)
+
+
+class DirectValidationEvidenceTests(ValidationEvidenceTests):
+    def setUp(self):
+        super().setUp()
+        self.manifest = direct_manifest()
+        self.evidence = direct_validation_evidence(self.manifest)
+
+    def test_direct_runtime_binding_and_definition_must_match(self):
+        for field, value in (
+            ("definition_sha256", sha("0")),
+            ("direct_mcp", manifest()["toolbox"]),
+        ):
+            evidence = copy.deepcopy(self.evidence)
+            evidence["runtime"][field] = value
+            with self.assertRaises(ContractError):
+                self.check(evidence)
+
+    def test_direct_calls_are_bound_to_reviewed_server_and_binding_hash(self):
+        for field, value in (("server_label", "other"), ("binding_sha256", sha("0"))):
+            evidence = copy.deepcopy(self.evidence)
+            evidence["tool_calls"][0][field] = value
+            with self.assertRaisesRegex(ContractError, "different direct MCP binding"):
+                self.check(evidence)
 
 
 class OptionalRouteTests(unittest.TestCase):

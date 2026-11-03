@@ -21,11 +21,11 @@ on:
         type: string
         required: false
       candidate_version:
-        description: Read-back validation candidate version (start only)
+        description: Read-back validation candidate version (start and continue)
         type: string
         required: false
       binding_verified:
-        description: Confirm the exact Toolbox-authentication connection was read back in this project (prepare only)
+        description: Confirm the manifest binding was read back (Toolbox auth connection or explicit direct MCP definition; prepare only)
         type: choice
         required: false
         default: "no"
