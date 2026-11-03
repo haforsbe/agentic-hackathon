@@ -56,15 +56,35 @@ is needed to teach reuse.
 
 ## Prepare the supported route before teaching
 
-**Documentation checked 2026-10-28.** One project's saved-connection creation,
-forecast-only Toolbox version and developer-authenticated `tools/list` have
-been observed. Full prompt-runtime approval/denial, forecast execution,
+**Authentication references rechecked 2026-11-03; no live operations performed.**
+Previously recorded evidence covers one project's saved-connection creation,
+forecast-only Toolbox version and developer-authenticated `tools/list`.
+Full prompt-runtime approval/denial, forecast execution,
 portal rendering and an end-to-end curriculum rehearsal remain unverified;
 do not describe configuration read-back as runtime success.
 The installed skill describes `RemoteTool`
 project connections for custom MCP servers; current Microsoft documentation
 supports Toolbox MCP integration for prompt agents. Neither is proof that a
 specific participant's region, API, SDK, identity or portal supports the route.
+
+**Preparation blocker:** a supported managed prompt-agent-to-Toolbox
+authentication recipe has not been established. The
+[user-delegation reference](https://learn.microsoft.com/azure/foundry/agents/how-to/configure-user-delegation#configure-userentratoken)
+restricts `UserEntraToken` to its supported targets (or the documented A2A
+compatibility path); it does not list a custom Toolbox endpoint. The
+[MCP integration reference](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/model-context-protocol)
+describes Microsoft Entra credentials for Toolbox access, but that and a
+developer bearer-token sample do not establish token acquisition by a managed
+prompt agent. Do not infer support from MCP compatibility, a pinned URL or an
+audience of `https://ai.azure.com`. Nor does the custom-MCP
+`AgentOnBehalfOfUser` guidance establish a working Toolbox-specific replacement.
+Before offering any authentication connection write or agent attachment,
+the facilitator must supply a current supported recipe for the exact
+caller/runtime, target, auth type, audience/scopes and operation permissions,
+then rehearse it under separate explicit approvals. If unavailable, explain
+this blocker briefly, preserve existing evidence and leave T01-T03's affected
+runtime gates incomplete. No role grants, speculative versions, paid diagnosis
+or silent direct-MCP fallback are authorized by this document.
 
 During facilitator preparation, record a supported, rehearsed recipe for:
 
@@ -106,7 +126,7 @@ or Toolbox pass. A facilitator may agree an explicitly partial route, with
 these learning gates still incomplete. Do not broaden roles, disable approvals,
 or install a different runtime to conceal a failure.
 
-## Correct attachment recipe and failure guards
+## Attachment requirements and failure guards (not a verified auth recipe)
 
 Keep the two connections distinct:
 
@@ -115,20 +135,18 @@ Keep the two connections distinct:
    its verified project-local connection name, retains `server_url`, selects
    only the current lesson's upstream tools and requires approval.
 2. **Toolbox-authentication connection:** a separate `RemoteTool` record points
-   to the verified, version-specific Foundry Toolbox endpoint. The current
-   official prompt-agent example uses `UserEntraToken` with audience
-   `https://ai.azure.com`. Set the required authentication field
-   `properties.audience`, not only `properties.metadata.audience`, and
-   independently read back the authentication field. Metadata alone does not
-   configure token acquisition: the observed metadata-only connection saved
+   to the verified, version-specific Foundry Toolbox endpoint, **only after
+   the preparation blocker above is resolved**. Do not prescribe
+   `UserEntraToken` with audience `https://ai.azure.com` as a working recipe.
+   If a supported route requires an audience, set and independently read back
+   its actual authentication field, not just metadata. Metadata alone does not
+   configure token acquisition: a previously observed metadata-only connection saved
    successfully but failed at invocation with "Missing required query parameter:
-   audience". Follow the current connection schema; where its example includes
-   both fields, preserve both. See [user-delegation connection properties](https://learn.microsoft.com/azure/foundry/agents/how-to/configure-user-delegation#configure-userentratoken)
-   and the [prompt-agent Toolbox attachment example](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/model-context-protocol).
-   This method uses the incoming caller's Microsoft identity on their behalf;
-   it is not authentication as the agent's own identity. Explain this distinction
-   and obtain approval
-   before creating it. Never reuse the anonymous upstream connection for
+   audience". Fixing that field is not proof the target supports the auth type.
+   Follow the current supported schema and establish whether the actor uses
+   the caller's delegated identity or the agent's own identity; do not conflate
+   them. Explain the verified identity behavior and obtain approval before
+   creating it. Never reuse the anonymous upstream connection for
    this authenticated endpoint or forward a Foundry token to the public server.
 3. **Agent binding:** replace the candidate's direct public-MCP binding with
    the Toolbox endpoint in `MCPTool.server_url`, plus the Toolbox-authentication
