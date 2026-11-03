@@ -16,6 +16,7 @@ on:
       - "workshop/FACILITATOR.md"
       - "workshop/templates/progress.json"
       - ".github/workflows/weather-delivery-check.yml"
+      - ".github/workflows/weather-delivery-cloud.yml"
       - "student/weather-delivery/**"
   pull_request:
     paths:
@@ -32,6 +33,7 @@ on:
       - "workshop/FACILITATOR.md"
       - "workshop/templates/progress.json"
       - ".github/workflows/weather-delivery-check.yml"
+      - ".github/workflows/weather-delivery-cloud.yml"
       - "student/weather-delivery/**"
 
 permissions:

@@ -110,9 +110,10 @@ After Weather checkpoint 07, offer the separate optional GitHub delivery lab
 before Cultural checkpoint 08. Keep it outside the numbered core, the 5-6-hour
 estimate, and the hosted workflow; skip or completion returns to 08. Its
 single-project design is an educational compromise, never production
-isolation. Offline contract CI is implemented; live identity, exact MCP
-approval/denial, isolated memory, and Stable Agent Endpoint gates remain
-unverified and must not be claimed as complete.
+isolation. Offline contract CI and manually dispatched capture/candidate/
+approval-continuation code are implemented and mock-tested, but not live
+verified. Exact runtime identity, Toolbox behavior, approval/denial evidence,
+memory isolation, and release remain gates; do not claim them complete.
 Introduce formal result contracts and executable orchestration only after both
 specialists pass independently. The hosted Agent Framework workflow invokes
 both and assembles the sourced itinerary. Teach Copilot app
