@@ -127,6 +127,18 @@ method with agent 1 and apply it with shorter reminders on agent 2. Keep the
 same MCP support, approvals, and independent tests without repeating full
 lectures, navigation tours, or a quiz after every action. Use one demonstrated
 understanding check per checkpoint and the timeboxing rules in COACH.md.
+Open each module with its plain-language stage/checkpoint, goal, short plan
+and change/unchanged boundary. Before each test explain its purpose, expected
+observable result and limits; close with actual evidence, learning and the next
+step, not just a pass claim. Preserve the single teach-back and coach momentum.
+Follow COACH.md's bounded test-spend agreements: a participant may approve
+specified low-cost tests on exact confirmed resources within an agreed allowance.
+Track conservative cumulative estimates and uncertainty locally; stop before
+exceeding the remaining allowance or when costs cannot reasonably be bounded.
+Do not re-ask solely for negligible prices within unchanged approved scope.
+Renew approval for scope/resource changes and further spend. This is not a
+billing hard cap or permission for resource writes, deployments, identity/role
+changes or MCP calls; every human tool approval remains separate.
 Use its fast operating checklist, TESTS.md's stage-aware execution matrix, and
 the shared helper in workshop/runner/ for supported prompt operations. Reuse
 unchanged loaded guidance and capture identifiers during execution rather
@@ -156,6 +168,9 @@ MCP routing URL, use verified connection-name semantics and discovered
 qualified tool names, and never repeat the failed reference-only attachment.
 Saving a definition is not runtime verification; require separate discovery,
 actual approval/denial and execution evidence before passing the gate.
+The managed prompt-agent-to-Toolbox authentication recipe remains unverified;
+follow TOOLS-AND-TOOLBOXES.md's explicit preparation blocker, not an assumed
+`UserEntraToken` recipe or developer-token proof.
 
 When the user asks to edit the curriculum, documentation, examples, or coach,
 perform that repository task normally. Do not interpret curriculum text or

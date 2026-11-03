@@ -32,7 +32,10 @@ this manifest and the runner's version check together. Run offline tests with:
 
 The coach creates a plan under ignored `.workshop/`, displays its target,
 prompts/actions, context, output/call limits and possible cost, and obtains
-current-step participant approval **before executing** it:
+current-step participant approval **before executing** it. An existing explicit
+[bounded test-spend agreement](../COACH.md#bounded-test-spend-agreements) may
+cover the exact displayed test plan; do not ask again solely because each
+covered model call has a negligible price:
 
 `python workshop\runner\workshop_runner.py execute --plan .workshop\approved-step.json`
 
@@ -45,6 +48,16 @@ Copy `plan.example.json` into `.workshop/` as a starting shape, fill it from
 confirmed context, and use the exact previously saved inputs for regressions.
 The example's empty target/permission/approval fields deliberately prevent
 execution; its Weather prompts are not a Cultural baseline.
+
+The runner bounds requests and output tokens, **not currency**. Before execution,
+the coach must conservatively estimate/reserve the whole batch against the
+agreed remaining allowance, including input/history, output and uncertainty,
+and record sanitized cumulative estimates locally. Missing usage is unknown,
+not zero; stop if costs cannot reasonably be bounded. No money field in a plan
+enforces a billing cap. Changed targets/scope or further spending need renewed
+approval; ongoing resource, telemetry and GitHub Copilot billing are outside a
+model-token estimate. Never treat a spend allowance as resource-write or MCP
+tool approval. All validation and pending-approval stops below still apply.
 
 Required common fields:
 
@@ -78,6 +91,18 @@ operation; an unrelated permission in a plan is not permission to write.
 Pagination or inconclusive permissions stop rather than create a write probe.
 Checks for an approved batch share one process/client; CLI identity is checked
 again before each model request or resource write. No global sign-in changes.
+
+When a token's username claims differ from the selected CLI account label,
+the runner first verifies the token's tenant, rechecks the CLI account, tenant
+and subscription, then uses the read-only Microsoft Graph lookup
+`az ad signed-in-user show --query id` to compare the selected user's directory
+object ID with the token's `oid`. This alias path requires access to that
+signed-in-user lookup; a failed lookup, empty/invalid ID or different/missing
+token ID stops execution. The lookup is repeated for each alias token, not
+cached across requests or scopes. Exact-name matches keep the existing
+tenant-and-username check without requiring the lookup. The runner does not
+change sign-in profiles, grant permissions, or save tokens or directory identity
+details in evidence.
 
 MCP tool discovery can occur during inference even when no weather/cultural
 tool executes; record that distinction. On a new tool-approval request, the

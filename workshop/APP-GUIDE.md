@@ -21,6 +21,13 @@ alternatives later in the lessons.
 
 ## Where tests and exploration happen
 
+Each module starts with where you are (plain-language stage and checkpoint),
+its goal, a short plan and what will change or stay unchanged. Before a test,
+the coach explains why you are running it, what you should observe and what
+it cannot prove. At module close, review actual evidence and what you learned,
+complete the existing single understanding check, and choose continue or pause.
+There is no extra quiz after each action.
+
 The coach names the route before every test or exploration:
 
 | Route | What you do | What the coach does |
@@ -98,6 +105,14 @@ Both test routes use the agent in Foundry and may incur Foundry charges.
 Neither route's token totals measure the Workshop Coach conversation in the
 Copilot app. Missing portal-test usage is marked unknown, not zero.
 Switching routes does not approve extra calls, changes, or a different agent.
+You may agree a bounded batch or allowance for specified low-cost tests on
+confirmed resources using [COACH.md's spending agreement](COACH.md#bounded-test-spend-agreements).
+Covered tests do not need repeated negligible-price approvals. The coach tracks
+conservative cumulative estimates, including uncertain portal usage, and stops
+before the remaining allowance would be exceeded or costs cannot be bounded.
+This is not a billing hard cap and excludes ongoing resource/telemetry charges
+and GitHub Copilot billing. Scope/resource changes or further spend need a new
+decision; resource writes and each human MCP tool approval remain separate.
 
 For portal navigation, the coach gives a concrete, documented route first:
 starting URL, your exact project and resource, control labels, and the expected
