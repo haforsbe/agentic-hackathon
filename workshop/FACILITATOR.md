@@ -70,6 +70,15 @@ finish time. Keep prerequisite access, supported capabilities, quota, and
 public-service reachability ready; a blocked environment cannot be made
 complete by removing safety gates.
 
+The optional Weather GitHub delivery lab is offered only after Weather 07 and
+before Cultural 08. It is not included in the 330-minute budget. Treat its
+single-project setup as an educational compromise, not production isolation;
+do not reduce the core agenda or skip a learning gate to fit it in. The
+offline contract workflow is available, but a full live rehearsal is not yet
+verified; do not schedule the lab as a completed cloud delivery exercise until
+the identity, exact tool approval/denial, isolated memory and stable consumer
+path are rehearsed.
+
 Rehearse agent 2 as an application exercise, not a second introductory lecture.
 The coach still supplies its selected MCP endpoint/tool information and guides
 all independent tests. Use shorter reminders and a single checkpoint
@@ -102,6 +111,13 @@ Before the cohort:
   tests, then separately approved integration checks. Record gaps for memory,
   consumer endpoints or hosted runtime rather than claiming the narrow prompt
   runner implements those capabilities.
+- For the optional Weather delivery lab, run `python -S -m unittest discover
+  -s workshop/weather_delivery -p "test_*.py" -v`. Rehearse capture, Git
+  review, offline CI, current-commit evidence linkage, actual prompt-runtime
+  approval/denial, a separate candidate memory scope, and Stable Agent
+  Endpoint invocation independently. The offline workflow has no OIDC/Azure
+  permissions and proves no live gate; do not configure or dispatch cloud
+  workflows as part of this authoring revision.
 - Record a compatible official hosted sample URL/revision, dependency set,
   local test command, hosting/runtime prerequisites and known limitations in
   sanitized facilitator evidence. Prepare reusable failure fixtures and the

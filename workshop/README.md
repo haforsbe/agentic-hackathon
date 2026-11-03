@@ -67,6 +67,14 @@ or participant hosting requirement. The coach provides the connection details,
 discovers actual schemas, and guides the same approval, configuration, test,
 trace, and teach-back process for each specialist. Foundry charges still apply.
 
+After Weather checkpoint 07, participants may choose the separate
+[optional Weather-agent GitHub delivery lab](weather-delivery/README.md) before
+checkpoint 08. It does not add a numbered checkpoint or extend the 5-6-hour
+core estimate. Skip or completion both return to 08. The lab's one-project
+setup is explicitly an educational compromise, not production isolation;
+offline CI is implemented, while live Microsoft Foundry validation, per-call
+approval, and release remain unverified, manual gates.
+
 ## Terms the coach introduces when needed
 
 The coach does not assume prior agent or cloud experience and does not present
@@ -117,6 +125,8 @@ this as a vocabulary test. It introduces each term immediately before use:
 Each checkpoint depends on the preceding checkpoint. Both prompt agents must
 pass and be released independently before checkpoint 15 introduces executable
 orchestration. Where a checkpoint has substeps, test and pause between them.
+The optional Weather delivery lab is offered only after 07; skipping or
+completing it leaves the numbered route unchanged and continues at 08.
 Capstone selection happens at 17 if the participant chooses that follow-on,
 not during setup or as extra work inside the core time budget.
 

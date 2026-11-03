@@ -296,6 +296,32 @@ is never promoted or deployed as the stable release. Execute rollback only for
 an unforeseen problem discovered after a fully passing candidate was promoted;
 otherwise P04 verifies recovery readiness without changing stable routing back.
 
+## Optional Weather delivery lab
+
+This lab is outside numbered checkpoints and is not required for completion.
+Its offline contracts live in `workshop/weather_delivery/`; run them with:
+
+```text
+python -S -m unittest discover -s workshop/weather_delivery -p "test_*.py" -v
+```
+
+| ID | Input/procedure | Pass conditions |
+|----|-----------------|-----------------|
+| WD01 | Review a sanitized manifest and run the offline contract CI | Exact fields, hashes, pinned Toolbox endpoint/dependencies, and distinct connections pass the contract; human review confirms no credentials or memory contents; CI is explicitly not Microsoft Foundry evidence |
+| WD02 | Test a separate Weather validation agent against the reviewed commit | Actual runtime response/Conversation/trace IDs match the manifest hash, exact candidate version, current CI run/artifact, and dependency versions |
+| WD03 | Verify candidate/release identity and memory boundaries | Same training project is disclosed; agent identities and supported memory scopes differ; proof does not rely on separate Conversations alone |
+| WD04 | Inspect one actual Weather tool request, approve it, then deny a separate request | Exact qualified tool and argument hashes are linked to per-call human decisions; denied call has no execution; no automatic approval or direct-MCP bypass |
+| WD05 | Invoke after release through the Stable Agent Endpoint | Service-returned endpoint/version and consumer response/Conversation/trace evidence match the validated manifest and current reviewed commit; project and Toolbox endpoints are rejected as substitutes |
+
+The validator checks structure, hashes and artifact linkage only. A facilitator
+must independently inspect service evidence before live tests can pass.
+Validation and release attempts remain separate records; preserve partial
+failure evidence and block promotion on any mismatch. This one-project setup
+shares permissions, quota, project assets and blast radius; it is an
+educational compromise, not a production-isolation pattern. The optional lab
+adds no authorization to configure GitHub/Azure, run model or tool calls, or
+deploy resources.
+
 ## Capstone gates and optional mutations
 
 | ID | Input/procedure | Pass conditions |

@@ -1,0 +1,64 @@
+name: Weather delivery offline checks
+
+on:
+  push:
+    paths:
+      - "AGENTS.md"
+      - "README.md"
+      - ".github/agents/workshop-coach.agent.md"
+      - ".github/copilot-instructions.md"
+      - "workshop/weather_delivery/**"
+      - "workshop/weather-delivery/**"
+      - "workshop/01-prompt-agents.md"
+      - "workshop/COACH.md"
+      - "workshop/README.md"
+      - "workshop/TESTS.md"
+      - "workshop/FACILITATOR.md"
+      - "workshop/templates/progress.json"
+      - ".github/workflows/weather-delivery-check.yml"
+      - ".github/workflows/weather-delivery-cloud.yml"
+      - "student/weather-delivery/**"
+  pull_request:
+    paths:
+      - "AGENTS.md"
+      - "README.md"
+      - ".github/agents/workshop-coach.agent.md"
+      - ".github/copilot-instructions.md"
+      - "workshop/weather_delivery/**"
+      - "workshop/weather-delivery/**"
+      - "workshop/01-prompt-agents.md"
+      - "workshop/COACH.md"
+      - "workshop/README.md"
+      - "workshop/TESTS.md"
+      - "workshop/FACILITATOR.md"
+      - "workshop/templates/progress.json"
+      - ".github/workflows/weather-delivery-check.yml"
+      - ".github/workflows/weather-delivery-cloud.yml"
+      - "student/weather-delivery/**"
+
+permissions:
+  contents: read
+
+jobs:
+  offline-contract-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run offline contract and progress-state tests
+        run: python -S -m unittest discover -s workshop/weather_delivery -p "test_*.py" -v
+      - name: Record source and contract hashes only
+        run: |
+          python -S -m workshop.weather_delivery.contract write-ci-record \
+            --commit "$GITHUB_SHA" \
+            --manifest student/weather-delivery/manifest.json \
+            --output artifacts/weather-delivery-check.json
+      - name: Preserve offline CI record
+        uses: actions/upload-artifact@v4
+        with:
+          name: weather-delivery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/weather-delivery-check.json
+          retention-days: 14

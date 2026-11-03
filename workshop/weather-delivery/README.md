@@ -1,0 +1,177 @@
+# Optional Weather-agent GitHub delivery lab
+
+This is an optional lab **after Weather checkpoint 07 and before Cultural
+checkpoint 08**. It is not a numbered core checkpoint. Skipping it or
+completing it returns directly to checkpoint 08; the core stays 00-16 and
+remains planned for 5-6 hours.
+
+## What this lab does—and does not do
+
+The lab practices a reviewed Git configuration change, offline CI checks, and
+bounded Microsoft Foundry cloud stages for the Weather Research Agent only.
+The manually dispatched cloud workflow supports configuration capture,
+creation/read-back of the separate validation candidate, a managed
+Conversation request, and explicit per-call MCP approval or denial
+continuation. Its API calls have offline mock coverage, but have **not** been
+rehearsed against a live project. The separate release helpers remain gated;
+the workflow does not claim end-to-end release automation.
+
+This uses **one Microsoft Foundry Project as a training compromise**, not as a
+production pattern or best practice. The validation candidate and released
+Weather agent must be separate resources with explicitly separate memory
+scopes. This reduces accidental changes to the released agent; it does not
+isolate quotas, permissions, project-wide resources, audit scope, or blast
+radius. Never infer memory isolation from using separate Conversations.
+
+GitHub CI's short-lived workload identity, the participant/runtime identity,
+and any agent identity are different principals. A GitHub Environment approval
+or a successful CI run is **not** per-call MCP approval. Keep the actual
+`weather_forecast` request visible and require a human to approve or deny that
+specific call in the supported Microsoft Foundry prompt-agent runtime. If the
+runtime cannot surface the exact request and preserve its Conversation for
+continuation, stop: do not auto-approve, switch to direct MCP, or claim a pass.
+
+## Route
+
+1. **Capture** the reviewed Weather configuration and release dependencies
+   from service read-back. Record the instructions and model policy; exact
+   released-agent/version and Stable Agent Endpoint; Toolbox name, pinned
+   version-specific MCP URL, and discovered qualified tool mapping; distinct
+   upstream and Toolbox-authentication connection references; skill revision
+   and delivery method; and memory configuration hash and separate candidate/
+   release scopes. Include no tool credentials, private Conversations,
+   transcripts, memory contents, or bearer tokens. Do not construct a URL from
+   a display name or substitute the project endpoint for the Stable Agent
+   Endpoint.
+2. **Review in Git.** Put only the sanitized manifest, agent-definition file,
+   instructions source, and synthetic/public test cases in the participant's
+   `student/weather-delivery/` folder. The manifest pins the agent-definition
+   and instructions file hashes; offline CI checks those hashes against the
+   reviewed files. Open a normal GitHub pull request and review the diff. The
+   manifest contract rejects unknown fields, missing dependency references,
+   shared connections, unverified bindings, and non-pinned Toolbox endpoints;
+   it does not silently remove unsupported fields.
+3. **Run offline CI.** The
+   [Weather delivery check](../../.github/workflows/weather-delivery-check.yml)
+   runs standard-library tests with no secrets, Azure login, network calls,
+   model usage, MCP invocation, or `id-token` permission. A passing check proves
+   only that the local contract and progress-state tests passed. It does not
+   prove Foundry access or runtime behavior.
+4. **Validate the separate candidate.** After reviewing the exact commit,
+   manually dispatch the
+   [Weather delivery cloud stages](../../.github/workflows/weather-delivery-cloud.yml)
+   from the default workshop branch. `capture` reads one exact saved version;
+   review its artifact before adding the sanitized definition to the reviewed
+   `student/weather-delivery/` change. `prepare` creates the validation agent
+   only if it does not exist; if it already exists, the workflow reuses only
+   an identical latest definition and blocks on any difference. Keep its
+   Toolbox version, effective allowlist, model policy, skill revision, and
+   other dependencies pinned to the reviewed manifest. Verify its identity
+   and memory scope independently. Before `prepare`, the operator must
+   independently read back the exact Toolbox-authentication connection in
+   this project and set `binding_verified=yes`; the workflow has no supported
+   connection-discovery operation. Never modify the released agent or its
+   dependencies during validation.
+5. **Review each tool call before continuing.** `start` creates a fresh
+   managed Conversation and stops at one pending Weather MCP approval. The
+   run output and artifact contain IDs and hashes, not the raw prompt, reply,
+   or tool arguments. Before a separate `continue` dispatch, inspect that
+   exact pending request in Microsoft Foundry using its response and
+   Conversation IDs, then choose `yes` or `no` for that specific call. The
+   continuation re-reads the response and requires the exact approval ID,
+   candidate version, Toolbox binding, and same Conversation. Never approve
+   from a GitHub Environment approval alone or from an uninspected request.
+   Each `start` and `continue` dispatch also requires a separate
+   current-step cost/spend confirmation; approval to run offline checks,
+   capture, or create a candidate does not grant that spend agreement.
+   Capture only returned evidence IDs and hashes, including one actual
+   approved call and a separate denied call. Do not save raw arguments,
+   prompts, replies, or memory content in shared files.
+6. **Gate and release manually.** Creating a version on the released agent
+   can affect its active traffic when the current selector follows the latest
+   version, so `prepare-release` requires its own explicit current-step
+   approval before the write. `pin-release` requires a separate approval to
+   change version routing. Do not release until the same reviewed
+   configuration commit and manifest hash match the passing offline CI run,
+   candidate version, dependency references, explicit approval/denial traces,
+   and isolated memory evidence. Use the supported Foundry release action only
+   after a separate current-step approval. Read back the service-returned
+   version/Stable Agent Endpoint, then test through that consumer path and
+   retain its evidence IDs. If any identity, dependency version, permission,
+   approval, or endpoint differs, block release and preserve the failed
+   evidence. A project endpoint or Toolbox MCP URL is not the consumer path.
+
+The standard-library validator can check internal consistency:
+
+```text
+python -S -m workshop.weather_delivery.contract check-manifest student/weather-delivery/manifest.json
+python -S -m workshop.weather_delivery.contract check-validation student/weather-delivery/manifest.json .workshop/evidence/weather-validation.json --repository haforsbe/agentic-hackathon --default-branch FY27 --current-commit "$CURRENT_SHA" --latest-sha "$LATEST_DEFAULT_BRANCH_SHA" --latest-attempt "$LATEST_RUN_ATTEMPT"
+python -S -m workshop.weather_delivery.contract check-release student/weather-delivery/manifest.json .workshop/evidence/weather-validation.json .workshop/evidence/weather-release.json --repository haforsbe/agentic-hackathon --default-branch FY27 --current-commit "$CURRENT_SHA" --latest-sha "$LATEST_DEFAULT_BRANCH_SHA" --latest-attempt "$LATEST_RUN_ATTEMPT"
+```
+
+Evidence belongs in ignored `.workshop/evidence/`, not in the Git PR. The
+validator checks hashes, pinned dependencies, exact CI run/artifact linkage,
+actual evidence-ID presence, and the approval outcome shape; it cannot prove
+that a human-reported ID came from Microsoft Foundry. The facilitator must
+independently inspect required live evidence. Failed or blocked attempts stay
+available for diagnosis and never authorize release. The shell variables in
+the examples must come from an independent read of the current commit and
+latest default-branch workflow attempt; never fill them from participant-
+reported or stale values.
+
+## Before any live rehearsal
+
+The cloud workflow is source-only until a separately approved facilitator
+configures its required repository variables:
+`WEATHER_AZURE_CLIENT_ID`, `WEATHER_AZURE_TENANT_ID`,
+`WEATHER_AZURE_SUBSCRIPTION_ID`, `WEATHER_OIDC_SUBJECT`, and
+`WEATHER_FOUNDRY_PROJECT_ENDPOINT`. None are configured by this PR, and the
+workflow has not been dispatched. It requires the GitHub OIDC subject to match
+the federated credential exactly and the short-lived Azure CLI token to match
+the configured tenant and client ID. Do not add a credential, broaden access,
+or run a live stage as part of this offline work.
+
+A later facilitator-approved rehearsal must separately establish:
+
+- the exact GitHub repository/workflow/branch OIDC subject and a short-lived,
+  least-privilege CI identity, distinct from the participant/runtime identity;
+- the exact existing one-project scope and permitted create/read/invoke
+  operations,
+  without write-probing, role broadening, or creating another model deployment;
+- the Toolbox-authentication connection and agent binding were read back in
+  the target project; this workflow does not create or discover connections;
+- observed prompt-agent runtime use of the version-pinned Toolbox, exact
+  per-call approval/denial and same-Conversation continuation, plus explicit
+  memory isolation evidence;
+- explicit cost/spend agreement for each model/tool call, private artifact
+  retention, a separate human release gate, and read-only consumer-path
+  verification; and
+- an observed full failure/recovery rehearsal on synthetic/public data.
+
+Current documented Foundry REST operations support the stages in the cloud
+workflow, including prompt-agent MCP configuration and approval continuation.
+The live Toolbox binding and approval behavior remain unverified. In addition,
+the documented `GET /agents/{name}` response provides endpoint configuration,
+not the Stable Agent Endpoint URL. Capture that exact URL from the participant's
+Foundry read-back into the reviewed manifest; never derive it from a display
+name. The release helpers validate that reviewed URL against the documented
+agent endpoint path and read back version routing before use. The cloud
+workflow does not yet accept validation evidence because independently
+verified trace, memory-isolation, and approval evidence must first be assembled
+and reviewed through a provenance-verified path. The release CLI helpers are
+fail-closed, but are not exposed as workflow choices until that evidence
+collection is implemented. Until those gates are met, **cloud capture and
+candidate validation are implemented but live-unverified; release remains
+manual and fail-closed**. Never treat mock tests as live runtime evidence.
+
+The optional lab is not included in the core time estimate. Do not reduce or
+skip any 00-16 approval, evidence, test, or teach-back gate to fit it in.
+
+## Official references
+
+- [Build with agents, Conversations, and Responses](https://learn.microsoft.com/azure/foundry/agents/concepts/runtime-components)
+- [Configure and share a Microsoft Foundry agent](https://learn.microsoft.com/azure/foundry/agents/how-to/configure-agent)
+- [Connect agents to MCP server endpoints](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/model-context-protocol)
+- [Create and manage a Toolbox](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/toolbox)
+- [GitHub OIDC in Azure](https://docs.github.com/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-azure)
+- [GitHub OIDC subject claims](https://docs.github.com/actions/reference/security/oidc#immutable-subject-claims)

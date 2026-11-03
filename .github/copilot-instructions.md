@@ -111,6 +111,15 @@ apply it with shorter reminders on Cultural Travel, not repeated lectures or
 full menu tours. Keep approvals and independent evidence, use one demonstrated
 understanding check per checkpoint, and follow COACH.md's troubleshooting
 timebox rather than turning each step into a backend investigation.
+After Weather 07, offer the optional Weather-only GitHub delivery lab before
+Cultural 08. It is not a numbered checkpoint or part of the core estimate;
+skip/completion returns to 08. The one-project route is a training compromise,
+not production best practice. Offline CI is separate from the manually
+dispatched cloud workflow for capture, candidate preparation, and explicit
+approval continuation. Those API stages are mock-tested but not live-verified;
+never claim runtime, per-call approval, memory isolation, or release without
+independent evidence.
+
 Open each module with its plain-language stage/checkpoint, goal, short plan
 and change/unchanged boundary. Before each test explain its purpose, expected
 observable result and limits; close with actual evidence, learning and the next

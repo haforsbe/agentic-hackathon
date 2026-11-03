@@ -1,0 +1,174 @@
+name: Weather delivery cloud stages
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Run one bounded cloud stage
+        type: choice
+        required: true
+        options:
+          - capture
+          - prepare
+          - start
+          - continue
+      agent_name:
+        description: Exact existing Weather agent name (capture only)
+        type: string
+        required: false
+      agent_version:
+        description: Exact saved Weather version to capture
+        type: string
+        required: false
+      candidate_version:
+        description: Read-back validation candidate version (start only)
+        type: string
+        required: false
+      binding_verified:
+        description: Confirm the exact Toolbox-authentication connection was read back in this project (prepare only)
+        type: choice
+        required: false
+        default: "no"
+        options:
+          - "no"
+          - "yes"
+      prepare_approved:
+        description: Approve the validation-agent resource write in the one-project lab; this stage does not invoke a model
+        type: choice
+        required: false
+        default: "no"
+        options:
+          - "no"
+          - "yes"
+      decision_case:
+        description: Label this public test request for later evidence review
+        type: choice
+        required: false
+        options:
+          - approved
+          - denied
+      response_id:
+        description: Exact prior stored response ID (continue only)
+        type: string
+        required: false
+      approval_request_id:
+        description: Exact pending MCP approval ID (continue only)
+        type: string
+        required: false
+      approve:
+        description: Your per-call decision after inspecting this exact pending request in Microsoft Foundry
+        type: choice
+        required: false
+        options:
+          - yes
+          - no
+      spend_approved:
+        description: Confirm the agreed cost for this specific model/tool request
+        type: choice
+        required: false
+        default: "no"
+        options:
+          - "no"
+          - "yes"
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: weather-delivery-cloud
+  cancel-in-progress: false
+
+jobs:
+  weather-cloud-stage:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      AZURE_CONFIG_DIR: ${{ runner.temp }}/weather-delivery-azure-cli
+      AZURE_CLIENT_ID: ${{ vars.WEATHER_AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ vars.WEATHER_AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.WEATHER_AZURE_SUBSCRIPTION_ID }}
+      EXPECTED_OIDC_SUBJECT: ${{ vars.WEATHER_OIDC_SUBJECT }}
+      FOUNDRY_PROJECT_ENDPOINT: ${{ vars.WEATHER_FOUNDRY_PROJECT_ENDPOINT }}
+      STAGE: ${{ inputs.stage }}
+      AGENT_NAME: ${{ inputs.agent_name }}
+      AGENT_VERSION: ${{ inputs.agent_version }}
+      CANDIDATE_VERSION: ${{ inputs.candidate_version }}
+      BINDING_VERIFIED: ${{ inputs.binding_verified }}
+      PREPARE_APPROVED: ${{ inputs.prepare_approved }}
+      DECISION_CASE: ${{ inputs.decision_case }}
+      RESPONSE_ID: ${{ inputs.response_id }}
+      APPROVAL_REQUEST_ID: ${{ inputs.approval_request_id }}
+      APPROVE: ${{ inputs.approve }}
+      SPEND_APPROVED: ${{ inputs.spend_approved }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify the exact GitHub OIDC subject before Azure login
+        run: python -S -m workshop.weather_delivery.cloud_stages verify-oidc
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.WEATHER_AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.WEATHER_AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.WEATHER_AZURE_SUBSCRIPTION_ID }}
+      - name: Run one explicit cloud stage
+        shell: bash
+        run: |
+          mkdir -p artifacts/weather-delivery
+          case "$STAGE" in
+            capture)
+              test -n "$AGENT_NAME" && test -n "$AGENT_VERSION"
+              python -S -m workshop.weather_delivery.cloud_stages capture \
+                --agent-name "$AGENT_NAME" \
+                --version "$AGENT_VERSION" \
+                --output artifacts/weather-delivery/agent-definition.json \
+                --record artifacts/weather-delivery/result.json
+              ;;
+            prepare)
+              test "$BINDING_VERIFIED" = "yes" && test "$PREPARE_APPROVED" = "yes"
+              python -S -m workshop.weather_delivery.cloud_stages prepare \
+                --manifest student/weather-delivery/manifest.json \
+                --definition student/weather-delivery/agent-definition.json \
+                --binding-verified "$BINDING_VERIFIED" \
+                --approved "$PREPARE_APPROVED" \
+                --output artifacts/weather-delivery/result.json
+              ;;
+            start)
+              test -n "$CANDIDATE_VERSION" && test -n "$DECISION_CASE" && test "$SPEND_APPROVED" = "yes"
+              python -S -m workshop.weather_delivery.cloud_stages start \
+                --manifest student/weather-delivery/manifest.json \
+                --candidate-version "$CANDIDATE_VERSION" \
+                --decision-case "$DECISION_CASE" \
+                --spend-approved "$SPEND_APPROVED" \
+                --output artifacts/weather-delivery/result.json
+              ;;
+            continue)
+              test -n "$CANDIDATE_VERSION" && test -n "$RESPONSE_ID" && test -n "$APPROVAL_REQUEST_ID" && test -n "$APPROVE" && test "$SPEND_APPROVED" = "yes"
+              python -S -m workshop.weather_delivery.cloud_stages continue \
+                --manifest student/weather-delivery/manifest.json \
+                --candidate-version "$CANDIDATE_VERSION" \
+                --response-id "$RESPONSE_ID" \
+                --approval-request-id "$APPROVAL_REQUEST_ID" \
+                --approve "$APPROVE" \
+                --spend-approved "$SPEND_APPROVED" \
+                --output artifacts/weather-delivery/result.json
+              ;;
+            *)
+              echo "Unsupported stage: $STAGE" >&2
+              exit 2
+              ;;
+          esac
+      - name: Preserve sanitized stage evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weather-cloud-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/weather-delivery/**
+          if-no-files-found: warn
+          retention-days: 14
