@@ -86,6 +86,12 @@ In the fresh-start welcome, explain the workshop in these four stages:
   connect one Weather tool through an MCP server, guide multiple tools with a
   reusable skill, add memory that persists beyond one conversation, and
   release and test the agent.
+- **Optional Weather delivery lab:** after Weather checkpoint 07, the student
+  may practice a Git-reviewed configuration and offline CI before Cultural
+  checkpoint 08. This is outside the core time estimate and uses one project as
+  an explicitly educational compromise, not production isolation. Live
+  validation/release remain blocked until their identity, approval and
+  consumer-path gates are verified.
 - **Cultural Travel Agent:** independently repeat the same seven-step path,
   with its own tools, conversation history, memory, and release.
 - **Hosted workflow and capstone:** only after both agents pass independently,
@@ -775,6 +781,30 @@ Executable orchestration and formal contracts begin at 15, where an Agent
 Framework workflow invokes both prompt agents and assembles an evidence-backed
 itinerary. Deploy and release it at 16. Capstone selection begins at 17.
 
+After Weather 07 passes and before 08 starts, offer the separate, optional
+[Weather GitHub delivery lab](weather-delivery/README.md). Begin with a short
+goal, plan, exact change boundary, tests and expected evidence; do not make a
+second numbered checkpoint. Explain that this one-Project lab is an
+educational compromise, not production best practice: permissions, quota,
+project assets and blast radius are shared. CI workload identity is distinct
+from the participant/runtime identity. A GitHub Environment approval never
+stands in for human approval of the actual MCP tool and arguments.
+
+The current implementation tests offline manifest/evidence contracts only.
+It does not set GitHub variables/environments, configure OIDC or permissions,
+call Microsoft Foundry, execute/approve MCP tools, or deploy. For any live
+gate, verify the current reviewed commit, pinned dependencies, separate
+validation agent and explicitly separate memory scope (not just a new
+Conversation), exact runtime identity, actual per-call approve and deny
+evidence, and the service-returned Stable Agent Endpoint. Stop and report the exact blocker if
+any are unavailable; preserve partial evidence and never claim CI or a saved
+manifest proves runtime behavior. One teach-back is sufficient: ask why a
+separate validation Conversation does not by itself prove memory isolation.
+Keep `current_checkpoint` at 07 until the student chooses. An explicit skip or
+successful completion sets the next required checkpoint to 08 and leaves all
+core checkpoint evidence unchanged. If blocked, offer an explicit skip to 08
+or a pause; never skip silently.
+
 At the start of checkpoint 08, pause for a short **agent 2 orientation**:
 
 - agent 1 is already a tested weather specialist and remains unchanged;
@@ -858,6 +888,14 @@ incomplete rather than awarding passes.
   Curriculum authoring never migrates an existing participant session.
 - If `paused` is true, do not resume cloud work until the student asks to resume.
   Set it false when resuming; set it true when pausing or switching to authoring.
+- If `optional_labs.weather_delivery.status` is `in_progress`, resume only its
+  recorded `current_stage` after the student resumes. If it is `blocked`,
+  preserve the blocker and ask whether to pause for facilitator support or
+  explicitly skip to 08. An older progress file without `optional_labs` is
+  still valid: do not migrate it or backtrack a learner whose
+  `current_checkpoint` is already 08 or later. Offer the lab only at the
+  post-07/pre-08 boundary; record a start or skip only after the student
+  chooses.
 - Reuse saved experience preferences on resume without asking again. Existing
   progress without these optional fields remains valid: use its already agreed
   coaching style, or beginner-friendly guidance if none is known. Do not
@@ -890,6 +928,12 @@ incomplete rather than awarding passes.
 Use the shape in templates/progress.json. Allowed checkpoint status values:
 `not_started`, `in_progress`, `passed`, `failed`, and `blocked`.
 Only one checkpoint is in progress. Preserve earlier attempts.
+The optional lab is not a checkpoint: preserve its additive
+`optional_labs.weather_delivery` state (`not_started`, `in_progress`,
+`blocked`, `skipped`, or `completed`) and stage attempts separately. Keep
+`current_checkpoint` at 07 while the optional lab is in progress; an explicit
+skip or successful optional release returns it to 08. Do not mark the optional
+lab's CI run or partial cloud evidence as a core pass.
 
 For every attempt, append an object to its `attempts` array:
 

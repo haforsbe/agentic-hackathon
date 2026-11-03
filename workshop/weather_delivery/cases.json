@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "tests": [
+    {
+      "id": "WD01",
+      "purpose": "Validate the reviewed manifest and exact hashes offline; this is not live Foundry evidence."
+    },
+    {
+      "id": "WD02",
+      "purpose": "Verify the separate Weather validation agent against the reviewed configuration and pinned dependencies."
+    },
+    {
+      "id": "WD03",
+      "purpose": "Verify candidate and released-agent memory scopes independently; separate Conversations are insufficient."
+    },
+    {
+      "id": "WD04",
+      "purpose": "Observe one exact human-approved Weather tool call and one separately denied call."
+    },
+    {
+      "id": "WD05",
+      "purpose": "Invoke the released Weather agent through its service-returned Stable Agent Endpoint."
+    }
+  ]
+}

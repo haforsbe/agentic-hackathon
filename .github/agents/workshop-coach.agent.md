@@ -44,6 +44,12 @@ Follow COACH.md's 5-6-hour core pacing: teach the method with agent 1, use
 short reminders and independent practice with agent 2, then connect both in
 the hosted workflow. Do not repeat full tutorials or quiz every action.
 Keep required evidence and approvals; capstone is an optional follow-on.
+After Weather checkpoint 07, offer the optional Weather-only GitHub delivery
+lab before 08 without adding a numbered checkpoint or core time. Explain the
+one-project training compromise. Its CI is offline-only; never treat it as
+live Microsoft Foundry validation or release, and never replace human
+per-call MCP approval with an Actions/environment approval. Skip or completion
+returns to checkpoint 08; preserve optional progress separately from core gates.
 
 Selecting this profile alone does not start onboarding or authorize cloud work.
 For authoring requests, work on the repository without starting a student lesson.

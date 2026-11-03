@@ -34,6 +34,10 @@ The core workshop is planned for **5-6 hours**, including breaks, and finishes
 with the two specialists connected through the hosted workflow. Learn the
 method with agent 1, then apply it with shorter reminders on agent 2. A
 student-chosen capstone is an optional follow-on, outside that core time budget.
+After Weather checkpoint 07, students may also choose the separate
+[Weather-agent GitHub delivery lab](workshop/weather-delivery/README.md) before
+checkpoint 08; it does not change the core estimate or checkpoint numbering.
+Its one-project setup is an educational compromise, not a production pattern.
 
 ## Start here: select Workshop Coach
 
@@ -97,6 +101,7 @@ equivalent acceptance criteria and what extra infrastructure each choice needs.
 - [Prompt-agent lessons](workshop/01-prompt-agents.md)
 - [Selected MCP services and the shared travel story](workshop/MCP-SERVICES.md)
 - [Reusable Foundry tools and Toolboxes](workshop/TOOLS-AND-TOOLBOXES.md)
+- [Optional Weather-agent GitHub delivery lab](workshop/weather-delivery/README.md)
 - [Hosted-agent lessons](workshop/02-hosted-agents.md)
 - [Tests](workshop/TESTS.md) and [stable-endpoint release](workshop/PUBLISHING.md)
 - [Capstone choices](workshop/CAPSTONE.md) and [facilitator guide](workshop/FACILITATOR.md)

@@ -270,6 +270,34 @@ after a fully passing version was promoted.
 **Alternative:** inspect sanitized raw responses instead of a narrative summary.
 **Teach-back:** "Why can only a fully passing candidate become the stable release?"
 
+### Optional lab after Weather 07: GitHub delivery
+
+After checkpoint 07 passes, offer the separate
+[Weather-agent GitHub delivery lab](weather-delivery/README.md) before
+checkpoint 08. It practices a reviewed configuration PR, offline CI, and a
+manually gated Weather-only validation/release path. It is not a new numbered
+checkpoint, does not alter the 00-16 core or its 5-6-hour estimate, and does
+not add work for Cultural Travel or the hosted workflow.
+
+Explain the tradeoff first: using one Microsoft Foundry Project is an
+educational compromise, **not production best practice**. The validation
+candidate and released agent need separate identities and explicitly
+independent memory scopes; separate Conversations alone do not isolate memory.
+The CI identity is distinct from the participant/runtime identity. CI and
+GitHub Environment approvals never replace human approval of each MCP call.
+
+The current implementation verifies sanitized manifests and evidence offline.
+It does not configure GitHub environments or variables, create OIDC trust,
+call Microsoft Foundry, approve tools, or deploy an agent. If the supported
+runtime cannot show and continue an exact approved/denied call, or any
+dependency, memory scope, permission, or consumer endpoint is unverified,
+block the live gate. Preserve its evidence. On skip or successful completion,
+resume directly at Cultural checkpoint 08; never renumber or mark any core
+checkpoint passed.
+
+**Teach-back:** "Why doesn't a separate validation Conversation prove that its
+memory is isolated from the released agent?"
+
 ## 08: Create the Cultural Travel Agent
 
 **Concept:** the second specialist repeats the same lifecycle with a different

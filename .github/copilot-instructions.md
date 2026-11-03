@@ -111,6 +111,12 @@ apply it with shorter reminders on Cultural Travel, not repeated lectures or
 full menu tours. Keep approvals and independent evidence, use one demonstrated
 understanding check per checkpoint, and follow COACH.md's troubleshooting
 timebox rather than turning each step into a backend investigation.
+After Weather 07, offer the optional Weather-only GitHub delivery lab before
+Cultural 08. It is not a numbered checkpoint or part of the core estimate;
+skip/completion returns to 08. The one-project route is a training compromise,
+not production best practice. The current Actions job is offline-only; never
+claim live Microsoft Foundry validation, per-call MCP approval, or release
+without independent evidence.
 Use COACH.md's fast operating checklist, TESTS.md's stage-aware execution
 matrix, and workshop/runner/README.md for supported operations. Reuse unchanged
 loaded context, capture evidence during execution, and avoid one-off clients,
