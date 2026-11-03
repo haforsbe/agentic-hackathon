@@ -79,6 +79,18 @@ Pagination or inconclusive permissions stop rather than create a write probe.
 Checks for an approved batch share one process/client; CLI identity is checked
 again before each model request or resource write. No global sign-in changes.
 
+When a token's username claims differ from the selected CLI account label,
+the runner first verifies the token's tenant, rechecks the CLI account, tenant
+and subscription, then uses the read-only Microsoft Graph lookup
+`az ad signed-in-user show --query id` to compare the selected user's directory
+object ID with the token's `oid`. This alias path requires access to that
+signed-in-user lookup; a failed lookup, empty/invalid ID or different/missing
+token ID stops execution. The lookup is repeated for each alias token, not
+cached across requests or scopes. Exact-name matches keep the existing
+tenant-and-username check without requiring the lookup. The runner does not
+change sign-in profiles, grant permissions, or save tokens or directory identity
+details in evidence.
+
 MCP tool discovery can occur during inference even when no weather/cultural
 tool executes; record that distinction. On a new tool-approval request, the
 runner **stops the batch**. Remaining cases are not run. Inspect the proposed
