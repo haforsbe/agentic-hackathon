@@ -126,9 +126,30 @@ for an unforeseen issue discovered after promotion, not a substitute for
 pre-release testing. Retain the failed post-release version and traces for
 diagnosis while restoring the previous known-good release.
 
-**App practice:** compare the release handoff with live endpoint/version and nested-trace evidence.
-**Alternative:** use applicable hosted Canvas controls when available, then return to Chat for validation.
-**Teach-back:** "How can you prove which workflow and specialist versions produced the itinerary?"
+After the final endpoint release/update checks pass, follow
+[channel publication at 16](PUBLISHING.md#required-channel-publication-at-07-and-16).
+Publish the **hosted workflow's stable endpoint**, not the individual workers,
+to the participant's chosen Microsoft Teams and/or Microsoft 365 Copilot
+surface. Obtain separate publication and bounded test approvals; do not
+rebuild the specialists or replace their endpoints.
 
-This completes the core route. Proceed to [capstone selection](CAPSTONE.md)
+Run CH02: the participant sends a supported trip request from the chosen
+channel and receives the workflow's sourced itinerary. Inspect the same run's
+correlated Microsoft Foundry workflow and specialist traces together to show
+both agents being invoked, both results validated and the itinerary assembled.
+The channel displays the combined reply; do not promise it exposes internal
+agent-to-agent messages. Keep per-call approvals, identity isolation,
+provenance and explicit failures intact through the channel adapter.
+At least one chosen surface must have real CH02 evidence; installation or a
+raw endpoint response alone is not enough. An unsupported adapter or approval
+flow blocks this milestone; it does not authorize an approval bypass.
+
+**App practice:** send the workflow request in the chosen channel, then compare
+the reply with live endpoint/version and nested-trace evidence in the GitHub Copilot app.
+**Alternative:** use applicable hosted Canvas controls when available, then return to Chat for validation.
+**Teach-back:** "How can you prove that your request from Microsoft Teams or
+Microsoft 365 Copilot invoked the workflow and both tested specialist versions?"
+
+The core route is complete only after both endpoint and channel gates pass,
+including Weather CH01 and workflow CH02. Proceed to [capstone selection](CAPSTONE.md)
 only if the participant chooses the optional follow-on.

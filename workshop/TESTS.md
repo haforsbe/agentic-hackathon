@@ -5,13 +5,19 @@ automated grading service. Never use the coach's own answer as the runtime resul
 
 ## Run and judge
 
-Before running a case, name its execution route: **Run from the Copilot app -
-coach sends** or **Run in the Foundry portal - participant sends**. Follow
+Before running a case, name its execution route: **Run from the GitHub Copilot app -
+coach sends** or **Run in the Microsoft Foundry portal - participant sends**. Follow
 COACH.md and APP-GUIDE.md for approvals, exact agent/version, conversation
 context, navigation, and where to report results. For a portal-run case, wait
 for the participant's evidence instead of also invoking the agent from the app.
 Portal inspection alone is not a test. Both routes require actual Foundry
 runtime evidence, not the coach's predicted answer; missing usage is unknown.
+
+At 07 and 16 there is also **Run in Microsoft Teams or Microsoft 365 Copilot -
+participant sends**. Name the exact chosen surface and published app before
+the test. CH01/CH02 require actual channel-originated requests, not a duplicate
+coach or Playground call. Record these participant prompts by channel; never
+add calls to rebalance the earlier demonstration/practice target.
 
 Distribute required cases using the
 [mixed test plan](APP-GUIDE.md#where-tests-and-exploration-happen); participant
@@ -55,17 +61,28 @@ approved collection of checks on the **current candidate**, not authorization
 for future lessons, tool approvals or retries. Use the
 [shared runner](runner/README.md) for its supported operations.
 
+Treat the regression column as required **coverage**, not an instruction to
+send every historical prompt again. Before the batch, match each assertion to
+its candidate/version, configuration and dependencies, actual execution path,
+identity and Conversation/memory scope. Reuse an existing pass only when all
+relevant dimensions remain valid; execute missing or invalidated coverage.
+No new version or capability change does not by itself invalidate unrelated
+evidence. New consumer/channel paths and changed authorization or state still
+need their own affected checks. Keep release suites complete on the actual
+final version/path; never infer a channel pass from project tests.
+
 | Checkpoints | Required new behavior | Regression on the current candidate |
 |-------------|-----------------------|-------------------------------------|
 | 01, 08 | B01-B03, one fresh context per input | None; save exact baseline prompts, replies, target, version and route |
 | 02, 09 | I01: same three inputs, required headings | These same three after-change exchanges also satisfy B01-B03; compare with saved baseline evidence, not three new before-change calls |
-| 03, 10 | D01 two turns in Conversation A; D02 dependent follow-up in new Conversation B | B01-B03/I01 in an approved batch; missing-context B02 can share the D02 exchange if its exact input and assertions match |
+| 03, 10 | D01 two turns in Conversation A; D02 dependent follow-up in new Conversation B | B01-B03/I01 coverage: reuse valid evidence on the unchanged version/path/scope; run only missing or invalidated checks if Conversation invocation changes that path or scope. B02 can share D02 when exact input/assertions match |
 | 04, 11 | T01 reusable connection; T03 Weather Toolbox-at-04 or T02 Cultural Toolbox-at-11; C01 or C02 first-tool success and trace; C03a/C03b | B01-B03/I01 and D01-D02; no memory or later skill tests yet |
 | 05, 12 | T01 connection reuse and T03 Weather Toolbox expansion at 05 / T02 Cultural Toolbox expansion at 12; S01 or S02 routing/provenance and partial failure | B01-B03/I01, D01-D02, C01R or C02R, C03a/C03b; a skill scenario may also satisfy a matching forecast/museum regression |
 | 06, 13 | M01-M03, consented synthetic preference, trusted-scope isolation/correction/deletion | Previous applicable coverage, using C01R/C02R and the post-memory D variant below; the required skill/MCP personalization run may satisfy overlapping assertions |
-| 07, 14 | T03 existing Weather Toolbox/dependency verification at 07; P01-P03 for each specialist at its release; two-specialist comparison at 14 | Full applicable B/I/D/C/S/M coverage on each final Toolbox-backed candidate/path, counted once; at 14 verify unchanged Weather metadata and reuse its valid evidence, not a second full Weather suite |
+| 07 | T03 existing Weather Toolbox/dependency verification; P01-P03, then CH01 channel publication/use before 08 | Full applicable B/I/D/C/S/M coverage on the final Toolbox-backed candidate/path, counted once; new channel-path access/approval/isolation evidence cannot be inferred from endpoint tests |
+| 14 | Cultural P01-P03 and two-specialist comparison | Full applicable Cultural B/I/D/C/S/M coverage; verify unchanged Weather release, publication and dependencies and reuse valid evidence, not a second Weather suite or publication |
 | 15 | G01-G03 and W01-W03: local fixtures for validation/failure branches and approved live calls to both released specialists | Specialist release evidence must match the versions invoked; no specialist rewrite or full rerun merely to scaffold the workflow |
-| 16 | W01-W03 and P01-P04 remotely; retain pre-release evidence and a known-good recovery target | Full applicable G/W behavior on the final hosted version and consumer path; one exchange can satisfy both W01 and P01 |
+| 16 | W01-W03 and P01-P04 remotely, then CH02 on the final selected workflow version; retain pre-release evidence and a known-good recovery target | Full applicable G/W behavior on the final hosted version and consumer path; one exchange can satisfy both W01 and P01; CH02 must originate in the chosen channel |
 
 Prior results can be reused only for the **same retained version, configuration,
 execution path and relevant identity/scope**. A new version needs its applicable
@@ -256,6 +273,43 @@ Failed candidate tests are retained for diagnosis, but a known-failing candidate
 is never promoted or deployed as the stable release. Execute rollback only for
 an unforeseen problem discovered after a fully passing candidate was promoted;
 otherwise P04 verifies recovery readiness without changing stable routing back.
+
+## Microsoft Teams and Microsoft 365 Copilot publication
+
+Follow [PUBLISHING.md](PUBLISHING.md#required-channel-publication-at-07-and-16).
+At least one participant-chosen surface is required for each milestone; if
+both are chosen, record each separately. Cultural's channel publication is
+not required. Do not equate release P01-P04 with channel CH01/CH02.
+
+| ID | Input/procedure | Pass conditions |
+|----|-----------------|-----------------|
+| CH01 | At 07 publish the tested Weather release to the approved Microsoft Teams and/or Microsoft 365 Copilot surface; participant sends a supported weather request there | Approved audience, channel identity, app/Bot Service and pinned active version verified; actual channel reply with weather provenance and uncertainty; same-run service/trace linkage proves the released Weather agent and permitted MCP tools executed; channel-specific access, trusted Conversation/memory isolation and actual approval/denial verified; direct endpoint remains usable; all chosen surfaces have evidence before 08 |
+| CH02 | At 16 publish the final released hosted workflow; participant sends a supported trip request from the chosen surface and inspects the same execution | Approved app/channel maps to the workflow stable endpoint/version, not a worker; channel reply contains a sourced itinerary with uncertainty; correlated request, both released specialist invocations, result validation and aggregation are observed; identity mapping, downstream access and per-call approval remain effective; no manual worker calls, direct-tool shortcut or fabricated evidence; all chosen surfaces have evidence before core completion |
+
+Before tests, approve exact prompts, supported location/dates, bounded model
+requests, tool approval continuations, stored data and costs. Include a scoped
+channel denial check and synthetic-user isolation verification; retain the
+same security assertions when a channel requires a different supported client
+or adapter. Do not grant roles, switch audience to organization-wide, or
+disable approvals to manufacture a pass.
+Use read-only metadata/access checks where sufficient and live execution for
+runtime assertions. Reuse an exchange for overlapping assertions only when
+target/version, actual channel, identity/scope and input match; no duplicate
+call merely for another test label. A channel happy path may satisfy a matching
+W01 assertion but not the complete W02/W03 suite.
+
+Capture publication status, returned launch link/app identifiers, audience,
+channel and tested version, exact input/reply or labeled safe excerpt,
+timestamp, available response/Conversation/correlation identifiers, trace
+linkage and known/unknown usage. Corroborate participant-reported output with
+the actual run, not screenshots of an installed app. Native streaming/citation
+cards are not promised; verify readable source attribution in the actual reply
+and full provenance in execution evidence.
+If permissions, tenant policy/licensing, protocol support, approval flow or
+required linkage cannot be verified, keep CH01/CH02 and its checkpoint blocked.
+Saved endpoint passes remain valid for their unchanged paths; an explicitly
+approved partial route remains incomplete. Publication success or admin
+approval alone never passes either channel test.
 
 ## Capstone gates and optional mutations
 

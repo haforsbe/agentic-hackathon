@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "curriculum_version": "two-specialists-workflow-v8",
+  "curriculum_version": "two-specialists-workflow-v9",
   "paused": false,
   "scenario": null,
   "student_project_root": "student",
@@ -10,7 +10,9 @@
     "experience": {
       "foundry": null,
       "copilot_app": null
-    }
+    },
+    "interaction_balance": null,
+    "check_ins": []
   },
   "context": {
     "subscription_id": null,
@@ -91,6 +93,36 @@
       "portal_visibility": "unverified",
       "selected_upstream_tools": [],
       "exposed_tool_names": []
+    }
+  },
+  "channel_publications": {
+    "weather": {
+      "status": "not_started",
+      "surfaces": [],
+      "audience": null,
+      "agent_name": null,
+      "agent_version": null,
+      "stable_endpoint": null,
+      "app_id": null,
+      "app_package_version": null,
+      "launch_links": [],
+      "bot_service_resource_id": null,
+      "publication_evidence": null,
+      "channel_test_evidence": []
+    },
+    "workflow": {
+      "status": "not_started",
+      "surfaces": [],
+      "audience": null,
+      "agent_name": null,
+      "agent_version": null,
+      "stable_endpoint": null,
+      "app_id": null,
+      "app_package_version": null,
+      "launch_links": [],
+      "bot_service_resource_id": null,
+      "publication_evidence": null,
+      "channel_test_evidence": []
     }
   },
   "resources": [],

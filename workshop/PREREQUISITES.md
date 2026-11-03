@@ -4,6 +4,10 @@ Build two Microsoft Foundry agents and a coordinating workflow, guided by
 **Workshop Coach in the GitHub Copilot app**. No prior agent development
 experience is required. Prepare the following before attending; contact your
 facilitator if anything is blocked.
+You will also publish and use Weather before building Cultural Travel, and
+the completed workflow afterward, in **Microsoft Teams and/or Microsoft 365
+Copilot**. Choose at least one surface for each milestone; the GitHub Copilot
+app remains the separate coaching application.
 
 Plan for **5-6 hours including breaks** for the guided two-agent-and-workflow
 build. A capstone using your own scenario is an optional follow-on. Ready
@@ -62,7 +66,8 @@ roles at the appropriate resource scope:
 | Activity | Access needed |
 |----------|---------------|
 | Build and test agents | **Foundry User** on the Foundry resource or appropriate project scope. |
-| Publish agents during release lessons | **Foundry Project Manager** on the parent Foundry resource; this also supports agent development. |
+| Release agents through stable endpoints | Operation-specific agent management and consumer access, checked at the project/agent scope; **Foundry Project Manager** on the parent Microsoft Foundry resource supports project management but does not grant Bot Service permissions. |
+| Publish Weather and the hosted workflow to Microsoft Teams/Microsoft 365 Copilot | Microsoft Foundry project publishing access (the official guide names **Foundry User**) plus `Microsoft.BotService/botServices/write` and `Microsoft.BotService/botServices/channels/write` in the target resource group; **Azure Bot Service Contributor Role** provides those Bot Service permissions. |
 | Create a project or deploy models | Additional management permissions, such as **Foundry Account Owner** on the Foundry resource; creating the resource itself requires permissions on the target resource group. |
 | Inspect traces and query logs | **Log Analytics Reader** on connected telemetry resources; protected tables may require additional read access. |
 | Deploy the hosted workflow | Permissions for supporting Azure resources and runtime identities, checked during deployment preparation. |
@@ -104,7 +109,32 @@ exercises. A working model reply does not prove tracing is enabled.
 Connecting or creating telemetry resources requires explicit approval and can
 incur storage and ingestion costs; earlier executions may not appear afterward.
 
-## 4. Agree on costs and safe practice data
+## 4. Prepare Microsoft Teams or Microsoft 365 Copilot access
+
+Arrange access/licensing to at least one of these applications with your
+organization's Microsoft account. Your facilitator must rehearse the chosen
+surface(s), tenant app policies, installation and publication permissions, and
+the hosted workflow's compatible channel adapter before delivery. Ask your
+administrator for help; do not bypass app policies or request broad roles.
+
+The Azure subscription needs the `Microsoft.BotService` provider registered.
+Registration or resource creation is not authorized by attending the workshop.
+The publishing flow can create an Azure Bot Service resource and enable channel
+protocol/authorization settings. **Just you** is the preferred workshop scope;
+organization-wide distribution requires separate approval and Microsoft 365
+administrator review. Personal publication does not remove Azure permission,
+licensing or tenant-policy requirements.
+
+Messages and app metadata pass through Microsoft 365 services and their data
+handling commitments, separately from Microsoft Foundry. Agree on this flow
+and any channel costs before publishing. Private-network projects need a
+separately approved, rehearsed supported route; do not relax security settings.
+See [publication readiness and steps](PUBLISHING.md#required-channel-publication-at-07-and-16).
+A missing required channel/runtime or tool-approval capability leaves the
+affected checkpoint blocked, not passed with a screenshot or endpoint-only test.
+No agents need to be published in advance.
+
+## 5. Agree on costs and safe practice data
 
 Agree on an approved spending arrangement: models, memory, hosted compute,
 and telemetry can incur charges, even with existing resources. The coach asks
@@ -115,20 +145,24 @@ Use only **public or synthetic data**; traces may capture prompts and replies.
 Never share credentials or confidential files. Agree on resource cleanup;
 pausing a lesson does not stop paid Azure resources.
 
-## 5. Be ready to start in the Copilot app
+## 6. Be ready to start in the GitHub Copilot app
 
 After cloning the repository provided by your facilitator (downloading a local
 copy), open it as a project in the **GitHub Copilot app**, start a session,
-select **Workshop Coach** in the agent selector, and send:
+type **`/agent`** in the message box, select **Workshop Coach**, and send:
 
 > Start the workshop.
 
 The coach welcomes you and explains the workshop, then asks how experienced
 you feel with **Microsoft Foundry** and the **GitHub Copilot app**, separately.
-Choose Beginner, Intermediate or Advanced, or describe it in your own words.
+Choose Beginner, Intermediate or Expert, or describe it in your own words.
 The answers tailor explanations and navigation, not the goals or safety checks.
 Setup starts next without another start command. You can say "explain more"
 or "keep it brief" at any time; saved preferences are reused when you resume.
+During the workshop, occasional short check-ins let you keep or adjust the
+explanation level and the balance between coach-executed and hands-on steps.
+You can defer a check-in; it is not an assessment and does not change approvals
+or required learning evidence.
 
 The core includes reusable **Foundry tool connections** and **Toolboxes**
 (managed collections of tools). Your project must support their management
@@ -147,11 +181,15 @@ The coaching language does not automatically change your Foundry agents'
 instructions or test prompts. Ask your facilitator which languages have been
 rehearsed for this workshop.
 
-If there is no agent selector, use normal repository Chat. If the selector
-exists but Workshop Coach is missing, use the [start guide](START.md) or ask
+The documented alternative is the agent picker dropdown inside the prompt box,
+if visible; it is not the model picker. If neither selection route is available,
+use normal repository Chat. If selection works but Workshop Coach is missing,
+use the [start guide](START.md) or ask
 your facilitator; availability depends on the app build and configuration.
 
-The coach runs in Copilot; your agents run in Foundry. The coach states when
+Workshop Coach is a supplied GitHub Copilot custom-agent profile; you do not
+need to create one to begin. The coach runs in the GitHub Copilot app; your
+Weather and Cultural Travel agents run in Microsoft Foundry. The coach states when
 to use the portal for inspection or testing. Do not duplicate tests in both places.
 
 ## Final readiness check
@@ -161,6 +199,7 @@ to use the portal for inspection or testing. Do not duplicate tests in both plac
 - [ ] I know which Microsoft account and approved Azure subscription I will use.
 - [ ] I can access my dedicated Foundry Project, or have arranged to create it during setup.
 - [ ] Application Insights and telemetry-read access are ready, or I have flagged the setup needed with my facilitator.
+- [ ] I can access Microsoft Teams and/or Microsoft 365 Copilot, with channel publishing, Bot Service permissions and tenant policies prepared or flagged with my facilitator.
 - [ ] I understand that Azure usage can incur costs and will use only public or synthetic data.
 
 If any item is blocked, contact your facilitator before the workshop. You do

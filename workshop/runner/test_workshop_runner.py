@@ -1,11 +1,12 @@
 import copy
 import base64
+import io
 import json
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 import workshop_runner as runner
 
@@ -207,6 +208,77 @@ class RunnerTests(unittest.TestCase):
         self.assertTrue(runner.permitted(grants, permission))
         self.assertFalse(runner.permitted(grants, {"kind": "actions", "operation": permission["operation"]}))
 
+    def test_documented_data_policy_accepts_existing_equivalent_or_broader_grant(self):
+        for pattern in ("Microsoft.CognitiveServices/*", "MICROSOFT.COGNITIVESERVICES/*", "*"):
+            for exclusions in ([], list(runner.FOUNDRY_USER_DATA_EXCLUSIONS)):
+                with self.subTest(pattern=pattern, exclusions=exclusions):
+                    self.assertTrue(runner.foundry_user_data_access([
+                        {"dataActions": [pattern], "notDataActions": exclusions},
+                    ]))
+
+    def test_documented_data_policy_rejects_narrower_or_additionally_restricted_grants(self):
+        for grants in (
+            [],
+            [{"actions": ["*"]}],
+            [{"dataActions": ["Microsoft.CognitiveServices/accounts/AIServices/agents/*"]}],
+            [{"dataActions": ["Microsoft.CognitiveServices/accounts/AIServices/agents/storage/read"]}],
+            [{"dataActions": ["Microsoft.CognitiveServices/*"], "notDataActions": ["*/storage/write"]}],
+            [{"dataActions": ["Microsoft.CognitiveServices/*"], "notDataActions": ["*"]}],
+        ):
+            with self.subTest(grants=grants):
+                self.assertFalse(runner.foundry_user_data_access(grants))
+
+    def test_independent_equivalent_grant_can_supply_access(self):
+        restricted = {"dataActions": ["Microsoft.CognitiveServices/*"], "notDataActions": ["*/storage/*"]}
+        self.assertTrue(runner.foundry_user_data_access([
+            restricted, {"dataActions": ["Microsoft.CognitiveServices/*"]},
+        ]))
+
+    def verify_grants(self, grants, **extra):
+        credential = Mock()
+        credential.get_token.return_value.token = "synthetic-token"
+        payload = io.StringIO(json.dumps({"value": grants, **extra}))
+        with patch.object(runner, "urlopen", return_value=payload):
+            return runner.verify_permissions(self.plan, credential)
+
+    def test_permission_preflight_records_documented_data_policy(self):
+        self.plan["authorization_policy"] = "foundry-user-data-access"
+        verification = self.verify_grants([{
+            "dataActions": ["Microsoft.CognitiveServices/*"],
+            "notDataActions": list(runner.FOUNDRY_USER_DATA_EXCLUSIONS),
+        }])
+        self.assertEqual(verification["policy"], "foundry-user-data-access")
+        self.assertTrue(verification["foundry_user_equivalent_data_grant_verified"])
+        self.assertTrue(verification["required_permissions_verified"])
+        self.client.conversations.create.assert_not_called()
+        self.client.responses.create.assert_not_called()
+
+    def test_documented_data_policy_still_checks_exact_required_operations(self):
+        self.plan["authorization_policy"] = "foundry-user-data-access"
+        self.plan["required_permissions"] = [{"kind": "actions", "operation": "Microsoft.Authorization/test/write"}]
+        with self.assertRaisesRegex(ValueError, "Required operation permission"):
+            self.verify_grants([{"dataActions": ["Microsoft.CognitiveServices/*"]}])
+
+    def test_permission_preflight_rejects_missing_broad_grant_and_pagination(self):
+        self.plan["authorization_policy"] = "foundry-user-data-access"
+        with self.assertRaisesRegex(ValueError, "data grant not verified"):
+            self.verify_grants([{"dataActions": [self.plan["required_permissions"][0]["operation"]]}])
+        with self.assertRaisesRegex(ValueError, "pagination"):
+            self.verify_grants([{"dataActions": ["*"]}], nextLink="https://synthetic.invalid/next")
+        self.client.conversations.create.assert_not_called()
+        self.client.responses.create.assert_not_called()
+
+    def test_conversation_policy_is_checked_again_before_permission_request(self):
+        self.plan["operation"] = "new-conversation"
+        with patch.object(runner, "urlopen") as request:
+            with self.assertRaisesRegex(ValueError, "Managed Conversations require"):
+                runner.verify_permissions(self.plan, Mock())
+        request.assert_not_called()
+
+    def test_legacy_operation_specific_preflight_remains_supported(self):
+        verification = self.verify_grants([{"dataActions": [self.plan["required_permissions"][0]["operation"]]}])
+        self.assertEqual(verification, {"policy": "operation-specific", "required_permissions_verified": True})
+
     def test_normalization_accepts_only_equivalent_allowlist(self):
         a = {"tools": [{"allowed_tools": ["weather_forecast"]}]}
         b = {"tools": [{"allowed_tools": {"tool_names": ["weather_forecast"]}}]}
@@ -235,6 +307,30 @@ class PlanTests(unittest.TestCase):
 
     def test_valid_plan(self):
         self.assertEqual(self.load()[0]["max_requests"], 2)
+
+    def test_unknown_authorization_policy_is_rejected(self):
+        self.plan["authorization_policy"] = "skip-permissions"
+        with self.assertRaisesRegex(ValueError, "Unsupported authorization policy"):
+            self.load()
+
+    def test_managed_conversation_requires_explicit_documented_data_policy(self):
+        for operation in ("new-conversation", "run"):
+            with self.subTest(operation=operation):
+                self.plan["operation"] = operation
+                self.plan["cases"][0]["conversation_id"] = "conv_synthetic"
+                with self.assertRaisesRegex(ValueError, "Managed Conversations require"):
+                    self.load()
+                self.plan["authorization_policy"] = "foundry-user-data-access"
+                self.assertEqual(self.load()[0]["authorization_policy"], "foundry-user-data-access")
+                self.plan.pop("authorization_policy")
+
+    def test_documented_data_policy_does_not_replace_required_permissions(self):
+        self.plan["authorization_policy"] = "foundry-user-data-access"
+        for permissions in ([], [{"kind": "dataActions", "operation": "Microsoft.CognitiveServices/*"}]):
+            with self.subTest(permissions=permissions):
+                self.plan["required_permissions"] = permissions
+                with self.assertRaises(ValueError):
+                    self.load()
 
     def test_approval_scope_and_budget_required(self):
         for key, value in (("approval_reference", ""), ("max_requests", 1),
@@ -285,6 +381,81 @@ class PlanTests(unittest.TestCase):
                 with self.assertRaises(FileExistsError):
                     runner.run(self.plan, CONFIG)
         self.assertIn("request_started", existing.read_text(encoding="utf-8"))
+
+    def test_missing_data_policy_grant_stops_before_constructing_project_client(self):
+        self.plan.update(operation="new-conversation", authorization_policy="foundry-user-data-access")
+        project_factory = Mock()
+        credential = Mock()
+        credential.get_token.return_value.token = "synthetic-token"
+        payload = io.StringIO(json.dumps({
+            "value": [{"dataActions": [self.plan["required_permissions"][0]["operation"]]}],
+        }))
+        with patch.dict("sys.modules", {"azure.ai.projects": SimpleNamespace(AIProjectClient=project_factory)}), \
+                patch.object(runner, "readiness", return_value={"prompt_runner_ready": True}), \
+                patch.object(runner, "check_cli"), \
+                patch.object(runner, "cli", return_value={"id": self.plan["project_resource_id"]}), \
+                patch.object(runner, "verified_credential", return_value=credential), \
+                patch.object(runner, "urlopen", return_value=payload), \
+                patch.dict(runner.os.environ):
+            with self.assertRaisesRegex(RuntimeError, "Runner stopped"):
+                runner.run(self.plan, CONFIG)
+        project_factory.assert_not_called()
+        credential.close.assert_called_once()
+        evidence = json.loads((self.root / ".workshop" / "evidence" / "synthetic-test.json").read_text())
+        self.assertEqual(evidence["state"], "stopped_do_not_retry_without_reconciliation")
+        self.assertEqual(evidence["requests_started"], 0)
+        self.assertIn("data grant not verified", evidence["error"]["reason"])
+
+    def test_project_access_reads_only_first_connection_page_and_propagates_failure(self):
+        for index, (items, fails) in enumerate((([], False), ([{"name": "synthetic"}], False), ([], True))):
+            with self.subTest(items=items, fails=fails):
+                self.plan.update(operation="inspect", run_id=f"synthetic-access-{index}")
+                project_factory = MagicMock()
+                project = project_factory.return_value.__enter__.return_value
+                project.agents.get_version.return_value.definition.as_dict.return_value = CONFIG["definition"]
+                client = project.get_openai_client.return_value.__enter__.return_value
+                credential = Mock()
+
+                def pages():
+                    if fails:
+                        raise TimeoutError("Synthetic project access failure")
+                    yield iter(items)
+                    self.fail("Project access must not fetch another connection page")
+
+                listing = project.connections.list.return_value
+                listing.by_page.return_value = pages()
+                listing.__iter__.side_effect = AssertionError("Do not enumerate all connections")
+                with patch.dict("sys.modules", {"azure.ai.projects": SimpleNamespace(AIProjectClient=project_factory)}), \
+                        patch.object(runner, "readiness", return_value={"prompt_runner_ready": True}), \
+                        patch.object(runner, "check_cli") as check_cli, \
+                        patch.object(runner, "cli", return_value={"id": self.plan["project_resource_id"]}), \
+                        patch.object(runner, "verified_credential", return_value=credential), \
+                        patch.object(runner, "verify_permissions", return_value={"required_permissions_verified": True}) as permissions, \
+                        patch.dict(runner.os.environ):
+                    if fails:
+                        with self.assertRaisesRegex(RuntimeError, "Runner stopped"):
+                            runner.run(self.plan, CONFIG)
+                    else:
+                        _, record = runner.run(self.plan, CONFIG)
+                        self.assertEqual(record["state"], "operation_completed_not_graded")
+                        project.agents.get_version.assert_called_once_with(
+                            agent_name=self.plan["agent_name"], agent_version=self.plan["agent_version"])
+                        project.get_openai_client.assert_called_once_with(max_retries=0, timeout=60)
+                check_cli.assert_called_once_with(self.plan)
+                permissions.assert_called_once_with(self.plan, credential)
+                project_factory.assert_called_once_with(
+                    endpoint=self.plan["endpoint"], credential=credential, retry_total=0)
+                listing.by_page.assert_called_once_with()
+                client.responses.create.assert_not_called()
+                credential.close.assert_called_once()
+                if fails:
+                    project.get_openai_client.assert_not_called()
+                    project.agents.get_version.assert_not_called()
+                    evidence = json.loads(
+                        (self.root / ".workshop" / "evidence" / f"synthetic-access-{index}.json").read_text())
+                    self.assertEqual(evidence["state"], "stopped_do_not_retry_without_reconciliation")
+                    self.assertEqual(evidence["requests_started"], 0)
+                    self.assertEqual(evidence["error"]["type"], "TimeoutError")
 
 
 if __name__ == "__main__":
