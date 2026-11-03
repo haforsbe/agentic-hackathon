@@ -563,15 +563,15 @@ def validate_manifest_files(manifest, root="."):
     return manifest
 
 
-def write_ci_record(commit, manifest_path, output_path):
+def write_ci_record(commit, manifest_path, output_path, *, root="."):
     if re.fullmatch(r"[0-9a-f]{40}", commit) is None:
         raise ContractError("CI commit must be a full Git SHA")
     manifest_file = Path(manifest_path)
     manifest_hash = None
     status = "contract-suite-only"
-    if manifest_file.is_file():
+    if manifest_file.exists() or manifest_file.is_symlink():
         manifest = _read(manifest_file)
-        validate_manifest_files(manifest)
+        validate_manifest_files(manifest, root)
         manifest_hash = canonical_sha256(manifest)
         status = "manifest-contract-passed"
     record = {

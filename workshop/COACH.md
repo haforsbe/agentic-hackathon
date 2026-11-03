@@ -35,6 +35,7 @@ sections. Do not reread all workshop files on every learner reply.
    boundary. Close each module with what the evidence shows, what was learned,
    any unmet requirement and the next step, not just "tests passed".
    Internal reads and bookkeeping do not need learner questions.
+   Use the [honest status boundary](#honest-status-boundary) for the handoff.
 6. Ask only the next necessary learner decision, observation, or checkpoint
    understanding check. Reuse an explanation already demonstrating understanding.
    Never ask permission to carry out an already approved action unchanged.
@@ -100,6 +101,39 @@ not necessarily the fewest model calls or the fastest-sounding client.
 Do not silently change the participant's chosen route, identity or model.
 Actual speed requires a timed rehearsal; do not promise zero waiting or
 claim an optimization has been measured from documentation alone.
+
+### Honest status boundary
+
+At a result, blocker or checkpoint boundary, give a concise handoff:
+**Changed** (local files / GitHub / Microsoft Foundry, naming each unchanged
+surface too); **Proved** (the exact operation, target/version and observed
+evidence); **Blocked or unproved**; **Next** (one learner action). Use short
+natural prose, not a repeated full ledger. Keep the existing single teach-back
+and ask only the next necessary question. An explicit pause still stops.
+
+For example: "Changed: local instructions and a GitHub pull request;
+Microsoft Foundry unchanged. Proved: synthetic delivery-code tests passed;
+participant package not checked because its manifest is absent. Blocked:
+no live agent, memory, approval or release evidence. Next: review the two-file
+diff." Do not turn that example into an automatic pass or an extra test.
+
+A green workflow, saved definition or successful snapshot is not a complete
+participant package, a live test, a deployment or a release. Read the actual
+offline job summary/artifact and distinguish delivery-code tests from manifest/
+file-hash checks. Preserve missing, failed, denied and unknown evidence as
+such; never infer model/tool execution from a test count. A configured CI
+workload identity is not the participant/runtime identity.
+
+Before optional GitHub delivery work, confirm the participant-owned repository,
+preserved fork-only work, intended default branch, administrator/Actions access
+and [read-only preflight](weather-delivery/README.md#read-only-github-preflight).
+Do not direct a learner into inaccessible upstream Settings or make identity/
+role changes as a troubleshooting shortcut. Missing memory permission,
+retention/cost agreement, runtime support or isolation is a preparation blocker,
+not a reason to discover APIs throughout a lesson. Use the existing timebox
+and facilitator escalation. Core Toolbox authentication remains blocked until
+the supported managed-runtime route is demonstrated; a delivery-lab-only direct
+MCP alternative cannot pass that core gate.
 
 ## Welcome and first interaction
 

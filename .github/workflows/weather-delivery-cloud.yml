@@ -60,8 +60,8 @@ on:
         type: choice
         required: false
         options:
-          - yes
-          - no
+          - "yes"
+          - "no"
       spend_approved:
         description: Confirm the agreed cost for this specific model/tool request
         type: choice
@@ -85,7 +85,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      AZURE_CONFIG_DIR: ${{ runner.temp }}/weather-delivery-azure-cli
       AZURE_CLIENT_ID: ${{ vars.WEATHER_AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ vars.WEATHER_AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.WEATHER_AZURE_SUBSCRIPTION_ID }}
@@ -110,6 +109,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Isolate Azure CLI configuration for this job
+        shell: bash
+        run: echo "AZURE_CONFIG_DIR=$RUNNER_TEMP/weather-delivery-azure-cli" >> "$GITHUB_ENV"
       - name: Verify the exact GitHub OIDC subject before Azure login
         run: python -S -m workshop.weather_delivery.cloud_stages verify-oidc
       - uses: azure/login@v2

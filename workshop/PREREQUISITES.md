@@ -26,6 +26,13 @@ tools. Install:
 
 Sign in to the app with a GitHub account that has the required Copilot access.
 Open the repository link and exact revision supplied by your facilitator.
+Prepare a participant-owned fork or template copy, preserving any existing
+fork-only work. Confirm the intended default branch, administrator access,
+Actions policy and workflow availability using the
+[owned-repository setup route](START.md#2-choose-your-owned-repository-then-clone-it).
+Do not expect access to upstream Settings. Repository configuration and the
+optional delivery lab's CI identity are separate from your Microsoft Foundry
+participant/runtime identity; neither a clone nor a green check grants access.
 Your network must allow GitHub, Microsoft sign-in, Foundry, and the approved
 Azure services; do not disable security controls.
 
