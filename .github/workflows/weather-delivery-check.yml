@@ -14,9 +14,10 @@ on:
       - "workshop/README.md"
       - "workshop/TESTS.md"
       - "workshop/FACILITATOR.md"
+      - "workshop/START.md"
+      - "workshop/PREREQUISITES.md"
       - "workshop/templates/progress.json"
-      - ".github/workflows/weather-delivery-check.yml"
-      - ".github/workflows/weather-delivery-cloud.yml"
+      - ".github/workflows/**"
       - "student/weather-delivery/**"
   pull_request:
     paths:
@@ -31,16 +32,27 @@ on:
       - "workshop/README.md"
       - "workshop/TESTS.md"
       - "workshop/FACILITATOR.md"
+      - "workshop/START.md"
+      - "workshop/PREREQUISITES.md"
       - "workshop/templates/progress.json"
-      - ".github/workflows/weather-delivery-check.yml"
-      - ".github/workflows/weather-delivery-cloud.yml"
+      - ".github/workflows/**"
       - "student/weather-delivery/**"
 
 permissions:
   contents: read
 
 jobs:
+  workflow-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate workflow structure, expressions and context availability
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo \
+            rhysd/actionlint:1.7.12 -color -shellcheck= .github/workflows/*.yml
   offline-contract-tests:
+    name: Delivery-code tests and optional participant-package checks (offline only)
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -48,17 +60,25 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Run offline contract and progress-state tests
+      - name: Run synthetic delivery-code tests (not live agent tests)
+        id: delivery-tests
         run: python -S -m unittest discover -s workshop/weather_delivery -p "test_*.py" -v
-      - name: Record source and contract hashes only
+      - name: Report exactly what offline CI checked
+        if: always()
+        env:
+          TEST_OUTCOME: ${{ steps.delivery-tests.outcome }}
         run: |
-          python -S -m workshop.weather_delivery.contract write-ci-record \
+          python -S -m workshop.weather_delivery.offline_ci \
             --commit "$GITHUB_SHA" \
+            --tests-outcome "$TEST_OUTCOME" \
             --manifest student/weather-delivery/manifest.json \
-            --output artifacts/weather-delivery-check.json
-      - name: Preserve offline CI record
+            --output-dir artifacts/weather-delivery-offline \
+            --summary "$GITHUB_STEP_SUMMARY"
+      - name: Preserve offline coverage report and available hash record
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: weather-delivery-${{ github.run_id }}-${{ github.run_attempt }}
-          path: artifacts/weather-delivery-check.json
+          path: artifacts/weather-delivery-offline/
+          if-no-files-found: error
           retention-days: 14

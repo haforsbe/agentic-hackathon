@@ -76,6 +76,20 @@ runtime passes. Rehearse with synthetic targets/usage and no cloud calls:
 | Forecast exceeds remaining allowance, terms expire or scope/resource changes | Stop before spending; explain the difference and obtain a new scoped decision |
 | Pending MCP approval or proposed resource/identity change | Treat it separately from spending permission; never batch past a pending tool decision or bypass the runner |
 | Toolbox configuration saves or developer discovery succeeds, but managed-runtime auth is unsubstantiated | Explain the authentication blocker; do not claim a runtime pass, invent an auth connection recipe or grant roles |
+| Green delivery-code tests with no participant manifest | Report local/GitHub/Microsoft Foundry change boundaries, package not checked, live tests/deployment not run, and one next learner action; award no runtime pass |
+| Repository variables/workflows cannot be listed | Report denied/unknown access, not absent configuration; check the owned repository and do not send the learner into upstream Settings |
+| Memory setup is missing permission, retention/cost agreement or runtime/isolation evidence | Keep the memory gate blocked, timebox diagnosis and involve the facilitator; do not treat a saved store definition as a pass |
+
+The [offline coverage report](weather-delivery/README.md#reading-green-checks)
+distinguishes synthetic delivery-code tests, optional participant-package
+contract/hash checks, live agent testing and deployment. Regression coverage in
+`workshop/weather_delivery/test_offline_ci.py` exercises absent, present-valid,
+malformed and file-mismatched packages plus failed/cancelled/skipped suites.
+`test_repository_readiness.py` covers read-only metadata, pagination, missing
+configuration and denied/unknown results without contacting Azure.
+The separate `actionlint` job checks real workflow context/structural rules;
+unit tests or parse-only YAML cannot substitute for it. None of these checks
+fulfills a numbered checkpoint, CH01/CH02 or the facilitator's live rehearsal.
 
 ## Checkpoint execution matrix
 

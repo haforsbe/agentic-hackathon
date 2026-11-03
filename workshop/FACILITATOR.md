@@ -190,6 +190,42 @@ to recover time.
 
 ## Before the cohort arrives
 
+### Customer-delivery go/no-go
+
+**Current status: not yet customer-ready.** Offline CI and saved configuration
+are preparation evidence only. The core managed prompt-agent-to-Toolbox
+authentication recipe remains unverified; follow its
+[explicit preparation blocker](TOOLS-AND-TOOLBOXES.md#prepare-the-supported-route-before-teaching),
+not a guessed connection recipe or developer-token proof. Any direct-MCP
+alternative proposed for the optional delivery lab is not a core Toolbox pass.
+
+Before inviting participants to a full delivery, record a dated **go/no-go**
+against the exact curriculum revision, GitHub Copilot app build, supported
+SDK/API versions and intended participant account type. Keep sanitized local
+evidence references and owners for unresolved items; do not commit participant
+identifiers, definitions, transcripts or progress. Every row below needs
+independently observed evidence for **go**; unknown or failed means **no-go**
+for full delivery. Offer an explicitly partial session instead, without
+claiming missing checkpoints complete.
+
+| Gate | Required evidence before go |
+|---|---|
+| Owned repository and GitHub access | Fresh fork/template route rehearsed without losing fork-only work; intended default branch, administrator access, Actions policy/workflow availability, structural validation, and an accurately labeled offline CI summary/artifact |
+| Tools and authentication | Weather MCP server's `weather_forecast` and Cultural Travel MCP server's `find_museum_guide` through their exact pinned Toolboxes in the managed runtime; actual caller identity, effective restrictions, human approval and denial, same-Conversation continuation and correlated execution evidence, not just configuration/discovery |
+| Memory permission and policy | Actual operation-specific authorization for store setup/read/write/delete, approved identity mapping, retention/deletion policy and bounded model/storage costs before the lesson; no credential collection, write-probing or auto grants |
+| Memory behavior and isolation | Rehearsed store lifecycle and runtime retrieval with same/fresh Conversation behavior, separate specialist and validation/release scopes, positive and negative isolation evidence; a saved memory definition or separate Conversation is insufficient |
+| Telemetry | Project's Application Insights route, telemetry-read permission, captured-data/retention/cost agreement and visible correlated model/tool/memory traces; missing telemetry is unknown, not zero usage or no execution |
+| Release and consumer path | Service-read-back versions, stable consumer endpoint, active-version routing and rollback; independent approved/unauthorized caller tests plus CH01 Weather and CH02 hosted workflow use in Microsoft Teams and/or Microsoft 365 Copilot with both specialists traced |
+| End-to-end participant rehearsal | Fresh participant-owned copy, actual coach discovery/start, setup through 16 in order with hands-on/teach-back and approval gates, bounded spend, failure/recovery and realistic timing; optional delivery lab rehearsed separately if offered |
+
+Read-only GitHub preparation can use the
+[repository preflight](weather-delivery/README.md#read-only-github-preflight).
+It never contacts Azure and reports configuration names only. Present variable
+names do not prove their values, OIDC trust, runtime identity or permissions.
+Absent configuration requires a successful listing; denied/hidden responses
+remain unknown. Do not configure or dispatch cloud stages to resolve an
+offline-maintenance check.
+
 Send participants [PREREQUISITES.md](PREREQUISITES.md) with the workshop
 invitation. Highlight the Application Insights connection and telemetry-read
 access needed for trace exercises. Participants preparing a project in advance

@@ -12,13 +12,43 @@ the completed workflow there to observe both agents' contributions.
 Open the app, select **Sign in to GitHub** if prompted, and sign in with your
 workshop-approved account. You should see **Projects** in the sidebar.
 
-## 2. Clone the workshop repository
+## 2. Choose your owned repository, then clone it
 
-Cloning downloads the workshop files to your computer.
+Use a participant-owned fork or template copy for changes, pull requests and
+GitHub Actions. The upstream `haforsbe/agentic-hackathon` is the curriculum
+source, not a repository where every participant has administrator access.
+Cloning downloads files; it does not grant GitHub permissions or copy Actions
+variables, identity trust or Azure access.
+
+1. In a browser, open https://github.com/haforsbe/agentic-hackathon and confirm
+   the facilitator's revision is **`FY27`**. If you already have a fork, use
+   it: inspect its branches and unmerged work before syncing. Do not delete,
+   replace, force-push or reset it to get a clean start.
+2. If you need a copy, use GitHub's **Fork** control to create one under your
+   approved account/organization, including `FY27`. A facilitator may instead
+   supply a template route if **Use this template** is available; confirm that
+   the copy includes the intended branch and workshop files. Do not assume
+   template controls are available or that fork-only work is in a new copy.
+3. Record your exact `OWNER/REPOSITORY` and intended default branch. For this
+   revision use `FY27`, unless the facilitator explicitly establishes another
+   branch containing the same reviewed curriculum. In your owned repository,
+   confirm administrator access and that **Actions** lists **Weather delivery
+   offline checks** and **Weather delivery cloud stages**. Confirm policy
+   permits the required actions. A fork may require enabling Actions with
+   owner approval. Do not dispatch a cloud stage.
+
+Use the [read-only repository preflight](weather-delivery/README.md#read-only-github-preflight)
+to distinguish missing configuration from denied/unknown access. If Settings
+or workflows are inaccessible, stop and ask the repository owner/facilitator;
+do not navigate into upstream Settings, grant roles, or paste credentials.
+Missing cloud variables block the optional cloud delivery lab, not reading
+the curriculum or starting the core workshop. Repository checks do not prove
+Microsoft Foundry access or make the workshop delivery-ready.
+
+Now clone **your owned repository** in the GitHub Copilot app:
 
 1. Click **+** beside **Projects**, then **GitHub repository**.
-2. Find **`haforsbe/agentic-hackathon`** and follow the prompts to clone it:
-   https://github.com/haforsbe/agentic-hackathon
+2. Find your recorded **`OWNER/REPOSITORY`** and follow the prompts to clone it.
 3. Use the facilitator-confirmed **`FY27`** branch
    (the named workshop revision), not an unconfirmed default branch.
 
@@ -26,16 +56,18 @@ If branch selection is unavailable, ask your facilitator for help, or run this
 in a terminal from a folder where you keep projects:
 
 ```text
-git clone --branch FY27 https://github.com/haforsbe/agentic-hackathon.git
+git clone --branch FY27 https://github.com/OWNER/REPOSITORY.git
 ```
 
+Replace `OWNER/REPOSITORY` with your actual owned copy, not the upstream name.
 Then choose **Projects → + → Local folder or repository** and select the newly
-created `agentic-hackathon` folder. If you already have the correct checkout,
-add that folder instead of cloning again.
+created repository folder. If you already have the correct checkout, add that
+folder instead of cloning again. Preserve its student files and ignored
+`.workshop/` progress; switching revisions is not consent to migrate progress.
 
 ## 3. Open the workshop
 
-Under **Projects**, find **`agentic-hackathon`** and click **+** beside it to
+Under **Projects**, find your cloned repository and click **+** beside it to
 start a session. Choose a local execution location unless your facilitator
 specifies otherwise. Use this repository session, not the general **Chats** area.
 
