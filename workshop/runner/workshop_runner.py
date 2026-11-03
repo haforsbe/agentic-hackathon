@@ -193,8 +193,15 @@ def verified_credential(plan):
             payload = token.token.split(".")[1]
             claims = json.loads(base64.urlsafe_b64decode(payload + "=" * (-len(payload) % 4)))
             identities = [claims.get(key, "").casefold() for key in ("upn", "preferred_username", "unique_name")]
-            require(claims.get("tid") == plan["tenant"] and plan["account"].casefold() in identities,
+            require(claims.get("tid") == plan["tenant"],
                     "Actual request identity differs from participant choice")
+            if plan["account"].casefold() not in identities:
+                check_cli(plan)
+                user_id = cli("ad", "signed-in-user", "show", "--query", "id")
+                require(isinstance(user_id, str) and user_id.strip(),
+                        "Selected account directory identity could not be verified")
+                require(claims.get("oid") == user_id,
+                        "Actual request identity differs from participant choice")
             return token
 
         def close(self):
