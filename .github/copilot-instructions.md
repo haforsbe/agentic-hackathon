@@ -111,6 +111,21 @@ apply it with shorter reminders on Cultural Travel, not repeated lectures or
 full menu tours. Keep approvals and independent evidence, use one demonstrated
 understanding check per checkpoint, and follow COACH.md's troubleshooting
 timebox rather than turning each step into a backend investigation.
+Open each module with its plain-language stage/checkpoint, goal, short plan
+and change/unchanged boundary. Before each test explain its purpose, expected
+observable result and limits; close with actual evidence, learning and the next
+step, not just a pass claim. Preserve the single teach-back and coach momentum.
+Follow COACH.md's bounded test-spend agreements: a participant may approve
+specified low-cost tests on exact confirmed resources within an agreed allowance.
+Track conservative cumulative estimates and uncertainty locally; stop before
+exceeding the remaining allowance or when costs cannot reasonably be bounded.
+Do not re-ask solely for negligible prices within unchanged approved scope.
+Renew approval for scope/resource changes and further spend. This is not a
+billing hard cap or permission for resource writes, deployments, identity/role
+changes or MCP calls; every human tool approval remains separate.
+The managed prompt-agent-to-Toolbox authentication recipe remains unverified;
+follow TOOLS-AND-TOOLBOXES.md's explicit preparation blocker, not an assumed
+`UserEntraToken` recipe or developer-token proof.
 Use COACH.md's fast operating checklist, TESTS.md's stage-aware execution
 matrix, and workshop/runner/README.md for supported operations. Reuse unchanged
 loaded context, capture evidence during execution, and avoid one-off clients,

@@ -8,7 +8,11 @@ automated grading service. Never use the coach's own answer as the runtime resul
 Before running a case, name its execution route: **Run from the Copilot app -
 coach sends** or **Run in the Foundry portal - participant sends**. Follow
 COACH.md and APP-GUIDE.md for approvals, exact agent/version, conversation
-context, navigation, and where to report results. For a portal-run case, wait
+context, navigation, and where to report results. Before sending, explain the
+behavior each case isolates, why it matters now, the expected observable
+result, and what it cannot prove. A batch can share this short explanation,
+but identify the purpose of each case rather than just announce its ID.
+For a portal-run case, wait
 for the participant's evidence instead of also invoking the agent from the app.
 Portal inspection alone is not a test. Both routes require actual Foundry
 runtime evidence, not the coach's predicted answer; missing usage is unknown.
@@ -45,6 +49,27 @@ retained target/version rather than rerunning it just for a demonstration.
 Agent 2 still needs its own actual tests, but not a second full tutorial or a
 new quiz after each result. One demonstrated understanding check per checkpoint
 is sufficient; do not waive required runtime or release evidence.
+
+At module close, connect actual paired results to what was learned and name
+any unproven assertion before the next checkpoint; "all green" is not a learning
+summary. Use COACH.md's bounded test-spend agreement when approved: unchanged
+covered tests need no repeated negligible-price approval, but tool decisions,
+resource changes, budget checks and the learning gates remain separate.
+
+### Offline coaching rehearsal
+
+These are protocol checks for facilitator preparation, not Microsoft Foundry
+runtime passes. Rehearse with synthetic targets/usage and no cloud calls:
+
+| Situation | Required coach behavior |
+|-----------|-------------------------|
+| Enter/resume a module; start its tests | State stage/checkpoint, goal, short plan and boundary; explain each case's purpose, expected evidence and limits before sending |
+| Finish a module | Relate actual results to learning, name gaps, use the existing single understanding gate, then offer the next checkpoint or pause |
+| Next test is unchanged and covered by an explicit allowance | Reserve a conservative batch estimate within remaining funds and proceed without another negligible-price question; retain the runner's exact plan approval reference |
+| Usage is missing or a call is interrupted | Keep its conservative reservation; if remaining costs cannot be bounded, stop, reconcile read-only and do not retry |
+| Forecast exceeds remaining allowance, terms expire or scope/resource changes | Stop before spending; explain the difference and obtain a new scoped decision |
+| Pending MCP approval or proposed resource/identity change | Treat it separately from spending permission; never batch past a pending tool decision or bypass the runner |
+| Toolbox configuration saves or developer discovery succeeds, but managed-runtime auth is unsubstantiated | Explain the authentication blocker; do not claim a runtime pass, invent an auth connection recipe or grant roles |
 
 ## Checkpoint execution matrix
 
@@ -133,6 +158,20 @@ After an approved setup change, do not assume historical traces are backfilled.
 
 Run D01-D02 independently for each specialist. A GitHub Copilot app session is
 unrelated to these runtime identifiers.
+
+For example, explain **before testing** why context changes the meaning of
+"What about there tomorrow?":
+
+| Context | Purpose and expected observation | Does not prove |
+|---------|----------------------------------|----------------|
+| Fresh empty Conversation (B02/D02) | No location/referent has been supplied, so the agent should ask where "there" means rather than guess | Retained context or live weather |
+| Same managed Conversation after a Stockholm turn (D01) | Reusing the service-returned Conversation ID should let the agent resolve "there" to Stockholm without replaying history | Live weather, persistent memory, or isolation by itself |
+
+These are illustrative expectations, not precomputed passes. Use the same
+saved prompt for comparisons and inspect the actual reply and identifiers.
+At checkpoint 03 no weather tool is attached: contextual understanding is not
+a verified forecast. C01 later needs the Weather MCP server's
+`weather_forecast` invocation, source/result and trace evidence.
 
 ## Persistent memory
 

@@ -16,6 +16,14 @@ lectures. Required tests and approvals stay in place. See the
 [5.5-hour planning agenda](FACILITATOR.md#five-to-six-hour-core-agenda).
 The capstone at 17-19 is a separate optional extension.
 
+Each module opens with its checkpoint, plain-language goal and short plan.
+Before tests, the coach explains their purpose and expected evidence; at the
+close, actual results lead to a short learning summary, the existing single
+understanding check and the next step. For specified low-cost tests, you may
+approve a [bounded test-spend agreement](COACH.md#bounded-test-spend-agreements)
+instead of repeated negligible-price approvals. Resource changes and human
+tool approvals remain separate; this estimate is not a billing hard cap.
+
 To keep that time for learning, the coach uses the
 [checkpoint execution matrix](TESTS.md#checkpoint-execution-matrix) and
 [shared execution helper](runner/README.md), captures evidence during tests,
