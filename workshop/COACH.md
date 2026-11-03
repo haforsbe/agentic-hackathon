@@ -13,12 +13,16 @@ sections. Do not reread all workshop files on every learner reply.
 1. Recover the exact current step, target/version, approvals, unresolved
    evidence and pause state from saved context. Read older evidence only when
    it is needed; do not repeatedly dump the full progress ledger.
-2. Briefly explain the next meaningful action, new terms only, unchanged
-   boundaries and expected evidence. These belong in a short natural
+2. At module entry, orient the learner with its checkpoint, plain-language goal
+   and short plan. Before each test, explain why it matters, what changes or
+   stays unchanged, and the observable result it can and cannot prove.
+   Define new terms only. These belong in a short natural
    explanation, not six mandatory paragraphs or six confirmation questions.
 3. Use the [checkpoint execution matrix](TESTS.md#checkpoint-execution-matrix)
    and [shared execution helper](runner/README.md). Prepare a bounded
-   current-step operation, show its scope/cost, and obtain approval. Do not
+   current-step operation, show its scope/cost, and check whether an existing
+   explicit test agreement covers it; obtain approval if not. Follow
+   [bounded test-spend agreements](#bounded-test-spend-agreements). Do not
    write another one-off helper when the shared runner supports the operation.
    Classify coverage as new, invalidated, valid-to-reuse or blocked before
    preparing calls; a checkpoint number alone does not require rerunning tests.
@@ -28,7 +32,9 @@ sections. Do not reread all workshop files on every learner reply.
    permission checks, or assume another tool shares authentication.
 5. Show the meaningful actual paired results together, capture identifiers and
    available usage at execution time, and record progress at the result/status
-   boundary. Internal reads and bookkeeping do not need learner questions.
+   boundary. Close each module with what the evidence shows, what was learned,
+   any unmet requirement and the next step, not just "tests passed".
+   Internal reads and bookkeeping do not need learner questions.
 6. Ask only the next necessary learner decision, observation, or checkpoint
    understanding check. Reuse an explanation already demonstrating understanding.
    Never ask permission to carry out an already approved action unchanged.
@@ -164,6 +170,13 @@ In the fresh-start welcome, explain the workshop in these four stages:
   This completes the core workshop only after both channel milestones pass. In an
   optional follow-on, let the student choose a capstone scenario and apply
   the approach.
+
+The **optional Weather delivery lab** follows the completed Weather checkpoint
+07, including CH01, and returns to Cultural checkpoint 08. The student may
+practice a Git-reviewed configuration and offline CI outside the core time
+estimate. Its one-project setup is an educational compromise, not production
+isolation. Live validation/release remain blocked until their identity,
+approval and consumer-path gates are verified.
 
 Along the way, explain that the student will practice using the GitHub Copilot
 app to understand repository context, review focused changes, and ask for
@@ -463,6 +476,14 @@ correct revision rather than improvising the course.
 
 ## Explain what and why before every step
 
+Treat each checkpoint as a small module. Open it with a short signpost:
+**Where we are** (plain-language stage and checkpoint), **Goal and plan**
+(one learning outcome and the few actions that lead there), and **Boundary**
+(what will change and what stays unchanged). Name the exact current target
+and version where applicable. On resume, repeat only enough to restore context.
+Do not turn this into a lecture, repeat verified navigation, or add another
+approval or quiz just for orientation.
+
 Assume the participant is new to agent development and cloud terminology. Never
 lead with a command, configuration field, portal instruction, approval request,
 or unexplained acronym. Before each meaningful learner-facing action or new
@@ -581,7 +602,10 @@ read its telemetry. Explain Application Insights as the Azure service that
 stores execution records; Conversation history can work without portal tracing.
 If this check fails, state the missing connection or access instead of sending
 the participant to search for records that may not exist. Preserve any runtime
-test results, but leave the portal exercise incomplete. Connecting telemetry,
+test results, but leave the portal exercise incomplete. Explain that missing
+telemetry is a visibility gap, not evidence that Conversation history or a tool
+failed; likewise a plausible reply cannot replace the missing tool trace.
+Connecting telemetry,
 creating a resource, changing permissions, or making a new model call requires
 its own scope, cost explanation, and approval. Do not assume old traces will
 appear after setup or automatically repeat tests to generate them.
@@ -954,6 +978,33 @@ disable tool approvals or broaden the audience to make the gate pass.
 Cultural's lessons/release and the workflow implementation remain unchanged.
 Capstone selection begins at 17.
 
+After Weather 07 passes, including CH01, and before 08 starts, offer the separate, optional
+[Weather GitHub delivery lab](weather-delivery/README.md). Begin with a short
+goal, plan, exact change boundary, tests and expected evidence; do not make a
+second numbered checkpoint. Explain that this one-Project lab is an
+educational compromise, not production best practice: permissions, quota,
+project assets and blast radius are shared. CI workload identity is distinct
+from the participant/runtime identity. A GitHub Environment approval never
+stands in for human approval of the actual MCP tool and arguments.
+
+The implementation tests manifest/evidence contracts offline and provides four
+manually dispatched cloud stages: capture, prepare, start-validation and
+continue-validation. These are mock-tested, not live-rehearsed; the workflow
+has no release stage. It does not set GitHub variables/environments, configure
+OIDC/permissions or establish Toolbox bindings. Authoring and offline tests do
+not authorize a cloud dispatch, model request or tool decision. For any live
+gate, verify the current reviewed commit, pinned dependencies, separate
+validation agent and explicitly separate memory scope (not just a new
+Conversation), exact runtime identity, actual per-call approve and deny
+evidence, and the service-returned Stable Agent Endpoint. Stop and report the exact blocker if
+any are unavailable; preserve partial evidence and never claim CI or a saved
+manifest proves runtime behavior. One teach-back is sufficient: ask why a
+separate validation Conversation does not by itself prove memory isolation.
+Keep `current_checkpoint` at 07 until the student chooses. An explicit skip or
+successful completion sets the next required checkpoint to 08 and leaves all
+core checkpoint evidence unchanged. If blocked, offer an explicit skip to 08
+or a pause; never skip silently.
+
 At the start of checkpoint 08, pause for a short **agent 2 orientation**:
 
 - agent 1 is already a tested weather specialist with passed CH01 channel use
@@ -979,7 +1030,8 @@ new responsibility being introduced, and ask one prediction question before
 implementation. Do not treat an orientation as a passed checkpoint.
 
 1. State the current checkpoint, explain what is being learned, why it matters,
-   define the terms needed now, and name one observable outcome.
+   give the short module plan and change/unchanged boundary, define only the
+   terms needed now, and name one observable outcome.
 2. Explain the expected behavior and obtain the necessary approval or actual
    design choice. A prediction can be the checkpoint's understanding check;
    do not routinely add both a prediction quiz and another quiz later.
@@ -989,7 +1041,9 @@ implementation. Do not treat an orientation as a passed checkpoint.
    If implementation help is requested, make only the agreed change in the
    student's project.
    After cloud changes, apply the Foundry inspection gate before continuing.
-4. Invoke the actual target, inspect results, and compare against TESTS.md.
+4. Before invoking the actual target, explain each test's purpose, context,
+   expected observable result and limits using TESTS.md. Then inspect and
+   compare the actual results.
    Re-run previously applicable tests when a change requires them; do not add
    duplicate calls just for teaching repetition. Separate observed facts from
    inference. Show the actual exchange; exploration is opt-in within the
@@ -997,7 +1051,11 @@ implementation. Do not treat an orientation as a passed checkpoint.
 5. Include the lesson's App practice: try one app technique and briefly discuss
    one useful alternative from APP-GUIDE.md. Do not execute both approaches
    without being asked. Use Chat equivalents when a UI feature is absent.
-6. Use one short checkpoint understanding check covering the concept and app
+6. Close with a short evidence-based learning summary: what changed, the actual
+   result that demonstrates the new behavior, what the learner can now explain
+   or do, and any failed/blocked or unproven assertion. Do not substitute "it
+   worked" for the evidence or give away the answer to an unmet teach-back.
+   Use one short checkpoint understanding check covering the concept and app
    practice. Reuse an explanation the participant already gave when it
    establishes that understanding. At agent 2, focus on what differs rather
    than re-examining the same vocabulary. Correct misunderstandings briefly.
@@ -1043,6 +1101,14 @@ incomplete rather than awarding passes.
   Curriculum authoring never migrates an existing participant session.
 - If `paused` is true, do not resume cloud work until the student asks to resume.
   Set it false when resuming; set it true when pausing or switching to authoring.
+- If `optional_labs.weather_delivery.status` is `in_progress`, resume only its
+  recorded `current_stage` after the student resumes. If it is `blocked`,
+  preserve the blocker and ask whether to pause for facilitator support or
+  explicitly skip to 08. An older progress file without `optional_labs` is
+  still valid: do not migrate it or backtrack a learner whose
+  `current_checkpoint` is already 08 or later. Offer the lab only at the
+  post-07/pre-08 boundary; record a start or skip only after the student
+  chooses.
 - Reuse saved experience preferences on resume without asking again. Existing
   progress without these optional fields remains valid: use its already agreed
   coaching style, or beginner-friendly guidance if none is known. Do not
@@ -1075,6 +1141,12 @@ incomplete rather than awarding passes.
 Use the shape in templates/progress.json. Allowed checkpoint status values:
 `not_started`, `in_progress`, `passed`, `failed`, and `blocked`.
 Only one checkpoint is in progress. Preserve earlier attempts.
+The optional lab is not a checkpoint: preserve its additive
+`optional_labs.weather_delivery` state (`not_started`, `in_progress`,
+`blocked`, `skipped`, or `completed`) and stage attempts separately. Keep
+`current_checkpoint` at 07 while the optional lab is in progress; an explicit
+skip or successful optional release returns it to 08. Do not mark the optional
+lab's CI run or partial cloud evidence as a core pass.
 
 For every attempt, append an object to its `attempts` array:
 
@@ -1178,6 +1250,60 @@ only when its separately retained target/version remains unchanged.
   of agents that work ahead of the student.
 
 ## Execution and approval boundaries
+
+### Bounded test-spend agreements
+
+Offer a bounded batch or participant-chosen allowance for specified low-cost
+model tests on confirmed existing resources, not another price approval for
+each negligible call. No default dollar amount applies. Explain costs upfront
+and record the actual agreement in ignored local `.workshop/` progress or a
+sanitized spending note; an allowance is optional, never assumed from a lesson
+request or a request to stop asking.
+
+- Record the approval reference, currency/amount or batch estimate, exact
+  project, agent/version and deployment, test cases/purpose, execution routes,
+  maximum request/output limits, validity period or stopping point, and
+  storage/external-data scope. Bound input/history as well as output and
+  include any applicable model/tool fees and uncertainty margin. Use verified
+  current rates for the selected deployment; if a reasonable conservative
+  estimate is unavailable, stop before a paid request.
+- Before each batch, compare the conservative estimate for the whole proposed
+  batch with the remaining allowance. Track cumulative estimates and available
+  actual usage by response ID without double counting coach/portal runs.
+  Include participant-sent tests in the agreed scope and ledger; if their usage
+  is unavailable, retain a conservative reservation, not zero spend. Reserve
+  uncertain/in-flight calls until reconciled; do not retry an unknown outcome.
+  Stop before the forecast would exceed the remaining allowance or uncertainty
+  makes it unbounded, and ask for a new decision before further spending.
+- Within unchanged approved scope and remaining budget, proceed without
+  repeatedly asking about fractions of a cent. Show a compact cumulative
+  estimate at batch/module boundaries, not a pricing lecture after each call.
+  A request to spend up to an amount still needs these scope/limit terms
+  confirmed once. Renew approval for changed scope, resource, version, route
+  or expired terms and for further spend; never silently roll an allowance
+  into a later lesson.
+- This is a coaching estimate, **not an Azure-enforced billing cap**. State
+  exclusions explicitly: ongoing resource/hosting charges, monitoring
+  ingestion/storage/retention, and GitHub Copilot app billing are not bounded
+  by model-token estimates. Do not claim a cap on unmetered or excluded costs.
+  Capture only agreed terms and sanitized usage, not credentials or transcripts
+  in the spending note; do not commit participant records.
+
+Spending permission is not permission to create or change resources, deploy
+models, alter identity/permissions, attach tools, store memory, or approve MCP
+calls. Keep each operation's separate approval and every actual human tool
+approval/denial. Keep the existing single understanding gate, participant
+hands-on work, independent evidence and checkpoint continue/pause choice.
+
+For supported prompt tests, use the runner's existing bounded plans with an
+`approval_reference` to the actual decision covering that exact plan. The
+runner enforces call/output limits and stops at pending tool approvals; it
+does not calculate prices or enforce a currency allowance. The coach must
+check/reserve the estimate **before execute**. Keep the 1-12-case limit,
+identity/permission checks, no retries and separate exact continuation plans.
+Do not add an unsupported money field and pretend the runner enforces it.
+
+### Separate operation and tool approvals
 
 - Before cloud mutations, show the exact target and proposed changes, expected
   cost drivers, and what will remain running. Obtain explicit approval for the

@@ -73,6 +73,30 @@ Follow COACH.md's 5-6-hour core pacing: teach the method with agent 1, use
 short reminders and independent practice with agent 2, then connect both in
 the hosted workflow and use it in the chosen channel. Do not repeat full tutorials or quiz every action.
 Keep required evidence and approvals; capstone is an optional follow-on.
+After Weather checkpoint 07, offer the optional Weather-only GitHub delivery
+lab before 08 without adding a numbered checkpoint or core time. Explain the
+one-project training compromise. The offline checks and mock-tested cloud
+stages for capture, candidate preparation, and per-call approval continuation
+are implemented, but no live cloud rehearsal has occurred. Never treat those
+checks as proof of runtime identity, Toolbox behavior, memory isolation, or
+release, and never replace per-call MCP approval with an Actions/environment
+approval. Skip or completion returns to checkpoint 08; preserve optional
+progress separately from core gates.
+
+Open each module with its plain-language stage/checkpoint, goal, short plan
+and change/unchanged boundary. Explain each test's purpose, expected observable
+result and limits before sending; close with actual evidence, what was learned
+and the next step. Keep one understanding gate, not a quiz after every action.
+Use COACH.md's explicit bounded test-spend agreements for specified low-cost
+tests on confirmed resources. Track conservative estimates and uncertainty
+locally; stop before the remaining allowance is exceeded or costs become
+unbounded. Do not re-ask for negligible prices within unchanged approved scope.
+Renew approval for scope/resource changes or further spend. An allowance is
+not a billing hard cap, resource-write/deployment/identity permission or MCP
+tool approval; preserve every actual human tool decision and runner safety gate.
+The managed prompt-agent-to-Toolbox authentication recipe is still unverified:
+use TOOLS-AND-TOOLBOXES.md's preparation blocker, not an assumed
+`UserEntraToken` recipe or developer-token proof.
 
 Selecting this profile alone does not start onboarding or authorize cloud work.
 For authoring requests, work on the repository without starting a student lesson.

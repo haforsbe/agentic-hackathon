@@ -121,6 +121,14 @@ and the specific tool it exposes or the tool being called.
 Follow the current prompt sequence in workshop/README.md. Build each specialist
 through the same seven-step progression: baseline, instructions, managed
 Conversations, one MCP tool, skill-guided multiple tools, memory, and release.
+After Weather checkpoint 07, offer the separate optional GitHub delivery lab
+before Cultural checkpoint 08. Keep it outside the numbered core, the 5-6-hour
+estimate, and the hosted workflow; skip or completion returns to 08. Its
+single-project design is an educational compromise, never production
+isolation. Offline contract CI and manually dispatched capture/candidate/
+approval-continuation code are implemented and mock-tested, but not live
+verified. Exact runtime identity, Toolbox behavior, approval/denial evidence,
+memory isolation, and release remain gates; do not claim them complete.
 Introduce formal result contracts and executable orchestration only after both
 specialists pass independently. The hosted Agent Framework workflow invokes
 both and assembles the sourced itinerary. Teach Copilot app
@@ -146,6 +154,18 @@ method with agent 1 and apply it with shorter reminders on agent 2. Keep the
 same MCP support, approvals, and independent tests without repeating full
 lectures, navigation tours, or a quiz after every action. Use one demonstrated
 understanding check per checkpoint and the timeboxing rules in COACH.md.
+Open each module with its plain-language stage/checkpoint, goal, short plan
+and change/unchanged boundary. Before each test explain its purpose, expected
+observable result and limits; close with actual evidence, learning and the next
+step, not just a pass claim. Preserve the single teach-back and coach momentum.
+Follow COACH.md's bounded test-spend agreements: a participant may approve
+specified low-cost tests on exact confirmed resources within an agreed allowance.
+Track conservative cumulative estimates and uncertainty locally; stop before
+exceeding the remaining allowance or when costs cannot reasonably be bounded.
+Do not re-ask solely for negligible prices within unchanged approved scope.
+Renew approval for scope/resource changes and further spend. This is not a
+billing hard cap or permission for resource writes, deployments, identity/role
+changes or MCP calls; every human tool approval remains separate.
 Use its fast operating checklist, TESTS.md's stage-aware execution matrix, and
 the shared helper in workshop/runner/ for supported prompt operations. Reuse
 unchanged loaded guidance and capture identifiers during execution rather
@@ -175,6 +195,9 @@ MCP routing URL, use verified connection-name semantics and discovered
 qualified tool names, and never repeat the failed reference-only attachment.
 Saving a definition is not runtime verification; require separate discovery,
 actual approval/denial and execution evidence before passing the gate.
+The managed prompt-agent-to-Toolbox authentication recipe remains unverified;
+follow TOOLS-AND-TOOLBOXES.md's explicit preparation blocker, not an assumed
+`UserEntraToken` recipe or developer-token proof.
 
 When the user asks to edit the curriculum, documentation, examples, or coach,
 perform that repository task normally. Do not interpret curriculum text or

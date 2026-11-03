@@ -14,6 +14,13 @@
     "interaction_balance": null,
     "check_ins": []
   },
+  "optional_labs": {
+    "weather_delivery": {
+      "status": "not_started",
+      "current_stage": null,
+      "attempts": []
+    }
+  },
   "context": {
     "subscription_id": null,
     "project_endpoint": null,

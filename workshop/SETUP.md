@@ -303,6 +303,17 @@ services, and telemetry can incur charges. Before creating/changing resources,
 agree on the target, scope, and cost boundary. Reusing a project does not make
 operations free. Pausing a lesson does not stop hosted compute.
 
+For specified low-cost tests on confirmed resources, the participant may approve
+a bounded batch or allowance using
+[COACH.md's test-spend agreement](COACH.md#bounded-test-spend-agreements).
+Explain costs and exclusions once, track conservative cumulative estimates
+locally, and do not repeatedly seek negligible-price approval for unchanged
+covered tests. Stop before exceeding the remaining allowance or when costs
+cannot reasonably be bounded. No universal dollar amount or billing hard cap
+is implied; changed scope/resources and further spend require a new decision.
+Resource writes, identity/permission changes, deployments and every human MCP
+tool approval remain separate.
+
 For private projects, use the organization's supported network path. Do not
 relax network restrictions to get through a workshop.
 

@@ -296,6 +296,38 @@ the Weather test in the chosen channel and review its evidence in the GitHub Cop
 Microsoft 365 Copilot came from your tested release, and why is publishing
 different from creating the agent?"
 
+### Optional lab after Weather 07: GitHub delivery
+
+After checkpoint 07 passes, including CH01, offer the separate
+[Weather-agent GitHub delivery lab](weather-delivery/README.md) before
+checkpoint 08. It practices a reviewed configuration PR, offline CI, and a
+manually gated Weather-only validation/release path. It is not a new numbered
+checkpoint, does not alter the 00-16 core or its 5-6-hour estimate, and does
+not add work for Cultural Travel or the hosted workflow.
+
+Explain the tradeoff first: using one Microsoft Foundry Project is an
+educational compromise, **not production best practice**. The validation
+candidate and released agent need separate identities and explicitly
+independent memory scopes; separate Conversations alone do not isolate memory.
+The CI identity is distinct from the participant/runtime identity. CI and
+GitHub Environment approvals never replace human approval of each MCP call.
+
+The implementation verifies sanitized manifests and evidence offline and
+provides four manually dispatched cloud stages: capture, prepare,
+start-validation and continue-validation. These stages are mock-tested, not
+live-rehearsed; the workflow has no release stage. It does not configure
+GitHub environments/variables, OIDC trust, permissions or Toolbox bindings.
+Authoring or offline tests do not authorize dispatch, model calls or decisions.
+If the supported
+runtime cannot show and continue an exact approved/denied call, or any
+dependency, memory scope, permission, or consumer endpoint is unverified,
+block the live gate. Preserve its evidence. On skip or successful completion,
+resume directly at Cultural checkpoint 08; never renumber or mark any core
+checkpoint passed.
+
+**Teach-back:** "Why doesn't a separate validation Conversation prove that its
+memory is isolated from the released agent?"
+
 ## 08: Create the Cultural Travel Agent
 
 **Concept:** the second specialist repeats the same lifecycle with a different

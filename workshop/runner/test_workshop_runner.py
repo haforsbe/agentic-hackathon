@@ -174,7 +174,10 @@ class RunnerTests(unittest.TestCase):
             credential = runner.verified_credential(self.plan)
         self.assertIsNotNone(credential.get_token("https://ai.azure.com/.default"))
         inner.get_token.return_value = token("another@example.invalid", self.plan["tenant"])
-        with self.assertRaisesRegex(ValueError, "identity differs"):
+        with (
+            patch.object(runner, "cli", return_value="synthetic-user-id"),
+            self.assertRaisesRegex(ValueError, "identity differs"),
+        ):
             credential.get_token("https://ai.azure.com/.default")
         credential.close()
         inner.close.assert_called_once()
@@ -286,6 +289,116 @@ class RunnerTests(unittest.TestCase):
         b["tools"][0]["allowed_tools"]["other"] = True
         with self.assertRaises(ValueError):
             runner.normalized(b)
+
+
+class CredentialAliasTests(unittest.TestCase):
+    def setUp(self):
+        self.plan = plan()
+        self.inner = Mock()
+        self.identity = SimpleNamespace(AzureCliCredential=Mock(return_value=self.inner))
+        with patch.dict("sys.modules", {"azure.identity": self.identity}):
+            self.credential = runner.verified_credential(self.plan)
+        self.addCleanup(self.credential.close)
+        self.account = {
+            "user": {"name": self.plan["account"]},
+            "tenantId": self.plan["tenant"], "id": self.plan["subscription"],
+        }
+        self.user_id = "synthetic-user-id"
+        self.cli_patch = patch.object(runner, "cli", side_effect=self.cli)
+        self.cli_mock = self.cli_patch.start()
+        self.addCleanup(self.cli_patch.stop)
+
+    def cli(self, *args):
+        if args == ("account", "show"):
+            return self.account
+        self.assertEqual(args, ("ad", "signed-in-user", "show", "--query", "id"))
+        return self.user_id
+
+    def token(self, **overrides):
+        claims = {
+            "upn": "alias@example.invalid", "tid": self.plan["tenant"],
+            "oid": "synthetic-user-id",
+        }
+        claims.update(overrides)
+        payload = base64.urlsafe_b64encode(json.dumps(claims).encode()).decode().rstrip("=")
+        token = SimpleNamespace(token=f"header.{payload}.signature")
+        self.inner.get_token.return_value = token
+        return token
+
+    def test_alias_matches_directory_identity_across_scopes(self):
+        for scope in ("https://management.azure.com/.default", "https://ai.azure.com/.default"):
+            with self.subTest(scope=scope):
+                token = self.token()
+                self.assertIs(self.credential.get_token(scope), token)
+        self.assertEqual(self.cli_mock.call_count, 4)
+        self.identity.AzureCliCredential.assert_called_once_with(
+            tenant_id=self.plan["tenant"], process_timeout=60)
+
+    def test_exact_name_claims_need_no_directory_lookup(self):
+        for claim in ("upn", "preferred_username", "unique_name"):
+            with self.subTest(claim=claim):
+                token = self.token(oid=None, **{claim: self.plan["account"].upper()})
+                self.assertIs(self.credential.get_token("https://ai.azure.com/.default"), token)
+        self.cli_mock.assert_not_called()
+
+    def test_alias_with_different_or_missing_token_object_id_fails(self):
+        for oid in ("different-user-id", None, "", 42):
+            with self.subTest(oid=oid):
+                self.token(oid=oid)
+                with self.assertRaisesRegex(ValueError, "identity differs"):
+                    self.credential.get_token("https://ai.azure.com/.default")
+        self.token()
+        payload = base64.urlsafe_b64encode(json.dumps({
+            "upn": "alias@example.invalid", "tid": self.plan["tenant"],
+        }).encode()).decode().rstrip("=")
+        self.inner.get_token.return_value = SimpleNamespace(token=f"header.{payload}.signature")
+        with self.assertRaisesRegex(ValueError, "identity differs"):
+            self.credential.get_token("https://ai.azure.com/.default")
+
+    def test_different_tenant_fails_before_directory_lookup(self):
+        self.token(tid="different-tenant")
+        with self.assertRaisesRegex(ValueError, "identity differs"):
+            self.credential.get_token("https://ai.azure.com/.default")
+        self.cli_mock.assert_not_called()
+
+    def test_invalid_directory_lookup_fails_closed(self):
+        for user_id in (None, "", "   ", {}, [], 42):
+            with self.subTest(user_id=user_id):
+                self.user_id = user_id
+                self.token()
+                with self.assertRaisesRegex(ValueError, "directory identity could not be verified"):
+                    self.credential.get_token("https://ai.azure.com/.default")
+
+    def test_failed_directory_lookup_fails_closed(self):
+        self.token()
+        self.cli_mock.side_effect = [self.account, ValueError("Azure CLI check failed")]
+        with self.assertRaisesRegex(ValueError, "Azure CLI check failed"):
+            self.credential.get_token("https://ai.azure.com/.default")
+
+    def test_alias_rechecks_cli_scope_before_lookup(self):
+        for field in ("account", "tenant", "subscription"):
+            with self.subTest(field=field):
+                self.account = {
+                    "user": {"name": self.plan["account"]},
+                    "tenantId": self.plan["tenant"], "id": self.plan["subscription"],
+                }
+                if field == "account":
+                    self.account["user"]["name"] = "different@example.invalid"
+                else:
+                    self.account[{"tenant": "tenantId", "subscription": "id"}[field]] = "different"
+                self.cli_mock.reset_mock()
+                self.token()
+                with self.assertRaisesRegex(ValueError, "differs; no identity switch"):
+                    self.credential.get_token("https://ai.azure.com/.default")
+                self.cli_mock.assert_called_once_with("account", "show")
+
+    def test_directory_identity_is_not_cached_between_alias_requests(self):
+        self.token()
+        self.credential.get_token("https://management.azure.com/.default")
+        self.user_id = "different-user-id"
+        with self.assertRaisesRegex(ValueError, "identity differs"):
+            self.credential.get_token("https://ai.azure.com/.default")
+        self.assertEqual(self.cli_mock.call_count, 4)
 
 
 class PlanTests(unittest.TestCase):

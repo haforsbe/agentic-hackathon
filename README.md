@@ -9,8 +9,8 @@ enhance a separate **Cultural Travel Agent** backed by the public **travel.art
 MCP server**. Both specialists use the selected free-to-use, no-authentication
 [MCP services](workshop/MCP-SERVICES.md); the coach supplies connection details
 and guides the same incremental process for each. Participants do not host
-MCP servers. Foundry resources and model usage can still incur charges.
-Learn reusable **Foundry tool connections** and a forecast-only **Toolbox**
+MCP servers. Microsoft Foundry resources and model usage can still incur charges.
+Learn reusable **Microsoft Foundry tool connections** and a forecast-only **Toolbox**
 with Weather's first tool at checkpoint 04; expand that Toolbox at 05.
 Verify the existing binding before release and deepen Toolbox management
 with Cultural Travel, then verify both existing releases at handoff without
@@ -44,6 +44,10 @@ access, policies and permissions; the updated agenda is a planning target,
 not a measured completion time. Learn the
 method with agent 1, then apply it with shorter reminders on agent 2. A
 student-chosen capstone is an optional follow-on, outside that core time budget.
+After Weather checkpoint 07 passes, including CH01, students may also choose the separate
+[Weather-agent GitHub delivery lab](workshop/weather-delivery/README.md) before
+checkpoint 08; it does not change the core estimate or checkpoint numbering.
+Its one-project setup is an educational compromise, not a production pattern.
 
 ## Start here: select Workshop Coach
 
@@ -119,6 +123,7 @@ equivalent acceptance criteria and what extra infrastructure each choice needs.
 - [Prompt-agent lessons](workshop/01-prompt-agents.md)
 - [Selected MCP services and the shared travel story](workshop/MCP-SERVICES.md)
 - [Reusable Foundry tools and Toolboxes](workshop/TOOLS-AND-TOOLBOXES.md)
+- [Optional Weather-agent GitHub delivery lab](workshop/weather-delivery/README.md)
 - [Hosted-agent lessons](workshop/02-hosted-agents.md)
 - [Tests](workshop/TESTS.md) and [stable-endpoint release](workshop/PUBLISHING.md)
 - [Capstone choices](workshop/CAPSTONE.md) and [facilitator guide](workshop/FACILITATOR.md)
