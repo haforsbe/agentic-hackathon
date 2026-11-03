@@ -466,6 +466,35 @@ class ValidationEvidenceTests(unittest.TestCase):
 
 
 class OptionalRouteTests(unittest.TestCase):
+    def test_v9_template_keeps_channel_gates_separate_from_optional_lab(self):
+        import json
+        from pathlib import Path
+
+        progress = json.loads(
+            (Path(__file__).resolve().parents[1] / "templates" / "progress.json").read_text()
+        )
+        self.assertEqual(progress["curriculum_version"], "two-specialists-workflow-v9")
+        self.assertEqual(set(progress["channel_publications"]), {"weather", "workflow"})
+        progress["current_checkpoint"] = "07"
+        weather = next(item for item in progress["checkpoints"] if item["id"] == "07")
+        weather["status"] = "blocked"
+        self.assertEqual(route_after_weather_release(progress), "07")
+        with self.assertRaises(ValueError):
+            choose_weather_delivery(progress, "skip")
+
+        weather["status"] = "passed"
+        progress["channel_publications"]["weather"].update(
+            status="passed", channel_test_evidence=["synthetic-CH01"]
+        )
+        original = copy.deepcopy(progress)
+        for choice in ("start", "skip"):
+            with self.subTest(choice=choice):
+                updated = choose_weather_delivery(progress, choice)
+                self.assertEqual(updated["channel_publications"], original["channel_publications"])
+                self.assertEqual(updated["checkpoints"], original["checkpoints"])
+                self.assertEqual(updated["channel_publications"]["workflow"]["status"], "not_started")
+        self.assertEqual(progress, original)
+
     @staticmethod
     def progress():
         return {

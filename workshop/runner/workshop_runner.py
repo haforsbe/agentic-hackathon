@@ -20,6 +20,11 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[2]
 OPERATIONS = {"inspect", "create-version", "run", "retrieve", "new-conversation", "continue"}
 VERSIONS = {"azure-ai-projects": "2.6.1", "azure-identity": "1.25.3", "openai": "3.19.2"}
+FOUNDRY_USER_DATA_EXCLUSIONS = {
+    "Microsoft.CognitiveServices/accounts/AIServices/agents/endpoints/UserIdentityImpersonation/action",
+    "Microsoft.CognitiveServices/accounts/OpenAI/fine-tunes-deployments/write",
+    "Microsoft.CognitiveServices/accounts/AIServices/fine_tuning_deployments/write",
+}
 
 
 def require(condition, message):
@@ -137,7 +142,19 @@ def load_plan(path):
         require(type(plan.get("approve")) is bool, "Explicitly approve or deny this one tool request")
         require(plan.get("approval_request_id", "").startswith("mcpr_"), "Exact approval request ID required")
         require(plan.get("tool_name") and isinstance(plan.get("arguments"), dict), "Exact tool and arguments required")
+    authorization_policy(plan)
     return plan, config
+
+
+def authorization_policy(plan):
+    policy = plan.get("authorization_policy", "operation-specific")
+    require(policy in ("operation-specific", "foundry-user-data-access"), "Unsupported authorization policy")
+    uses_conversation = plan["operation"] == "new-conversation" or (
+        plan["operation"] == "run" and any(case.get("conversation_id") for case in plan["cases"])
+    )
+    require(not uses_conversation or policy == "foundry-user-data-access",
+            "Managed Conversations require the documented foundry-user-data-access authorization policy")
+    return policy
 
 
 def cli(*args):
@@ -168,7 +185,18 @@ def permitted(grants, permission):
     )
 
 
+def foundry_user_data_access(grants):
+    allowed_exclusions = {operation.lower() for operation in FOUNDRY_USER_DATA_EXCLUSIONS}
+    return any(
+        any(pattern.lower() in ("*", "microsoft.cognitiveservices/*")
+            for pattern in grant.get("dataActions", []))
+        and all(pattern.lower() in allowed_exclusions for pattern in grant.get("notDataActions", []))
+        for grant in grants
+    )
+
+
 def verify_permissions(plan, credential):
+    policy = authorization_policy(plan)
     token = credential.get_token("https://management.azure.com/.default")
     request = Request(
         "https://management.azure.com" + plan["project_resource_id"]
@@ -180,6 +208,14 @@ def verify_permissions(plan, credential):
     require(not permissions.get("nextLink"), "Permission pagination needs facilitator review")
     require(all(permitted(permissions["value"], item) for item in plan["required_permissions"]),
             "Required operation permission not verified; no write probe performed")
+    verification = {"policy": policy, "required_permissions_verified": True}
+    if policy == "foundry-user-data-access":
+        require(foundry_user_data_access(permissions["value"]),
+                "Documented Foundry User-equivalent data grant not verified; "
+                "narrower or additionally restricted grants need facilitator review, not a role change or write probe")
+        verification["foundry_user_equivalent_data_grant_verified"] = True
+        verification["reference"] = "https://learn.microsoft.com/en-us/azure/foundry/concepts/rbac-foundry"
+    return verification
 
 
 def verified_credential(plan):
@@ -340,10 +376,11 @@ def run(plan, config):
         credential = verified_credential(plan)
         project_resource = cli("resource", "show", "--ids", plan["project_resource_id"])
         require(project_resource["id"].lower() == plan["project_resource_id"].lower(), "Project resource differs")
-        verify_permissions(plan, credential)
+        record["authorization"] = verify_permissions(plan, credential)
+        save()
         with AIProjectClient(endpoint=plan["endpoint"], credential=credential, retry_total=0) as project:
             # This request establishes access to the exact data-plane project, not just ARM.
-            list(project.connections.list())
+            next(project.connections.list().by_page(), None)
             with project.get_openai_client(max_retries=0, timeout=60) as client:
                 execute(project, client, plan, config, record, save)
         if record["state"] != "awaiting_separate_tool_approval":

@@ -3,12 +3,21 @@
 This repository is an incremental workshop delivered in the GitHub Copilot app.
 The current entry point is README.md and the curriculum is workshop/README.md.
 The numbered example folders are reference material from the earlier workshop.
+Use full product names in teaching and documentation: **GitHub Copilot** or
+**GitHub Copilot app**, **Microsoft Foundry**, **Microsoft Teams** and
+**Microsoft 365 Copilot**. Keep exact UI labels, role names and API identifiers
+unchanged; never confuse Microsoft 365 Copilot with the GitHub Copilot app.
 
 ## Workshop participation
 
 The preferred entry in the GitHub Copilot app is to select the custom agent
 named exactly **Workshop Coach**, then say "Start the workshop."
-Normal repository Chat is the fallback only when the app has no agent selector.
+Give the documented route: type `/agent` in the repository session's message
+box and select Workshop Coach; the agent picker inside the prompt box is an
+alternative if visible. A missing dropdown alone does not establish that
+selection is unavailable. Normal repository Chat is the fallback only when
+neither selection route is available. Distinguish the custom-agent profile
+from the model picker and the Microsoft Foundry agents being built.
 Do not claim selector availability or profile discovery without evidence.
 For "How do I start this workshop?" or equivalent onboarding questions,
 read workshop/START.md and guide the participant from their current point.
@@ -25,6 +34,12 @@ remaining setup. Follow COACH.md for the full wording and exact sequence.
 Do not require a second start command after the experience questions. Adapt
 explanation/navigation depth only; keep all learning, approval and evidence
 gates. Reuse saved preferences on resume without reassessment.
+During active coaching, follow COACH.md's occasional experience check-ins:
+at natural pauses offer one optional question about execution balance or
+product-specific explanation level (Beginner/Intermediate/Expert), not both
+at once or at every checkpoint. Save explicit preferences locally and adapt
+remaining suitable actions without changing required hands-on evidence,
+approvals or order. Do not ask check-ins during authoring or an explicit pause.
 The plain message "Start the workshop" is sufficient after selecting the profile
 or in the no-selector fallback; students need not name instruction files.
 For every coaching turn follow COACH.md's plain-language pattern: explain what
@@ -119,10 +134,22 @@ specialists pass independently. The hosted Agent Framework workflow invokes
 both and assembles the sourced itinerary. Teach Copilot app
 techniques throughout and defer the student's own scenario choice to the
 capstone.
+Preserve checkpoint order and follow workshop/PUBLISHING.md: at 07, after
+Weather's independent release and before Cultural starts at 08, require CH01
+publication and use in participant-chosen Microsoft Teams and/or Microsoft 365
+Copilot. Build/release Cultural unchanged. At 16, after the final hosted
+workflow release/update checks, publish that workflow endpoint and require
+CH02 channel input/reply plus correlated traces proving both specialists ran.
+At least one chosen surface must pass each milestone. Explain these outcomes
+in the welcome; distinguish Microsoft 365 Copilot consumption from coaching in
+the GitHub Copilot app. Verify tenant/licensing, Bot Service permissions,
+channel identity/protocol and actual tool approvals; publication needs separate
+scope/data/cost approval. No endpoint-only pass or policy/approval bypass.
 Do not start coaching or provision resources merely because the repo is open.
 
 Pace the core workshop (00-16) for 5-6 hours, ending with both agents connected
-through the hosted workflow; capstone 17-19 is an optional follow-on. Teach the
+through the hosted workflow and used from Microsoft Teams and/or Microsoft 365
+Copilot; capstone 17-19 is an optional follow-on. Teach the
 method with agent 1 and apply it with shorter reminders on agent 2. Keep the
 same MCP support, approvals, and independent tests without repeating full
 lectures, navigation tours, or a quiz after every action. Use one demonstrated
@@ -153,7 +180,7 @@ Discover current schemas, explain and obtain approval for the same incremental
 connection/test process for each agent, and verify Foundry runtime evidence.
 Do not ask participants to find server URLs, obtain keys, or deploy an MCP
 server. Report actual discovery/access failures rather than inventing tools.
-Follow workshop/TOOLS-AND-TOOLBOXES.md for curriculum v8: register Weather's
+Follow workshop/TOOLS-AND-TOOLBOXES.md for curriculum v9: register Weather's
 reusable upstream connection and attach its forecast-only Weather Toolbox at
 04; expand that Toolbox at 05 and verify its existing binding at 07, then deepen Toolbox practice
 with Cultural at 11/12. Verify runtime identity, effective restrictions and

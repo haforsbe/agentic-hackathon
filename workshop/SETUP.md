@@ -8,8 +8,10 @@ capabilities can actually be used. Do not create an agent at this step.
 ## Student experience
 
 Follow the [participant start guide](START.md): in the GitHub Copilot app's
-repository project, select **Workshop Coach**, then say **"Start the workshop."**
-Use normal repository Chat only if the app has no agent selector.
+repository project, type **`/agent`** in the message box, select
+**Workshop Coach**, then say **"Start the workshop."** The documented agent
+picker inside the prompt box is an alternative if visible. Use normal
+repository Chat only if neither selection route is available.
 The coach welcomes you before asking for setup information, checks
 saved progress, and helps with one missing value at a time. There is no VS Code
 extension setup in the core path.
@@ -62,6 +64,7 @@ it does not create a Foundry agent or grant Azure permissions.
 | Skills | Skills API and compatible client/provider | Upload/version/retrieve support; MCP resources support is distinct from tools |
 | Hosted workflow | Azure Developer CLI (`azd`), Agent Framework, supported Foundry extensions/runtime, and tracing | Current sample, runtime, both downstream endpoints/contracts, deployment support, quota/cost boundary |
 | Consumer access | Approved test caller identities | Endpoint invocation permission and a caller without permission for the negative test |
+| Microsoft Teams/Microsoft 365 Copilot (07, 16) | At least one chosen surface, licensed/allowed tenant access, project publishing and Bot Service resource/channel write permissions, registered Microsoft.BotService provider | Rehearsed Weather and hosted-workflow publication/installation, compatible activity adapter, channel identity and trusted user/state mapping, downstream runtime access, actual tool approval/denial and correlated traces; separate audience/data/cost approval; see PUBLISHING.md |
 
 Use the installed `microsoft-foundry` skill, including its dependency check and
 workflow instructions, when available. Otherwise follow the official references
@@ -139,7 +142,11 @@ Before the first prices or paid-call approval, explain that these counts and
 estimates cover the agents built and tested in Foundry and their model setup
 tests, not the Workshop Coach conversation in the Copilot app. Copilot usage
 and billing are separate and excluded; do not imply the coach is free.
-Label subsequent summaries **Foundry agent/model usage**.
+Label subsequent summaries **Microsoft Foundry agent/model usage**.
+Follow [checkpoint usage summaries](COACH.md#checkpoint-usage-summaries):
+capture usage locally per operation, but report checkpoint and updated workshop
+totals once per checkpoint, not after every call. Pre-action cost disclosures
+and approvals remain required.
 Include the source and date, distinguish estimated retail cost from the final
 bill, and state explicitly when pricing cannot be verified. Do not hardcode
 example prices or force token rates onto a different billing model.
@@ -186,6 +193,13 @@ or unverified; metadata alone does not demonstrate runtime behavior.
 No project/model creation, memory-store write, deployment, paid test or role
 change is authorized by advance readiness. The live coach still confirms the
 account, immediately collects the endpoint and revalidates the actual context.
+
+Include channel readiness for the required publication/use at 07 and 16:
+chosen Microsoft Teams/Microsoft 365 Copilot surface(s), tenant app policies,
+licensing/access, Bot Service permissions/provider registration and compatible
+hosted protocol/approval handling. Readiness is not authorization to register
+a provider, create a bot, publish an app or send a channel test. Do not prepare
+participants' publication passes for them.
 
 The shared helper is deliberately narrow: creation/readback, bounded prompt
 tests, managed Conversation creation, exact tool approval/denial continuation,
@@ -333,5 +347,7 @@ references before use.
 - [Memory stores](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/memory-usage)
 - [Skills](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/skills)
 - [Current agent model and stable endpoints](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/migrate-agent-applications)
+- [Publish to Microsoft Teams and Microsoft 365 Copilot](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/publish-copilot)
+- [Publication API, networking and channel limitations](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/publish-copilot-virtual-network)
 - [Legacy Agent Applications](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/agent-applications)
 - [Custom-agent configuration](https://docs.github.com/en/copilot/reference/custom-agents-configuration)

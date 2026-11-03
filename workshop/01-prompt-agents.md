@@ -134,12 +134,24 @@ The coach provides the public **Weather MCP server** endpoint
 credentials. Explain `weather_forecast` and its required numeric `lat` and
 `lon` inputs; optional `hourly=false` selects daily periods. Use the first-tool
 configuration and coverage guidance in [MCP-SERVICES.md](MCP-SERVICES.md).
-After approval, connect only that tool to the Weather Agent's new candidate,
-keep tool-call approval required, and independently read back the definition.
-First register the server as a reusable Foundry project tool connection.
+Before opening the agent's tool picker, explain the route **agent -> pinned
+Microsoft Foundry Toolbox -> Weather MCP server -> `weather_forecast`**.
+The Toolbox attachment can itself appear as an MCP tool: its saved Microsoft
+Foundry Toolbox URL and separate authentication reference distinguish it from
+a direct public-server attachment. Do not promise a Toolbox option under
+**Add**; if only direct tools are available, explain the rehearsed
+coach-executed SDK/API alternative before requesting its separate approval.
+Follow the [advance explanation and picker guidance](TOOLS-AND-TOOLBOXES.md#explain-the-attachment-before-opening-the-picker)
+and [participant inspection steps](APP-GUIDE.md#before-adding-a-toolbox-backed-tool).
+Do not create a direct candidate as an intermediate experiment.
+
+After scoped approval, first register the server as a reusable Microsoft
+Foundry project tool connection.
 Create a Weather-only Toolbox referencing that connection and selecting only
 `weather_forecast`, then authenticate and attach its verified version-specific
-endpoint, following [Tools and Toolboxes](TOOLS-AND-TOOLBOXES.md).
+endpoint to a new Weather candidate, following
+[Tools and Toolboxes](TOOLS-AND-TOOLBOXES.md).
+Keep tool-call approval required and independently read back the definition.
 Use the separately approved Toolbox-authentication connection, not the
 anonymous upstream connection, on the agent binding. Keep `server_url`;
 a connection reference does not replace it. Discover the exposed tool name,
@@ -248,6 +260,17 @@ suite, verify its exact agent version, skill revision, tool allowlist, memory
 configuration, and Microsoft Foundry Model Deployment, then run P01-P03 through
 the Stable Agent Endpoint.
 
+Before moving to checkpoint 08, follow
+[channel publication at 07](PUBLISHING.md#required-channel-publication-at-07-and-16).
+The participant chooses Microsoft Teams, Microsoft 365 Copilot, or both,
+approves the publication scope separately, publishes this released Weather
+agent and uses it from at least one chosen surface. Run CH01 with real
+channel input/reply and correlated Microsoft Foundry execution evidence.
+Retain tool approvals, provenance and user isolation; a successful publish
+dialog or Playground reply is not a channel pass. Keep the stable endpoint's
+direct-client access for the later workflow. If blocked, preserve release
+evidence but do not pass 07 or silently start the second agent.
+
 The released agent returns a consistent evidence-aware weather briefing with
 destination, dates, findings, tool/source provenance, timestamps, uncertainty,
 and missing information. It does not provide cultural recommendations or a
@@ -266,13 +289,16 @@ Retain failed candidate test evidence for diagnosis, but keep that candidate
 out of stable routing. Rollback is reserved for an unforeseen issue discovered
 after a fully passing version was promoted.
 
-**App practice:** request endpoint/version metadata and observed test evidence.
+**App practice:** distinguish endpoint release from channel publication; send
+the Weather test in the chosen channel and review its evidence in the GitHub Copilot app.
 **Alternative:** inspect sanitized raw responses instead of a narrative summary.
-**Teach-back:** "Why can only a fully passing candidate become the stable release?"
+**Teach-back:** "How do you know the Weather reply in Microsoft Teams or
+Microsoft 365 Copilot came from your tested release, and why is publishing
+different from creating the agent?"
 
 ### Optional lab after Weather 07: GitHub delivery
 
-After checkpoint 07 passes, offer the separate
+After checkpoint 07 passes, including CH01, offer the separate
 [Weather-agent GitHub delivery lab](weather-delivery/README.md) before
 checkpoint 08. It practices a reviewed configuration PR, offline CI, and a
 manually gated Weather-only validation/release path. It is not a new numbered
@@ -286,9 +312,13 @@ independent memory scopes; separate Conversations alone do not isolate memory.
 The CI identity is distinct from the participant/runtime identity. CI and
 GitHub Environment approvals never replace human approval of each MCP call.
 
-The current implementation verifies sanitized manifests and evidence offline.
-It does not configure GitHub environments or variables, create OIDC trust,
-call Microsoft Foundry, approve tools, or deploy an agent. If the supported
+The implementation verifies sanitized manifests and evidence offline and
+provides four manually dispatched cloud stages: capture, prepare,
+start-validation and continue-validation. These stages are mock-tested, not
+live-rehearsed; the workflow has no release stage. It does not configure
+GitHub environments/variables, OIDC trust, permissions or Toolbox bindings.
+Authoring or offline tests do not authorize dispatch, model calls or decisions.
+If the supported
 runtime cannot show and continue an exact approved/denied call, or any
 dependency, memory scope, permission, or consumer endpoint is unverified,
 block the live gate. Preserve its evidence. On skip or successful completion,
@@ -308,6 +338,11 @@ but this agent owns museum and art-trip evidence." Supply its new target and
 MCP information when needed. Reuse familiar navigation and explain only
 differences; the repeated tests prove independence, not a need to repeat the
 full introduction. Apply this pacing through checkpoint 14.
+
+Require the Weather endpoint release and CH01 channel milestone at 07 first.
+Weather remains available in its chosen channel while Cultural is built.
+The Cultural lessons and independent release are unchanged; there is no
+additional required Cultural channel publication.
 
 Create a separate Cultural Travel Agent without tools, memory, or copied Weather
 Agent state. It may answer stable, general cultural questions while labeling
@@ -379,6 +414,11 @@ invoke Toolbox and approval still covers each actual upstream operation.
 Require T01/T02 as well as C02/C03. Do not change the released Weather Agent
 or attach its tools to Cultural Travel. Missing Toolbox support blocks this
 gate; direct integration is not a Toolbox pass.
+Before opening the picker, briefly remind the participant that this Toolbox
+also appears as an MCP attachment: verify its Microsoft Foundry Toolbox URL
+and separate authentication reference, not its display name. Reuse 04's
+supported route if the picker only offers direct tools; do not restart a UI
+search or attach the public travel.art URL as a substitute.
 The source is travel.art's published museum guides, not live ticket inventory
 or an official venue verification service.
 

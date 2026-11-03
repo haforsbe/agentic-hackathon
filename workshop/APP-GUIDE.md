@@ -15,9 +15,52 @@ not add two optional prompts after every result.
 App features depend on build, policy, and available tools. Inspect what is
 actually exposed. Never invent buttons, keyboard shortcuts, slash commands,
 custom-agent selectors, or Canvas actions. The example prompts below work in
-the selected Workshop Coach session, or normal repository Chat when the app
-has no agent selector. Do not confuse that entry fallback with optional visual
+the selected Workshop Coach session, or normal repository Chat when neither
+`/agent` nor an agent picker is available. Do not confuse that entry fallback with optional visual
 alternatives later in the lessons.
+
+## Select custom agents
+
+A **custom agent profile** gives GitHub Copilot a reusable specialist role:
+instructions describing its purpose, how it should work, and optionally which
+tools it can use. It is not a new AI model or a deployed cloud service.
+
+| Choice | What it controls |
+|--------|------------------|
+| **Custom agent**, selected with `/agent` or the documented agent picker in the prompt box | The specialist role and instructions for the GitHub Copilot app session, such as **Workshop Coach** |
+| **Model**, selected with the model picker | The AI model powering the session; a profile can also specify a model, but Workshop Coach inherits your selection |
+| **Interactive / Plan / Autopilot** | How the session collaborates with you or proceeds with work |
+| **Microsoft Foundry agent and version** | The separately created cloud agent being configured or tested; selecting a GitHub Copilot profile does not select or deploy it |
+
+### Select the existing Workshop Coach
+
+In the GitHub Copilot app, open a session for this workshop repository. Type
+**`/agent`** in its message box and choose **Workshop Coach**. Alternatively,
+use the agent picker dropdown inside the prompt box if your app displays it.
+Confirm the selected profile using the interface your build exposes; then send
+**"Start the workshop"** for a fresh start, or **"Resume the workshop"** when
+you intend to continue saved progress. Selecting a profile alone is not a
+start/resume request and does not authorize Microsoft Foundry operations.
+
+The profile is supplied in `.github/agents/workshop-coach.agent.md`.
+Its presence is not proof that your app has discovered it. If the dropdown
+is absent, try `/agent`; if neither selection route is available, use normal
+repository Chat with the same coaching protocol. If selection is available
+but Workshop Coach is missing, involve the facilitator to check the checkout
+and discovery. Do not choose an unrelated profile or clear progress.
+
+Participants select an existing profile; they do not need to create or edit
+one. Selecting Workshop Coach does not change repository files or Microsoft
+Foundry resources, deploy an agent, or reset saved workshop progress. Using
+the selected profile still uses GitHub Copilot under your plan. Check selection
+in the app's interface; a coach-like reply alone does not prove the profile
+was selected.
+
+These routes are documented in
+[Using custom agents in the GitHub Copilot app](https://docs.github.com/en/copilot/how-tos/github-copilot-app/customize-github-copilot-app#using-custom-agents),
+and the [`/agent` reference](https://docs.github.com/en/copilot/reference/github-copilot-app-reference/slash-commands).
+Documented support is not participant-build verification; if controls differ,
+describe what is visible instead of guessing labels.
 
 ## Where tests and exploration happen
 
@@ -32,9 +75,10 @@ The coach names the route before every test or exploration:
 
 | Route | What you do | What the coach does |
 |-------|-------------|---------------------|
-| **Run from the Copilot app - coach sends** | Stay in this GitHub Copilot app session and approve the stated test. Do not enter the prompt in Foundry as well. | Send the prompt to your actual agent in Foundry, then show its reply, available token counts, and estimated cost here. |
-| **Run in the Foundry portal - participant sends** | Follow the coach's verified steps from https://ai.azure.com/ to your exact project and agent, send the agreed prompt yourself, then report the result here. | Give the exact prompt, conversation context, controls and evidence to report, then wait without sending a duplicate call. |
-| **Inspect in Foundry - no prompt sent** | Look at the agent's saved settings or the specified test trace. Do not send a message or edit settings. | Explain what to inspect and compare your observation with service-returned evidence. |
+| **Run from the GitHub Copilot app - coach sends** | Stay in this GitHub Copilot app session and approve the stated test. Do not enter the prompt in Microsoft Foundry as well. | Send the prompt to your actual agent in Microsoft Foundry and show its reply here; capture usage locally for the checkpoint and cumulative workshop summary, not a per-call report. |
+| **Run in the Microsoft Foundry portal - participant sends** | Follow the coach's verified steps from https://ai.azure.com/ to your exact project and agent, send the agreed prompt yourself, then report the result here. | Give the exact prompt, conversation context, controls and evidence to report, then wait without sending a duplicate call. |
+| **Inspect in Microsoft Foundry - no prompt sent** | Look at the agent's saved settings or the specified test trace. Do not send a message or edit settings. | Explain what to inspect and compare your observation with service-returned evidence. |
+| **Run in Microsoft Teams or Microsoft 365 Copilot - participant sends** | At 07/16 open your exact published Weather/workflow app in the chosen surface, send the approved prompt once, and return the actual reply. | Verify publication/target and channel identity, provide documented navigation from the returned launch link, then inspect the same run's Microsoft Foundry evidence without resending. |
 
 Aim for **50/50 coach-sent and participant-sent test prompts** across each
 specialist's lessons, using a **coach demonstrates, participant practices**
@@ -52,6 +96,13 @@ chat playground.
 | Conversations (03, 10) | Participant sends the three-message D01-D02 sequence if the interface supports the required history and identifier evidence. Otherwise use the supported client route and explain the limitation. Rebalance using later suitable tests. |
 | MCP and skills (04-05, 11-12) | Coach demonstrates the first tool request and approval boundary. Divide remaining required prompts between routes to bring the running split toward half each; participant returns the answer plus tool evidence. Keep controlled failures on the coach route when they need an isolated test client. |
 | Memory and release (06-07, 13-16) | Coach handles identity/scope, deletion, consumer-endpoint, and automated regression checks. A participant may send a required recall or normal-path test only when the interface can preserve its exact scope and target. Playground-only evidence never substitutes for a consumer-endpoint test. |
+| Channel publication (07, 16) | Participant uses Weather in Microsoft Teams and/or Microsoft 365 Copilot before 08, then uses the released workflow there at 16. CH01/CH02 require channel-originated requests and same-run runtime evidence; a publish dialog is not a pass. |
+
+Keep the channel prompts labeled and counted as participant-sent prompts on
+their actual route. They are required distribution exercises, not a reason to
+rebalance or duplicate the preceding specialist tests. See
+[channel publication](PUBLISHING.md#required-channel-publication-at-07-and-16)
+for documented controls, tenant prerequisites, separate approvals and blockers.
 
 Plan the split before each specialist's lessons, record the route of each
 actual prompt, and use the running counts to allocate remaining suitable tests.
@@ -63,6 +114,17 @@ than weakening a test or approval boundary. Never add calls, repeat completed
 tests, or split a matched pair or Conversation sequence just to balance counts.
 Portal inspection and guided trace
 exercises remain required even when the coach sent the prompt.
+
+At occasional natural pauses, the coach checks whether you prefer the current
+execution balance, more hands-on steps or more coach-executed steps. It also
+occasionally offers to keep or change your explanation level for Microsoft
+Foundry or the GitHub Copilot app: Beginner, Intermediate or Expert.
+These are separate, optional questions, not a quiz or a survey after every
+checkpoint; you can defer them or describe a preference in your own words.
+An explicit execution preference adjusts remaining suitable actions rather
+than enforcing the default 50/50 split. Required participant practice, approvals,
+test evidence and checkpoint order remain unchanged. See
+[experience check-ins](COACH.md#occasional-experience-check-ins).
 
 For each participant-run test, the coach provides one copy-ready prompt, the
 exact project/agent/version, fresh-or-existing Conversation instructions, the
@@ -177,11 +239,43 @@ flows were not rehearsed. Do not invent their exact labels or treat this
 read-only walkthrough as test evidence for those behaviors. Missing telemetry
 or a different date filter does not authorize another model call or setup change.
 
+### Before adding a Toolbox-backed tool
+
+At 04, before using an agent's **Add** control, the coach explains the route:
+**agent -> pinned Microsoft Foundry Toolbox -> public Weather MCP server ->
+`weather_forecast`**. A Toolbox exposes an MCP endpoint, so the resulting
+entry in **Tools** can look like an ordinary MCP tool. You are not expected
+to find a special Toolbox card or tab.
+
+The agent's saved server URL must be the verified Microsoft Foundry Toolbox
+URL containing `/toolboxes/<name>/versions/<version>/mcp`, not the public
+Weather URL. Its authentication reference must name the separate
+Toolbox-authentication connection, not the anonymous upstream connection.
+The coach supplies your exact approved values and checks the saved tool
+allowlist and approval setting independently; a familiar display name is
+not proof of the route.
+
+**Participant-reported on 2026-10-30:** one project's **Add** picker offered
+direct tools but no Toolbox option. After a separately approved coach-executed
+SDK attachment, the participant saw the Toolbox attachment in the resulting
+agent version's **Tools** area. This does not establish a universal picker
+layout or prove any tool executed.
+
+If your picker offers only direct tools, stop before adding or saving one as
+a substitute. The coach explains the supported alternative before requesting
+approval, makes only the approved configuration change, and reads it back.
+Then, on the established agent page, refresh if needed, select the actual
+returned **Version:** and inspect **Tools** without editing. If connection
+details are not exposed there, review the coach's service-returned read-back;
+do not guess a details control. Sending a test or publishing requires its own
+approval. At 11, apply the same check to the Cultural Travel MCP server's
+`find_museum_guide` through its separate Toolbox, with a shorter reminder.
+
 ## Techniques to introduce along the way
 
 | Checkpoints | Primary approach to practice | Useful alternative and tradeoff |
 |-------------|-----------------------------|--------------------------------|
-| 00 | Select Workshop Coach in the GitHub Copilot app, send "Start the workshop", then try "Explain without editing." | If the app has no selector, use normal repository Chat with the same prompt and protocol |
+| 00 | Type `/agent` in the repository session, select Workshop Coach, send "Start the workshop", then try "Explain without editing." | Use the documented agent picker if visible; normal repository Chat is the fallback only when neither selection route is available |
 | 01, 08 | "Explain this agent definition before editing it." Then explicitly request the small change | Ask for a proposed definition diff first to retain more control |
 | 02, 09 | Review the focused instruction diff and compare the same test before and after | Ask for an instruction proposal without applying it |
 | 03, 10 | Keep this coaching session; create separate runtime Conversations for each agent test | Use a new app session for an independent task; do not assume it inherits runtime history |

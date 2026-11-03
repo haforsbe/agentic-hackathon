@@ -8,10 +8,13 @@ consumer endpoints, telemetry, or role assignments.
 It also does **not** register reusable Foundry tool connections, manage
 Toolboxes, accept connection-backed MCP definitions, or authenticate Toolbox
 endpoints. Its public direct-MCP examples are reference/partial-route
-operations, not the full v8 core tool-management implementation. Use the
+operations, not the full v9 core tool-management implementation. Use the
 rehearsed current Foundry skill/API route in
 [Tools and Toolboxes](../TOOLS-AND-TOOLBOXES.md) for those gates and their
 runtime tests. Do not relax the helper's endpoint checks to bypass this limit.
+It also does not publish to or test Microsoft Teams/Microsoft 365 Copilot.
+Use [the publishing guide](../PUBLISHING.md) for the required CH01/CH02 gates;
+a project-client response is not a channel test.
 
 ## Prepare before the cohort
 
@@ -71,6 +74,7 @@ Required common fields:
 | `azure_config_dir` | Absolute workshop-only CLI profile outside the repository; never the global profile |
 | `endpoint`, `project_resource_id` | Exact confirmed Foundry project endpoint and discovered ARM ID; never construct a guessed resource ID |
 | `required_permissions` | Nonempty list of `{ "kind": "actions" or "dataActions", "operation": "exact operation name" }`; discover the correct current permission names using supported guidance before presenting the plan |
+| `authorization_policy` | Defaults to `operation-specific`. Set `foundry-user-data-access` explicitly for managed Conversation creation or runs using a Conversation ID; this additionally verifies the documented broad project data grant, not guessed Conversation operation names |
 | `agent_name`, `agent_version` | Exact target and immutable version; version omitted only for creation |
 | `configuration` | Reviewed JSON file under `student/`, with `name` and `definition`; only ordinary prompt agents and the selected public MCP services, always approval |
 
@@ -89,8 +93,58 @@ declared permission grants/exclusions, direct project access, and pinned
 configuration. The coach must verify the permission names cover the actual
 operation; an unrelated permission in a plan is not permission to write.
 Pagination or inconclusive permissions stop rather than create a write probe.
+The direct project-access check requests only the first connection-list page;
+it does not enumerate every connection or follow later pages merely to prove
+access. An empty successful page is valid access evidence, not proof of any
+particular connection. Request failures still stop before operation execution.
 Checks for an approved batch share one process/client; CLI identity is checked
 again before each model request or resource write. No global sign-in changes.
+
+### Managed Conversation authorization
+
+The [documented Foundry User role](https://learn.microsoft.com/en-us/azure/foundry/concepts/rbac-foundry)
+grants `Microsoft.CognitiveServices/*` data actions with exclusions for
+end-user identity impersonation and two fine-tuning deployment operations.
+The [permissions reference](https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/hosted-agent-permissions#explicit-project-level-access)
+documents agent session-storage access, but does not explicitly map each modern
+Conversation REST operation to a minimal caller custom role. Do not invent
+`AIServices/conversations/read` or `write`, or substitute legacy thread operations.
+
+For `new-conversation` and `run` cases with `conversation_id`, explicitly select
+`"authorization_policy": "foundry-user-data-access"`. The helper requires an
+existing project-scope `Microsoft.CognitiveServices/*` or `*` **data** grant
+with no exclusions beyond the documented Foundry User exclusions. Matching is
+case-insensitive. A qualifying independent grant can supply access; exclusions
+in another grant are not an Azure deny assignment. Control-plane permissions,
+agent-read-only access, narrower grants, unknown exclusions and paginated
+permission results do not satisfy this conservative policy.
+
+Keep `required_permissions` for the other verified requests, including
+`Microsoft.CognitiveServices/accounts/AIServices/agents/read` for pinned-version
+inspection. The additional policy does not bypass those checks, prove a
+particular role assignment, inspect deny assignments, or guarantee a write
+will succeed. Evidence records the policy and its current permission check.
+A successful Conversation read is not proof of create execution.
+
+This policy checks existing access; it never assigns a role or requests broader
+permissions. If a participant has narrower grants, stop for a facilitator-verified
+operation mapping rather than broaden access to satisfy this helper. Current-step
+approval, actual identity/project verification, write journals, budgets and
+disabled retries remain required.
+
+For this supported path, use these built-in checks instead of running the same
+CLI/project/version inspection separately immediately beforehand. Creation
+already includes independent definition read-back. Additional inspection is
+for an uncovered assertion, changed context or discrepancy, not a ritual after
+every operation. This does not remove participant inspection or operation
+authorization. For compatible independent coach-sent cases, prefer one
+approved `run` plan to one process per case; do not combine future lessons,
+different targets or authorization scopes for speed. Turns using an already
+verified explicit Conversation ID can share an approved ordered batch, but
+must remain sequential; never parallelize dependent turns or continue past
+a pending approval.
+
+### Signed-in account aliases
 
 When a token's username claims differ from the selected CLI account label,
 the runner first verifies the token's tenant, rechecks the CLI account, tenant

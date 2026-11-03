@@ -4,6 +4,8 @@ This is an optional lab **after Weather checkpoint 07 and before Cultural
 checkpoint 08**. It is not a numbered core checkpoint. Skipping it or
 completing it returns directly to checkpoint 08; the core stays 00-16 and
 remains planned for 5-6 hours.
+Checkpoint 07 must include the required CH01 channel publication and use
+before this optional lab is offered. The lab does not replace CH01 or CH02.
 
 ## What this lab does—and does not do
 

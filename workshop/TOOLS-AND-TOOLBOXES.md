@@ -23,6 +23,49 @@ credentials. Foundry project connections and Toolbox endpoints still require
 the appropriate Foundry permissions and authentication. Do not send a Foundry
 bearer token to either public upstream endpoint.
 
+## Explain the attachment before opening the picker
+
+Before asking a participant to use an agent's tool-adding control, explain:
+
+> We are connecting the agent to a Microsoft Foundry Toolbox, not directly
+> to the public Weather MCP server. The route is agent -> pinned Toolbox
+> version -> Weather MCP server -> `weather_forecast`. The Toolbox itself
+> exposes an MCP endpoint, so its agent attachment can appear as an MCP tool,
+> not as a separate Toolbox card. The saved URL and authentication connection
+> distinguish the two routes; the display name alone does not.
+
+| Saved agent setting | Direct upstream attachment | Intended Toolbox attachment |
+|---------------------|----------------------------|-----------------------------|
+| `server_url` | Public MCP server URL, such as `https://weather.datakoot.com/mcp` | Verified Microsoft Foundry project URL containing `/toolboxes/<name>/versions/<version>/mcp?api-version=v1` |
+| `project_connection_id` | Upstream connection's verified project-local reference | Separate Toolbox-authentication connection's verified project-local reference |
+| Allowed tools and approval | Must not be assumed from instructions or a connection name | Exact discovered qualified tool names and explicit per-call approval, verified in the saved candidate and later at runtime |
+
+Supply the participant's actual approved values before any edit. Explain
+which route the coach or participant will execute, what remains unchanged,
+and what the independent read-back will prove. For Cultural Travel at 11,
+give a short reminder of the same distinction using its own server, Toolbox
+and exposed tool name; do not repeat the full lesson.
+
+Do not assume **Add** offers a Toolbox selector. In a participant-guided
+session on **2026-10-30**, the picker offered direct tools only. An earlier
+save contained no tools; another saved the public upstream connection rather
+than the intended Toolbox. A separately approved SDK operation then saved a
+Toolbox-backed candidate, independently read back with its pinned URL,
+authentication reference, forecast-only allowlist and approval-always setting.
+The participant reported seeing the resulting Toolbox attachment in Tools.
+These are observations from one project, not universal portal behavior or
+runtime evidence.
+
+If the picker only offers direct tools, explain that limitation immediately.
+Do not ask the learner to hunt for a nonexistent option, select the upstream
+as a substitute, or repeatedly save candidates to discover the UI behavior.
+Use verified UI controls if available; otherwise explain and obtain separate
+approval for the rehearsed, coach-executed SDK/API attachment route below.
+No VS Code or participant-written client is required. After independent
+read-back, guide one read-only inspection of the exact resulting agent version.
+Configuration approval does not authorize a model request, tool execution or
+publication.
+
 ## Incremental path
 
 | Checkpoint | Current-step change | Observable evidence |
@@ -56,12 +99,15 @@ is needed to teach reuse.
 
 ## Prepare the supported route before teaching
 
-**Authentication references rechecked 2026-11-03; no live operations performed.**
-Previously recorded evidence covers one project's saved-connection creation,
-forecast-only Toolbox version and developer-authenticated `tools/list`.
-Full prompt-runtime approval/denial, forecast execution,
-portal rendering and an end-to-end curriculum rehearsal remain unverified;
-do not describe configuration read-back as runtime success.
+**Authentication references rechecked 2026-11-03; no live operations performed
+in that review.** Earlier 2026-10-30 evidence covers one project's saved-connection creation,
+forecast-only Toolbox version, developer-authenticated `tools/list` and
+SDK-created prompt-agent Toolbox binding have been independently read back.
+The participant reported seeing that attachment in the agent's Tools area;
+a portal Toolbox-add route has not been verified. Full prompt-runtime
+approval/denial, forecast execution and an end-to-end curriculum rehearsal
+remain unverified; do not describe configuration read-back or portal
+visibility as runtime success.
 The installed skill describes `RemoteTool`
 project connections for custom MCP servers; current Microsoft documentation
 supports Toolbox MCP integration for prompt agents. Neither is proof that a
@@ -243,7 +289,7 @@ Stable-agent rollback alone does not undo a mutable shared dependency:
 retain the tested dependency versions and review affected consumers before
 updates or cleanup.
 
-This tool-management path is curriculum `two-specialists-workflow-v8`.
+This tool-management path is retained in curriculum `two-specialists-workflow-v9`.
 For earlier progress, ask before migration, preserve all historical attempts,
 and record T01-T03 as unmet until evidenced. Do not reset the participant's
 agents or automatically award new gates from direct-MCP evidence. Version 8
@@ -251,6 +297,8 @@ moves Weather Toolbox setup from 07 to 04 and expansion into that Toolbox at
 05; 07 verifies the existing binding rather than creating it. Explain this
 change and obtain migration approval for earlier progress. The
 participant session paused during authoring stays paused and unchanged.
+Version 9 additionally requires Weather and workflow channel publication/use
+at 07/16; see PUBLISHING.md. These do not replace tool-management evidence.
 
 ## Official references
 
