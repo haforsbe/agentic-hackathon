@@ -21,7 +21,11 @@ from workshop.weather_delivery.cloud_stages import (
     test_stable_endpoint,
     verify_github_oidc,
 )
-from workshop.weather_delivery.test_contract import manifest
+from workshop.weather_delivery.test_contract import (
+    direct_definition, direct_manifest, manifest as toolbox_manifest,
+    direct_validation_evidence,
+)
+from workshop.weather_delivery.contract import canonical_sha256
 
 
 SUBJECT = "repo:example/workshop:ref:refs/heads/FY27"
@@ -38,6 +42,14 @@ DEFINITION = {
         "require_approval": "always",
     }],
 }
+
+
+def manifest():
+    config = toolbox_manifest()
+    config["configuration_sha256"] = hashlib.sha256(
+        json.dumps({"schema_version": 1, "definition": DEFINITION}).encode()
+    ).hexdigest()
+    return config
 
 
 def pending_response(response_id="resp_1", conversation_id="conv_1"):
@@ -264,6 +276,160 @@ class CloudStageTests(unittest.TestCase):
             )
         self.assertEqual(api.requests, [])
 
+
+class DirectMcpStageTests(unittest.TestCase):
+    def setUp(self):
+        self.config = direct_manifest()
+        self.api = FakeFoundryApi()
+        self.api.definition = direct_definition()
+        self.api.existing_validation_agent["versions"]["latest"]["definition"] = direct_definition()
+        self.api.pending["output"][0].update(
+            server_label="weather_intelligence", name="weather_forecast",
+        )
+
+    def test_capture_prepare_and_readback_preserve_exact_direct_definition(self):
+        with TemporaryDirectory() as directory:
+            source = Path(directory) / "definition.json"
+            record = capture_agent(self.api, "weather-release", "7", source)
+            self.config["configuration_sha256"] = record["configuration_sha256"]
+            result = prepare_candidate(
+                self.api, self.config, source, binding_verified=True, approved=True,
+            )
+        self.assertFalse(result["created_agent"])
+        self.assertNotIn("project_connection_id", self.api.definition["tools"][0])
+        self.assertEqual(self.api.definition, direct_definition())
+
+    def test_prepare_blocks_unreviewed_file_hash_before_api_write(self):
+        with TemporaryDirectory() as directory:
+            source = Path(directory) / "definition.json"
+            source.write_text(json.dumps({"schema_version": 1, "definition": direct_definition()}))
+            with self.assertRaisesRegex(StageBlocked, "file hash"):
+                prepare_candidate(
+                    self.api, self.config, source, binding_verified=True, approved=True,
+                )
+        self.assertEqual(self.api.requests, [])
+
+    def test_prepare_creates_missing_direct_candidate_and_blocks_readback_drift(self):
+        with TemporaryDirectory() as directory:
+            source = Path(directory) / "definition.json"
+            record = capture_agent(self.api, "weather-release", "7", source)
+            self.config["configuration_sha256"] = record["configuration_sha256"]
+            self.api.existing_validation_agent = None
+            result = prepare_candidate(
+                self.api, self.config, source, binding_verified=True, approved=True,
+            )
+            self.assertTrue(result["created_agent"])
+            self.api.get_version = Mock(return_value={"version": "wrong", "definition": direct_definition()})
+            with self.assertRaisesRegex(StageBlocked, "Candidate version read-back"):
+                prepare_candidate(
+                    self.api, self.config, source, binding_verified=True, approved=True,
+                )
+
+    def test_release_requires_passed_evidence_and_preserves_reviewed_definition(self):
+        with TemporaryDirectory() as directory:
+            source = Path(directory) / "definition.json"
+            record = capture_agent(self.api, "weather-release", "7", source)
+            self.config["configuration_sha256"] = record["configuration_sha256"]
+            evidence = direct_validation_evidence(self.config)
+            context = {
+                "repository": "example/workshop", "default_branch": "FY27",
+                "current_commit": "1" * 40, "latest_sha": "1" * 40, "latest_attempt": 2,
+            }
+            evidence["status"] = "blocked"
+            with self.assertRaisesRegex(ValueError, "cannot authorize release"):
+                prepare_release_version(
+                    self.api, self.config, source, evidence, approved=True, **context,
+                )
+            self.assertNotIn("create_version", [request[0] for request in self.api.requests])
+            evidence["status"] = "passed"
+            result = prepare_release_version(
+                self.api, self.config, source, evidence, approved=True, **context,
+            )
+            self.assertEqual(result["released_version"], "8")
+            self.assertEqual(self.api.definition, direct_definition())
+
+    def test_binding_verification_and_write_approval_are_still_required(self):
+        for binding, approved in ((False, True), (True, False)):
+            with self.subTest(binding=binding, approved=approved), self.assertRaises(StageBlocked):
+                prepare_candidate(
+                    self.api, self.config, "unused", binding_verified=binding, approved=approved,
+                )
+        self.assertEqual(self.api.requests, [])
+
+    def test_start_waits_for_exact_direct_mcp_approval(self):
+        self.api.responses = [copy.deepcopy(self.api.pending)]
+        result = start_tool_call(self.api, self.config, "12", "approved", spend_approved=True)
+        self.assertEqual(result["tool_name"], "weather_forecast")
+        self.assertEqual(result["server_label"], "weather_intelligence")
+        self.assertNotIn("arguments", result)
+
+    def test_wrong_endpoint_tools_approval_and_definition_block_before_model_call(self):
+        for key, value in (
+            ("server_url", "https://wrong.example/mcp"),
+            ("allowed_tools", ["weather_forecast", "delete_everything"]),
+            ("require_approval", "never"),
+            ("project_connection_id", "invented-toolbox-auth"),
+        ):
+            with self.subTest(key=key):
+                self.api.definition = direct_definition()
+                self.api.definition["tools"][0][key] = value
+                self.api.requests = []
+                with self.assertRaises(StageBlocked):
+                    start_tool_call(self.api, self.config, "12", "approved", spend_approved=True)
+                self.assertEqual([item[0] for item in self.api.requests], ["get_version"])
+        self.api.definition = direct_definition()
+        self.api.definition["instructions"] = "Unreviewed composition"
+        with self.assertRaises(StageBlocked):
+            start_tool_call(self.api, self.config, "12", "approved", spend_approved=True)
+
+    def test_nonapproval_response_and_wrong_pending_binding_block(self):
+        for field, value in (("name", "delete_everything"), ("server_label", "other")):
+            with self.subTest(field=field):
+                response = copy.deepcopy(self.api.pending)
+                response["output"][0][field] = value
+                self.api.responses = [response]
+                with self.assertRaises(StageBlocked):
+                    start_tool_call(self.api, self.config, "12", "approved", spend_approved=True)
+        self.api.responses = [{"status": "completed", "output": []}]
+        with self.assertRaisesRegex(StageBlocked, "human MCP approval"):
+            start_tool_call(self.api, self.config, "12", "approved", spend_approved=True)
+
+    def test_approval_and_denial_continue_in_same_conversation(self):
+        for approve in (True, False):
+            with self.subTest(approve=approve):
+                self.api.responses = [{
+                    "id": "resp_2", "status": "completed", "conversation": "conv_1",
+                    "output": [{
+                        "type": "mcp_call", "id": "call_1",
+                        "name": "weather_forecast", "server_label": "weather_intelligence",
+                    }] if approve else [],
+                }]
+                result = continue_tool_call(
+                    self.api, self.config, "12", "resp_1", "mcpr_1", approve, spend_approved=True,
+                )
+                self.assertEqual(result["conversation_id"], "conv_1")
+                self.assertEqual(result["decision"], "approved" if approve else "denied")
+                self.assertEqual(result["binding_sha256"], canonical_sha256(self.config["direct_mcp"]))
+                self.assertNotIn("toolbox_version", result)
+        self.api.responses = [{
+            "id": "resp_2", "status": "completed", "conversation": "wrong", "output": [],
+        }]
+        with self.assertRaisesRegex(StageBlocked, "original managed Conversation"):
+            continue_tool_call(
+                self.api, self.config, "12", "resp_1", "mcpr_1", False, spend_approved=True,
+            )
+
+    def test_execution_must_match_approved_tool_and_server(self):
+        self.api.responses = [{
+            "id": "resp_2", "status": "completed", "conversation": "conv_1",
+            "output": [{"type": "mcp_call", "id": "call_1", "name": "other", "server_label": "other"}],
+        }]
+        with self.assertRaisesRegex(StageBlocked, "differs from the approved"):
+            continue_tool_call(
+                self.api, self.config, "12", "resp_1", "mcpr_1", True, spend_approved=True,
+            )
+
+class CloudStageContinuationTests(unittest.TestCase):
     def test_prepare_requires_explicit_agent_creation_approval(self):
         api = FakeFoundryApi()
         with self.assertRaisesRegex(StageBlocked, "requires explicit current-step approval"):

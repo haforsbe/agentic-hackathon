@@ -84,6 +84,16 @@ verified; do not schedule the lab as a completed cloud delivery exercise until
 the identity, exact tool approval/denial, isolated memory and stable consumer
 path are rehearsed.
 
+Within this optional lab only, participants may explicitly choose the
+[schema 2 direct-MCP alternative](weather-delivery/README.md#explicit-direct-mcp-alternative)
+when managed-agent-to-Toolbox authentication is blocked. Preserve schema 1
+Toolbox compatibility, inspect the complete direct definition and explicit
+Weather allowlist, and never invent authentication-connection references.
+Capture/review/offline CI/prepare/start/continue and gated release remain the
+same experience. Both routes require independent identity, per-call human
+approval/denial, same-Conversation and isolated memory evidence. This does
+not change core Toolbox lessons, migrate progress or assert live readiness.
+
 Rehearse agent 2 as an application exercise, not a second introductory lecture.
 The coach still supplies its selected MCP endpoint/tool information and guides
 all independent tests. Use shorter reminders and a single checkpoint
