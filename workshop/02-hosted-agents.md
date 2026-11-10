@@ -9,6 +9,27 @@ Use [TESTS.md](TESTS.md) and [APP-GUIDE.md](APP-GUIDE.md). Use a current officia
 hosting sample and the installed Microsoft Foundry skill workflow, not an old
 console script as a server entry point.
 
+### Development-time builder skill
+
+Use the repository-scoped
+[Python Agent Framework builder skill](../.agents/skills/agent-framework-builder-python/SKILL.md)
+when preparing or implementing checkpoints 15-16. It is Microsoft-maintained
+guidance for the GitHub Copilot coding assistant, not a runtime skill attached
+to either specialist and not an additional participant exercise.
+
+The bundled snapshot is pinned to upstream commit
+`1c3264b065ef4b2b9b3614b19394bdd49d98334f`; its source metadata is recorded in
+`SKILL.md`. Review changes before intentionally updating that pin. Load its
+workflow and hosting references as needed, and check API examples against the
+workshop's tested package versions rather than upgrading dependencies to match
+upstream guidance automatically.
+
+Use the builder for framework code, session isolation, approval/resume behavior
+and deterministic workflow tests. Continue using the Microsoft Foundry skill
+for deployment and resource operations, and Microsoft Learn MCP for current
+API documentation. Neither guidance nor installation proves Toolbox execution,
+human approval, release or CH01/CH02 channel evidence.
+
 ## 15: Build and test the Trip Planning Workflow
 
 **Concept:** executable workflow code coordinates released specialists and is
