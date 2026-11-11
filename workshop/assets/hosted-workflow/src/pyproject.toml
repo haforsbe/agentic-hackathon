@@ -1,0 +1,16 @@
+[project]
+name = "workshop-hosted-workflow-reference"
+version = "0.1.0"
+description = "Reusable Microsoft Foundry host and facilitator reference graph."
+requires-python = ">=3.12"
+dependencies = [
+    "agent-framework-core==1.25.0",
+    "agent-framework-foundry-hosting==1.0.0b261106",
+    "azure-ai-agentserver-core==2.1.0",
+    "azure-ai-agentserver-invocations==1.1.0",
+    "azure-ai-agentserver-responses==2.2.0b1",
+    "azure-ai-projects==2.7.0",
+    "azure-identity==1.27.0",
+    "httpx==0.28.1",
+    "openai==3.42.1",
+]

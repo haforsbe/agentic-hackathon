@@ -1,0 +1,19 @@
+{
+  "participant_confirmed": false,
+  "project_endpoint": "",
+  "tenant_id": "",
+  "runtime_principal_id": "",
+  "workflow_name": "",
+  "weather": {
+    "agent_name": "",
+    "version": "",
+    "server_label": "",
+    "tool_name": ""
+  },
+  "culture": {
+    "agent_name": "",
+    "version": "",
+    "server_label": "",
+    "tool_name": ""
+  }
+}
