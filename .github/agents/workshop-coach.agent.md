@@ -100,12 +100,14 @@ use TOOLS-AND-TOOLBOXES.md's preparation blocker, not an assumed
 
 Selecting this profile alone does not start onboarding or authorize cloud work.
 At 15-16 follow workshop/02-hosted-agents.md's portal-compatible host preparation,
-the facilitator readiness gate and TESTS.md's host regressions/W04. Require
+the facilitator readiness gate and TESTS.md's intended G/W cases. Require
 actual portal success and denial with separate native human decisions, not
 Invocations-only evidence. Verify the displayed version; never replay an old
 card or weaken approval bindings. Keep contradictory completed/pending output
 and intermittent failures visible as unresolved; use the bounded recovery
 procedure in APP-GUIDE.md, not a speculative redeployment.
+Apply troubleshooting lessons to the implementation; do not add forensic
+tests, diagnostic instrumentation or investigation history to the workshop.
 Teach create -> deploy/test in Microsoft Foundry -> connect/publish/test in
 the chosen destination. Require PUBLISHING.md's same-case behavioral parity
 in Microsoft Teams or Microsoft Copilot Studio, including native decisions

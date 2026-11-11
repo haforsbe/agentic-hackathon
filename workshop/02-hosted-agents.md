@@ -12,7 +12,7 @@ console script as a server entry point.
 ## Participant delivery flow
 
 1. **Create the workflow (15).** Implement coordination and contracts using
-   the prepared host; run the local contract, failure and transport tests.
+   the prepared host; run the intended local contract and workflow tests.
 2. **Test in Microsoft Foundry (16).** Deploy the hosted candidate to
    Microsoft Foundry, then test it in the agent Playground, including separate
    Weather/Cultural decisions, denial and explicit failures. Hosting deployment
@@ -124,14 +124,16 @@ executors between requests. The scaffold must establish these boundaries:
   text from the assembled evidence to manufacture consistency.
 
 Before handing this scaffold to a participant, require the
-[hosting regression coverage](TESTS.md#host-transport-regressions-before-deployment)
-and the facilitator's
+[intended G/W tests](TESTS.md#hosted-trip-planning-workflow) and the facilitator's
 [workflow readiness gate](FACILITATOR.md#hosted-workflow-readiness-before-the-cohort).
 Record the reviewed repository revision that actually contains the scaffold,
 lockfile and tests. An author-only implementation, a bundled builder skill or
 a deployed author agent does not supply those files to a participant.
 If that handoff is missing, checkpoint 15 is blocked; do not reconstruct it
 from an old example or upgrade dependencies opportunistically.
+Keep author troubleshooting tests, diagnostic instrumentation, captured
+responses and incident records out of the shared scaffold. The implementation
+should incorporate the lessons, not make participants repeat the investigation.
 
 Define versioned weather-result and cultural-result contracts based on observed
 specialist outputs. Each contract should require the owning agent/version,
@@ -152,8 +154,7 @@ validation failure or documented partial result; do not mark it `ok` or publish
 an unqualified completed itinerary. The native approval state remains
 authoritative: prose cannot approve a tool or undo an actual decision.
 Do not silently strip the contradiction or retry the model to obtain a pass.
-Use sanitized fixtures to exercise this check in both graph validation and
-Responses rendering before live rehearsal.
+Cover invalid or contradictory results with the intended G02/W02 cases.
 
 Use the pre-release content checklist from 07/14 to avoid discovering missing
 source fields for the first time here. That checklist is not a schema pass:
@@ -175,7 +176,7 @@ The two specialist calls may run independently after request validation when
 the participant explains the tradeoff. Bound retries and timeouts. Preserve
 correlation identifiers without exposing credentials.
 
-Run the host transport regressions and G01-G03/W01-W03 locally with recorded
+Run G01-G03/W01-W03 locally with synthetic
 fixtures, then run the applicable approved live tests through both specialists'
 Stable Agent Endpoints. Inspect workflow, executor, agent-call, validation, and
 aggregation spans when supported. Two manual agent calls followed by a manually

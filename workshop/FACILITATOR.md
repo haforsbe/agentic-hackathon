@@ -108,33 +108,15 @@ login profiles, native journals and local student implementations out of that
 handoff. A separate local author worktree or running author deployment is not
 a published participant scaffold.
 
-Require [host transport regressions](TESTS.md#host-transport-regressions-before-deployment)
-and rehearse [W04](TESTS.md#hosted-trip-planning-workflow) in the actual portal,
-not only through an API client. Cover repeated independent fresh Conversations,
-page reopening with verification of the actual selected version, both
-sequential approvals, and denial. Plan a bounded number of attempts and costs
-in advance; stop on a new blocker rather than retrying until a pass appears.
-Capture same-run native execution/approval linkage and usage, not just cards
-or a plausible final answer. Preserve request-owned state, current-checkpoint
-validation, pinned specialists and both required protocols.
-
-The 2026-11-10 author rehearsal established a valid `include` projection was
-incorrectly rejected by the host; the repaired host later completed a portal
-trip with sequential Weather/Cultural decisions on the same deployed version.
-An earlier HTTP 400 during continuation was not conclusively diagnosed.
-The successful trip also contained a contradictory Cultural waiting-for-approval
-sentence. These observations are regression requirements, not a claim that
-intermittency, denial, output quality or cohort readiness has passed.
-Keep current sanitized readiness evidence separate from this dated account.
-
-Read-only reconciliation of that successful trip confirmed exactly one
-completed Weather tool call and one completed Cultural tool call, both linked
-to their native approvals and pinned specialist versions. The contradictory
-sentence was in Cultural's final native answer, not its initial message or
-the tool result; the workflow accepted and republished it. Require a semantic
-validation regression for that failure mode and scope specialist waiting
-instructions to the pre-approval boundary. Prompt wording as the cause remains
-unproven; instruction changes alone are not a validated repair.
+Rehearse the intended G01-G03/W01-W04 cases, including the actual portal
+route, sequential approvals, denial, sourced output and explicit failure
+handling. Capture same-run native execution/approval linkage and usage, not
+just cards or a plausible final answer. Preserve request-owned state,
+current-checkpoint validation, pinned specialists and both required protocols.
+Use the troubleshooting conclusions to prepare correct reusable code, not
+as an additional curriculum: do not publish incident history, captured native
+responses, forensic replay suites or author diagnostic instrumentation.
+Only the intended workshop tests belong in the shared scaffold.
 
 Rehearse the same Playground behavior cases through each offered destination,
 using [the parity plan](PUBLISHING.md#workflow-destination-test-parity).
@@ -144,7 +126,7 @@ untested connection as a supported workshop route. A Microsoft Copilot Studio
 test-pane pass is distinct from its eventual published-channel CH02 test.
 Prepare this integration before the cohort, not during the final lesson.
 
-Block delivery of the affected checkpoints if the reviewed scaffold, repeated
+Block delivery of the affected checkpoints if the reviewed scaffold, intended
 portal evidence, final-output consistency or required denial coverage is
 missing. Escalate a reproducible portal/platform mismatch with sanitized
 request/correlation evidence. Do not substitute an Invocations-only demo,

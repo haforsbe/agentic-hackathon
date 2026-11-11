@@ -135,7 +135,7 @@ this as a vocabulary test. It introduces each term immediately before use:
 | 12 | [Cultural skill and multiple tools](01-prompt-agents.md#12-guide-multiple-cultural-tools-with-a-skill) | S02 | Review skill delivery and tool routing |
 | 13 | [Cultural memory](01-prompt-agents.md#13-add-and-test-cultural-memory) | M01-M03 | Verify separate memory scope |
 | 14 | [Release Cultural Travel Agent](01-prompt-agents.md#14-release-the-cultural-travel-agent) | Cultural final-path regressions/P01-P03, unchanged Weather release/dependency verification, T03 isolation and two-agent comparison | Review two independent Toolbox-backed releases without a planned Weather migration |
-| 15 | [Build Trip Planning Workflow](02-hosted-agents.md#15-build-and-test-the-trip-planning-workflow) | Reviewed portal-compatible scaffold, host transport regressions, G01-G03 and W01-W03 locally | Review contracts, request-owned state, approval bindings and traces |
+| 15 | [Build Trip Planning Workflow](02-hosted-agents.md#15-build-and-test-the-trip-planning-workflow) | Reviewed portal-compatible scaffold, G01-G03 and W01-W03 locally | Review contracts, request-owned state, approval bindings and traces |
 | 16 | [Deploy, release and publish workflow](02-hosted-agents.md#16-hosted-release) | W01-W03 remotely, actual portal W04 success/denial, P01-P04, then CH02 on the final version | Review sequential tool cards and sourced output; send a channel request and inspect both specialist calls |
 | 17 | [Choose a capstone](CAPSTONE.md#17-choose-and-scope) | K01 | Turn an idea into a bounded two-specialist plan |
 | 18 | [Build capstone specialists](CAPSTONE.md#18-build-and-release-the-specialists) | K02 and applicable specialist regressions | Small tasks, diff review, focused debugging |

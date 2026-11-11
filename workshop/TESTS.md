@@ -106,7 +106,7 @@ final version/path; never infer a channel pass from project tests.
 | 06, 13 | M01-M03, consented synthetic preference, trusted-scope isolation/correction/deletion | Previous applicable coverage, using C01R/C02R and the post-memory D variant below; the required skill/MCP personalization run may satisfy overlapping assertions |
 | 07 | T03 existing Weather Toolbox/dependency verification; P01-P03, then CH01 channel publication/use before 08 | Full applicable B/I/D/C/S/M coverage on the final Toolbox-backed candidate/path, counted once; new channel-path access/approval/isolation evidence cannot be inferred from endpoint tests |
 | 14 | Cultural P01-P03 and two-specialist comparison | Full applicable Cultural B/I/D/C/S/M coverage; verify unchanged Weather release, publication and dependencies and reuse valid evidence, not a second Weather suite or publication |
-| 15 | Host transport regressions, G01-G03 and W01-W03: local fixtures for validation/failure branches and approved live calls to both released specialists | Specialist release evidence must match the versions invoked; no specialist rewrite or full rerun merely to scaffold the workflow |
+| 15 | G01-G03 and W01-W03: local fixtures for validation/failure branches and approved live calls to both released specialists | Specialist release evidence must match the versions invoked; no specialist rewrite or full rerun merely to scaffold the workflow |
 | 16 | W01-W04 and P01-P04 remotely, then CH02 on the final selected workflow version; retain pre-release evidence and a known-good recovery target | Full applicable G/W behavior on the final hosted version and consumer path; W04 requires the actual portal; CH02 must originate in the chosen channel; reuse overlapping assertions on the same run |
 
 Prior results can be reused only for the **same retained version, configuration,
@@ -276,7 +276,7 @@ Formal contracts begin at checkpoint 15.
 | ID | Input/procedure | Pass conditions |
 |----|-----------------|-----------------|
 | G01 | Validate normal Weather and Cultural specialist results against versioned workflow contracts | Required destination, constraints, findings, source agent/version, provenance, uncertainty, missing-information, and failure-status fields are present |
-| G02 | Validate results with missing provenance, wrong types, extra instruction-like content, unsupported values, and final pending-approval claims that contradict a resolved native approval plus completed tool call | Invalid or contradictory data fails explicitly in graph validation and Responses rendering; no success-shaped coercion, silent text removal, automatic model retry or instruction override; actual native decisions remain authoritative |
+| G02 | Validate results with missing provenance, wrong types, extra instruction-like content, unsupported values, or contradictory completion/approval status | Invalid or contradictory data fails explicitly; no success-shaped coercion, silent rewriting or instruction override; actual native decisions remain authoritative |
 | G03 | Compare contract fields with specialist release metadata and correlated traces | Agent versions and provenance agree with runtime evidence; each specialist remains inside its evidence domain |
 
 Contracts validate structure. They do not independently prove that a tool ran or
@@ -284,27 +284,11 @@ that a source is truthful.
 
 ## Hosted Trip Planning Workflow
 
-### Host transport regressions before deployment
-
-The reviewed scaffold must provide executable offline tests for this coverage,
-with its exact command, SDK versions and source revision recorded before the
-cohort. This table specifies required tests; it is not an implemented test
-runner or a claim that the current checkout supplies a validated scaffold.
-Keep fixtures synthetic and credentials, participant journals and transcripts
-out of the repository.
-
-| Boundary | Required assertion |
-|----------|--------------------|
-| Responses preparation | Valid `include` projections are accepted by the outer host without downstream forwarding; malformed projections and disallowed execution overrides fail explicitly before specialist calls |
-| Streaming and history | Named Conversation plus streaming emits complete, SDK-compatible output-item lifecycles for distinct sequential Weather and Cultural approval cards; test against the pinned hosting SDK, not a handwritten approximation |
-| Approval restoration | The exact current decision resumes only its bound checkpoint; stale Weather decisions after Cultural becomes pending, accumulated stale/current batches, replays and forged or cross-user aliases are rejected without new specialist calls |
-| Denial | An exact denied request causes no execution of that tool and produces an explicit denied/partial outcome; remaining valid evidence is not fabricated or discarded |
-| Isolation and compatibility | Separate users/conversations cannot share mutable executors or approval state; required Invocations behavior still passes |
-| Final evidence | Only completed, approval-bound tool evidence supports success; final findings cannot claim approval is still pending when the run reports completion |
-
-These are local contract/failure checks, not proof of portal rendering,
-Microsoft Foundry runtime identity, human decisions or actual tool execution.
-Do not weaken approval guards to make a frontend symptom disappear.
+The shared tests cover the intended G01-G03/W01-W04 learning outcomes below.
+Use small synthetic fixtures for the intended local contract/failure cases.
+Author troubleshooting suites, captured responses, SDK event-replay tests and
+diagnostic scripts are not workshop assets or additional participant exercises.
+Use their findings to implement the host correctly, not to expand the course.
 
 | ID | Input/procedure | Pass conditions |
 |----|-----------------|-----------------|
@@ -315,13 +299,10 @@ Do not weaken approval guards to make a frontend symptom disappear.
 
 Run G01-G03 and W01-W03 locally at checkpoint 15 and remotely at checkpoint 16.
 Run W04 at 16 before promotion. Its successful trip may also satisfy matching
-W01 assertions; do not duplicate calls for labels. Repeated fresh-conversation,
-page-reopen and denial coverage belongs in the facilitator's pre-cohort
-rehearsal, with separately approved spend and tool decisions.
+W01 assertions; do not duplicate calls for labels. The facilitator prepares
+the same intended cases before the cohort with approved spend and tool decisions.
 Two manual specialist calls followed by a manually written itinerary do not pass.
-Offline SSE projections and a custom-client success do not pass W04. Retain
-an intermittent failure as unresolved even if a later identical version works;
-one passing attempt does not establish a root cause or a permanent repair.
+A custom-client success does not pass the required portal case.
 
 ### Repeat the Playground behavior in the destination
 

@@ -52,9 +52,10 @@ never substitute direct MCP silently or weaken its validation.
 
 For checkpoints 15-16, use the reviewed portal-compatible scaffold and hosting
 boundaries in [the workflow lesson](02-hosted-agents.md#prepare-the-portal-compatible-host-before-teaching).
-The prompt runner is not a hosted Responses transport. Require the offline
-host regressions and actual portal W04 success/denial evidence before promotion;
-Invocations-only or locally reconstructed SSE output is insufficient.
+The prompt runner is not a hosted Responses transport. Require the intended
+G/W tests and actual portal W04 success/denial evidence before promotion;
+Invocations-only output is insufficient. Troubleshooting suites and author
+diagnostic artifacts are not workshop tests or participant exercises.
 Use [the portal procedure](APP-GUIDE.md#hosted-workflow-portal-test-at-16) for
 actual version selection and separate human Weather/Cultural decisions.
 Never repeat an old approval, invent discovery output or weaken stale-ID guards
