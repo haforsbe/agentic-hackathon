@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - "workshop/runner/**"
+      - "workshop/assets/hosted-workflow/**"
       - ".github/workflows/workshop-runner.yml"
   pull_request:
     paths:
       - "workshop/runner/**"
+      - "workshop/assets/hosted-workflow/**"
       - ".github/workflows/workshop-runner.yml"
 
 permissions:
@@ -23,3 +25,24 @@ jobs:
           python-version: "3.12"
       - name: Test without Azure credentials or SDK installation
         run: python -S -m unittest discover -s workshop/runner -p "test_*.py" -v
+
+  hosted-workflow-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PIP_INDEX_URL: https://packagefeedproxy.microsoft.io/pypi/simple
+      OTEL_SDK_DISABLED: "true"
+    defaults:
+      run:
+        working-directory: workshop/assets/hosted-workflow
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install exact hosted workflow dependencies from the approved feed
+        run: python -m pip install --disable-pip-version-check -r src/requirements.txt
+      - name: Check installed dependency compatibility
+        run: python -m pip check
+      - name: Test intended workflow outcomes without Azure credentials
+        run: python -m unittest discover -s tests -p "test_*.py" -v

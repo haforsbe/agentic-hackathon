@@ -121,6 +121,15 @@ The eight tests use **small synthetic fixtures**. Clients are patched; no
 Microsoft Foundry account, model request, MCP tool execution or human decision
 is needed or claimed.
 
+The repository's `Workshop runner offline checks` workflow runs these same
+tests on Linux with Python 3.13, separately from the SDK-free runner tests.
+It installs the exported requirements from
+`https://packagefeedproxy.microsoft.io/pypi/simple`, the feed used for the
+local restore, without a fallback index. Feed or package failures block the
+check rather than silently changing dependencies. A green check establishes
+that CI environment's offline behavior, not a Microsoft Foundry remote build
+or any live gate below.
+
 | Test | Intended assertion |
 |---|---|
 | `test_required_evidence_fields_and_source_sections` | G01: required versioned fields and both evidence domains |

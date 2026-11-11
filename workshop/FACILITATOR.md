@@ -102,8 +102,14 @@ cannot be met, report the partial outcome honestly.
 
 Do not make participants debug hosting protocols in the final 90-minute block.
 Before checkpoints 15-16 are offered, record one reviewed repository revision
-containing the reusable hosting scaffold, exact dependency lock, offline test
-command and compatible official sample revision. Keep author project IDs,
+containing the reusable hosting scaffold, fully pinned dependencies, offline test
+command and compatible official sample revision. The
+[shared hosted-workflow asset](assets/hosted-workflow/README.md) supplies the
+host, configuration and facilitator reference graph with fully pinned
+requirements, not a portable artifact/hash lock. Verify package availability
+and remote-build compatibility through the approved feed; do not copy the
+author's private-feed lock or claim that version pins establish either check.
+Keep author project IDs,
 login profiles, native journals and local student implementations out of that
 handoff. A separate local author worktree or running author deployment is not
 a published participant scaffold.

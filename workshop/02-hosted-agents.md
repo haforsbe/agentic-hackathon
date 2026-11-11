@@ -8,6 +8,10 @@ instructions into the hosted runtime.
 Use [TESTS.md](TESTS.md) and [APP-GUIDE.md](APP-GUIDE.md). Use a current official
 hosting sample and the installed Microsoft Foundry skill workflow, not an old
 console script as a server entry point.
+The [shared hosted-workflow asset](assets/hosted-workflow/README.md) contains
+the reusable host, confirmed-configuration contract, exact dependency pins and
+intended local tests. Its graph is a facilitator reference, not a substitute
+for the participant's implementation or live release evidence.
 
 ## Participant delivery flow
 
@@ -77,9 +81,13 @@ their pinned dependency versions and T01-T03 evidence. The workflow invokes
 the specialists, not a combined Toolbox; do not give it direct weather or
 cultural tool access as a shortcut around specialist execution.
 
-After approval, scaffold the smallest appropriate
-[official sample](https://github.com/microsoft-foundry/foundry-samples) under
-`student/hosted-agent/`. Record its source revision and dependency versions.
+After approval, use the reviewed
+[shared hosting plumbing](assets/hosted-workflow/README.md) under
+`student/hosted-agent/`, preserving the participant's own graph implementation.
+Record the repository revision and dependency versions. If a replacement is
+necessary, rehearse the smallest appropriate
+[official sample](https://github.com/microsoft-foundry/foundry-samples) before
+offering it to participants.
 
 The facilitator rehearses and records the exact suitable sample revision and
 dependency set before the cohort, with a runnable validation/failure-fixture
@@ -127,7 +135,10 @@ Before handing this scaffold to a participant, require the
 [intended G/W tests](TESTS.md#hosted-trip-planning-workflow) and the facilitator's
 [workflow readiness gate](FACILITATOR.md#hosted-workflow-readiness-before-the-cohort).
 Record the reviewed repository revision that actually contains the scaffold,
-lockfile and tests. An author-only implementation, a bundled builder skill or
+fully pinned dependency manifest and tests. The shared asset excludes its
+private-feed lockfile; its version pins do not prove package availability or
+remote-build compatibility. Verify the approved feed and target runtime first.
+An author-only implementation, a bundled builder skill or
 a deployed author agent does not supply those files to a participant.
 If that handoff is missing, checkpoint 15 is blocked; do not reconstruct it
 from an old example or upgrade dependencies opportunistically.
