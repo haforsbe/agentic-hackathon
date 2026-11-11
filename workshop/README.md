@@ -90,8 +90,11 @@ After Weather checkpoint 07 passes, including CH01, participants may choose the 
 checkpoint 08. It does not add a numbered checkpoint or extend the 5-6-hour
 core estimate. Skip or completion both return to 08. The lab's one-project
 setup is explicitly an educational compromise, not production isolation;
-offline CI is implemented, while live Microsoft Foundry validation, per-call
-approval, and release remain unverified, manual gates.
+capture opens a reviewed PR, offline checks validate its package, and a
+protected GitHub Environment gates deployment to the separate Prod agent.
+The workflow is not live-rehearsed or configured with Azure OIDC/project
+permissions; a successful deploy does not establish Toolbox runtime access or
+per-call approval.
 
 ## Terms the coach introduces when needed
 

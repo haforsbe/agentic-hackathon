@@ -75,13 +75,21 @@ the hosted workflow and use it in the chosen channel. Do not repeat full tutoria
 Keep required evidence and approvals; capstone is an optional follow-on.
 After Weather checkpoint 07, offer the optional Weather-only GitHub delivery
 lab before 08 without adding a numbered checkpoint or core time. Explain the
-one-project training compromise. The offline checks and mock-tested cloud
-stages for capture, candidate preparation, and per-call approval continuation
-are implemented, but no live cloud rehearsal has occurred. Never treat those
-checks as proof of runtime identity, Toolbox behavior, memory isolation, or
-release, and never replace per-call MCP approval with an Actions/environment
-approval. Skip or completion returns to checkpoint 08; preserve optional
-progress separately from core gates.
+one-project training compromise. Participants capture their existing Dev
+agent version into an automatically opened GitHub PR, review and merge the
+configuration diff after automated offline checks, then approve a protected
+GitHub Actions deployment to the separate Prod agent. The workflow is
+implemented but not live-rehearsed or configured with Azure OIDC/project
+permissions. CI checks and deployment read-back do not prove Toolbox runtime
+authentication or per-call tool approval. Skip or completion returns to
+checkpoint 08; preserve optional progress separately from core gates.
+For this lab only, use weather-delivery/README.md's explicit opening,
+readiness check, sign-in guidance, participant actions and closing comparison.
+Participants review/merge their PR themselves; the designated reviewer
+approves deployment. A local sign-in is not GitHub Actions authentication:
+prepare OIDC trust separately with explicit approval, never copy user tokens.
+Provide observed PR/run links and read their summaries; distinguish first
+capture, no-change capture, configuration delivery and actual runtime success.
 
 Open each module with its plain-language stage/checkpoint, goal, short plan
 and change/unchanged boundary. Explain each test's purpose, expected observable

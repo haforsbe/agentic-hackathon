@@ -301,32 +301,36 @@ different from creating the agent?"
 After checkpoint 07 passes, including CH01, offer the separate
 [Weather-agent GitHub delivery lab](weather-delivery/README.md) before
 checkpoint 08. It practices a reviewed configuration PR, offline CI, and a
-manually gated Weather-only validation/release path. It is not a new numbered
-checkpoint, does not alter the 00-16 core or its 5-6-hour estimate, and does
-not add work for Cultural Travel or the hosted workflow.
+GitHub-Actions promotion from a manually edited Dev Weather agent to a
+separate Prod Weather agent. It is not a new numbered checkpoint, does not
+alter the 00-16 core or its 5-6-hour estimate, and does not add work for
+Cultural Travel or the hosted workflow.
 
-Explain the tradeoff first: using one Microsoft Foundry Project is an
-educational compromise, **not production best practice**. The validation
-candidate and released agent need separate identities and explicitly
-independent memory scopes; separate Conversations alone do not isolate memory.
-The CI identity is distinct from the participant/runtime identity. CI and
-GitHub Environment approvals never replace human approval of each MCP call.
+Explain the tradeoff first: Dev and Prod are separate agent resources in one
+Microsoft Foundry Project, an educational compromise, **not production best
+practice**. Project dependencies, permissions, quotas, and audit boundary are
+shared. GitHub Actions captures the selected saved Dev version, opens a PR
+that shows the tracked configuration being replaced, runs automated offline
+checks, and deploys a new version to the existing Prod agent after merge and
+the protected `production` Environment approval. PR checks are automated
+contract tests, not an AI review; the participant reviews and merges the diff.
 
-The implementation verifies sanitized manifests and evidence offline and
-provides four manually dispatched cloud stages: capture, prepare,
-start-validation and continue-validation. These stages are mock-tested, not
-live-rehearsed; the workflow has no release stage. It does not configure
-GitHub environments/variables, OIDC trust, permissions or Toolbox bindings.
-Authoring or offline tests do not authorize dispatch, model calls or decisions.
-If the supported
-runtime cannot show and continue an exact approved/denied call, or any
-dependency, memory scope, permission, or consumer endpoint is unverified,
-block the live gate. Preserve its evidence. On skip or successful completion,
-resume directly at Cultural checkpoint 08; never renumber or mark any core
-checkpoint passed.
+The deployment copies the captured agent definition, not project resources,
+credentials, Conversations, transcripts, memory contents, or external skill
+files. Shared Foundry dependencies remain in the project. Offline checks prove
+package consistency only; deployment read-back proves a version was created
+and selected, not that MCP authentication or tool execution works. Those
+runtime checks remain independent and may be blocked by the Toolbox
+authentication investigation. The CI identity, participant/runtime identity,
+and agent runtime identity are distinct. Neither merge approval nor a GitHub
+Environment approval substitutes for per-call MCP approval. Live workflows
+remain unavailable until the facilitator configures and rehearses repository
+variables, OIDC trust, required permissions, and the production Environment.
+On skip or completion, resume directly at Cultural checkpoint 08; never
+renumber or mark any core checkpoint passed.
 
-**Teach-back:** "Why doesn't a separate validation Conversation prove that its
-memory is isolated from the released agent?"
+**Teach-back:** "What does merging the capture PR approve, and what does the
+separate production Environment approval allow GitHub Actions to do?"
 
 ## 08: Create the Cultural Travel Agent
 

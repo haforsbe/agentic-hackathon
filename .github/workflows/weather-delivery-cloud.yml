@@ -1,115 +1,71 @@
-name: Weather delivery cloud stages
+name: Capture Weather Dev configuration
 
 on:
   workflow_dispatch:
     inputs:
-      stage:
-        description: Run one bounded cloud stage
-        type: choice
-        required: true
-        options:
-          - capture
-          - prepare
-          - start
-          - continue
-      agent_name:
-        description: Exact existing Weather agent name (capture only)
-        type: string
-        required: false
       agent_version:
-        description: Exact saved Weather version to capture
+        description: Exact saved version of the configured Weather Dev agent
         type: string
-        required: false
-      candidate_version:
-        description: Read-back validation candidate version (start only)
-        type: string
-        required: false
-      binding_verified:
-        description: Confirm the exact Toolbox-authentication connection was read back in this project (prepare only)
-        type: choice
-        required: false
-        default: "no"
-        options:
-          - "no"
-          - "yes"
-      prepare_approved:
-        description: Approve the validation-agent resource write in the one-project lab; this stage does not invoke a model
-        type: choice
-        required: false
-        default: "no"
-        options:
-          - "no"
-          - "yes"
-      decision_case:
-        description: Label this public test request for later evidence review
-        type: choice
-        required: false
-        options:
-          - approved
-          - denied
-      response_id:
-        description: Exact prior stored response ID (continue only)
-        type: string
-        required: false
-      approval_request_id:
-        description: Exact pending MCP approval ID (continue only)
-        type: string
-        required: false
-      approve:
-        description: Your per-call decision after inspecting this exact pending request in Microsoft Foundry
-        type: choice
-        required: false
-        options:
-          - yes
-          - no
-      spend_approved:
-        description: Confirm the agreed cost for this specific model/tool request
-        type: choice
-        required: false
-        default: "no"
-        options:
-          - "no"
-          - "yes"
+        required: true
 
 permissions:
-  contents: read
+  actions: write
+  contents: write
   id-token: write
+  pull-requests: write
 
 concurrency:
-  group: weather-delivery-cloud
+  group: weather-delivery-capture
   cancel-in-progress: false
 
 jobs:
-  weather-cloud-stage:
+  capture-and-open-pr:
     if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     env:
       AZURE_CONFIG_DIR: ${{ runner.temp }}/weather-delivery-azure-cli
       AZURE_CLIENT_ID: ${{ vars.WEATHER_AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ vars.WEATHER_AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.WEATHER_AZURE_SUBSCRIPTION_ID }}
-      EXPECTED_OIDC_SUBJECT: ${{ vars.WEATHER_OIDC_SUBJECT }}
+      EXPECTED_OIDC_SUBJECT: ${{ vars.WEATHER_CAPTURE_OIDC_SUBJECT }}
       FOUNDRY_PROJECT_ENDPOINT: ${{ vars.WEATHER_FOUNDRY_PROJECT_ENDPOINT }}
-      STAGE: ${{ inputs.stage }}
-      AGENT_NAME: ${{ inputs.agent_name }}
+      WEATHER_DEV_AGENT_NAME: ${{ vars.WEATHER_DEV_AGENT_NAME }}
+      WEATHER_PROD_AGENT_NAME: ${{ vars.WEATHER_PROD_AGENT_NAME }}
+      WEATHER_PROD_STABLE_ENDPOINT: ${{ vars.WEATHER_PROD_STABLE_ENDPOINT }}
       AGENT_VERSION: ${{ inputs.agent_version }}
-      CANDIDATE_VERSION: ${{ inputs.candidate_version }}
-      BINDING_VERIFIED: ${{ inputs.binding_verified }}
-      PREPARE_APPROVED: ${{ inputs.prepare_approved }}
-      DECISION_CASE: ${{ inputs.decision_case }}
-      RESPONSE_ID: ${{ inputs.response_id }}
-      APPROVAL_REQUEST_ID: ${{ inputs.approval_request_id }}
-      APPROVE: ${{ inputs.approve }}
-      SPEND_APPROVED: ${{ inputs.spend_approved }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      CAPTURE_BRANCH: weather-capture/${{ github.run_id }}-${{ github.run_attempt }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
-          persist-credentials: false
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Check lab configuration before signing in
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -S - <<'PY'
+          import os
+          required = (
+              "AZURE_CLIENT_ID", "AZURE_TENANT_ID", "AZURE_SUBSCRIPTION_ID",
+              "EXPECTED_OIDC_SUBJECT", "FOUNDRY_PROJECT_ENDPOINT",
+              "WEATHER_DEV_AGENT_NAME", "WEATHER_PROD_AGENT_NAME",
+              "WEATHER_PROD_STABLE_ENDPOINT",
+          )
+          missing = [name for name in required if not os.environ.get(name, "").strip()]
+          for name in missing:
+              print(f"::error::Missing lab setting: {name}. Ask the facilitator to complete setup; no Azure operation has run.")
+          raise SystemExit(bool(missing))
+          PY
+          if [[ "$WEATHER_DEV_AGENT_NAME" == "$WEATHER_PROD_AGENT_NAME" ]]; then
+            echo "::error::Dev and Prod must be different existing agents."
+            exit 1
+          fi
       - name: Verify the exact GitHub OIDC subject before Azure login
         run: python -S -m workshop.weather_delivery.cloud_stages verify-oidc
       - uses: azure/login@v2
@@ -117,58 +73,83 @@ jobs:
           client-id: ${{ vars.WEATHER_AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.WEATHER_AZURE_TENANT_ID }}
           subscription-id: ${{ vars.WEATHER_AZURE_SUBSCRIPTION_ID }}
-      - name: Run one explicit cloud stage
+      - name: Capture the saved Dev version and prepare the reviewed PR
         shell: bash
         run: |
-          mkdir -p artifacts/weather-delivery
-          case "$STAGE" in
-            capture)
-              test -n "$AGENT_NAME" && test -n "$AGENT_VERSION"
-              python -S -m workshop.weather_delivery.cloud_stages capture \
-                --agent-name "$AGENT_NAME" \
-                --version "$AGENT_VERSION" \
-                --output artifacts/weather-delivery/agent-definition.json \
-                --record artifacts/weather-delivery/result.json
-              ;;
-            prepare)
-              test "$BINDING_VERIFIED" = "yes" && test "$PREPARE_APPROVED" = "yes"
-              python -S -m workshop.weather_delivery.cloud_stages prepare \
-                --manifest student/weather-delivery/manifest.json \
-                --definition student/weather-delivery/agent-definition.json \
-                --binding-verified "$BINDING_VERIFIED" \
-                --approved "$PREPARE_APPROVED" \
-                --output artifacts/weather-delivery/result.json
-              ;;
-            start)
-              test -n "$CANDIDATE_VERSION" && test -n "$DECISION_CASE" && test "$SPEND_APPROVED" = "yes"
-              python -S -m workshop.weather_delivery.cloud_stages start \
-                --manifest student/weather-delivery/manifest.json \
-                --candidate-version "$CANDIDATE_VERSION" \
-                --decision-case "$DECISION_CASE" \
-                --spend-approved "$SPEND_APPROVED" \
-                --output artifacts/weather-delivery/result.json
-              ;;
-            continue)
-              test -n "$CANDIDATE_VERSION" && test -n "$RESPONSE_ID" && test -n "$APPROVAL_REQUEST_ID" && test -n "$APPROVE" && test "$SPEND_APPROVED" = "yes"
-              python -S -m workshop.weather_delivery.cloud_stages continue \
-                --manifest student/weather-delivery/manifest.json \
-                --candidate-version "$CANDIDATE_VERSION" \
-                --response-id "$RESPONSE_ID" \
-                --approval-request-id "$APPROVAL_REQUEST_ID" \
-                --approve "$APPROVE" \
-                --spend-approved "$SPEND_APPROVED" \
-                --output artifacts/weather-delivery/result.json
-              ;;
-            *)
-              echo "Unsupported stage: $STAGE" >&2
-              exit 2
-              ;;
-          esac
-      - name: Preserve sanitized stage evidence
+          set -euo pipefail
+          test -n "$WEATHER_DEV_AGENT_NAME"
+          test -n "$WEATHER_PROD_AGENT_NAME"
+          test -n "$WEATHER_PROD_STABLE_ENDPOINT"
+          mkdir -p student/weather-delivery artifacts/weather-delivery
+          python -S -m workshop.weather_delivery.cloud_stages capture \
+            --agent-name "$WEATHER_DEV_AGENT_NAME" \
+            --version "$AGENT_VERSION" \
+            --output student/weather-delivery/agent-definition.json \
+            --record artifacts/weather-delivery/capture.json
+          python -S -m workshop.weather_delivery.cloud_stages package-capture \
+            --agent-name "$WEATHER_DEV_AGENT_NAME" \
+            --version "$AGENT_VERSION" \
+            --production-agent "$WEATHER_PROD_AGENT_NAME" \
+            --production-stable-endpoint "$WEATHER_PROD_STABLE_ENDPOINT" \
+            --project-endpoint "$FOUNDRY_PROJECT_ENDPOINT" \
+            --definition student/weather-delivery/agent-definition.json \
+            --output student/weather-delivery/manifest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          capture_description='Add your Weather agent configuration to Git for the first time.'
+          if git ls-files --error-unmatch student/weather-delivery/agent-definition.json >/dev/null 2>&1; then
+            capture_description='Review changes since the previous captured Weather configuration.'
+          fi
+          git switch --create "$CAPTURE_BRANCH"
+          git add student/weather-delivery/agent-definition.json student/weather-delivery/manifest.json
+          if git diff --cached --quiet; then
+            echo "The captured Dev version matches the configuration already in Git; no PR is needed."
+            printf '%s\n' '## Nothing new to promote' \
+              'The selected Dev version already matches the tracked package. No PR was opened and Prod was not changed.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git commit -m "Capture Weather Dev version $AGENT_VERSION"
+          git push --set-upstream origin "$CAPTURE_BRANCH"
+          body="$(printf '%s\n' \
+            '## Captured configuration' \
+            '' \
+            "$capture_description" \
+            '' \
+            "- Dev agent: \`$WEATHER_DEV_AGENT_NAME\`" \
+            "- Dev version: \`$AGENT_VERSION\`" \
+            "- Intended Prod agent: \`$WEATHER_PROD_AGENT_NAME\`" \
+            '' \
+            '## Your next steps' \
+            '- Open **Files changed**. Find the instructions you recognize from Microsoft Foundry, then inspect the model and tool references.' \
+            '- Open **Checks** and wait for `offline-contract-tests`. These checks validate package consistency, not live model or tool behavior.' \
+            '- Confirm the Dev version and Prod target above, then merge if this is the configuration you intend to promote.' \
+            '- Merging authorizes the reviewed configuration to enter the delivery branch; the separate `production` environment gate controls deployment.' \
+            '' \
+            'The capture contains agent configuration only. It does not contain credentials, Conversations, transcripts, or memory contents.')"
+          pr_url="$(gh pr create \
+            --base "$DEFAULT_BRANCH" \
+            --head "$CAPTURE_BRANCH" \
+            --title "Promote Weather Dev configuration to Prod" \
+            --body "$body")"
+          {
+            printf '## Captured: ready for your review\n\n'
+            printf '%s\n\n' "$capture_description"
+            printf 'Dev: `%s`, saved version `%s` → intended Prod: `%s`.\n\n' "$WEATHER_DEV_AGENT_NAME" "$AGENT_VERSION" "$WEATHER_PROD_AGENT_NAME"
+            printf '[Open your pull request](%s)\n\n' "$pr_url"
+            printf '%s\n' 'Next: inspect **Files changed**, wait for the offline check, then review and merge. Dev and Prod have not been changed by capture.'
+          } >> "$GITHUB_STEP_SUMMARY"
+          gh workflow run weather-delivery-check.yml --ref "$CAPTURE_BRANCH"
+      - name: Explain an incomplete capture
+        if: failure()
+        run: |
+          printf '%s\n' '## Capture did not complete' \
+            'Open the first failed step above. A PR may already exist if check dispatch failed; inspect it before rerunning.' \
+            'Do not paste tokens or credentials into the Coach conversation. Capture does not deploy to Prod.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve capture metadata
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: weather-cloud-${{ github.run_id }}-${{ github.run_attempt }}
+          name: weather-capture-${{ github.run_id }}-${{ github.run_attempt }}
           path: artifacts/weather-delivery/**
           if-no-files-found: warn
           retention-days: 14

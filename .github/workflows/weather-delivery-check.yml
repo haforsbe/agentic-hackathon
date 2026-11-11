@@ -17,6 +17,7 @@ on:
       - "workshop/templates/progress.json"
       - ".github/workflows/weather-delivery-check.yml"
       - ".github/workflows/weather-delivery-cloud.yml"
+      - ".github/workflows/weather-delivery-deploy.yml"
       - "student/weather-delivery/**"
   pull_request:
     paths:
@@ -34,7 +35,9 @@ on:
       - "workshop/templates/progress.json"
       - ".github/workflows/weather-delivery-check.yml"
       - ".github/workflows/weather-delivery-cloud.yml"
+      - ".github/workflows/weather-delivery-deploy.yml"
       - "student/weather-delivery/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -62,3 +65,15 @@ jobs:
           name: weather-delivery-${{ github.run_id }}-${{ github.run_attempt }}
           path: artifacts/weather-delivery-check.json
           retention-days: 14
+      - name: Explain the checks
+        if: always()
+        env:
+          CHECK_STATUS: ${{ job.status }}
+        run: |
+          {
+            printf '## Weather configuration checks: %s\n\n' "$CHECK_STATUS"
+            printf 'Checked Git commit: `%s`.\n\n' "$GITHUB_SHA"
+            printf '%s\n' 'These checks run offline tests and, when a captured package exists, validate its structure, credential-like field exclusion, distinct Dev/Prod names and exact file hash.' \
+              'They do not call Microsoft Foundry or prove model quality, tool authentication or execution.' \
+              'If successful: review the configuration diff before merging. If failed: inspect the failed step with the Coach; do not merge.'
+          } >> "$GITHUB_STEP_SUMMARY"

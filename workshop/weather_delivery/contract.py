@@ -53,6 +53,88 @@ def canonical_sha256(value):
     return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 
 
+def _reject_credentials(value):
+    sensitive_names = {
+        "authorization", "headers", "password", "secret", "token",
+        "api_key", "apikey", "credential", "connection_string",
+    }
+    if isinstance(value, dict):
+        for key, child in value.items():
+            normalized = str(key).casefold().replace("-", "_")
+            if (
+                normalized in sensitive_names
+                or normalized.endswith(("_token", "_secret", "_password", "_api_key"))
+            ):
+                raise ContractError("Agent configuration contains a credential-like field")
+            _reject_credentials(child)
+    elif isinstance(value, list):
+        for child in value:
+            _reject_credentials(child)
+
+
+def validate_capture_package(manifest, definition, *, expected_production_agent=None):
+    _object(
+        manifest,
+        {
+            "schema_version", "source_agent_name", "source_agent_version",
+            "production_agent_name", "production_stable_endpoint",
+            "definition_sha256",
+        },
+        "capture manifest",
+    )
+    if type(manifest["schema_version"]) is not int or manifest["schema_version"] != 1:
+        raise ContractError("Unsupported capture manifest schema_version")
+    source_name = _text(manifest["source_agent_name"], "source_agent_name")
+    _text(manifest["source_agent_version"], "source_agent_version")
+    production_name = _text(manifest["production_agent_name"], "production_agent_name")
+    if source_name == production_name:
+        raise ContractError("The Dev source and Prod target must be separate agents")
+    _sha256(manifest["definition_sha256"], "definition_sha256")
+    endpoint = _https_url(
+        manifest["production_stable_endpoint"], "production_stable_endpoint",
+    )
+    expected_endpoint_path = (
+        f"/agents/{quote(production_name, safe='')}/endpoint/protocols/openai/responses"
+    )
+    if endpoint.query or not endpoint.path.endswith(expected_endpoint_path):
+        raise ContractError("Prod stable endpoint must match the configured Prod agent")
+    if expected_production_agent is not None and production_name != expected_production_agent:
+        raise ContractError("Capture manifest targets a different configured Prod agent")
+
+    _object(definition, {"schema_version", "definition"}, "captured agent definition")
+    if type(definition["schema_version"]) is not int or definition["schema_version"] != 1:
+        raise ContractError("Unsupported captured agent definition schema_version")
+    body = definition["definition"]
+    _reject_credentials(body)
+    if (
+        not isinstance(body, dict)
+        or body.get("kind") != "prompt"
+        or not isinstance(body.get("model"), str)
+        or not body["model"]
+        or not isinstance(body.get("instructions"), str)
+        or not isinstance(body.get("tools", []), list)
+    ):
+        raise ContractError("Captured definition must be a prompt agent with model and instructions")
+    return manifest
+
+
+def validate_capture_files(manifest_path, definition_path, *, expected_production_agent=None):
+    manifest_file = Path(manifest_path)
+    definition_file = Path(definition_path)
+    try:
+        manifest = _read(manifest_file)
+        definition = _read(definition_file)
+    except (OSError, json.JSONDecodeError) as error:
+        raise ContractError("Capture manifest and agent definition must be readable JSON files") from error
+    validate_capture_package(
+        manifest, definition, expected_production_agent=expected_production_agent,
+    )
+    actual_hash = hashlib.sha256(definition_file.read_bytes()).hexdigest()
+    if actual_hash != manifest["definition_sha256"]:
+        raise ContractError("Captured agent definition hash differs from the manifest")
+    return manifest, definition
+
+
 def validation_cases_sha256():
     cases = json.loads(
         (Path(__file__).with_name("cases.json")).read_text(encoding="utf-8")
@@ -571,9 +653,16 @@ def write_ci_record(commit, manifest_path, output_path):
     status = "contract-suite-only"
     if manifest_file.is_file():
         manifest = _read(manifest_file)
-        validate_manifest_files(manifest)
+        if isinstance(manifest, dict) and "source_agent_name" in manifest:
+            validate_capture_files(
+                manifest_file,
+                manifest_file.parent / "agent-definition.json",
+            )
+            status = "capture-package-passed"
+        else:
+            validate_manifest_files(manifest)
+            status = "manifest-contract-passed"
         manifest_hash = canonical_sha256(manifest)
-        status = "manifest-contract-passed"
     record = {
         "schema_version": 1,
         "status": status,
@@ -591,6 +680,10 @@ def write_ci_record(commit, manifest_path, output_path):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
+    capture_parser = subparsers.add_parser("check-capture")
+    capture_parser.add_argument("manifest")
+    capture_parser.add_argument("definition")
+    capture_parser.add_argument("--production-agent")
     manifest_parser = subparsers.add_parser("check-manifest")
     manifest_parser.add_argument("manifest")
     record_parser = subparsers.add_parser("write-ci-record")
@@ -614,10 +707,16 @@ def main(argv=None):
     try:
         manifest = (
             _read(args.manifest)
-            if args.command in {"check-validation", "check-release"}
+            if args.command in {"check-validation", "check-release", "check-manifest"}
             else None
         )
-        if args.command == "check-manifest":
+        if args.command == "check-capture":
+            validate_capture_files(
+                args.manifest, args.definition,
+                expected_production_agent=args.production_agent,
+            )
+            print("Captured Dev configuration and Prod target passed offline checks.")
+        elif args.command == "check-manifest":
             manifest = _read(args.manifest)
             validate_manifest_files(manifest)
             print(f"Manifest structure passed; SHA-256 {canonical_sha256(manifest)}")

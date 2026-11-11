@@ -15,16 +15,24 @@ from workshop.weather_delivery.cloud_stages import (
     azure_cli_token,
     capture_agent,
     continue_tool_call,
+    deploy_captured_agent,
     prepare_candidate,
     prepare_release_version,
     start_tool_call,
     test_stable_endpoint,
     verify_github_oidc,
+    write_capture_manifest,
 )
+from workshop.weather_delivery.contract import ContractError, validate_capture_files
 from workshop.weather_delivery.test_contract import manifest
 
 
 SUBJECT = "repo:example/workshop:ref:refs/heads/FY27"
+PROJECT_ENDPOINT = "https://project.example.invalid/api/projects/lab"
+PROD_ENDPOINT = (
+    "https://project.example.invalid/api/projects/lab/agents/weather-prod/"
+    "endpoint/protocols/openai/responses"
+)
 DEFINITION = {
     "kind": "prompt",
     "model": "participant-selected-model",
@@ -209,6 +217,96 @@ class CloudStageTests(unittest.TestCase):
             with self.assertRaisesRegex(StageBlocked, "credential-like field"):
                 capture_agent(api, "weather-release", "7", target)
             self.assertFalse(target.exists())
+
+    def test_capture_package_records_source_and_prod_target(self):
+        config = {"schema_version": 1, "definition": copy.deepcopy(DEFINITION)}
+        with TemporaryDirectory() as directory:
+            definition = Path(directory) / "agent-definition.json"
+            manifest_path = Path(directory) / "manifest.json"
+            definition.write_text(json.dumps(config), encoding="utf-8")
+            result = write_capture_manifest(
+                "weather-dev", "7", "weather-prod", PROD_ENDPOINT, definition,
+                manifest_path, PROJECT_ENDPOINT,
+            )
+            checked, captured = validate_capture_files(manifest_path, definition)
+        self.assertEqual(result["source_agent_name"], "weather-dev")
+        self.assertEqual(result["production_agent_name"], "weather-prod")
+        self.assertEqual(checked, result)
+        self.assertEqual(captured, config)
+
+    def test_capture_package_rejects_same_dev_and_prod_agent(self):
+        config = {"schema_version": 1, "definition": copy.deepcopy(DEFINITION)}
+        with TemporaryDirectory() as directory:
+            definition = Path(directory) / "agent-definition.json"
+            definition.write_text(json.dumps(config), encoding="utf-8")
+            with self.assertRaisesRegex(StageBlocked, "must be separate"):
+                write_capture_manifest(
+                    "weather-agent", "7", "weather-agent", PROD_ENDPOINT,
+                    definition, Path(directory) / "manifest.json", PROJECT_ENDPOINT,
+                )
+
+    def test_deploy_creates_and_pins_reviewed_definition_on_existing_prod_agent(self):
+        api = FakeFoundryApi()
+        api.get_existing_agent = Mock(return_value={"name": "weather-prod"})
+        api.create_version = Mock(return_value={"version": "9"})
+        api.get_version = Mock(return_value={
+            "version": "9", "definition": copy.deepcopy(DEFINITION),
+        })
+        api.pin_agent_version = Mock(return_value={
+            "name": "weather-prod",
+            "endpoint": "https://project.example.invalid/api/projects/lab/agents/weather-prod/endpoint/protocols/openai/responses",
+        })
+        config = {"schema_version": 1, "definition": copy.deepcopy(DEFINITION)}
+        with TemporaryDirectory() as directory:
+            definition_path = Path(directory) / "agent-definition.json"
+            manifest_path = Path(directory) / "manifest.json"
+            definition_path.write_text(json.dumps(config), encoding="utf-8")
+            write_capture_manifest(
+                "weather-dev", "7", "weather-prod", PROD_ENDPOINT,
+                definition_path, manifest_path, PROJECT_ENDPOINT,
+            )
+            result = deploy_captured_agent(
+                api, manifest_path, definition_path, "weather-prod", PROD_ENDPOINT,
+            )
+        self.assertEqual(result["production_version"], "9")
+        self.assertEqual(result["source_agent_version"], "7")
+        self.assertEqual(api.create_version.call_args.args[0], "weather-prod")
+        self.assertEqual(api.pin_agent_version.call_args.args, ("weather-prod", "9"))
+
+    def test_deploy_rejects_manifest_for_other_prod_agent_before_write(self):
+        api = FakeFoundryApi()
+        config = {"schema_version": 1, "definition": copy.deepcopy(DEFINITION)}
+        with TemporaryDirectory() as directory:
+            definition_path = Path(directory) / "agent-definition.json"
+            manifest_path = Path(directory) / "manifest.json"
+            definition_path.write_text(json.dumps(config), encoding="utf-8")
+            write_capture_manifest(
+                "weather-dev", "7", "weather-prod", PROD_ENDPOINT,
+                definition_path, manifest_path, PROJECT_ENDPOINT,
+            )
+            with self.assertRaisesRegex(ContractError, "different configured Prod agent"):
+                deploy_captured_agent(
+                    api, manifest_path, definition_path, "other-prod", PROD_ENDPOINT,
+                )
+        self.assertEqual(api.requests, [])
+
+    def test_deploy_rejects_mismatched_prod_endpoint_before_write(self):
+        api = FakeFoundryApi()
+        config = {"schema_version": 1, "definition": copy.deepcopy(DEFINITION)}
+        with TemporaryDirectory() as directory:
+            definition_path = Path(directory) / "agent-definition.json"
+            manifest_path = Path(directory) / "manifest.json"
+            definition_path.write_text(json.dumps(config), encoding="utf-8")
+            write_capture_manifest(
+                "weather-dev", "7", "weather-prod", PROD_ENDPOINT,
+                definition_path, manifest_path, PROJECT_ENDPOINT,
+            )
+            with self.assertRaisesRegex(StageBlocked, "differs from the facilitator-verified endpoint"):
+                deploy_captured_agent(
+                    api, manifest_path, definition_path, "weather-prod",
+                    PROD_ENDPOINT.replace("weather-prod", "other-prod"),
+                )
+        self.assertEqual(api.requests, [])
 
     def test_prepare_creates_separate_candidate_and_reads_it_back(self):
         api = FakeFoundryApi()

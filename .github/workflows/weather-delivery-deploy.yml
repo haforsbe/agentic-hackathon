@@ -1,0 +1,101 @@
+name: Deploy Weather configuration to Prod
+
+on:
+  push:
+    paths:
+      - "student/weather-delivery/agent-definition.json"
+      - "student/weather-delivery/manifest.json"
+      - ".github/workflows/weather-delivery-deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: weather-delivery-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    env:
+      AZURE_CONFIG_DIR: ${{ runner.temp }}/weather-delivery-azure-cli
+      AZURE_CLIENT_ID: ${{ vars.WEATHER_AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ vars.WEATHER_AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.WEATHER_AZURE_SUBSCRIPTION_ID }}
+      EXPECTED_OIDC_SUBJECT: ${{ vars.WEATHER_PRODUCTION_OIDC_SUBJECT }}
+      FOUNDRY_PROJECT_ENDPOINT: ${{ vars.WEATHER_FOUNDRY_PROJECT_ENDPOINT }}
+      WEATHER_PROD_AGENT_NAME: ${{ vars.WEATHER_PROD_AGENT_NAME }}
+      WEATHER_PROD_STABLE_ENDPOINT: ${{ vars.WEATHER_PROD_STABLE_ENDPOINT }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check settings and the reviewed package before Azure login
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -S - <<'PY'
+          import os
+          required = (
+              "AZURE_CLIENT_ID", "AZURE_TENANT_ID", "AZURE_SUBSCRIPTION_ID",
+              "EXPECTED_OIDC_SUBJECT", "FOUNDRY_PROJECT_ENDPOINT",
+              "WEATHER_PROD_AGENT_NAME", "WEATHER_PROD_STABLE_ENDPOINT",
+          )
+          missing = [name for name in required if not os.environ.get(name, "").strip()]
+          for name in missing:
+              print(f"::error::Missing lab setting: {name}. Ask the facilitator to complete setup.")
+          raise SystemExit(bool(missing))
+          PY
+          python -S -m unittest discover -s workshop/weather_delivery -p "test_*.py"
+          python -S -m workshop.weather_delivery.contract check-capture \
+            student/weather-delivery/manifest.json \
+            student/weather-delivery/agent-definition.json \
+            --production-agent "$WEATHER_PROD_AGENT_NAME"
+      - name: Verify the exact GitHub OIDC subject before Azure login
+        run: python -S -m workshop.weather_delivery.cloud_stages verify-oidc
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.WEATHER_AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.WEATHER_AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.WEATHER_AZURE_SUBSCRIPTION_ID }}
+      - name: Verify the package, create a Prod version, and pin the stable endpoint
+        run: |
+          mkdir -p artifacts/weather-delivery
+          python -S -m workshop.weather_delivery.cloud_stages deploy-capture \
+            --manifest student/weather-delivery/manifest.json \
+            --definition student/weather-delivery/agent-definition.json \
+            --production-agent "$WEATHER_PROD_AGENT_NAME" \
+            --production-stable-endpoint "$WEATHER_PROD_STABLE_ENDPOINT" \
+            --output artifacts/weather-delivery/deployment.json
+      - name: Show what was delivered
+        run: |
+          {
+            printf '## Delivered: verify your Prod agent\n\n'
+            jq -r '"| Item | Observed value |\n|---|---|\n| Source Dev agent | `\(.source_agent_name)` |\n| Captured Dev version | `\(.source_agent_version)` |\n| Prod agent | `\(.production_agent_name)` |\n| New Prod version | `\(.production_version)` |\n| Configuration SHA-256 | `\(.definition_sha256)` |\n| Stable endpoint | `\(.stable_endpoint)` |"' artifacts/weather-delivery/deployment.json
+            printf '\nSource Git commit: `%s`.\n\n' "$GITHUB_SHA"
+            printf '%s\n' 'Next: with the Coach, inspect this exact Prod version and its selected version in Microsoft Foundry. Compare its instructions with the merged PR.' \
+              'The workflow read back the definition and selector. It did not modify Dev or run a model/tool test. Runtime authentication and tool approvals remain separate.'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Explain an incomplete deployment
+        if: failure()
+        run: |
+          printf '%s\n' '## Deployment did not complete' \
+            'Inspect the first failed step and any deployment artifact with the Coach.' \
+            'A Prod version or selector may already have changed. Read back the current state before retrying; do not assume failure means no changes.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve deployment read-back
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weather-deployment-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/weather-delivery/**
+          if-no-files-found: warn
+          retention-days: 14

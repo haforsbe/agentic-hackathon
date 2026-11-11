@@ -3,23 +3,23 @@
   "tests": [
     {
       "id": "WD01",
-      "purpose": "Validate the reviewed manifest and exact hashes offline; this is not live Foundry evidence."
+      "purpose": "Capture the selected Dev version, reject credential-like configuration, and hash the exact package."
     },
     {
       "id": "WD02",
-      "purpose": "Verify the separate Weather validation agent against the reviewed configuration and pinned dependencies."
+      "purpose": "Open a reviewable PR and run offline package checks on the captured configuration."
     },
     {
       "id": "WD03",
-      "purpose": "Verify candidate and released-agent memory scopes independently; separate Conversations are insufficient."
+      "purpose": "Require a protected production Environment approval before any Prod resource write."
     },
     {
       "id": "WD04",
-      "purpose": "Observe one exact human-approved Weather tool call and one separately denied call."
+      "purpose": "Create a new version on the existing Prod agent, read it back, and pin the stable endpoint."
     },
     {
       "id": "WD05",
-      "purpose": "Invoke the released Weather agent through its service-returned Stable Agent Endpoint."
+      "purpose": "Treat optional runtime verification, especially MCP execution, as independent from successful configuration deployment."
     }
   ]
 }

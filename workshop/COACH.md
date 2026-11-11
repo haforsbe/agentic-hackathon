@@ -194,11 +194,17 @@ In the fresh-start welcome, explain the workshop in these four stages:
   the approach.
 
 The **optional Weather delivery lab** follows the completed Weather checkpoint
-07, including CH01, and returns to Cultural checkpoint 08. The student may
-practice a Git-reviewed configuration and offline CI outside the core time
-estimate. Its one-project setup is an educational compromise, not production
-isolation. Live validation/release remain blocked until their identity,
-approval and consumer-path gates are verified.
+07, including CH01, and returns to Cultural checkpoint 08. Participants finish
+their Weather setup in Microsoft Foundry, then capture its selected Dev
+version into Git through an automatically opened PR. Offline CI checks the
+captured package; participants review/merge the replacement; GitHub Actions
+then waits for the protected production Environment approval before creating
+and pinning a version on the separate Prod agent. The two agents share one
+project as a workshop shortcut, not production isolation. Capture/deploy code
+and offline checks do not prove live access; the facilitator must configure
+and rehearse OIDC, Foundry permissions, PR creation, Environment approval,
+and deployment before the lab is live-ready. Prod read-back does not prove
+Toolbox runtime authentication or tool execution.
 
 Along the way, explain that the student will practice using the GitHub Copilot
 app to understand repository context, review focused changes, and ask for
@@ -1010,19 +1016,45 @@ project assets and blast radius are shared. CI workload identity is distinct
 from the participant/runtime identity. A GitHub Environment approval never
 stands in for human approval of the actual MCP tool and arguments.
 
-The implementation tests manifest/evidence contracts offline and provides four
-manually dispatched cloud stages: capture, prepare, start-validation and
-continue-validation. These are mock-tested, not live-rehearsed; the workflow
-has no release stage. It does not set GitHub variables/environments, configure
-OIDC/permissions or establish Toolbox bindings. Authoring and offline tests do
-not authorize a cloud dispatch, model request or tool decision. For any live
-gate, verify the current reviewed commit, pinned dependencies, separate
-validation agent and explicitly separate memory scope (not just a new
-Conversation), exact runtime identity, actual per-call approve and deny
-evidence, and the service-returned Stable Agent Endpoint. Stop and report the exact blocker if
-any are unavailable; preserve partial evidence and never claim CI or a saved
-manifest proves runtime behavior. One teach-back is sufficient: ask why a
-separate validation Conversation does not by itself prove memory isolation.
+The capture workflow opens the PR and dispatches the offline check; the deploy
+workflow runs after the reviewed change reaches the default branch and pauses
+at the `production` Environment. CI checks the captured JSON and hash; they
+are not an AI review or a live quality test. The Prod stage creates a version
+on the already-existing Prod agent and pins its stable endpoint. It copies the
+definition, not project dependencies or memory contents. The same project
+keeps model and Toolbox dependencies shared. The production Environment
+approval is a deployment gate, not per-call MCP approval. Toolbox auth and
+runtime behavior remain separately unverified until rehearsed. One teach-back
+is sufficient: ask what merging the PR approves and what the Environment
+approval allows.
+For this optional lab only, follow the opening, readiness, authentication and
+one-action-at-a-time navigation in `weather-delivery/README.md`. Explain the
+benefit as "publish my tested configuration without manually copying settings",
+then show capture -> review/checks -> merge -> deployment approval -> Prod
+read-back. Let the participant start capture, inspect familiar instructions
+in the PR, and review/merge; the designated reviewer approves deployment.
+Supply real run/PR links from observed outputs. The first capture adds files;
+later captures show changes. Read workflow summaries together, including
+"nothing new" or failure outcomes, without calling those a new promotion.
+Do not run a learner's merge or approval for them merely to save time.
+
+The easiest safe authentication route is facilitator-prepared OIDC trust and
+project permissions; participants sign into GitHub/Microsoft Foundry themselves
+when needed. A local `az login` does not authenticate GitHub Actions.
+For any needed CLI sign-in, ask approval, use a supported interactive flow,
+preserve identity isolation, let the participant authenticate themselves, and
+recheck actual identity and access. Creating trust, roles or other persistent
+access needs separate explicit scope approval, not just sign-in permission.
+Do not provision access or alter repository protections merely by entering
+this lab. Verify required checks and Environment reviewers before capture;
+if unavailable, explain the blocker rather than weakening them.
+
+End by comparing the merged configuration, deployment summary and independently
+read-back exact Prod version/selector; inspect Dev remains unchanged. Explain
+the production comparison table only after the learner sees the benefit.
+An optional prompt/tool test needs separate scope/spend/tool approvals and
+must not be inferred from deployment success. These instructions apply only
+to the optional lab; preserve all core checkpoints and channel gates.
 Keep `current_checkpoint` at 07 until the student chooses. An explicit skip or
 successful completion sets the next required checkpoint to 08 and leaves all
 core checkpoint evidence unchanged. If blocked, offer an explicit skip to 08
