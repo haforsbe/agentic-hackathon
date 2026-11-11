@@ -82,7 +82,7 @@ jobs:
           client-id: ${{ vars.WEATHER_AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.WEATHER_AZURE_TENANT_ID }}
           subscription-id: ${{ vars.WEATHER_AZURE_SUBSCRIPTION_ID }}
-      - name: Verify the package, create a Prod version, and pin the stable endpoint
+      - name: Verify the package, create or reuse a Prod version, and pin the stable endpoint
         run: |
           mkdir -p artifacts/weather-delivery
           python -S -m workshop.weather_delivery.cloud_stages deploy-capture \
@@ -95,10 +95,12 @@ jobs:
         run: |
           {
             printf '## Delivered: verify your Prod agent\n\n'
-            jq -r '"| Item | Observed value |\n|---|---|\n| Source Dev agent | `\(.source_agent_name)` |\n| Captured Dev version | `\(.source_agent_version)` |\n| Prod agent | `\(.production_agent_name)` |\n| New Prod version | `\(.production_version)` |\n| Configuration SHA-256 | `\(.definition_sha256)` |\n| Stable endpoint | `\(.stable_endpoint)` |"' artifacts/weather-delivery/deployment.json
+            jq -r '"| Item | Observed value |\n|---|---|\n| Source Dev agent | `\(.source_agent_name)` |\n| Captured Dev version | `\(.source_agent_version)` |\n| Prod agent | `\(.production_agent_name)` |\n| Returned Prod version | `\(.production_version)` |\n| Configuration SHA-256 | `\(.definition_sha256)` |\n| Stable endpoint | `\(.stable_endpoint)` |"' artifacts/weather-delivery/deployment.json
             printf '\nSource Git commit: `%s`.\n\n' "$GITHUB_SHA"
             printf 'Manually requested by: `%s`. This lab uses no GitHub Environment or independent reviewer gate.\n\n' "$GITHUB_ACTOR"
             printf '%s\n' 'Next: with the Coach, inspect this exact Prod version and its selected version in Microsoft Foundry. Compare its instructions with the merged PR.' \
+              'Identical configuration may reuse an existing version; this alone does not demonstrate a changed-version rollout.' \
+              'Then, under separate cost/storage approval, use the guided manual basic-response test in the lab guide. Automated runtime testing is optional and its corrected prompt-agent endpoint route remains unverified.' \
               'The workflow read back the definition and selector. It did not modify Dev or run a model/tool test. Runtime authentication and tool approvals remain separate.'
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Explain an incomplete deployment

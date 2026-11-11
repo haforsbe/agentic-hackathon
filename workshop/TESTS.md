@@ -391,10 +391,17 @@ python -S -m unittest discover -s workshop/weather_delivery -p "test_*.py" -v
 | ID | Input/procedure | Pass conditions |
 |----|-----------------|-----------------|
 | WD01 | Capture a selected saved Dev version and inspect the generated PR | Exact Dev name/version and intended Prod name are recorded; definition hash matches; credential-like fields are rejected; capture reads Dev only |
-| WD02 | Review the PR and wait for its automatically dispatched offline check | PR diff shows the proposed tracked-definition replacement; trusted tests and package/hash validation pass; CI does not claim model or MCP runtime validation; participant merges only after reviewing the diff |
+| WD02 | Review the PR, handle workflow approval if GitHub requires it, and wait for the required offline check | Authorized participant reviews/approves the workflow using the displayed control or involves the owner; approval policy is not bypassed; trusted tests and package/hash validation pass on the current PR head; workflow approval is not deployment or tool approval; participant reviews the diff before merge |
 | WD03 | Merge the PR, then manually dispatch deployment on the default branch with its full reviewed commit SHA and deployment confirmation | Merge alone does not deploy; unchecked confirmation and wrong commit fail before Azure login/write; confirmed matching commit proceeds without any GitHub Environment |
-| WD04 | Read back the deployed Prod version and selector | New version definition matches the reviewed capture; stable endpoint selects that version; Dev remains unchanged; deployment artifact records source and destination versions |
-| WD05 | Optionally test the Prod consumer endpoint under separate approval | Runtime response and any MCP tool call are inspected independently; a successful deploy alone is not tool-runtime evidence |
+| WD04 | Read back the deployed Prod version and selector | Created or reused version definition matches the reviewed capture; stable endpoint selects that version; Dev remains unchanged; artifact records source and destination versions; reuse of identical configuration is not a changed-version rollout |
+| WD05 | Finish with a guided manual basic-response test on the exact deployed Prod version under separate cost/storage approval | Record agent/version, actual prompt/reply and absence of tool calls; distinguish participant-reported from independently inspected evidence; portal behavior does not prove the consumer endpoint or Weather tools; if blocked or skipped, retain delivery results and mark runtime unverified |
+
+Automated consumer-endpoint testing and live Weather tool tests are optional,
+separately approved extensions, not new completion gates. The corrected helper
+uses `?api-version=v1` on invocation only; offline coverage does not establish
+prompt-agent runtime compatibility. A successful live rehearsal of that exact
+route is still required before describing it as verified automation. Each actual
+MCP call retains its separate approval/denial requirement.
 
 The offline contract checks package shape, credential exclusion and hashes.
 They are not an AI review or a Foundry runtime test. The workshop uses two

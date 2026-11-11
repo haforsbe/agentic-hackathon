@@ -311,22 +311,31 @@ Microsoft Foundry Project, an educational compromise, **not production best
 practice**. Project dependencies, permissions, quotas, and audit boundary are
 shared. GitHub Actions captures the selected saved Dev version, opens a PR
 that shows the tracked configuration being replaced, runs automated offline
-checks, and lets the participant manually deploy a new version to the existing
-Prod agent after merge, confirming the full reviewed commit and deployment intent.
-No GitHub Environment is required. PR checks are automated
+checks, and lets the participant manually deploy a created or reused version
+to the existing Prod agent after merge, confirming the full reviewed commit
+and deployment intent.
+No GitHub Environment is required. If GitHub requires workflow-run approval,
+review the workflow and use its displayed approval control if authorized, or
+involve the owner; do not bypass the policy. That approval is not deployment
+or tool approval. PR checks are automated
 contract tests, not an AI review; the participant reviews and merges the diff.
 
 The deployment copies the captured agent definition, not project resources,
 credentials, Conversations, transcripts, memory contents, or external skill
 files. Shared Foundry dependencies remain in the project. Offline checks prove
 package consistency only; deployment read-back proves a version was created
-and selected, not that MCP authentication or tool execution works. Those
+or reused and selected, not that MCP authentication or tool execution works. Those
 runtime checks remain independent and may be blocked by the Toolbox
 authentication investigation. The CI identity, participant/runtime identity,
 and agent runtime identity are distinct. Neither merge approval nor a GitHub
 manual deployment confirmation substitutes for per-call MCP approval. Live workflows
 remain unavailable until the facilitator configures and rehearses repository
 variables, branch-based OIDC trust, required permissions, and manual deployment.
+Finish with read-back and the lab guide's separately approved manual
+basic-response test on the exact deployed Prod version. Record the observed
+scope: a portal answer is not proof of the stable endpoint or Weather tools.
+Automated runtime verification is optional until its corrected endpoint route
+is successfully live-rehearsed; a blocked test remains explicitly unverified.
 On skip or completion, resume directly at Cultural checkpoint 08; never
 renumber or mark any core checkpoint passed.
 

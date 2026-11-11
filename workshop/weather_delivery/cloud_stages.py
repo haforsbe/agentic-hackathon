@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import time
@@ -36,6 +37,41 @@ class FoundryRequestError(StageBlocked):
     def __init__(self, status):
         self.status = status
         super().__init__(f"Foundry request failed ({status}); no automatic retry")
+
+
+def _stable_endpoint_error(error):
+    details = []
+    request_id = (
+        error.headers.get("apim-request-id") or error.headers.get("x-ms-request-id")
+    ) if error.headers else None
+    if isinstance(request_id, str) and re.fullmatch(
+        r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+        request_id,
+    ):
+        details.append(f"request_id={request_id}")
+    try:
+        raw = error.read(8193)
+        if len(raw) > 8192:
+            raise ValueError("oversized response")
+        payload = json.loads(raw)
+    except (OSError, ValueError):
+        payload = None
+    service_error = payload.get("error") if isinstance(payload, dict) else None
+    recognized_error = False
+    if isinstance(service_error, dict):
+        code = service_error.get("code")
+        if code in (
+            "BadRequest", "Unauthorized", "Forbidden", "NotFound",
+            "TooManyRequests", "InternalServerError",
+        ):
+            details.append(f"code={code}")
+            recognized_error = True
+        if service_error.get("message") == "Missing required query parameter: api-version":
+            details.append("message=Missing required query parameter: api-version")
+            recognized_error = True
+    if not recognized_error:
+        details.append("service details unavailable or withheld")
+    return f"Stable Agent Endpoint request failed (HTTP {error.code}; {'; '.join(details)}); no automatic retry"
 
 
 def _require(condition, message):
@@ -218,7 +254,7 @@ class FoundryApi:
     def invoke_stable_endpoint(self, endpoint, agent_name, body):
         _validate_stable_endpoint_url(self.endpoint, endpoint, agent_name)
         request = Request(
-            endpoint,
+            endpoint + "?api-version=v1",
             data=json.dumps(body).encode("utf-8"),
             headers={
                 "Authorization": f"Bearer {self.token}",
@@ -232,10 +268,11 @@ class FoundryApi:
                 payload = json.loads(raw) if raw else {}
                 _require(isinstance(payload, dict), "Stable Agent Endpoint returned a non-object response")
                 return payload
-        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as error:
-            status = getattr(error, "code", None)
+        except HTTPError as error:
+            raise StageBlocked(_stable_endpoint_error(error)) from error
+        except (URLError, TimeoutError, json.JSONDecodeError) as error:
             raise StageBlocked(
-                f"Stable Agent Endpoint request failed ({status or type(error).__name__}); no automatic retry"
+                f"Stable Agent Endpoint request failed ({type(error).__name__}); no automatic retry"
             ) from error
 
 

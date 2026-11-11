@@ -77,17 +77,26 @@ These are ordinary reviewable files, not a second cloud environment.
    and definition hash. These are automated contract checks, not an AI review
    and not proof that the model or tools work in Foundry. The participant
    remains responsible for reviewing and merging the diff.
+   If GitHub says approval is required before a workflow can run, review the
+   proposed workflow and use the displayed approval control if authorized;
+   otherwise involve the repository owner. Then wait for the required check
+   on the current PR head. This authorizes workflow execution, not deployment
+   or Weather tool use. Not every repository or participant sees this gate;
+   never disable the policy or bypass a required check to proceed.
 4. **Start deployment deliberately.** Merge does not deploy. Manually run
    [Deploy Weather configuration to Prod](../../.github/workflows/weather-delivery-deploy.yml)
    on the default branch. Enter its full reviewed commit SHA as
    `expected_commit` and check `deploy_approved`. The job refuses an unchecked
    confirmation or a different commit before Azure login. It then creates a
-   new version on the existing Prod agent, reads it back and pins the Prod
+   version on the existing Prod agent, reads it back and pins the Prod
    stable endpoint to it. No GitHub Environment or separate reviewer is used.
+   Microsoft Foundry may return an existing version for identical configuration;
+   do not promise a distinct new version or a changed-configuration rollout.
 5. **Verify and explain.** Participants inspect the deployment artifact and
-   Foundry read-back for the Prod agent name, new version, source Dev version,
+   Foundry read-back for the Prod agent name, selected version, source Dev version,
    configuration hash, and stable endpoint. Dev should remain unchanged. A
-   separate prompt/tool runtime test is not part of this deployment job.
+   guided manual basic-response test follows under separate approval, as
+   described below. The deployment job itself runs no prompt/tool runtime test.
 
 The learning outcome is a merged, versioned configuration in Git and a
 GitHub-Actions-created version selected by the Prod agent. Participants can
@@ -109,11 +118,11 @@ differs, ask what is visible rather than inventing a route.
 | GitHub Copilot app, current repository session with Workshop Coach | Confirm the selected saved Dev version and intended Prod target; choose to start the optional lab | One agreed source and destination; no additional Dev edit required |
 | GitHub website, confirmed repository -> **Actions** -> **Capture Weather Dev configuration** -> **Run workflow** | Select the default branch, enter the exact `agent_version`, then run | A capture run; its **Summary** links to the automatically opened PR, or explains that nothing changed |
 | Linked PR -> **Files changed** | Find familiar Weather instructions; inspect model/tool references and manifest source/target | A first captured configuration or a meaningful subsequent diff; no credentials or private conversation content |
-| Same PR -> **Checks** | Wait for `offline-contract-tests`; inspect its run summary | Successful checks on the current PR head; explicitly no model/tool runtime claim |
+| Same PR -> **Checks** | If GitHub requires workflow approval, review and approve using the displayed control if authorized, or involve the owner; then wait for `offline-contract-tests` | Successful required check on the current PR head; workflow approval is not deployment or tool approval |
 | Same PR -> **Conversation** | Review, then use the available merge control when required checks pass | A merged configuration; no deployment starts from merge |
 | GitHub -> repository **Code** -> default branch -> latest commit | With the Coach, confirm this is the reviewed merged configuration and copy the full commit SHA (a 40-character Git identifier) | An exact commit to deploy; if the branch changed, inspect the changes before confirming |
 | GitHub -> **Actions** -> **Deploy Weather configuration to Prod** -> **Run workflow** | Select the default branch, paste `expected_commit`, check `deploy_approved`, then run | The confirmed commit matches the run SHA; no Environment, reviewer gate or extra Azure sign-in prompt |
-| Completed deployment run -> **Summary** | Read the exact source version, Git commit, new Prod version, hash and endpoint | A readable receipt of the created/read-back definition and selected version |
+| Completed deployment run -> **Summary** | Read the exact source version, Git commit, returned Prod version, hash and endpoint | A readable receipt of the created or reused version and selected definition |
 | Microsoft Foundry, starting at https://ai.azure.com/ -> confirmed project | With Coach guidance based on the verified portal route, locate the exact Prod agent/version and selected stable version; compare its instructions with the merged PR | Independent read-back agrees with the receipt; inspect Dev to confirm it was not changed |
 
 Do not treat viewing an arbitrary version in a test screen as proof of the
@@ -122,6 +131,52 @@ that property is not exposed in the verified portal screen. Ask the participant
 to recognize a familiar instruction and explain the two approvals in one
 teach-back, not a quiz after each click. Keep this final evidence distinct from
 any separately approved paid prompt/tool runtime test.
+
+### Finish with read-back and a guided manual Prod test
+
+Compare the merged configuration, deployment summary and independently read-back
+Prod definition and stable version selector first. If identical configuration
+returns an existing version, record that version accurately: the run demonstrates
+delivery and explicit selection, not a changed-version rollout. Do not make an
+extra Dev edit just to obtain a new version.
+
+For the lab's basic runtime check, prefer a guided manual test in Microsoft
+Foundry. Starting at https://ai.azure.com/, use the facilitator's verified portal
+route to the confirmed project, exact Prod agent and version recorded in the
+deployment receipt. The coach must supply those actual names and verified
+controls, not assume a universal menu or confuse a viewed version with the
+stable selector. If the screen differs, ask what is visible.
+
+Before sending anything, explain model usage costs and response storage, obtain
+the current test's scope/spend approval, and check identity/access. Compare a
+familiar instruction with the merged PR, then send:
+**"Explain the difference between weather and climate. Do not call tools."**
+Record the selected agent/version, actual prompt and reply, and whether tool
+activity occurred. If the participant only reports success, label it
+participant-observed rather than independently trace-verified. A useful answer
+with no tool call supports basic behavior on that portal path only; it does not
+prove the stable consumer endpoint, live weather, Toolbox authentication,
+approval/denial or channel publication. Unexpected tool requests still require
+their own human decision; do not approve them as part of this basic test.
+
+A live Weather test is separate and optional for this delivery lab, with its own
+scope/data/spend approval and actual per-call tool approvals. Inspect the returned
+Weather evidence and its relationship to the reply; plausible prose alone is
+not tool execution evidence. Do not add these tests to the deployment job or
+turn them into new core checkpoint gates.
+
+Automated consumer-endpoint runtime verification is optional and is not a
+prerequisite for completing this delivery lab. The helper keeps the configured,
+validated stable URL query-free and appends `?api-version=v1` only to the POST.
+Microsoft's [hosted-agent invocation example](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/invoke-hosted-agent)
+documents that protocol URL and version. The corrected transport has offline
+coverage, but successful prompt-agent stable-endpoint runtime compatibility has
+not been live-rehearsed. Do not present it as verified automation until that
+exact route succeeds under separate approval. HTTP failures report status,
+a validated request ID and only recognized safe service details, never the raw
+response; there is no automatic retry. A failed automated request is not proof
+that a successful portal test failed, and a portal pass does not prove that the
+consumer endpoint works.
 
 If capture reports "nothing new", no PR or deployment was created. Explain the
 result; do not make a gratuitous Dev change or mark a new promotion complete.
@@ -237,6 +292,9 @@ workshop repository and project:
   requests. The capture workflow uses the repository `GITHUB_TOKEN` with
   `contents`, `pull-requests`, and `actions` permissions; it does not need a
   personal access token.
+- Check whether workflow-run approval is required for the participant's
+  generated PR, who can approve it and what control GitHub displays. Rehearse
+  that conditional step without weakening the repository's approval policy.
 - Rehearse capture, PR opening, the dispatched offline check, PR merge,
   manual deployment confirmation, Prod version creation/read-back, and endpoint pinning
   in an approved test project before teaching it live.
@@ -355,8 +413,11 @@ Then compare the observed lab with production:
 | Offline package checks and definition read-back | Quality, safety and runtime integration checks |
 | A deliberately approved version selection | Monitoring, change policy and rehearsed rollback |
 
-The lab is complete when the reviewed PR is merged, its automated check has
-passed, the production deployment is approved, and Foundry read-back confirms
-the new Prod version and selector. If live setup or runtime verification is
-blocked, record the exact blocker; never count a mock test or successful
-configuration write as runtime proof.
+The delivery sequence is complete when the reviewed PR is merged, its required
+offline check has passed, deployment is approved, and Microsoft Foundry read-back
+confirms the created or reused Prod version and selector. Finish with the
+separately approved guided manual basic-response check, recording its actual
+evidence or exact blocker. A skipped or blocked runtime check remains unverified;
+it does not erase the delivery result. Automated runtime testing is optional,
+not a completion gate. Never count a mock test or successful configuration write
+as runtime proof, or a basic portal answer as proof of Weather tool behavior.

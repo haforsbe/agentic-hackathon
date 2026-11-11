@@ -198,7 +198,7 @@ The **optional Weather delivery lab** follows the completed Weather checkpoint
 their Weather setup in Microsoft Foundry, then capture its selected Dev
 version into Git through an automatically opened PR. Offline CI checks the
 captured package; participants review/merge the replacement; GitHub Actions
-then manually dispatches a commit-confirmed deployment before creating
+then manually dispatches a commit-confirmed deployment before creating or reusing
 and pinning a version on the separate Prod agent. The two agents share one
 project as a workshop shortcut, not production isolation. Capture/deploy code
 and offline checks do not prove live access; the facilitator must configure
@@ -1020,7 +1020,11 @@ The capture workflow opens the PR and dispatches the offline check; the deploy
 workflow is manually dispatched on the default branch after merge, with the
 full reviewed commit SHA and an explicit deployment confirmation. Merge alone
 does not deploy; no GitHub Environment is used. CI checks the captured JSON and hash; they
-are not an AI review or a live quality test. The Prod stage creates a version
+are not an AI review or a live quality test. If GitHub requires approval before
+running a PR workflow, guide the authorized participant to review the workflow
+and use the displayed approval control, or involve the repository owner.
+Do not weaken the policy. That decision authorizes workflow execution, not
+deployment or an MCP call. The Prod stage creates or reuses a version
 on the already-existing Prod agent and pins its stable endpoint. It copies the
 definition, not project dependencies or memory contents. The same project
 keeps model and Toolbox dependencies shared. The manual deployment
@@ -1065,8 +1069,17 @@ if unavailable, explain the blocker rather than weakening them.
 
 End by comparing the merged configuration, deployment summary and independently
 read-back exact Prod version/selector; inspect Dev remains unchanged. Explain
-the production comparison table only after the learner sees the benefit.
-An optional prompt/tool test needs separate scope/spend/tool approvals and
+that identical configuration may return an existing version rather than a new
+version; do not call this a changed-configuration rollout. Follow the lab guide's
+separately approved manual basic-response test on the exact deployed Prod
+version. Record the actual prompt/reply and whether tool activity occurred;
+label participant-reported evidence accurately. Portal success does not prove
+the stable consumer endpoint or Weather tool behavior. Automated endpoint
+verification is optional; the corrected request format remains unverified for
+prompt-agent runtime until successfully live-rehearsed. A blocked or skipped
+runtime check stays unverified without invalidating configuration delivery.
+Explain the production comparison table only after the learner sees the benefit.
+A live Weather tool test needs separate scope/spend/tool approvals and
 must not be inferred from deployment success. These instructions apply only
 to the optional lab; preserve all core checkpoints and channel gates.
 Keep `current_checkpoint` at 07 until the student chooses. An explicit skip or
