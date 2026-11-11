@@ -116,6 +116,12 @@ tools or evidence domain.
 
 ## Hosted update and rollback
 
+For the participant, keep the flow explicit: **create the workflow, deploy
+and test it in Microsoft Foundry, then connect/publish and test that same
+workflow in the chosen destination**. Deployment to Microsoft Foundry precedes
+Playground testing; destination publication is a separate approved operation,
+not another implementation of the workflow.
+
 At checkpoint 16, first pass the same release checks for the hosted workflow.
 Then make one small visible instruction change as a separate candidate version,
 run the relevant regressions, and perform P04 after approval.
@@ -139,6 +145,76 @@ visual handoff, or successful deployment command alone does not prove behavior.
 
 **Teach-back:** "What stays stable for the consumer, and which identities need
 permission to call the agent and its tools?"
+
+## Workflow destination test parity
+
+Tests that establish correct workflow behavior in Microsoft Foundry Playground
+must establish the same behavior in the participant's chosen Microsoft Teams
+or Microsoft Copilot Studio route. Microsoft 365 Copilot remains an available
+published-channel target. A connection, successful publish or one plausible
+answer is insufficient.
+
+Before destination tests, save the passing Playground cases and their
+assertions. Approve a bounded destination test plan using the same synthetic
+inputs, exact workflow version and specialist pins. Use dates still inside
+verified forecast/catalogue coverage; if inputs must change, establish the
+new baseline explicitly rather than comparing unlike cases.
+
+| Playground assertion | Required destination evidence |
+|----------------------|-------------------------------|
+| W01/W04 successful trip | Same workflow invokes both pinned specialists, with separate human decisions and completed native tool calls; final sourced output and uncertainty agree with actual evidence |
+| W04 denial | The exact denied tool does not execute; the reply explicitly reports denied/partial evidence without fabrication |
+| W02/W03 validation and failure policy | Matching controlled failures, invalid results, ambiguity and timeout/authorization scenarios preserve the same documented outcome; use a rehearsed isolated harness where needed, never break shared services |
+| Approval/state boundaries | No automatic approval, stale-card replay, cross-user decision or substituted inner ID; caller and Conversation mapping remain trusted across the destination route |
+| Final result consistency | A completed answer cannot claim approval is pending; invalid or contradictory evidence fails explicitly, without silent rewriting or model retries |
+
+Record each case's baseline and destination run IDs, actual replies, native
+approval/execution evidence, version, route and available usage. Responses
+need not be word-for-word identical. Streaming, citation-card appearance and
+other interface affordances may differ, but human decision control, readable
+sources and result semantics must not be reduced.
+
+Reuse a destination exchange for matching W and CH02 assertions rather than
+duplicating it for labels. Do not equate P02 access checks through an endpoint
+with destination-specific access checks. If a failure cannot be exercised
+safely or a required approval cannot be represented, leave that assertion
+blocked; do not silently replace it with an unrelated API-only test.
+
+### Microsoft Copilot Studio integration
+
+Microsoft Copilot Studio is an authoring/integration product, not another name
+for Microsoft 365 Copilot. Connect its agent to the existing released workflow;
+do not move workflow logic into topics or replace the specialist calls.
+
+The [documented standard-harness connection](https://learn.microsoft.com/en-us/microsoft-copilot-studio/add-agent-foundry-agent)
+is preview, checked on 2026-11-11. It requires the Microsoft Foundry agent's
+Activity Protocol endpoint. Responses/Playground success alone does not
+establish that endpoint, a compatible hosted handler or native approval
+propagation. Inspect the actual configuration and rehearse that contract for
+the selected tenant/runtime before offering the route; do not infer support
+from an available connection picker. Do not interpret the documentation's
+endpoint example as a tested configuration for this workshop host.
+
+After confirming access, licensing, data flow, cost and explicit configuration
+approval, use the actual supported Microsoft Copilot Studio experience.
+For the documented standard-harness route, open the primary agent's **Agents**
+page, select **Add an agent**, then **Connect to an external agent >
+Microsoft Foundry**. Use the confirmed project connection and the
+service-returned workflow agent identifier. If controls or harness differ,
+stop and use the matching current official guidance instead of guessing.
+Treat endpoint/protocol changes as writes; preserve existing protocols and
+authorization rather than replacing their collections.
+
+Test from that Microsoft Copilot Studio agent, not directly from Microsoft
+Foundry, against the parity plan above. Verify which supported control presents
+each native human tool decision; an orchestrator choosing to call the workflow
+is not approval for its Weather or Cultural tool. Missing native decision or
+resume support blocks the integration; do not substitute prose consent.
+
+A passing Microsoft Copilot Studio test pane proves that integration path,
+not Microsoft Teams/Microsoft 365 Copilot publication. Publish and rerun the
+applicable cases on the actual chosen channel for CH02, with separate approval
+and same-run correlation. Neither path is live-verified merely by this guide.
 
 ## Legacy Agent Applications: explicit compatibility route only
 

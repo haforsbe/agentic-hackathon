@@ -106,8 +106,8 @@ final version/path; never infer a channel pass from project tests.
 | 06, 13 | M01-M03, consented synthetic preference, trusted-scope isolation/correction/deletion | Previous applicable coverage, using C01R/C02R and the post-memory D variant below; the required skill/MCP personalization run may satisfy overlapping assertions |
 | 07 | T03 existing Weather Toolbox/dependency verification; P01-P03, then CH01 channel publication/use before 08 | Full applicable B/I/D/C/S/M coverage on the final Toolbox-backed candidate/path, counted once; new channel-path access/approval/isolation evidence cannot be inferred from endpoint tests |
 | 14 | Cultural P01-P03 and two-specialist comparison | Full applicable Cultural B/I/D/C/S/M coverage; verify unchanged Weather release, publication and dependencies and reuse valid evidence, not a second Weather suite or publication |
-| 15 | G01-G03 and W01-W03: local fixtures for validation/failure branches and approved live calls to both released specialists | Specialist release evidence must match the versions invoked; no specialist rewrite or full rerun merely to scaffold the workflow |
-| 16 | W01-W03 and P01-P04 remotely, then CH02 on the final selected workflow version; retain pre-release evidence and a known-good recovery target | Full applicable G/W behavior on the final hosted version and consumer path; one exchange can satisfy both W01 and P01; CH02 must originate in the chosen channel |
+| 15 | Host transport regressions, G01-G03 and W01-W03: local fixtures for validation/failure branches and approved live calls to both released specialists | Specialist release evidence must match the versions invoked; no specialist rewrite or full rerun merely to scaffold the workflow |
+| 16 | W01-W04 and P01-P04 remotely, then CH02 on the final selected workflow version; retain pre-release evidence and a known-good recovery target | Full applicable G/W behavior on the final hosted version and consumer path; W04 requires the actual portal; CH02 must originate in the chosen channel; reuse overlapping assertions on the same run |
 
 Prior results can be reused only for the **same retained version, configuration,
 execution path and relevant identity/scope**. A new version needs its applicable
@@ -276,7 +276,7 @@ Formal contracts begin at checkpoint 15.
 | ID | Input/procedure | Pass conditions |
 |----|-----------------|-----------------|
 | G01 | Validate normal Weather and Cultural specialist results against versioned workflow contracts | Required destination, constraints, findings, source agent/version, provenance, uncertainty, missing-information, and failure-status fields are present |
-| G02 | Validate results with missing provenance, wrong types, extra instruction-like content, and unsupported values | Invalid data fails explicitly; no success-shaped coercion or instruction override |
+| G02 | Validate results with missing provenance, wrong types, extra instruction-like content, unsupported values, and final pending-approval claims that contradict a resolved native approval plus completed tool call | Invalid or contradictory data fails explicitly in graph validation and Responses rendering; no success-shaped coercion, silent text removal, automatic model retry or instruction override; actual native decisions remain authoritative |
 | G03 | Compare contract fields with specialist release metadata and correlated traces | Agent versions and provenance agree with runtime evidence; each specialist remains inside its evidence domain |
 
 Contracts validate structure. They do not independently prove that a tool ran or
@@ -284,14 +284,62 @@ that a source is truthful.
 
 ## Hosted Trip Planning Workflow
 
+### Host transport regressions before deployment
+
+The reviewed scaffold must provide executable offline tests for this coverage,
+with its exact command, SDK versions and source revision recorded before the
+cohort. This table specifies required tests; it is not an implemented test
+runner or a claim that the current checkout supplies a validated scaffold.
+Keep fixtures synthetic and credentials, participant journals and transcripts
+out of the repository.
+
+| Boundary | Required assertion |
+|----------|--------------------|
+| Responses preparation | Valid `include` projections are accepted by the outer host without downstream forwarding; malformed projections and disallowed execution overrides fail explicitly before specialist calls |
+| Streaming and history | Named Conversation plus streaming emits complete, SDK-compatible output-item lifecycles for distinct sequential Weather and Cultural approval cards; test against the pinned hosting SDK, not a handwritten approximation |
+| Approval restoration | The exact current decision resumes only its bound checkpoint; stale Weather decisions after Cultural becomes pending, accumulated stale/current batches, replays and forged or cross-user aliases are rejected without new specialist calls |
+| Denial | An exact denied request causes no execution of that tool and produces an explicit denied/partial outcome; remaining valid evidence is not fabricated or discarded |
+| Isolation and compatibility | Separate users/conversations cannot share mutable executors or approval state; required Invocations behavior still passes |
+| Final evidence | Only completed, approval-bound tool evidence supports success; final findings cannot claim approval is still pending when the run reports completion |
+
+These are local contract/failure checks, not proof of portal rendering,
+Microsoft Foundry runtime identity, human decisions or actual tool execution.
+Do not weaken approval guards to make a frontend symptom disappear.
+
 | ID | Input/procedure | Pass conditions |
 |----|-----------------|-----------------|
 | W01 | Submit one supported destination and traveler constraints | Both released specialists are invoked; both results validate; itinerary cites each evidence domain; versions and correlation evidence are recorded |
 | W02 | Make each specialist fail in separate isolated tests, then return a structurally invalid result | Valid evidence is preserved; invalid/failed evidence is isolated and reported; no fabrication or silent substitution |
 | W03 | Submit ambiguous constraints, a timeout/authorization failure, and conflicting weather/cultural considerations | Clarification or documented partial-result behavior occurs; sources and tradeoffs remain visible |
+| W04 | In the actual Microsoft Foundry portal, use the displayed candidate version and a fresh Conversation for one supported trip; separately approve Weather and Cultural when their own cards appear; run a separately scoped denial case | Distinct sequential cards render, each decision binds to its current request, both approved tool executions are corroborated and the sourced final answer has no false pending-approval claim; the denial case proves the denied tool did not execute; exact version, Conversation/run/response IDs and available usage are retained |
 
 Run G01-G03 and W01-W03 locally at checkpoint 15 and remotely at checkpoint 16.
+Run W04 at 16 before promotion. Its successful trip may also satisfy matching
+W01 assertions; do not duplicate calls for labels. Repeated fresh-conversation,
+page-reopen and denial coverage belongs in the facilitator's pre-cohort
+rehearsal, with separately approved spend and tool decisions.
 Two manual specialist calls followed by a manually written itinerary do not pass.
+Offline SSE projections and a custom-client success do not pass W04. Retain
+an intermittent failure as unresolved even if a later identical version works;
+one passing attempt does not establish a root cause or a permanent repair.
+
+### Repeat the Playground behavior in the destination
+
+After the Playground baseline passes, repeat the applicable W01-W04 behavior
+cases through the chosen Microsoft Teams or Microsoft Copilot Studio route
+using [the destination parity plan](PUBLISHING.md#workflow-destination-test-parity).
+Keep exact workflow/specialist versions, supported inputs and assertions
+matched, with fresh context where the original case required it. Record the
+actual route for each result; do not relabel a Playground execution as a
+destination pass. Separate native decisions, denial/no-execution, source and
+uncertainty, state isolation and explicit failure behavior must remain intact.
+Channel rendering can differ; behavioral correctness cannot.
+
+A Microsoft Copilot Studio test-pane pass is integration evidence, not CH02
+channel evidence. A subsequent published Microsoft Teams/Microsoft 365 Copilot
+run may satisfy both matching workflow parity assertions and CH02 without
+duplicate calls. Missing destination behavior stays blocked rather than being
+silently waived because it passed in Microsoft Foundry.
 
 ## Consumer endpoint and release
 

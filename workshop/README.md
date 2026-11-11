@@ -20,6 +20,15 @@ lectures. Required tests and approvals stay in place. See the
 [5-hour-50-minute planning agenda](FACILITATOR.md#five-to-six-hour-core-agenda).
 The capstone at 17-19 is a separate optional extension.
 
+For the workflow, follow one clear delivery sequence: **create it**, **deploy
+and test it in Microsoft Foundry Playground**, then **connect/publish and test
+the same workflow in Microsoft Teams or Microsoft Copilot Studio**. The same
+applicable approval, denial, sourced-output and failure tests must pass in the
+chosen destination; see [test parity](PUBLISHING.md#workflow-destination-test-parity).
+Microsoft Copilot Studio's test pane is not a published channel. The existing
+CH02 requirement still needs actual Microsoft Teams or Microsoft 365 Copilot
+use, either directly or after the Microsoft Copilot Studio integration.
+
 Each module opens with its checkpoint, plain-language goal and short plan.
 Before tests, the coach explains their purpose and expected evidence; at the
 close, actual results lead to a short learning summary, the existing single
@@ -126,8 +135,8 @@ this as a vocabulary test. It introduces each term immediately before use:
 | 12 | [Cultural skill and multiple tools](01-prompt-agents.md#12-guide-multiple-cultural-tools-with-a-skill) | S02 | Review skill delivery and tool routing |
 | 13 | [Cultural memory](01-prompt-agents.md#13-add-and-test-cultural-memory) | M01-M03 | Verify separate memory scope |
 | 14 | [Release Cultural Travel Agent](01-prompt-agents.md#14-release-the-cultural-travel-agent) | Cultural final-path regressions/P01-P03, unchanged Weather release/dependency verification, T03 isolation and two-agent comparison | Review two independent Toolbox-backed releases without a planned Weather migration |
-| 15 | [Build Trip Planning Workflow](02-hosted-agents.md#15-build-and-test-the-trip-planning-workflow) | G01-G03 and W01-W03 locally | Review contracts, scaffold, and traces |
-| 16 | [Deploy, release and publish workflow](02-hosted-agents.md#16-hosted-release) | W01-W03 remotely, P01-P04, then CH02 on the final version | Send a channel request; inspect both specialist calls, nested versions, routing and rollback |
+| 15 | [Build Trip Planning Workflow](02-hosted-agents.md#15-build-and-test-the-trip-planning-workflow) | Reviewed portal-compatible scaffold, host transport regressions, G01-G03 and W01-W03 locally | Review contracts, request-owned state, approval bindings and traces |
+| 16 | [Deploy, release and publish workflow](02-hosted-agents.md#16-hosted-release) | W01-W03 remotely, actual portal W04 success/denial, P01-P04, then CH02 on the final version | Review sequential tool cards and sourced output; send a channel request and inspect both specialist calls |
 | 17 | [Choose a capstone](CAPSTONE.md#17-choose-and-scope) | K01 | Turn an idea into a bounded two-specialist plan |
 | 18 | [Build capstone specialists](CAPSTONE.md#18-build-and-release-the-specialists) | K02 and applicable specialist regressions | Small tasks, diff review, focused debugging |
 | 19 | [Build and release capstone workflow](CAPSTONE.md#19-build-release-and-demonstrate-the-workflow) | K03, G01-G03, W01-W03, P01-P04 | Handoff with evidence and cleanup choices |

@@ -99,6 +99,17 @@ use TOOLS-AND-TOOLBOXES.md's preparation blocker, not an assumed
 `UserEntraToken` recipe or developer-token proof.
 
 Selecting this profile alone does not start onboarding or authorize cloud work.
+At 15-16 follow workshop/02-hosted-agents.md's portal-compatible host preparation,
+the facilitator readiness gate and TESTS.md's host regressions/W04. Require
+actual portal success and denial with separate native human decisions, not
+Invocations-only evidence. Verify the displayed version; never replay an old
+card or weaken approval bindings. Keep contradictory completed/pending output
+and intermittent failures visible as unresolved; use the bounded recovery
+procedure in APP-GUIDE.md, not a speculative redeployment.
+Teach create -> deploy/test in Microsoft Foundry -> connect/publish/test in
+the chosen destination. Require PUBLISHING.md's same-case behavioral parity
+in Microsoft Teams or Microsoft Copilot Studio, including native decisions
+and denial. A Studio test-pane pass is not the published-channel CH02 pass.
 For authoring requests, work on the repository without starting a student lesson.
 Inherit the user's model and available tools; do not assume picker visibility,
 tool availability, or preview support. Normal repository Chat follows the same

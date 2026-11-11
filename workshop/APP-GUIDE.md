@@ -79,6 +79,7 @@ The coach names the route before every test or exploration:
 | **Run in the Microsoft Foundry portal - participant sends** | Follow the coach's verified steps from https://ai.azure.com/ to your exact project and agent, send the agreed prompt yourself, then report the result here. | Give the exact prompt, conversation context, controls and evidence to report, then wait without sending a duplicate call. |
 | **Inspect in Microsoft Foundry - no prompt sent** | Look at the agent's saved settings or the specified test trace. Do not send a message or edit settings. | Explain what to inspect and compare your observation with service-returned evidence. |
 | **Run in Microsoft Teams or Microsoft 365 Copilot - participant sends** | At 07/16 open your exact published Weather/workflow app in the chosen surface, send the approved prompt once, and return the actual reply. | Verify publication/target and channel identity, provide documented navigation from the returned launch link, then inspect the same run's Microsoft Foundry evidence without resending. |
+| **Run in Microsoft Copilot Studio - participant sends** | At 16, if this integration route is chosen and rehearsed, test the primary agent connected to the released workflow using the same approved Playground behavior cases. | Verify the actual connected workflow/version, native approval controls and same-run specialist evidence; distinguish Studio integration testing from later published-channel CH02 evidence. |
 
 Aim for **50/50 coach-sent and participant-sent test prompts** across each
 specialist's lessons, using a **coach demonstrates, participant practices**
@@ -191,6 +192,58 @@ connection. The first check reads existing settings and access; it does not
 enable tracing or send a model prompt. If it is missing, the coach explains the blocker before asking you
 to search for a trace. Connection or resource changes need separate approval
 and can incur telemetry charges beyond the displayed model-token estimates.
+
+### Hosted workflow portal test at 16
+
+This is the baseline for
+[destination test parity](PUBLISHING.md#workflow-destination-test-parity):
+the same applicable cases must also pass through the chosen Microsoft Teams
+or Microsoft Copilot Studio route. Do not have the participant send a
+destination prompt while the coach sends its duplicate in the Playground.
+
+This route was observed in the English Microsoft Foundry portal on
+2026-11-10 for an existing hosted workflow. It is not a guarantee of controls
+in every tenant or a participant's current build.
+
+From https://ai.azure.com/, open the participant's confirmed project and its
+hosted workflow agent. Select **Playground**, then **Chat**. Read the actual
+**Version:** selector and heading; select the approved candidate if necessary.
+A `version` URL parameter or cached page alone is not confirmation.
+Confirm the signed-in profile matches the approved participant identity.
+If controls differ, stop and describe the screen rather than guessing.
+
+For the approved W04 trip:
+
+1. Select **New chat** for a fresh Conversation, enter the agreed supported
+   trip prompt and press **Send** once. Do not also invoke it from the
+   GitHub Copilot app.
+2. Read the Weather tool name and arguments. The participant chooses
+   **Approve** or **Deny** on that exact card once. A general test allowance
+   is not that tool decision.
+3. If Weather is approved, wait for the separate Cultural card. Review its
+   own tool name/arguments and make its own decision once; do not click the
+   old Weather card again. For the success case, both cards must resolve and
+   the combined answer must appear.
+4. Open **Traces** associated with that answer and capture the Conversation
+   and available run/response IDs. The coach corroborates both native calls
+   and approval bindings read-only; the participant does not need to discover
+   internal IDs or paste credentials.
+
+**If it fails:** do not press **Send** again, repeatedly approve a retained
+card, reload the page or switch versions while collecting the failed run.
+Record the visible error, exact displayed version, time and available IDs.
+Within approved diagnostic scope, capture the failing request's origin/path,
+HTTP status, safe error code and correlation identifier when available.
+Never paste authorization headers, cookies, tokens or an unsanitized network
+archive. Ordinary participants need not configure Playwright or developer
+tools; facilitator support owns deeper transport diagnosis.
+
+Do not infer the cause from a generic HTTP 400, an outer HTTP 200, or the
+last card still visible. A model/tool run may already have advanced.
+No native-ID/API approval fallback or relaxed stale-reference check is allowed.
+Any fresh diagnostic trip requires an explicitly approved scope and remaining
+allowance; it does not resume or erase the failed run. Apply the coach's
+five-minute/two-attempt timebox and keep unresolved required gates blocked.
 
 ## Foundry navigation rehearsed before the workshop
 

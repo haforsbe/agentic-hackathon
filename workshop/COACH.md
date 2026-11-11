@@ -50,6 +50,27 @@ supported skill/API route in [Tools and Toolboxes](TOOLS-AND-TOOLBOXES.md).
 The shared runner does not implement these operations or Toolbox endpoints;
 never substitute direct MCP silently or weaken its validation.
 
+For checkpoints 15-16, use the reviewed portal-compatible scaffold and hosting
+boundaries in [the workflow lesson](02-hosted-agents.md#prepare-the-portal-compatible-host-before-teaching).
+The prompt runner is not a hosted Responses transport. Require the offline
+host regressions and actual portal W04 success/denial evidence before promotion;
+Invocations-only or locally reconstructed SSE output is insufficient.
+Use [the portal procedure](APP-GUIDE.md#hosted-workflow-portal-test-at-16) for
+actual version selection and separate human Weather/Cultural decisions.
+Never repeat an old approval, invent discovery output or weaken stale-ID guards
+to work around a portal error. Stop on contradictory final approval status.
+An expired live-test allowance stops new paid calls; already-authorized narrow
+read-only reconciliation of that run may continue within its own scope after
+current identity/access checks, without extending the live-test deadline.
+
+Present workflow delivery in three stages: create it, deploy/test in Microsoft
+Foundry, then connect/publish and test that same workflow in the destination.
+Use [destination parity](PUBLISHING.md#workflow-destination-test-parity) to
+repeat the applicable Playground behavior cases through Microsoft Teams or
+Microsoft Copilot Studio; never promise parity before actual evidence.
+Microsoft Copilot Studio integration is not a workflow rewrite or a synonym
+for Microsoft 365 Copilot. Its test pane alone does not satisfy CH02.
+
 ### Shortest verified execution path
 
 Minimize avoidable waiting, not participant practice or safety checks:
