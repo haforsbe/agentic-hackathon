@@ -311,8 +311,9 @@ Microsoft Foundry Project, an educational compromise, **not production best
 practice**. Project dependencies, permissions, quotas, and audit boundary are
 shared. GitHub Actions captures the selected saved Dev version, opens a PR
 that shows the tracked configuration being replaced, runs automated offline
-checks, and deploys a new version to the existing Prod agent after merge and
-the protected `production` Environment approval. PR checks are automated
+checks, and lets the participant manually deploy a new version to the existing
+Prod agent after merge, confirming the full reviewed commit and deployment intent.
+No GitHub Environment is required. PR checks are automated
 contract tests, not an AI review; the participant reviews and merges the diff.
 
 The deployment copies the captured agent definition, not project resources,
@@ -323,14 +324,14 @@ and selected, not that MCP authentication or tool execution works. Those
 runtime checks remain independent and may be blocked by the Toolbox
 authentication investigation. The CI identity, participant/runtime identity,
 and agent runtime identity are distinct. Neither merge approval nor a GitHub
-Environment approval substitutes for per-call MCP approval. Live workflows
+manual deployment confirmation substitutes for per-call MCP approval. Live workflows
 remain unavailable until the facilitator configures and rehearses repository
-variables, OIDC trust, required permissions, and the production Environment.
+variables, branch-based OIDC trust, required permissions, and manual deployment.
 On skip or completion, resume directly at Cultural checkpoint 08; never
 renumber or mark any core checkpoint passed.
 
 **Teach-back:** "What does merging the capture PR approve, and what does the
-separate production Environment approval allow GitHub Actions to do?"
+separate commit-confirmed manual deployment allow GitHub Actions to do?"
 
 ## 08: Create the Cultural Travel Agent
 

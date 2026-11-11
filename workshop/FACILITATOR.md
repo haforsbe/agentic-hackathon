@@ -177,17 +177,19 @@ Before the cohort:
   -s workshop/weather_delivery -p "test_*.py" -v`. Before offering a live
   cohort run, provision and rehearse the documented GitHub OIDC identity,
   read-Dev/write-Prod Foundry permissions, automatic capture PR, dispatched
-  offline PR check, protected `production` Environment, version creation and
+  offline PR check, commit-confirmed manual deployment, version creation and
   stable-endpoint pinning. Confirm Dev is unchanged and the PR/deployment
   evidence identifies the captured source version and deployed Prod version.
   The workflows are source-only until facilitator-owned Azure variables,
-  federated credentials, Environment rules and live checks are configured;
+  federated credentials, repository protections and live checks are configured;
   they do not prove Toolbox authentication or tool execution.
   Follow `weather-delivery/README.md` for the lab-only authentication preparation
   and participant navigation. Obtain explicit approval before configuring
   persistent trust, roles or protections. Rehearse the required PR check with
-  no participant bypass and verify Environment reviewers are available on the
-  chosen GitHub plan/visibility. Do not impose a path-filtered required check
+  no participant bypass and verify default-branch dispatch permission and
+  rejection of unchecked confirmation/wrong commit before login. No GitHub
+  Environment is required; document that this is not an independent reviewer gate.
+  Do not impose a path-filtered required check
   on unrelated workshop PRs that would never trigger it. Prepare OIDC once so
   participants do not troubleshoot CI identity during promotion; personal
   sign-in is not a substitute. Retain the successful rehearsal's exact revision

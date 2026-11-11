@@ -44,10 +44,10 @@ The Workshop Coach says:
 
 Before asking the participant to run anything, confirm the exact repository,
 default branch, Microsoft Foundry Project, existing Dev/Prod names, saved Dev
-version and designated deployment reviewer. Reuse earlier verified evidence
+version and participant authorized to start deployment. Reuse earlier verified evidence
 only while its identity, resource and operation scope remain unchanged.
-Check the facilitator setup below, including required checks and Environment
-review protection. Distinguish **configured**, **access verified** and
+Check the facilitator setup below, including PR checks and manual deployment
+confirmation. No GitHub Environment is needed. Distinguish **configured**, **access verified** and
 **live-rehearsed**; an existing setting alone proves neither of the latter.
 If a prerequisite is missing, explain the specific blocker and offer setup
 assistance, pause or an explicit skip. Never quietly weaken a gate to proceed.
@@ -77,11 +77,13 @@ These are ordinary reviewable files, not a second cloud environment.
    and definition hash. These are automated contract checks, not an AI review
    and not proof that the model or tools work in Foundry. The participant
    remains responsible for reviewing and merging the diff.
-4. **Approve deployment.** Merging the PR to the default branch starts
-   [Deploy Weather configuration to Prod](../../.github/workflows/weather-delivery-deploy.yml).
-   The job pauses at the GitHub `production` Environment for its required
-   reviewer. Approval allows the job to create a new version on the existing
-   Prod agent, read the version back, and pin the Prod stable endpoint to it.
+4. **Start deployment deliberately.** Merge does not deploy. Manually run
+   [Deploy Weather configuration to Prod](../../.github/workflows/weather-delivery-deploy.yml)
+   on the default branch. Enter its full reviewed commit SHA as
+   `expected_commit` and check `deploy_approved`. The job refuses an unchecked
+   confirmation or a different commit before Azure login. It then creates a
+   new version on the existing Prod agent, reads it back and pins the Prod
+   stable endpoint to it. No GitHub Environment or separate reviewer is used.
 5. **Verify and explain.** Participants inspect the deployment artifact and
    Foundry read-back for the Prod agent name, new version, source Dev version,
    configuration hash, and stable endpoint. Dev should remain unchanged. A
@@ -91,7 +93,8 @@ The learning outcome is a merged, versioned configuration in Git and a
 GitHub-Actions-created version selected by the Prod agent. Participants can
 explain which PR was reviewed, which checks ran, who approved the production
 deployment, and what version is selected. Merging is the configuration
-approval; the Environment approval is the separate permission to deploy.
+approval; manually starting the confirmed deployment is the separate delivery
+decision. This is a lab confirmation, not enforced separation of duties.
 
 ### Where the participant clicks and what they should see
 
@@ -107,8 +110,9 @@ differs, ask what is visible rather than inventing a route.
 | GitHub website, confirmed repository -> **Actions** -> **Capture Weather Dev configuration** -> **Run workflow** | Select the default branch, enter the exact `agent_version`, then run | A capture run; its **Summary** links to the automatically opened PR, or explains that nothing changed |
 | Linked PR -> **Files changed** | Find familiar Weather instructions; inspect model/tool references and manifest source/target | A first captured configuration or a meaningful subsequent diff; no credentials or private conversation content |
 | Same PR -> **Checks** | Wait for `offline-contract-tests`; inspect its run summary | Successful checks on the current PR head; explicitly no model/tool runtime claim |
-| Same PR -> **Conversation** | Review, then use the available merge control when required checks pass | A merged configuration and a deployment run on the default branch |
-| GitHub -> **Actions** -> **Deploy Weather configuration to Prod** -> selected run | Inspect the pending `production` review; the designated reviewer uses **Review deployments** and approves the stated target | The job proceeds only after approval; if another reviewer is required, the participant observes rather than self-approves |
+| Same PR -> **Conversation** | Review, then use the available merge control when required checks pass | A merged configuration; no deployment starts from merge |
+| GitHub -> repository **Code** -> default branch -> latest commit | With the Coach, confirm this is the reviewed merged configuration and copy the full commit SHA (a 40-character Git identifier) | An exact commit to deploy; if the branch changed, inspect the changes before confirming |
+| GitHub -> **Actions** -> **Deploy Weather configuration to Prod** -> **Run workflow** | Select the default branch, paste `expected_commit`, check `deploy_approved`, then run | The confirmed commit matches the run SHA; no Environment, reviewer gate or extra Azure sign-in prompt |
 | Completed deployment run -> **Summary** | Read the exact source version, Git commit, new Prod version, hash and endpoint | A readable receipt of the created/read-back definition and selected version |
 | Microsoft Foundry, starting at https://ai.azure.com/ -> confirmed project | With Coach guidance based on the verified portal route, locate the exact Prod agent/version and selected stable version; compare its instructions with the merged PR | Independent read-back agrees with the receipt; inspect Dev to confirm it was not changed |
 
@@ -162,20 +166,18 @@ workshop repository and project:
   their exact values.
 - Configure `WEATHER_AZURE_CLIENT_ID`, `WEATHER_AZURE_TENANT_ID`, and
   `WEATHER_AZURE_SUBSCRIPTION_ID` as repository Actions variables. Configure
-  `WEATHER_CAPTURE_OIDC_SUBJECT` for the default-branch subject and
-  `WEATHER_PRODUCTION_OIDC_SUBJECT` for the `production` Environment subject.
-  Add matching federated credentials in Microsoft Entra ID; do not use a
+  `WEATHER_CAPTURE_OIDC_SUBJECT` for the default-branch subject used by both
+  capture and deployment. Add the matching federated credential in Microsoft Entra ID; do not use a
   client secret.
 - Give the CI identity only the Foundry permissions needed to read the
   selected Dev agent/version and create/read a version and update/read the
   version selector on the existing Prod agent. Verify the current permission
   mapping in the target project; do not test it by creating a throwaway
   resource.
-- Create the GitHub `production` Environment, restrict it to the repository's
-  default branch, and require a facilitator/authorized reviewer. This is the
-  deployment gate. Confirm required reviewers are supported for the
-  repository's plan/visibility; do not substitute an unprotected Environment
-  if they are unavailable.
+- Confirm the participant has repository access to manually dispatch the
+  deployment. Rehearse its unchecked-confirmation and wrong-commit rejection
+  before Azure login. GitHub Environments and their approval features are not
+  required. The same person may review/merge and start deployment in this lab.
 - Protect the default branch with a rule/ruleset requiring a pull request and
   the `offline-contract-tests` check from GitHub Actions before merge.
   Confirm the dispatched check on the actual PR head satisfies the rule and
@@ -191,19 +193,20 @@ workshop repository and project:
   `contents`, `pull-requests`, and `actions` permissions; it does not need a
   personal access token.
 - Rehearse capture, PR opening, the dispatched offline check, PR merge,
-  Environment approval, Prod version creation/read-back, and endpoint pinning
+  manual deployment confirmation, Prod version creation/read-back, and endpoint pinning
   in an approved test project before teaching it live.
 
-The capture job's federated subject is normally
-`repo:OWNER/REPOSITORY:ref:refs/heads/DEFAULT_BRANCH`; the deployment job uses
-the protected Environment and is normally
-`repo:OWNER/REPOSITORY:environment:production`. Confirm the actual subject
-claims and configure exact matches. The same CI identity is used for both
+Both jobs use the default-branch federated subject, normally
+`repo:OWNER/REPOSITORY:ref:refs/heads/DEFAULT_BRANCH`. Confirm the actual subject
+claims and configure an exact match. An old Environment-based subject cannot
+authenticate this branch-based flow; the facilitator must approve and configure
+the branch trust before use. `WEATHER_PRODUCTION_OIDC_SUBJECT` is no longer used.
+The same CI identity is used for both
 jobs as a workshop simplification; it therefore needs the union of their
 permissions. Separate identities and narrower environment-specific rights
 are preferable in production.
 
-No Azure variables, federated credentials, Environment approval rules, or
+No Azure variables, federated credentials, repository protection rules, or
 live workflow results are configured by this repository change. Until a
 facilitator completes the setup and live rehearsal, the flow is implemented
 but not ready to run against a Foundry project.
@@ -216,15 +219,15 @@ authenticate a job running later on a GitHub-hosted runner.
 
 | Who/where | Authentication and responsibility |
 |---|---|
-| Participant, GitHub website | Sign into their own GitHub account themselves. That account needs the agreed repository permissions to start capture and review/merge; only the designated Environment reviewer approves deployment. |
+| Participant, GitHub website | Sign into their own GitHub account themselves. That account needs the agreed repository permissions to start capture, review/merge and manually dispatch the confirmed deployment. |
 | Participant, Microsoft Foundry portal | Sign into their chosen Microsoft account themselves. Confirm the exact project and access; earlier portal sign-in does not prove the automation identity has access. |
 | Coach execution context, only if CLI operations are needed | Check `gh auth status` for GitHub or Azure CLI availability/sign-in for Microsoft Foundry. If absent or expired, explain which service needs sign-in, ask permission for its supported interactive/device sign-in flow, and let the participant complete it themselves. Recheck the actual identity, repository/project and operation permission afterward. |
 | GitHub Actions | Use the built-in short-lived `GITHUB_TOKEN` for the PR and an Azure workload identity trusted through OpenID Connect (OIDC) for Microsoft Foundry. OIDC lets GitHub prove which repository/job is running without a stored Azure password or client secret. |
 
 Prepare the automation identity/trust and scoped project role assignment once
 per participating repository/project before the promotion exercise, preferably
-before the cohort. Explain the exact application identity, project, two trusted
-GitHub subjects, intended access and possible costs. Obtain separate explicit
+before the cohort. Explain the exact application identity, project, trusted
+default-branch GitHub subject, intended access and possible costs. Obtain separate explicit
 approval before creating an identity, adding trust/roles, editing repository
 settings or creating Prod. If the participant lacks the required administrator
 rights, involve the facilitator; repeated sign-ins do not fix missing permission.
@@ -240,7 +243,7 @@ GitHub Copilot app's server-specific Sign in action, not an assumed CLI session.
 
 After setup, participants normally need no Azure CLI login for each capture
 or deployment. GitHub Actions obtains fresh short-lived credentials for each
-run; the Environment gate still requires its reviewer. Authentication is not
+run; manual deployment still requires the explicit commit confirmation. Authentication is not
 permission: read/write authorization remains independently checked.
 None of this fixes or bypasses the agent-to-Toolbox authentication blocker.
 
@@ -275,6 +278,7 @@ Then compare the observed lab with production:
 |---|---|
 | Two agents sharing one project | Separate environment/resource and audit boundaries |
 | One automation identity for capture and deployment | Separate narrowly scoped identities |
+| Manual deployment with a commit confirmation, no GitHub Environment | Enforced reviewer separation and deployment policy |
 | Existing shared model and tool dependencies | Explicit dependency versions and infrastructure management |
 | Offline package checks and definition read-back | Quality, safety and runtime integration checks |
 | A deliberately approved version selection | Monitoring, change policy and rehearsed rollback |

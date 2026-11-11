@@ -127,8 +127,10 @@ estimate, and the hosted workflow; skip or completion returns to 08. Its
 single-project design is an educational compromise, never production
 isolation. The optional Weather delivery lab captures an existing Dev agent
 version into an automatically opened PR, runs offline package checks, and
-deploys the merged configuration to a separate Prod agent behind a protected
-GitHub Environment. This flow is implemented and unit-tested, but not
+deploys the merged configuration to a separate Prod agent through a manual
+workflow with explicit commit/intent confirmation, without GitHub Environments.
+This lab confirmation is not an independent reviewer gate.
+This flow is implemented and unit-tested, but not
 live-rehearsed or configured with Azure OIDC/project permissions. Do not claim
 the delivery workflow is operational until those prerequisites are configured
 and verified. Configuration deployment does not prove exact runtime identity,

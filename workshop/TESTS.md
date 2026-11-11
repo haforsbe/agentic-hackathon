@@ -392,7 +392,7 @@ python -S -m unittest discover -s workshop/weather_delivery -p "test_*.py" -v
 |----|-----------------|-----------------|
 | WD01 | Capture a selected saved Dev version and inspect the generated PR | Exact Dev name/version and intended Prod name are recorded; definition hash matches; credential-like fields are rejected; capture reads Dev only |
 | WD02 | Review the PR and wait for its automatically dispatched offline check | PR diff shows the proposed tracked-definition replacement; trusted tests and package/hash validation pass; CI does not claim model or MCP runtime validation; participant merges only after reviewing the diff |
-| WD03 | Merge the PR and approve the `production` Environment deployment | The deploy run targets the default-branch merge commit and pauses for the required reviewer before Azure login/write |
+| WD03 | Merge the PR, then manually dispatch deployment on the default branch with its full reviewed commit SHA and deployment confirmation | Merge alone does not deploy; unchecked confirmation and wrong commit fail before Azure login/write; confirmed matching commit proceeds without any GitHub Environment |
 | WD04 | Read back the deployed Prod version and selector | New version definition matches the reviewed capture; stable endpoint selects that version; Dev remains unchanged; deployment artifact records source and destination versions |
 | WD05 | Optionally test the Prod consumer endpoint under separate approval | Runtime response and any MCP tool call are inspected independently; a successful deploy alone is not tool-runtime evidence |
 
@@ -401,7 +401,7 @@ They are not an AI review or a Foundry runtime test. The workshop uses two
 agents in one project as a teaching shortcut; model and project-level tool
 dependencies, permissions, quotas and audit boundary remain shared. Live
 rehearsal must independently verify OIDC, Foundry permissions, PR automation,
-Environment approval, version creation and endpoint pinning. Toolbox
+manual deployment confirmation, version creation and endpoint pinning. Toolbox
 authentication and MCP runtime behavior remain separate gates.
 
 ## Capstone gates and optional mutations

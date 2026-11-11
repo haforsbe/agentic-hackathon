@@ -123,7 +123,7 @@ jobs:
             '- Open **Files changed**. Find the instructions you recognize from Microsoft Foundry, then inspect the model and tool references.' \
             '- Open **Checks** and wait for `offline-contract-tests`. These checks validate package consistency, not live model or tool behavior.' \
             '- Confirm the Dev version and Prod target above, then merge if this is the configuration you intend to promote.' \
-            '- Merging authorizes the reviewed configuration to enter the delivery branch; the separate `production` environment gate controls deployment.' \
+            '- Merging records the accepted configuration; it does not deploy. Then manually run **Deploy Weather configuration to Prod** on the default branch, confirm its full commit SHA and select the deployment confirmation.' \
             '' \
             'The capture contains agent configuration only. It does not contain credentials, Conversations, transcripts, or memory contents.')"
           pr_url="$(gh pr create \

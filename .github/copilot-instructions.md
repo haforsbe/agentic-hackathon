@@ -139,11 +139,13 @@ Cultural 08. It is not a numbered checkpoint or part of the core estimate;
 skip/completion returns to 08. The one-project route is a training compromise,
 not production best practice. Participants capture their existing Dev agent
 version into an automatically opened PR, review and merge the configuration
-diff after automated offline checks, then approve a protected GitHub Actions
-deployment to the separate Prod agent. The workflow is not live-rehearsed or
+diff after automated offline checks, then manually dispatch a commit-confirmed
+GitHub Actions deployment to the separate Prod agent. No GitHub Environment
+is used; this lab confirmation is not an independent reviewer gate.
+The workflow is not live-rehearsed or
 configured with Azure OIDC/project permissions. CI checks and deployment
 read-back do not prove Toolbox runtime authentication or per-call tool
-approval. Do not equate the GitHub Environment deployment gate with runtime
+approval. Do not equate the manual deployment confirmation with runtime
 tool approval.
 
 Open each module with its plain-language stage/checkpoint, goal, short plan

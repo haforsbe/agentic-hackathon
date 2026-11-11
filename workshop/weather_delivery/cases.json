@@ -11,7 +11,7 @@
     },
     {
       "id": "WD03",
-      "purpose": "Require a protected production Environment approval before any Prod resource write."
+      "purpose": "Require manual default-branch dispatch, explicit deployment confirmation and an exact reviewed commit match before Azure login or any Prod resource write."
     },
     {
       "id": "WD04",

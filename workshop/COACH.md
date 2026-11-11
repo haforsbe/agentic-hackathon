@@ -198,11 +198,11 @@ The **optional Weather delivery lab** follows the completed Weather checkpoint
 their Weather setup in Microsoft Foundry, then capture its selected Dev
 version into Git through an automatically opened PR. Offline CI checks the
 captured package; participants review/merge the replacement; GitHub Actions
-then waits for the protected production Environment approval before creating
+then manually dispatches a commit-confirmed deployment before creating
 and pinning a version on the separate Prod agent. The two agents share one
 project as a workshop shortcut, not production isolation. Capture/deploy code
 and offline checks do not prove live access; the facilitator must configure
-and rehearse OIDC, Foundry permissions, PR creation, Environment approval,
+and rehearse OIDC, Foundry permissions, PR creation, manual deployment confirmation,
 and deployment before the lab is live-ready. Prod read-back does not prove
 Toolbox runtime authentication or tool execution.
 
@@ -1013,26 +1013,27 @@ goal, plan, exact change boundary, tests and expected evidence; do not make a
 second numbered checkpoint. Explain that this one-Project lab is an
 educational compromise, not production best practice: permissions, quota,
 project assets and blast radius are shared. CI workload identity is distinct
-from the participant/runtime identity. A GitHub Environment approval never
+from the participant/runtime identity. A deployment confirmation never
 stands in for human approval of the actual MCP tool and arguments.
 
 The capture workflow opens the PR and dispatches the offline check; the deploy
-workflow runs after the reviewed change reaches the default branch and pauses
-at the `production` Environment. CI checks the captured JSON and hash; they
+workflow is manually dispatched on the default branch after merge, with the
+full reviewed commit SHA and an explicit deployment confirmation. Merge alone
+does not deploy; no GitHub Environment is used. CI checks the captured JSON and hash; they
 are not an AI review or a live quality test. The Prod stage creates a version
 on the already-existing Prod agent and pins its stable endpoint. It copies the
 definition, not project dependencies or memory contents. The same project
-keeps model and Toolbox dependencies shared. The production Environment
-approval is a deployment gate, not per-call MCP approval. Toolbox auth and
+keeps model and Toolbox dependencies shared. The manual deployment
+confirmation is a lab decision, not an independent reviewer gate or per-call MCP approval. Toolbox auth and
 runtime behavior remain separately unverified until rehearsed. One teach-back
-is sufficient: ask what merging the PR approves and what the Environment
-approval allows.
+is sufficient: ask what merging the PR approves and what starting the
+commit-confirmed deployment allows.
 For this optional lab only, follow the opening, readiness, authentication and
 one-action-at-a-time navigation in `weather-delivery/README.md`. Explain the
 benefit as "publish my tested configuration without manually copying settings",
 then show capture -> review/checks -> merge -> deployment approval -> Prod
 read-back. Let the participant start capture, inspect familiar instructions
-in the PR, and review/merge; the designated reviewer approves deployment.
+in the PR, review/merge, and manually start the commit-confirmed deployment.
 Supply real run/PR links from observed outputs. The first capture adds files;
 later captures show changes. Read workflow summaries together, including
 "nothing new" or failure outcomes, without calling those a new promotion.
@@ -1046,7 +1047,7 @@ preserve identity isolation, let the participant authenticate themselves, and
 recheck actual identity and access. Creating trust, roles or other persistent
 access needs separate explicit scope approval, not just sign-in permission.
 Do not provision access or alter repository protections merely by entering
-this lab. Verify required checks and Environment reviewers before capture;
+this lab. Verify required checks and manual dispatch permission before capture;
 if unavailable, explain the blocker rather than weakening them.
 
 End by comparing the merged configuration, deployment summary and independently
