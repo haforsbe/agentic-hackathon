@@ -65,7 +65,7 @@ after final workflow release/update checks, publish the hosted workflow endpoint
 and require CH02 channel use with correlated traces showing both specialists
 invoked. At least one participant-chosen surface must pass each milestone.
 Explain this in the welcome and distinguish Microsoft 365 Copilot from the
-GitHub Copilot app. Verify tenant/licensing, Bot Service and channel access,
+GitHub Copilot app. Verify tenant/licensing, project publishing and channel access,
 runtime/approval support and separate publication/test approvals. Endpoint-only
 or install-only evidence is not a channel pass; blockers remain incomplete.
 

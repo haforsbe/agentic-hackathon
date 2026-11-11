@@ -66,8 +66,8 @@ roles at the appropriate resource scope:
 | Activity | Access needed |
 |----------|---------------|
 | Build and test agents | **Foundry User** on the Foundry resource or appropriate project scope. |
-| Release agents through stable endpoints | Operation-specific agent management and consumer access, checked at the project/agent scope; **Foundry Project Manager** on the parent Microsoft Foundry resource supports project management but does not grant Bot Service permissions. |
-| Publish Weather and the hosted workflow to Microsoft Teams/Microsoft 365 Copilot | Microsoft Foundry project publishing access (the official guide names **Foundry User**) plus `Microsoft.BotService/botServices/write` and `Microsoft.BotService/botServices/channels/write` in the target resource group; **Azure Bot Service Contributor Role** provides those Bot Service permissions. |
+| Release agents through stable endpoints | Operation-specific agent management and consumer access, checked at the project/agent scope; project management access alone does not prove consumer invocation permission. |
+| Publish Weather and the hosted workflow to Microsoft Teams/Microsoft 365 Copilot | Current project publishing permission (the official guide names **Foundry User**) and allowed/licensed tenant access to the chosen channel. Microsoft Foundry manages direct-publishing bot registration; no separate Azure Bot Service resource or Bot Service Contributor role is required for that route. See [PUBLISHING.md](PUBLISHING.md) for scope, approval and runtime requirements. |
 | Create a project or deploy models | Additional management permissions, such as **Foundry Account Owner** on the Foundry resource; creating the resource itself requires permissions on the target resource group. |
 | Inspect traces and query logs | **Log Analytics Reader** on connected telemetry resources; protected tables may require additional read access. |
 | Deploy the hosted workflow | Permissions for supporting Azure resources and runtime identities, checked during deployment preparation. |
@@ -117,10 +117,11 @@ surface(s), tenant app policies, installation and publication permissions, and
 the hosted workflow's compatible channel adapter before delivery. Ask your
 administrator for help; do not bypass app policies or request broad roles.
 
-The Azure subscription needs the `Microsoft.BotService` provider registered.
-Registration or resource creation is not authorized by attending the workshop.
-The publishing flow can create an Azure Bot Service resource and enable channel
-protocol/authorization settings. **Just you** is the preferred workshop scope;
+Microsoft Foundry manages bot registration for direct publishing; a separate
+Azure Bot Service resource or `Microsoft.BotService` provider registration is
+not a blanket prerequisite for that route. Publishing enables channel
+protocol/authorization settings and needs explicit approval.
+**Just you** is the preferred workshop scope;
 organization-wide distribution requires separate approval and Microsoft 365
 administrator review. Personal publication does not remove Azure permission,
 licensing or tenant-policy requirements.
@@ -199,7 +200,7 @@ to use the portal for inspection or testing. Do not duplicate tests in both plac
 - [ ] I know which Microsoft account and approved Azure subscription I will use.
 - [ ] I can access my dedicated Foundry Project, or have arranged to create it during setup.
 - [ ] Application Insights and telemetry-read access are ready, or I have flagged the setup needed with my facilitator.
-- [ ] I can access Microsoft Teams and/or Microsoft 365 Copilot, with channel publishing, Bot Service permissions and tenant policies prepared or flagged with my facilitator.
+- [ ] I can access Microsoft Teams and/or Microsoft 365 Copilot, with project publishing permissions, channel/runtime support and tenant policies prepared or flagged with my facilitator.
 - [ ] I understand that Azure usage can incur costs and will use only public or synthetic data.
 
 If any item is blocked, contact your facilitator before the workshop. You do

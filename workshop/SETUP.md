@@ -62,9 +62,9 @@ it does not create a Foundry agent or grant Azure permissions.
 | Toolboxes (04/05, 11/12; verification at 07/14) | Supported Toolbox API/client and prompt-agent consumption in the project's region | Weather starts with one tool at 04, expands at 05, and verifies its binding at release; Cultural deepens the pattern; caller/runtime access, pinned endpoints, retained routing URL, verified connection names and actual discovered tool names, effective restrictions and approval/denial; see TOOLS-AND-TOOLBOXES.md |
 | Memory | Chat and embedding deployments, memory capability | Store permissions, identity scope, retention, update behavior |
 | Skills | Skills API and compatible client/provider | Upload/version/retrieve support; MCP resources support is distinct from tools |
-| Hosted workflow | Azure Developer CLI (`azd`), Agent Framework, supported Foundry extensions/runtime, and tracing | Reviewed scaffold revision and exact dependency lock, Responses portal approval flow plus required Invocations path, intended G/W tests, both downstream endpoints/contracts, deployment support and quota/cost boundary; require the [pre-cohort workflow readiness gate](FACILITATOR.md#hosted-workflow-readiness-before-the-cohort) |
+| Hosted workflow | Azure Developer CLI (`azd`), Agent Framework, supported Foundry extensions/runtime, and tracing | Reviewed [shared scaffold](assets/hosted-workflow/README.md) revision, fully pinned dependencies and verified feed/runtime availability, Responses portal approval flow plus required Invocations path, intended G/W tests, both downstream endpoints/contracts, deployment support and quota/cost boundary; require the [pre-cohort workflow readiness gate](FACILITATOR.md#hosted-workflow-readiness-before-the-cohort) |
 | Consumer access | Approved test caller identities | Endpoint invocation permission and a caller without permission for the negative test |
-| Microsoft Teams/Microsoft 365 Copilot (07, 16) | At least one chosen surface, licensed/allowed tenant access, project publishing and Bot Service resource/channel write permissions, registered Microsoft.BotService provider | Rehearsed Weather and hosted-workflow publication/installation, compatible activity adapter, channel identity and trusted user/state mapping, downstream runtime access, actual tool approval/denial and correlated traces; separate audience/data/cost approval; see PUBLISHING.md |
+| Microsoft Teams/Microsoft 365 Copilot (07, 16) | At least one chosen surface, licensed/allowed tenant access and current project publishing permission; Microsoft Foundry manages direct-publishing bot registration without a separate Azure Bot Service resource | Rehearsed Weather and hosted-workflow publication/installation, compatible activity adapter or documented service translation, channel identity and trusted user/state mapping, downstream runtime access, actual tool approval/denial and correlated traces; separate audience/data/cost approval; see PUBLISHING.md |
 
 Use the installed `microsoft-foundry` skill, including its dependency check and
 workflow instructions, when available. Otherwise follow the official references
@@ -196,9 +196,11 @@ account, immediately collects the endpoint and revalidates the actual context.
 
 Include channel readiness for the required publication/use at 07 and 16:
 chosen Microsoft Teams/Microsoft 365 Copilot surface(s), tenant app policies,
-licensing/access, Bot Service permissions/provider registration and compatible
-hosted protocol/approval handling. Readiness is not authorization to register
-a provider, create a bot, publish an app or send a channel test. Do not prepare
+licensing/access, current project publishing permissions and compatible
+hosted protocol/approval handling. The direct route uses service-managed bot
+registration, not a separately provisioned Azure Bot Service resource.
+Readiness is not authorization to change roles/protocols, prepare/download a
+publication package, publish an app or send a channel test. Do not prepare
 participants' publication passes for them.
 
 The shared helper is deliberately narrow: creation/readback, bounded prompt

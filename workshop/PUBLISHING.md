@@ -248,7 +248,7 @@ Key differences to teach:
 Use the current official
 [portal publishing guide](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/publish-copilot)
 and [REST, networking and limitations reference](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/publish-copilot-virtual-network).
-The route below is documentation-checked on **2026-10-30**, not a claim of a
+The route below is documentation-checked on **2026-11-11**, not a claim of a
 live tenant rehearsal. Recheck support and controls before delivery. The
 shared prompt runner does not implement channel publishing or channel tests.
 Do not invent an API, paste an endpoint into a channel and call it published,
@@ -257,10 +257,14 @@ or create another agent/workflow to simulate the integration.
 ### Readiness and bounded approval
 
 Explain a **channel** as the application through which someone talks to the
-same released agent. The **Azure Bot Service** resource relays messages;
+same released agent. Microsoft Foundry manages the Teams bot registration;
 the **Activity Protocol** is the message format used by the channel.
-Publication can create that resource, enable the activity protocol and change
-channel authorization. It does not replace the tested specialist or workflow.
+Direct publishing does not require creating a separate Azure Bot Service
+resource. Publication enables the activity protocol and changes channel
+authorization. It does not replace the tested specialist or workflow.
+Verify that the hosted runtime or a documented service translation supports
+the required channel contract and native approval continuation; enabling a
+protocol in metadata alone does not establish that behavior.
 
 Before any publishing write, verify the selected Azure CLI sign-in and actual
 request identity, project access and current operation permissions as usual.
@@ -270,12 +274,13 @@ Check these prerequisites without creating a throwaway resource:
 - The exact tested agent/version, returned stable endpoint, existing publication
   and resource ownership. Pin the tested active version; do not use **Always use
   latest**. Reuse an existing valid publication rather than duplicating it.
-- The target resource group's `Microsoft.BotService/botServices/write` and
-  `Microsoft.BotService/botServices/channels/write` permissions and registered
-  `Microsoft.BotService` provider, alongside project agent publishing permission.
-  The official guide names **Foundry User** and **Azure Bot Service Contributor
-  Role** at their respective scopes; project access alone is insufficient.
-  Provider registration and role changes are separate approved operations.
+- The project publishing permission required by the current official route.
+  The direct-publishing guide names **Foundry User** at the project scope.
+  Do not require standalone Bot Service creation permissions, provider
+  registration or **Azure Bot Service Contributor Role** for this
+  service-managed route. A different approved legacy/custom route must verify
+  its own actual permissions; role or provider changes remain separate
+  approved operations, never readiness probes.
 - Access/licensing for the chosen Microsoft Teams and/or Microsoft 365 Copilot
   surface, tenant app policies, allowed installation/distribution, supported
   region/runtime and the actual channel-to-runtime protocol. For the hosted
@@ -293,7 +298,7 @@ Check these prerequisites without creating a throwaway resource:
   an explicitly approved, rehearsed compatible route or record a blocker.
 
 Ask for the surface(s), then obtain approval for the exact target, display
-metadata, app package version, resource group, Bot Service creation/reuse,
+metadata, app package version, service-managed registration and authorization,
 audience, data flow and possible Azure/channel costs. Explain that the app
 package's `major.minor.patch` version is not the Microsoft Foundry agent version.
 Prefer **Just you** for workshop testing. **People in your organization**
@@ -302,6 +307,11 @@ approval plus Microsoft 365 administrator approval. Never choose that broader
 scope merely to bypass a failed permission check. Confirm actual policies;
 personal scope needing no publication admin approval is not a guarantee of
 tenant access, licensing or installation.
+
+For a read-only readiness request, inspect existing configuration and report
+missing or unverified requirements only. Do not publish, enable protocols or
+prepare/download an app package: **Download ZIP** uses the publication
+preparation process and is not a read-only compatibility check.
 
 ### Publish, open and use the released target
 
@@ -312,7 +322,7 @@ tenant access, licensing or installation.
    Select **Publish > Teams and Microsoft Copilot**. The expected dialog is
    **Publish to Teams and Microsoft 365**. These are documented product labels;
    if the actual screen differs, ask what is visible rather than invent controls.
-2. Review the shown Azure Bot Service resource and complete **Name**, **Publish
+2. Complete **Name**, **Publish
    version**, **Short description**, **Description** and **Developer** with the
    approved public metadata. Select **Next: Publish options > Direct publish**,
    review **Choose who can use this agent**, and only then perform the approved
@@ -334,7 +344,7 @@ tenant access, licensing or installation.
    request from the project client or Playground. If both surfaces are chosen,
    approve and record a test in each; one surface's pass does not prove the other.
 5. Inspect the same run in Microsoft Foundry through the established trace
-   route. Record channel/app, audience, returned app/Bot Service identifiers,
+   route. Record channel/app, audience, returned app/registration identifiers,
    stable endpoint, selected version, actual input/reply, time and available
    response/Conversation/correlation identifiers. Corroborate runtime linkage
    with service evidence; do not infer it from the agent's self-description,
@@ -389,7 +399,9 @@ resource still running.
 Ask before stopping or deleting specific
 resources. Keep shared projects/models and other students' resources untouched.
 Include saved tool connections and Toolbox versions in the owned-resource
-inventory, including published apps and Azure Bot Service resources. Channel
+inventory, including published apps and any separately owned legacy/custom
+Azure Bot Service resources. Do not treat a service-managed registration as
+an independently provisioned resource to delete. Channel
 unpublishing/removal is separate from stopping a hosted runtime or deleting an
 endpoint; review each exact owned target and its consumers before approval.
 Check remaining consumers before proposing deletion; removing a

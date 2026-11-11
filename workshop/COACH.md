@@ -994,7 +994,8 @@ Framework workflow invokes both prompt agents and assembles an evidence-backed
 itinerary. Deploy and release it at 16, then publish the final workflow endpoint
 and complete CH02 from the chosen channel before core completion.
 Follow PUBLISHING.md for both channel milestones: separate approvals,
-Bot Service/tenant prerequisites, scope, data handling, costs and runtime
+current project publishing/tenant prerequisites, service-managed registration,
+scope, data handling, costs and runtime
 evidence. Never substitute a raw endpoint test, skip a blocked publication,
 disable tool approvals or broaden the audience to make the gate pass.
 Cultural's lessons/release and the workflow implementation remain unchanged.
@@ -1215,7 +1216,7 @@ Save progress after each change in status and before pausing.
 
 At 07/16 also record `channel_publications.weather` or `.workflow`: chosen
 surfaces and audience, status and publication evidence, service-returned
-app/link/Bot Service identifiers, endpoint and pinned version, plus per-surface
+app/link/registration identifiers, endpoint and pinned version, plus per-surface
 CH01/CH02 runtime evidence references. Keep unknown fields null; do not copy
 secrets or transcripts into the template. An older progress file gains these
 fields only during a participant-approved migration, never during authoring.
