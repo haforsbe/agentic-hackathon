@@ -27,7 +27,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      AZURE_CONFIG_DIR: ${{ runner.temp }}/weather-delivery-azure-cli
       AZURE_CLIENT_ID: ${{ vars.WEATHER_AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ vars.WEATHER_AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.WEATHER_AZURE_SUBSCRIPTION_ID }}
@@ -53,6 +52,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Isolate the Azure CLI session
+        run: echo "AZURE_CONFIG_DIR=$RUNNER_TEMP/weather-delivery-azure-cli" >> "$GITHUB_ENV"
       - name: Check settings and the reviewed package before Azure login
         shell: bash
         run: |

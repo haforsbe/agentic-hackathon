@@ -1038,6 +1038,19 @@ Supply real run/PR links from observed outputs. The first capture adds files;
 later captures show changes. Read workflow summaries together, including
 "nothing new" or failure outcomes, without calling those a new promotion.
 Do not run a learner's merge or approval for them merely to save time.
+Before publishing, confirm the agreed writable destination/default branch and
+preserve fork-only work; do not silently substitute a fork or send a read-only
+participant into upstream Settings. Use the lab's read-only GitHub preflight
+to distinguish missing settings from denied/unknown access. Setup may need the
+owner; participants do not need administrator access simply to take the lab.
+At each result or blocker, give a short natural handoff: what changed (and
+where nothing changed), what the observed evidence proves, what remains
+blocked/unproved, then one next learner action. Read the actual coverage
+summary/artifact: synthetic tests, participant package, live testing and
+deployment are distinct. Missing package is NOT CHECKED, not passed.
+Workflow startup defects are a delivery-development-team handoff, not a
+participant troubleshooting exercise. Preserve the existing timebox and
+single teach-back; do not add another quiz or change core gates.
 
 The easiest safe authentication route is facilitator-prepared OIDC trust and
 project permissions; participants sign into GitHub/Microsoft Foundry themselves

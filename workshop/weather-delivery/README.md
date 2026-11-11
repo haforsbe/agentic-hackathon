@@ -155,6 +155,51 @@ evidence.
 
 ## Facilitator setup before the cohort
 
+### Choose the repository without losing existing work
+
+Use the facilitator-confirmed destination repository and default branch.
+If the participant has Write access there, create the lab branch/PR in that
+repository. Do not silently publish to another repository. If they lack access,
+explain the limitation and agree on a participant-owned fork or template copy
+before publishing. A clone alone grants no permission, and neither a fork nor
+a template copies repository variables, Azure trust or project access.
+
+When using an existing fork, inspect its branches and unmerged work before
+syncing; never delete, reset or force-push it as setup. If a new copy is needed,
+use GitHub's **Fork** control, or **Use this template** only when available,
+then verify the copy contains the facilitator's reviewed curriculum revision.
+Record its exact owner/name and intended default branch. The participant
+needs permission to run Actions and review/merge; the repository owner or
+facilitator prepares settings and trust. Do not send a read-only participant
+to upstream **Settings** or demand administrator access merely to participate.
+
+### Read-only GitHub preflight
+
+The Coach can run the standard-library helper from the repository after
+checking GitHub CLI availability and sign-in. Replace these placeholders
+with the agreed destination; do not assume the upstream or a fork:
+
+```text
+python3 -S -m workshop.weather_delivery.repository_readiness \
+  --repository OWNER/REPOSITORY --expected-default-branch FY27
+```
+
+It reads GitHub metadata only: default branch, administrator access for setup,
+Actions enabled/policy, all three workflow states, and the eight required
+variable names listed below. It does not display variable values, modify
+settings, dispatch workflows or contact Azure. A missing variable is reported
+only after a successful complete listing; hidden, denied and failed requests
+remain **unknown**. Its nonzero exit means setup needs attention, not that the
+participant must be granted administrator access. Involve the owner when needed.
+
+Even a successful preflight means **configured, not authenticated**. It does
+not verify variable values, federated trust, permissions in Microsoft Foundry,
+PR protections, allowed-action policy details, or a working deployment.
+Check those separately in facilitator preparation. Missing optional delivery
+configuration must not block reading the curriculum or starting the core lab.
+
+### Configuration and rehearsal checklist
+
 The cloud workflows are repository code, not a connected deployment. Before
 any live run, configure and rehearse all of the following in the dedicated
 workshop repository and project:
@@ -246,6 +291,33 @@ or deployment. GitHub Actions obtains fresh short-lived credentials for each
 run; manual deployment still requires the explicit commit confirmation. Authentication is not
 permission: read/write authorization remains independently checked.
 None of this fixes or bypasses the agent-to-Toolbox authentication blocker.
+
+### What a green offline run actually means
+
+The check's **Summary** and downloadable artifact distinguish delivery-code
+tests from the participant's captured package. They include `coverage.json`,
+`summary.md` and, only when validation completes successfully, a hash record.
+
+| Report | Meaning |
+|---|---|
+| Delivery-code tests passed; package NOT CHECKED | The repository's synthetic tests passed, but no participant manifest exists |
+| Package PASSED | The actual package's structure and reviewed file hashes passed offline checks |
+| Package FAILED | The package could not be validated; the workflow fails and no passing hash record remains |
+| Package NOT RUN | Delivery-code tests failed, were cancelled or skipped |
+| Live tests / deployment NOT RUN | This offline workflow did not contact Microsoft Foundry, invoke a tool or deploy |
+
+Never infer live readiness from the test count or package hash. Deployment
+has its own manually requested workflow and read-back evidence.
+
+### Developer handoff, not a participant exercise
+
+Workflow startup/validation belongs to the delivery development team. Keep
+context-scope and expression errors out of the participant lesson; report the
+run link, failing step and reviewed revision to that team instead of making
+the learner debug Actions internals. The isolated Azure CLI directory is
+initialized in a runner step, and CI runs pinned `actionlint` structural checks
+before the offline suite. Neither structural validation nor unit tests replace
+an actual successful cloud rehearsal.
 
 ## What this shortcut is—and is not
 

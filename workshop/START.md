@@ -33,6 +33,15 @@ Then choose **Projects → + → Local folder or repository** and select the new
 created `agentic-hackathon` folder. If you already have the correct checkout,
 add that folder instead of cloning again.
 
+For the optional Weather GitHub delivery lab, also agree on a writable
+destination repository with your facilitator. Use that repository if you have
+access; otherwise agree on an owned fork/template copy before publishing.
+Preserve existing fork-only work and confirm the intended default branch.
+Cloning does not grant Settings access or copy cloud authentication.
+The [delivery setup and read-only preflight](weather-delivery/README.md#read-only-github-preflight)
+help the Coach identify missing versus unknown setup. These optional delivery
+requirements do not block starting the core workshop.
+
 ## 3. Open the workshop
 
 Under **Projects**, find **`agentic-hackathon`** and click **+** beside it to
