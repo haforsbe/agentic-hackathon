@@ -194,11 +194,17 @@ In the fresh-start welcome, explain the workshop in these four stages:
   the approach.
 
 The **optional Weather delivery lab** follows the completed Weather checkpoint
-07, including CH01, and returns to Cultural checkpoint 08. The student may
-practice a Git-reviewed configuration and offline CI outside the core time
-estimate. Its one-project setup is an educational compromise, not production
-isolation. Live validation/release remain blocked until their identity,
-approval and consumer-path gates are verified.
+07, including CH01, and returns to Cultural checkpoint 08. Participants finish
+their Weather setup in Microsoft Foundry, then capture its selected Dev
+version into Git through an automatically opened PR. Offline CI checks the
+captured package; participants review/merge the replacement; GitHub Actions
+then manually dispatches a commit-confirmed deployment before creating or reusing
+and pinning a version on the separate Prod agent. The two agents share one
+project as a workshop shortcut, not production isolation. Capture/deploy code
+and offline checks do not prove live access; the facilitator must configure
+and rehearse OIDC, Foundry permissions, PR creation, manual deployment confirmation,
+and deployment before the lab is live-ready. Prod read-back does not prove
+Toolbox runtime authentication or tool execution.
 
 Along the way, explain that the student will practice using the GitHub Copilot
 app to understand repository context, review focused changes, and ask for
@@ -1007,22 +1013,75 @@ goal, plan, exact change boundary, tests and expected evidence; do not make a
 second numbered checkpoint. Explain that this one-Project lab is an
 educational compromise, not production best practice: permissions, quota,
 project assets and blast radius are shared. CI workload identity is distinct
-from the participant/runtime identity. A GitHub Environment approval never
+from the participant/runtime identity. A deployment confirmation never
 stands in for human approval of the actual MCP tool and arguments.
 
-The implementation tests manifest/evidence contracts offline and provides four
-manually dispatched cloud stages: capture, prepare, start-validation and
-continue-validation. These are mock-tested, not live-rehearsed; the workflow
-has no release stage. It does not set GitHub variables/environments, configure
-OIDC/permissions or establish Toolbox bindings. Authoring and offline tests do
-not authorize a cloud dispatch, model request or tool decision. For any live
-gate, verify the current reviewed commit, pinned dependencies, separate
-validation agent and explicitly separate memory scope (not just a new
-Conversation), exact runtime identity, actual per-call approve and deny
-evidence, and the service-returned Stable Agent Endpoint. Stop and report the exact blocker if
-any are unavailable; preserve partial evidence and never claim CI or a saved
-manifest proves runtime behavior. One teach-back is sufficient: ask why a
-separate validation Conversation does not by itself prove memory isolation.
+The capture workflow opens the PR and dispatches the offline check; the deploy
+workflow is manually dispatched on the default branch after merge, with the
+full reviewed commit SHA and an explicit deployment confirmation. Merge alone
+does not deploy; no GitHub Environment is used. CI checks the captured JSON and hash; they
+are not an AI review or a live quality test. If GitHub requires approval before
+running a PR workflow, guide the authorized participant to review the workflow
+and use the displayed approval control, or involve the repository owner.
+Do not weaken the policy. That decision authorizes workflow execution, not
+deployment or an MCP call. The Prod stage creates or reuses a version
+on the already-existing Prod agent and pins its stable endpoint. It copies the
+definition, not project dependencies or memory contents. The same project
+keeps model and Toolbox dependencies shared. The manual deployment
+confirmation is a lab decision, not an independent reviewer gate or per-call MCP approval. Toolbox auth and
+runtime behavior remain separately unverified until rehearsed. One teach-back
+is sufficient: ask what merging the PR approves and what starting the
+commit-confirmed deployment allows.
+For this optional lab only, follow the opening, readiness, authentication and
+one-action-at-a-time navigation in `weather-delivery/README.md`. Explain the
+benefit as "publish my tested configuration without manually copying settings",
+then show capture -> review/checks -> merge -> deployment approval -> Prod
+read-back. Let the participant start capture, inspect familiar instructions
+in the PR, review/merge, and manually start the commit-confirmed deployment.
+Supply real run/PR links from observed outputs. The first capture adds files;
+later captures show changes. Read workflow summaries together, including
+"nothing new" or failure outcomes, without calling those a new promotion.
+Do not run a learner's merge or approval for them merely to save time.
+Before publishing, confirm the agreed writable destination/default branch and
+preserve fork-only work; do not silently substitute a fork or send a read-only
+participant into upstream Settings. Use the lab's read-only GitHub preflight
+to distinguish missing settings from denied/unknown access. Setup may need the
+owner; participants do not need administrator access simply to take the lab.
+At each result or blocker, give a short natural handoff: what changed (and
+where nothing changed), what the observed evidence proves, what remains
+blocked/unproved, then one next learner action. Read the actual coverage
+summary/artifact: synthetic tests, participant package, live testing and
+deployment are distinct. Missing package is NOT CHECKED, not passed.
+Workflow startup defects are a delivery-development-team handoff, not a
+participant troubleshooting exercise. Preserve the existing timebox and
+single teach-back; do not add another quiz or change core gates.
+
+The easiest safe authentication route is facilitator-prepared OIDC trust and
+project permissions; participants sign into GitHub/Microsoft Foundry themselves
+when needed. A local `az login` does not authenticate GitHub Actions.
+For any needed CLI sign-in, ask approval, use a supported interactive flow,
+preserve identity isolation, let the participant authenticate themselves, and
+recheck actual identity and access. Creating trust, roles or other persistent
+access needs separate explicit scope approval, not just sign-in permission.
+Do not provision access or alter repository protections merely by entering
+this lab. Verify required checks and manual dispatch permission before capture;
+if unavailable, explain the blocker rather than weakening them.
+
+End by comparing the merged configuration, deployment summary and independently
+read-back exact Prod version/selector; inspect Dev remains unchanged. Explain
+that identical configuration may return an existing version rather than a new
+version; do not call this a changed-configuration rollout. Follow the lab guide's
+separately approved manual basic-response test on the exact deployed Prod
+version. Record the actual prompt/reply and whether tool activity occurred;
+label participant-reported evidence accurately. Portal success does not prove
+the stable consumer endpoint or Weather tool behavior. Automated endpoint
+verification is optional; the corrected request format remains unverified for
+prompt-agent runtime until successfully live-rehearsed. A blocked or skipped
+runtime check stays unverified without invalidating configuration delivery.
+Explain the production comparison table only after the learner sees the benefit.
+A live Weather tool test needs separate scope/spend/tool approvals and
+must not be inferred from deployment success. These instructions apply only
+to the optional lab; preserve all core checkpoints and channel gates.
 Keep `current_checkpoint` at 07 until the student chooses. An explicit skip or
 successful completion sets the next required checkpoint to 08 and leaves all
 core checkpoint evidence unchanged. If blocked, offer an explicit skip to 08

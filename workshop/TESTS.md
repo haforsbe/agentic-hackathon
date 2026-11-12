@@ -390,20 +390,26 @@ python -S -m unittest discover -s workshop/weather_delivery -p "test_*.py" -v
 
 | ID | Input/procedure | Pass conditions |
 |----|-----------------|-----------------|
-| WD01 | Review a sanitized manifest and run the offline contract CI | Exact fields, hashes, pinned Toolbox endpoint/dependencies, and distinct connections pass the contract; human review confirms no credentials or memory contents; CI is explicitly not Microsoft Foundry evidence |
-| WD02 | Test a separate Weather validation agent against the reviewed commit | Actual runtime response/Conversation/trace IDs match the manifest hash, exact candidate version, current CI run/artifact, and dependency versions |
-| WD03 | Verify candidate/release identity and memory boundaries | Same training project is disclosed; agent identities and supported memory scopes differ; proof does not rely on separate Conversations alone |
-| WD04 | Inspect one actual Weather tool request, approve it, then deny a separate request | Exact qualified tool and argument hashes are linked to per-call human decisions; denied call has no execution; no automatic approval or direct-MCP bypass |
-| WD05 | Invoke after release through the Stable Agent Endpoint | Service-returned endpoint/version and consumer response/Conversation/trace evidence match the validated manifest and current reviewed commit; project and Toolbox endpoints are rejected as substitutes |
+| WD01 | Capture a selected saved Dev version and inspect the generated PR | Exact Dev name/version and intended Prod name are recorded; definition hash matches; credential-like fields are rejected; capture reads Dev only |
+| WD02 | Review the PR, handle workflow approval if GitHub requires it, and wait for the required offline check | Authorized participant reviews/approves the workflow using the displayed control or involves the owner; approval policy is not bypassed; trusted tests and package/hash validation pass on the current PR head; workflow approval is not deployment or tool approval; participant reviews the diff before merge |
+| WD03 | Merge the PR, then manually dispatch deployment on the default branch with its full reviewed commit SHA and deployment confirmation | Merge alone does not deploy; unchecked confirmation and wrong commit fail before Azure login/write; confirmed matching commit proceeds without any GitHub Environment |
+| WD04 | Read back the deployed Prod version and selector | Created or reused version definition matches the reviewed capture; stable endpoint selects that version; Dev remains unchanged; artifact records source and destination versions; reuse of identical configuration is not a changed-version rollout |
+| WD05 | Finish with a guided manual basic-response test on the exact deployed Prod version under separate cost/storage approval | Record agent/version, actual prompt/reply and absence of tool calls; distinguish participant-reported from independently inspected evidence; portal behavior does not prove the consumer endpoint or Weather tools; if blocked or skipped, retain delivery results and mark runtime unverified |
 
-The validator checks structure, hashes and artifact linkage only. A facilitator
-must independently inspect service evidence before live tests can pass.
-Validation and release attempts remain separate records; preserve partial
-failure evidence and block promotion on any mismatch. This one-project setup
-shares permissions, quota, project assets and blast radius; it is an
-educational compromise, not a production-isolation pattern. The optional lab
-adds no authorization to configure GitHub/Azure, run model or tool calls, or
-deploy resources.
+Automated consumer-endpoint testing and live Weather tool tests are optional,
+separately approved extensions, not new completion gates. The corrected helper
+uses `?api-version=v1` on invocation only; offline coverage does not establish
+prompt-agent runtime compatibility. A successful live rehearsal of that exact
+route is still required before describing it as verified automation. Each actual
+MCP call retains its separate approval/denial requirement.
+
+The offline contract checks package shape, credential exclusion and hashes.
+They are not an AI review or a Foundry runtime test. The workshop uses two
+agents in one project as a teaching shortcut; model and project-level tool
+dependencies, permissions, quotas and audit boundary remain shared. Live
+rehearsal must independently verify OIDC, Foundry permissions, PR automation,
+manual deployment confirmation, version creation and endpoint pinning. Toolbox
+authentication and MCP runtime behavior remain separate gates.
 
 ## Capstone gates and optional mutations
 

@@ -174,12 +174,26 @@ Before the cohort:
   participant's identity, project and operation-specific authorization; do
   not discover an entire platform API during the lesson.
 - For the optional Weather delivery lab, run `python -S -m unittest discover
-  -s workshop/weather_delivery -p "test_*.py" -v`. Rehearse capture, Git
-  review, offline CI, current-commit evidence linkage, actual prompt-runtime
-  approval/denial, a separate candidate memory scope, and Stable Agent
-  Endpoint invocation independently. The offline workflow has no OIDC/Azure
-  permissions and proves no live gate; do not configure or dispatch cloud
-  workflows as part of this authoring revision.
+  -s workshop/weather_delivery -p "test_*.py" -v`. Before offering a live
+  cohort run, provision and rehearse the documented GitHub OIDC identity,
+  read-Dev/write-Prod Foundry permissions, automatic capture PR, dispatched
+  offline PR check, commit-confirmed manual deployment, version creation and
+  stable-endpoint pinning. Confirm Dev is unchanged and the PR/deployment
+  evidence identifies the captured source version and deployed Prod version.
+  The workflows are source-only until facilitator-owned Azure variables,
+  federated credentials, repository protections and live checks are configured;
+  they do not prove Toolbox authentication or tool execution.
+  Follow `weather-delivery/README.md` for the lab-only authentication preparation
+  and participant navigation. Obtain explicit approval before configuring
+  persistent trust, roles or protections. Rehearse the required PR check with
+  no participant bypass and verify default-branch dispatch permission and
+  rejection of unchecked confirmation/wrong commit before login. No GitHub
+  Environment is required; document that this is not an independent reviewer gate.
+  Do not impose a path-filtered required check
+  on unrelated workshop PRs that would never trigger it. Prepare OIDC once so
+  participants do not troubleshoot CI identity during promotion; personal
+  sign-in is not a substitute. Retain the successful rehearsal's exact revision
+  and evidence locally, not credentials or a claim that unit tests prove access.
 - Record a compatible official hosted sample URL/revision, dependency set,
   local test command, hosting/runtime prerequisites and known limitations in
   sanitized facilitator evidence. Prepare reusable failure fixtures and the
@@ -231,6 +245,31 @@ never erase attempts, silently migrate them, or route a known-failing release
 to recover time.
 
 ## Before the cohort arrives
+
+### Consolidated delivery go/no-go
+
+Record a dated decision for the reviewed curriculum revision, GitHub Copilot
+app build and supported SDK/API route. Keep sanitized evidence and unresolved
+item owners locally. Missing or unknown evidence is not a full-workshop go;
+offer an explicitly scoped partial session without passing missing checkpoints.
+This checklist consolidates preparation, not new learner tasks or approval
+bypasses.
+
+| Preparation area | Evidence to retain |
+|---|---|
+| Repository and optional CI/CD | Agreed writable destination, preserved existing work, verified branch/Actions access, accurate package-vs-code coverage report and separately rehearsed manual promotion if offered |
+| Tool authentication | Both specialists' supported managed Toolbox paths, actual identities/restrictions, human approval and denial, same-Conversation continuation and correlated execution; a saved definition or developer token is insufficient |
+| Memory | Operation-specific permissions, approved retention/deletion/cost scope, working retrieval and positive/negative isolation evidence; separate Conversations alone do not prove isolation |
+| Telemetry | Read permission, data/retention/cost agreement and correlated model/tool/memory evidence; missing telemetry is unknown, not zero usage |
+| Release and channels | Version/selector read-back, tested consumer authorization and rollback, CH01 and CH02 evidence with both specialists traced as required |
+| Full participant rehearsal | Fresh participant route through 16 in order, actual Coach discovery, hands-on/teach-back and approval gates, bounded spend and failure recovery; time the optional delivery lab separately |
+
+Use the [read-only GitHub preflight](weather-delivery/README.md#read-only-github-preflight)
+for metadata only. It never authenticates to Azure or changes settings. Assign
+workflow startup/structural defects to the delivery development team, outside
+the learner-facing CI/CD narrative; do not turn participant time into debugging
+Actions syntax. Preserve the explicit Toolbox preparation blocker and all
+existing core gates.
 
 Send participants [PREREQUISITES.md](PREREQUISITES.md) with the workshop
 invitation. Highlight the Application Insights connection and telemetry-read

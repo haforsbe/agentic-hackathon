@@ -7,6 +7,7 @@ from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock
+from urllib.error import HTTPError
 from urllib.parse import parse_qs, urlsplit
 
 from workshop.weather_delivery.cloud_stages import (
@@ -15,16 +16,24 @@ from workshop.weather_delivery.cloud_stages import (
     azure_cli_token,
     capture_agent,
     continue_tool_call,
+    deploy_captured_agent,
     prepare_candidate,
     prepare_release_version,
     start_tool_call,
     test_stable_endpoint,
     verify_github_oidc,
+    write_capture_manifest,
 )
+from workshop.weather_delivery.contract import ContractError, validate_capture_files
 from workshop.weather_delivery.test_contract import manifest
 
 
 SUBJECT = "repo:example/workshop:ref:refs/heads/FY27"
+PROJECT_ENDPOINT = "https://project.example.invalid/api/projects/lab"
+PROD_ENDPOINT = (
+    "https://project.example.invalid/api/projects/lab/agents/weather-prod/"
+    "endpoint/protocols/openai/responses"
+)
 DEFINITION = {
     "kind": "prompt",
     "model": "participant-selected-model",
@@ -209,6 +218,96 @@ class CloudStageTests(unittest.TestCase):
             with self.assertRaisesRegex(StageBlocked, "credential-like field"):
                 capture_agent(api, "weather-release", "7", target)
             self.assertFalse(target.exists())
+
+    def test_capture_package_records_source_and_prod_target(self):
+        config = {"schema_version": 1, "definition": copy.deepcopy(DEFINITION)}
+        with TemporaryDirectory() as directory:
+            definition = Path(directory) / "agent-definition.json"
+            manifest_path = Path(directory) / "manifest.json"
+            definition.write_text(json.dumps(config), encoding="utf-8")
+            result = write_capture_manifest(
+                "weather-dev", "7", "weather-prod", PROD_ENDPOINT, definition,
+                manifest_path, PROJECT_ENDPOINT,
+            )
+            checked, captured = validate_capture_files(manifest_path, definition)
+        self.assertEqual(result["source_agent_name"], "weather-dev")
+        self.assertEqual(result["production_agent_name"], "weather-prod")
+        self.assertEqual(checked, result)
+        self.assertEqual(captured, config)
+
+    def test_capture_package_rejects_same_dev_and_prod_agent(self):
+        config = {"schema_version": 1, "definition": copy.deepcopy(DEFINITION)}
+        with TemporaryDirectory() as directory:
+            definition = Path(directory) / "agent-definition.json"
+            definition.write_text(json.dumps(config), encoding="utf-8")
+            with self.assertRaisesRegex(StageBlocked, "must be separate"):
+                write_capture_manifest(
+                    "weather-agent", "7", "weather-agent", PROD_ENDPOINT,
+                    definition, Path(directory) / "manifest.json", PROJECT_ENDPOINT,
+                )
+
+    def test_deploy_creates_and_pins_reviewed_definition_on_existing_prod_agent(self):
+        api = FakeFoundryApi()
+        api.get_existing_agent = Mock(return_value={"name": "weather-prod"})
+        api.create_version = Mock(return_value={"version": "9"})
+        api.get_version = Mock(return_value={
+            "version": "9", "definition": copy.deepcopy(DEFINITION),
+        })
+        api.pin_agent_version = Mock(return_value={
+            "name": "weather-prod",
+            "endpoint": "https://project.example.invalid/api/projects/lab/agents/weather-prod/endpoint/protocols/openai/responses",
+        })
+        config = {"schema_version": 1, "definition": copy.deepcopy(DEFINITION)}
+        with TemporaryDirectory() as directory:
+            definition_path = Path(directory) / "agent-definition.json"
+            manifest_path = Path(directory) / "manifest.json"
+            definition_path.write_text(json.dumps(config), encoding="utf-8")
+            write_capture_manifest(
+                "weather-dev", "7", "weather-prod", PROD_ENDPOINT,
+                definition_path, manifest_path, PROJECT_ENDPOINT,
+            )
+            result = deploy_captured_agent(
+                api, manifest_path, definition_path, "weather-prod", PROD_ENDPOINT,
+            )
+        self.assertEqual(result["production_version"], "9")
+        self.assertEqual(result["source_agent_version"], "7")
+        self.assertEqual(api.create_version.call_args.args[0], "weather-prod")
+        self.assertEqual(api.pin_agent_version.call_args.args, ("weather-prod", "9"))
+
+    def test_deploy_rejects_manifest_for_other_prod_agent_before_write(self):
+        api = FakeFoundryApi()
+        config = {"schema_version": 1, "definition": copy.deepcopy(DEFINITION)}
+        with TemporaryDirectory() as directory:
+            definition_path = Path(directory) / "agent-definition.json"
+            manifest_path = Path(directory) / "manifest.json"
+            definition_path.write_text(json.dumps(config), encoding="utf-8")
+            write_capture_manifest(
+                "weather-dev", "7", "weather-prod", PROD_ENDPOINT,
+                definition_path, manifest_path, PROJECT_ENDPOINT,
+            )
+            with self.assertRaisesRegex(ContractError, "different configured Prod agent"):
+                deploy_captured_agent(
+                    api, manifest_path, definition_path, "other-prod", PROD_ENDPOINT,
+                )
+        self.assertEqual(api.requests, [])
+
+    def test_deploy_rejects_mismatched_prod_endpoint_before_write(self):
+        api = FakeFoundryApi()
+        config = {"schema_version": 1, "definition": copy.deepcopy(DEFINITION)}
+        with TemporaryDirectory() as directory:
+            definition_path = Path(directory) / "agent-definition.json"
+            manifest_path = Path(directory) / "manifest.json"
+            definition_path.write_text(json.dumps(config), encoding="utf-8")
+            write_capture_manifest(
+                "weather-dev", "7", "weather-prod", PROD_ENDPOINT,
+                definition_path, manifest_path, PROJECT_ENDPOINT,
+            )
+            with self.assertRaisesRegex(StageBlocked, "differs from the facilitator-verified endpoint"):
+                deploy_captured_agent(
+                    api, manifest_path, definition_path, "weather-prod",
+                    PROD_ENDPOINT.replace("weather-prod", "other-prod"),
+                )
+        self.assertEqual(api.requests, [])
 
     def test_prepare_creates_separate_candidate_and_reads_it_back(self):
         api = FakeFoundryApi()
@@ -441,7 +540,7 @@ class CloudStageTests(unittest.TestCase):
             "weather-release",
             {"input": "public synthetic test"},
         )
-        self.assertEqual(captured["url"], endpoint)
+        self.assertEqual(captured["url"], endpoint + "?api-version=v1")
         self.assertEqual(result["id"], "resp_consumer")
         self.assertEqual(captured["body"]["input"], "public synthetic test")
         self.assertEqual(captured["authorization"], "Bearer token")
@@ -476,16 +575,60 @@ class CloudStageTests(unittest.TestCase):
         self.assertEqual(result["response_id"], "resp_consumer")
         api.invoke_stable_endpoint.assert_called_once()
 
+    def test_stable_endpoint_reports_safe_structured_service_error(self):
+        endpoint = PROJECT_ENDPOINT + "/agents/weather-release/endpoint/protocols/openai/responses"
+        request_id = "00000000-0000-0000-0000-000000000001"
+        body = json.dumps({"error": {
+            "code": "BadRequest",
+            "message": "Missing required query parameter: api-version",
+            "private": "do-not-disclose",
+        }}).encode()
+        error = HTTPError(endpoint, 400, "Bad Request", {"apim-request-id": request_id}, io.BytesIO(body))
+        opener = Mock(side_effect=error)
+        api = FoundryApi(PROJECT_ENDPOINT, "token", opener=opener)
+        with self.assertRaises(StageBlocked) as raised:
+            api.invoke_stable_endpoint(endpoint, "weather-release", {"input": "synthetic"})
+        for expected in (
+            "HTTP 400", "code=BadRequest", f"request_id={request_id}",
+            "message=Missing required query parameter: api-version", "no automatic retry",
+        ):
+            self.assertIn(expected, str(raised.exception))
+        self.assertNotIn("do-not-disclose", str(raised.exception))
+        opener.assert_called_once()
+
+    def test_stable_endpoint_withholds_untrusted_or_oversized_error_details(self):
+        endpoint = PROJECT_ENDPOINT + "/agents/weather-release/endpoint/protocols/openai/responses"
+        for body in (
+            json.dumps({"error": {"code": "secret", "message": "secret"}}).encode(),
+            json.dumps({"error": {"code": ["secret"], "message": {"secret": True}}}).encode(),
+            b"not-json secret",
+            b"\xff",
+            b"x" * 8193,
+        ):
+            with self.subTest(body=body[:40]):
+                error = HTTPError(endpoint, 400, "Bad Request", {"apim-request-id": "secret"}, io.BytesIO(body))
+                opener = Mock(side_effect=error)
+                api = FoundryApi(PROJECT_ENDPOINT, "token", opener=opener)
+                with self.assertRaises(StageBlocked) as raised:
+                    api.invoke_stable_endpoint(endpoint, "weather-release", {"input": "synthetic"})
+                self.assertIn("service details unavailable or withheld", str(raised.exception))
+                self.assertNotIn("secret", str(raised.exception))
+                opener.assert_called_once()
+
     def test_project_and_toolbox_endpoints_are_rejected_for_consumer_call(self):
-        api = FoundryApi("https://project.example.invalid/api/projects/lab", "token")
+        opener = Mock()
+        api = FoundryApi("https://project.example.invalid/api/projects/lab", "token", opener=opener)
         for endpoint in (
             "https://project.example.invalid/api/projects/lab",
             "https://project.example.invalid/api/projects/lab/toolboxes/weather/versions/3/mcp",
             "https://project.example.invalid/api/projects/other/agents/weather-release/endpoint/protocols/openai/responses",
             "https://project.example.invalid/api/projects/lab/agents/other/endpoint/protocols/openai/responses",
+            "https://project.example.invalid/api/projects/lab/agents/weather-release/endpoint/protocols/openai/responses?api-version=v1",
+            "https://project.example.invalid/api/projects/lab/agents/weather-release/endpoint/protocols/openai/responses#fragment",
         ):
             with self.subTest(endpoint=endpoint), self.assertRaises(StageBlocked):
                 api.invoke_stable_endpoint(endpoint, "weather-release", {"input": "synthetic"})
+        opener.assert_not_called()
 
 
 if __name__ == "__main__":

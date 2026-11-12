@@ -26,6 +26,11 @@ tools. Install:
 
 Sign in to the app with a GitHub account that has the required Copilot access.
 Open the repository link and exact revision supplied by your facilitator.
+If taking the optional Weather GitHub delivery lab, agree on its writable
+destination and preserve any existing fork-only work. The repository owner
+prepares Actions settings; participants do not need upstream administrator
+access. See the [delivery readiness check](weather-delivery/README.md#read-only-github-preflight).
+Repository access and CI identity do not establish Microsoft Foundry runtime access.
 Your network must allow GitHub, Microsoft sign-in, Foundry, and the approved
 Azure services; do not disable security controls.
 

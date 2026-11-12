@@ -125,10 +125,16 @@ After Weather checkpoint 07, offer the separate optional GitHub delivery lab
 before Cultural checkpoint 08. Keep it outside the numbered core, the 5-6-hour
 estimate, and the hosted workflow; skip or completion returns to 08. Its
 single-project design is an educational compromise, never production
-isolation. Offline contract CI and manually dispatched capture/candidate/
-approval-continuation code are implemented and mock-tested, but not live
-verified. Exact runtime identity, Toolbox behavior, approval/denial evidence,
-memory isolation, and release remain gates; do not claim them complete.
+isolation. The optional Weather delivery lab captures an existing Dev agent
+version into an automatically opened PR, runs offline package checks, and
+deploys the merged configuration to a separate Prod agent through a manual
+workflow with explicit commit/intent confirmation, without GitHub Environments.
+This lab confirmation is not an independent reviewer gate.
+This flow is implemented and unit-tested, but not
+live-rehearsed or configured with Azure OIDC/project permissions. Do not claim
+the delivery workflow is operational until those prerequisites are configured
+and verified. Configuration deployment does not prove exact runtime identity,
+Toolbox behavior, tool approval/denial, or memory isolation.
 Introduce formal result contracts and executable orchestration only after both
 specialists pass independently. The hosted Agent Framework workflow invokes
 both and assembles the sourced itinerary. Teach Copilot app

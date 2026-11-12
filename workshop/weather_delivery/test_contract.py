@@ -5,6 +5,8 @@ import unittest
 from workshop.weather_delivery.contract import (
     ContractError,
     canonical_sha256,
+    validate_capture_files,
+    validate_capture_package,
     validation_cases_sha256,
     validate_manifest,
     validate_manifest_files,
@@ -90,6 +92,70 @@ def manifest():
         },
         "unverified_bindings": [],
     }
+
+
+def capture_manifest():
+    return {
+        "schema_version": 1,
+        "source_agent_name": "weather-dev",
+        "source_agent_version": "7",
+        "production_agent_name": "weather-prod",
+        "production_stable_endpoint": (
+            "https://project.example.invalid/api/projects/lab/agents/weather-prod/"
+            "endpoint/protocols/openai/responses"
+        ),
+        "definition_sha256": sha("d"),
+    }
+
+
+def captured_definition():
+    return {
+        "schema_version": 1,
+        "definition": {
+            "kind": "prompt",
+            "model": "participant-model",
+            "instructions": "Weather instructions.",
+            "tools": [],
+        },
+    }
+
+
+class CapturePackageTests(unittest.TestCase):
+    def test_capture_package_requires_distinct_agents_and_expected_prod_target(self):
+        config = capture_manifest()
+        definition = captured_definition()
+        validate_capture_package(config, definition, expected_production_agent="weather-prod")
+        with self.assertRaisesRegex(ContractError, "different configured Prod agent"):
+            validate_capture_package(config, definition, expected_production_agent="other-prod")
+        config["production_agent_name"] = config["source_agent_name"]
+        with self.assertRaisesRegex(ContractError, "must be separate"):
+            validate_capture_package(config, definition)
+
+    def test_capture_package_rejects_credentials_and_changed_hash(self):
+        config = capture_manifest()
+        definition = captured_definition()
+        definition["definition"]["api_key"] = "not-a-real-key"
+        with self.assertRaisesRegex(ContractError, "credential-like field"):
+            validate_capture_package(config, definition)
+
+    def test_capture_files_verify_definition_hash(self):
+        import json
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        with TemporaryDirectory() as directory:
+            manifest_path = Path(directory) / "manifest.json"
+            definition_path = Path(directory) / "agent-definition.json"
+            definition = captured_definition()
+            payload = json.dumps(definition, sort_keys=True).encode()
+            config = capture_manifest()
+            config["definition_sha256"] = hashlib.sha256(payload).hexdigest()
+            manifest_path.write_text(json.dumps(config), encoding="utf-8")
+            definition_path.write_bytes(payload)
+            validate_capture_files(manifest_path, definition_path)
+            definition_path.write_text(json.dumps(captured_definition()), encoding="utf-8")
+            with self.assertRaisesRegex(ContractError, "hash differs"):
+                validate_capture_files(manifest_path, definition_path)
 
 
 def ci_run(config):
@@ -568,6 +634,31 @@ class CiRecordTests(unittest.TestCase):
             self.assertIsNone(record["manifest_sha256"])
             self.assertEqual(record["cases_sha256"], validation_cases_sha256())
             self.assertNotIn("toolbox", output_path.read_text(encoding="utf-8"))
+
+    def test_ci_record_validates_capture_package_without_copying_configuration(self):
+        import json
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            definition_path = root / "agent-definition.json"
+            manifest_path = root / "manifest.json"
+            output_path = root / "record.json"
+            definition = captured_definition()
+            definition_bytes = json.dumps(
+                definition, ensure_ascii=False, sort_keys=True,
+            ).encode("utf-8")
+            definition_path.write_bytes(definition_bytes)
+            config = capture_manifest()
+            config["definition_sha256"] = hashlib.sha256(definition_bytes).hexdigest()
+            manifest_path.write_text(json.dumps(config), encoding="utf-8")
+
+            record = write_ci_record("1" * 40, manifest_path, output_path)
+
+            self.assertEqual(record["status"], "capture-package-passed")
+            self.assertEqual(record["manifest_sha256"], canonical_sha256(config))
+            self.assertNotIn("Weather instructions.", output_path.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

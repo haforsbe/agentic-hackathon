@@ -17,6 +17,7 @@ on:
       - "workshop/templates/progress.json"
       - ".github/workflows/weather-delivery-check.yml"
       - ".github/workflows/weather-delivery-cloud.yml"
+      - ".github/workflows/weather-delivery-deploy.yml"
       - "student/weather-delivery/**"
   pull_request:
     paths:
@@ -34,7 +35,9 @@ on:
       - "workshop/templates/progress.json"
       - ".github/workflows/weather-delivery-check.yml"
       - ".github/workflows/weather-delivery-cloud.yml"
+      - ".github/workflows/weather-delivery-deploy.yml"
       - "student/weather-delivery/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -48,17 +51,34 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Run offline contract and progress-state tests
-        run: python -S -m unittest discover -s workshop/weather_delivery -p "test_*.py" -v
-      - name: Record source and contract hashes only
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+          cache: false
+      - name: Validate delivery workflow structure
         run: |
-          python -S -m workshop.weather_delivery.contract write-ci-record \
+          go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.12 -shellcheck= \
+            .github/workflows/weather-delivery-check.yml \
+            .github/workflows/weather-delivery-cloud.yml \
+            .github/workflows/weather-delivery-deploy.yml
+      - name: Run offline contract and progress-state tests
+        id: tests
+        run: python -S -m unittest discover -s workshop/weather_delivery -p "test_*.py" -v
+      - name: Report exactly what was checked
+        if: always()
+        env:
+          TESTS_OUTCOME: ${{ steps.tests.outcome }}
+        run: |
+          python -S -m workshop.weather_delivery.offline_ci \
             --commit "$GITHUB_SHA" \
             --manifest student/weather-delivery/manifest.json \
-            --output artifacts/weather-delivery-check.json
-      - name: Preserve offline CI record
+            --tests-outcome "$TESTS_OUTCOME" \
+            --output-dir artifacts/weather-delivery \
+            --summary "$GITHUB_STEP_SUMMARY"
+      - name: Preserve offline coverage and hash record
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: weather-delivery-${{ github.run_id }}-${{ github.run_attempt }}
-          path: artifacts/weather-delivery-check.json
+          path: artifacts/weather-delivery/**
           retention-days: 14

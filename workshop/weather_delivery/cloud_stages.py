@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import time
@@ -16,6 +17,8 @@ from urllib.request import Request, urlopen
 from workshop.weather_delivery.contract import (
     ContractError,
     canonical_sha256,
+    validate_capture_files,
+    validate_capture_package,
     validate_manifest,
     validate_manifest_files,
     validate_validation_evidence,
@@ -34,6 +37,41 @@ class FoundryRequestError(StageBlocked):
     def __init__(self, status):
         self.status = status
         super().__init__(f"Foundry request failed ({status}); no automatic retry")
+
+
+def _stable_endpoint_error(error):
+    details = []
+    request_id = (
+        error.headers.get("apim-request-id") or error.headers.get("x-ms-request-id")
+    ) if error.headers else None
+    if isinstance(request_id, str) and re.fullmatch(
+        r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+        request_id,
+    ):
+        details.append(f"request_id={request_id}")
+    try:
+        raw = error.read(8193)
+        if len(raw) > 8192:
+            raise ValueError("oversized response")
+        payload = json.loads(raw)
+    except (OSError, ValueError):
+        payload = None
+    service_error = payload.get("error") if isinstance(payload, dict) else None
+    recognized_error = False
+    if isinstance(service_error, dict):
+        code = service_error.get("code")
+        if code in (
+            "BadRequest", "Unauthorized", "Forbidden", "NotFound",
+            "TooManyRequests", "InternalServerError",
+        ):
+            details.append(f"code={code}")
+            recognized_error = True
+        if service_error.get("message") == "Missing required query parameter: api-version":
+            details.append("message=Missing required query parameter: api-version")
+            recognized_error = True
+    if not recognized_error:
+        details.append("service details unavailable or withheld")
+    return f"Stable Agent Endpoint request failed (HTTP {error.code}; {'; '.join(details)}); no automatic retry"
 
 
 def _require(condition, message):
@@ -216,7 +254,7 @@ class FoundryApi:
     def invoke_stable_endpoint(self, endpoint, agent_name, body):
         _validate_stable_endpoint_url(self.endpoint, endpoint, agent_name)
         request = Request(
-            endpoint,
+            endpoint + "?api-version=v1",
             data=json.dumps(body).encode("utf-8"),
             headers={
                 "Authorization": f"Bearer {self.token}",
@@ -230,10 +268,11 @@ class FoundryApi:
                 payload = json.loads(raw) if raw else {}
                 _require(isinstance(payload, dict), "Stable Agent Endpoint returned a non-object response")
                 return payload
-        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as error:
-            status = getattr(error, "code", None)
+        except HTTPError as error:
+            raise StageBlocked(_stable_endpoint_error(error)) from error
+        except (URLError, TimeoutError, json.JSONDecodeError) as error:
             raise StageBlocked(
-                f"Stable Agent Endpoint request failed ({status or type(error).__name__}); no automatic retry"
+                f"Stable Agent Endpoint request failed ({type(error).__name__}); no automatic retry"
             ) from error
 
 
@@ -342,6 +381,78 @@ def capture_agent(api, agent_name, version, output):
         "configuration_sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
         "captured_path": str(target),
         "review_required": True,
+    }
+
+
+def write_capture_manifest(
+    agent_name, version, production_agent, production_stable_endpoint,
+    definition_path, output, project_endpoint,
+):
+    source_name = agent_name.strip()
+    production_name = production_agent.strip()
+    _require(bool(source_name) and bool(production_name), "Dev and Prod agent names are required")
+    _require(source_name != production_name, "Dev and Prod must be separate agents")
+    _validate_stable_endpoint_url(
+        project_endpoint, production_stable_endpoint, production_name,
+    )
+    definition_file = Path(definition_path)
+    definition = _read(definition_file)
+    _reject_credentials(definition)
+    manifest = {
+        "schema_version": 1,
+        "source_agent_name": source_name,
+        "source_agent_version": str(version),
+        "production_agent_name": production_name,
+        "production_stable_endpoint": production_stable_endpoint,
+        "definition_sha256": hashlib.sha256(definition_file.read_bytes()).hexdigest(),
+    }
+    from workshop.weather_delivery.contract import validate_capture_package
+    validate_capture_package(manifest, definition)
+    target = Path(output)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return manifest
+
+
+def deploy_captured_agent(
+    api, manifest_path, definition_path, production_agent, production_stable_endpoint,
+):
+    manifest, captured = validate_capture_files(
+        manifest_path, definition_path, expected_production_agent=production_agent,
+    )
+    agent_name = manifest["production_agent_name"]
+    _validate_stable_endpoint_url(
+        api.endpoint, manifest["production_stable_endpoint"], agent_name,
+    )
+    _require(
+        manifest["production_stable_endpoint"] == production_stable_endpoint,
+        "Capture manifest Prod endpoint differs from the facilitator-verified endpoint",
+    )
+    existing = api.get_existing_agent(agent_name)
+    _require(
+        isinstance(existing, dict) and existing.get("name") == agent_name,
+        "Configured Prod agent must already exist in the confirmed Foundry project",
+    )
+    created = api.create_version(agent_name, captured["definition"])
+    version = created.get("version")
+    _require(isinstance(version, (str, int)) and str(version), "Foundry returned no Prod version")
+    observed_version = api.get_version(agent_name, str(version))
+    _require(
+        str(observed_version.get("version")) == str(version)
+        and observed_version.get("definition") == captured["definition"],
+        "Prod version read-back differs from the reviewed capture",
+    )
+    api.pin_agent_version(agent_name, str(version))
+    return {
+        "production_agent_name": agent_name,
+        "production_version": str(version),
+        "source_agent_name": manifest["source_agent_name"],
+        "source_agent_version": manifest["source_agent_version"],
+        "definition_sha256": manifest["definition_sha256"],
+        "stable_endpoint": manifest["production_stable_endpoint"],
     }
 
 
@@ -703,50 +814,25 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="command", required=True)
     oidc = sub.add_parser("verify-oidc")
     oidc.add_argument("--expected-subject", default=None)
+    package = sub.add_parser("package-capture")
+    package.add_argument("--agent-name", required=True)
+    package.add_argument("--version", required=True)
+    package.add_argument("--production-agent", required=True)
+    package.add_argument("--production-stable-endpoint", required=True)
+    package.add_argument("--project-endpoint", required=True)
+    package.add_argument("--definition", required=True)
+    package.add_argument("--output", required=True)
     capture = sub.add_parser("capture")
     capture.add_argument("--agent-name", required=True)
     capture.add_argument("--version", required=True)
     capture.add_argument("--output", required=True)
     capture.add_argument("--record", required=True)
-    prepare = sub.add_parser("prepare")
-    prepare.add_argument("--manifest", required=True)
-    prepare.add_argument("--definition", required=True)
-    prepare.add_argument("--binding-verified", choices=("yes", "no"), required=True)
-    prepare.add_argument("--approved", choices=("yes", "no"), required=True)
-    prepare.add_argument("--output", required=True)
-    prepare_release = sub.add_parser("prepare-release")
-    prepare_release.add_argument("--manifest", required=True)
-    prepare_release.add_argument("--definition", required=True)
-    prepare_release.add_argument("--validation-evidence", required=True)
-    prepare_release.add_argument("--approved", choices=("yes", "no"), required=True)
-    prepare_release.add_argument("--output", required=True)
-    _add_provenance_arguments(prepare_release)
-    start = sub.add_parser("start")
-    start.add_argument("--manifest", required=True)
-    start.add_argument("--candidate-version", required=True)
-    start.add_argument("--decision-case", choices=("approved", "denied"), required=True)
-    start.add_argument("--spend-approved", choices=("yes", "no"), required=True)
-    start.add_argument("--output", required=True)
-    cont = sub.add_parser("continue")
-    cont.add_argument("--manifest", required=True)
-    cont.add_argument("--candidate-version", required=True)
-    cont.add_argument("--response-id", required=True)
-    cont.add_argument("--approval-request-id", required=True)
-    cont.add_argument("--approve", choices=("yes", "no"), required=True)
-    cont.add_argument("--spend-approved", choices=("yes", "no"), required=True)
-    cont.add_argument("--output", required=True)
-    release = sub.add_parser("pin-release")
-    release.add_argument("--manifest", required=True)
-    release.add_argument("--release-version", required=True)
-    release.add_argument("--validation-evidence", required=True)
-    release.add_argument("--approved", choices=("yes", "no"), required=True)
-    release.add_argument("--output", required=True)
-    _add_provenance_arguments(release)
-    consumer = sub.add_parser("consumer-test")
-    consumer.add_argument("--manifest", required=True)
-    consumer.add_argument("--release-version", required=True)
-    consumer.add_argument("--prompt", required=True)
-    consumer.add_argument("--output", required=True)
+    deploy = sub.add_parser("deploy-capture")
+    deploy.add_argument("--manifest", required=True)
+    deploy.add_argument("--definition", required=True)
+    deploy.add_argument("--production-agent", required=True)
+    deploy.add_argument("--production-stable-endpoint", required=True)
+    deploy.add_argument("--output", required=True)
     args = parser.parse_args(argv)
     output_path = getattr(args, "record", None) if args.command == "capture" else getattr(args, "output", None)
     try:
@@ -757,6 +843,14 @@ def main(argv=None):
                 args.expected_subject or os.environ["EXPECTED_OIDC_SUBJECT"],
             )
             print(f"Verified GitHub OIDC subject: {subject}")
+            return 0
+        if args.command == "package-capture":
+            result = write_capture_manifest(
+                args.agent_name, args.version, args.production_agent,
+                args.production_stable_endpoint, args.definition, args.output,
+                args.project_endpoint,
+            )
+            print(json.dumps(result, indent=2, sort_keys=True))
             return 0
         subscription = os.environ["AZURE_SUBSCRIPTION_ID"]
         client_id = os.environ["AZURE_CLIENT_ID"]
@@ -797,63 +891,11 @@ def main(argv=None):
         )
         if args.command == "capture":
             result = capture_agent(api, args.agent_name, args.version, args.output)
-        else:
-            manifest = _read(args.manifest)
-            validate_manifest_files(manifest)
-            if args.command == "prepare":
-                result = prepare_candidate(
-                    api,
-                    manifest,
-                    args.definition,
-                    binding_verified=args.binding_verified == "yes",
-                    approved=args.approved == "yes",
-                )
-            elif args.command == "prepare-release":
-                result = prepare_release_version(
-                    api,
-                    manifest,
-                    args.definition,
-                    _read(args.validation_evidence),
-                    approved=args.approved == "yes",
-                    repository=args.repository,
-                    default_branch=args.default_branch,
-                    current_commit=args.current_commit,
-                    latest_sha=args.latest_sha,
-                    latest_attempt=args.latest_attempt,
-                )
-            elif args.command == "start":
-                result = start_tool_call(
-                    api,
-                    manifest,
-                    args.candidate_version,
-                    args.decision_case,
-                    spend_approved=args.spend_approved == "yes",
-                )
-            elif args.command == "continue":
-                result = continue_tool_call(
-                    api,
-                    manifest,
-                    args.candidate_version,
-                    args.response_id,
-                    args.approval_request_id,
-                    args.approve == "yes",
-                    spend_approved=args.spend_approved == "yes",
-                )
-            elif args.command == "pin-release":
-                result = pin_release(
-                    api,
-                    manifest,
-                    _read(args.validation_evidence),
-                    args.release_version,
-                    repository=args.repository,
-                    default_branch=args.default_branch,
-                    current_commit=args.current_commit,
-                    latest_sha=args.latest_sha,
-                    latest_attempt=args.latest_attempt,
-                    approved=args.approved == "yes",
-                )
-            else:
-                result = test_stable_endpoint(api, manifest, args.release_version, args.prompt)
+        elif args.command == "deploy-capture":
+            result = deploy_captured_agent(
+                api, args.manifest, args.definition, args.production_agent,
+                args.production_stable_endpoint,
+            )
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         persisted = {
             "schema_version": 1,
