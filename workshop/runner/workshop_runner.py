@@ -130,6 +130,11 @@ def load_plan(path):
             require(case.get("conversation_id") is None or case["conversation_id"].startswith("conv_"),
                     "Use a service-returned Conversation ID")
             require(type(case.get("store", False)) is bool, "store must be a boolean")
+            previous = case.get("previous_response_id")
+            require(previous is None or (
+                isinstance(previous, str) and previous.startswith("resp_")
+                and not case.get("conversation_id") and case.get("store") is True
+            ), "A stored response follow-up requires its exact response ID and no Conversation")
             if config["definition"].get("tools"):
                 require(case.get("store") is True,
                         "MCP tests need approved response storage for same-run retrieval/approval continuation")
@@ -277,8 +282,16 @@ def verify_version(project, plan, config):
     return observed
 
 
+def response_record(response):
+    body = copy.deepcopy(response.model_dump(mode="json"))
+    for item in body.get("output", []):
+        if item.get("type") == "reasoning":
+            item.pop("encrypted_content", None)
+    return body
+
+
 def summarize_response(response, plan):
-    body = response.model_dump(mode="json")
+    body = response_record(response)
     reference = body.get("agent_reference")
     expected = {"type": "agent_reference", "name": plan["agent_name"], "version": plan["agent_version"]}
     require(reference == expected, "Response agent/version linkage differs or is missing; inspect saved evidence")
@@ -294,6 +307,8 @@ def summarize_response(response, plan):
 def execute(project, client, plan, config, record, save):
     operation = plan["operation"]
     if operation == "create-version":
+        record["phase"] = "operation-identity-check"
+        save()
         check_cli(plan)
         from azure.ai.projects.models import MCPTool, PromptAgentDefinition
         definition = config["definition"]
@@ -302,33 +317,44 @@ def execute(project, client, plan, config, record, save):
         candidate = PromptAgentDefinition(model=definition["model"], instructions=definition["instructions"], tools=tools)
         require(normalized(candidate.as_dict()) == normalized(definition), "Unsupported definition fields")
         record["state"] = "creation_started_do_not_repeat"
+        record["phase"] = "agent-version-create"
         save()
         created = project.agents.create_version(agent_name=plan["agent_name"], definition=candidate)
         record["created_version"] = created.version
+        record["phase"] = "created-version-readback"
         save()
         observed = project.agents.get_version(agent_name=plan["agent_name"], agent_version=created.version)
         require(normalized(observed.definition.as_dict()) == normalized(definition), "Created version readback differs")
         record["definition_readback_matches"] = True
         return
+    record["phase"] = "pinned-version-readback"
+    save()
     verify_version(project, plan, config)
     if operation == "inspect":
         record["definition_readback_matches"] = True
         return
     if operation == "new-conversation":
+        record["phase"] = "operation-identity-check"
+        save()
         check_cli(plan)
         record["state"] = "conversation_creation_started_do_not_repeat"
+        record["phase"] = "conversation-create"
         save()
         record["conversation_id"] = client.conversations.create().id
         save()
         return
     if operation == "retrieve":
+        record["phase"] = "response-retrieve"
+        save()
         response = client.responses.retrieve(plan["response_id"])
-        record["raw_response"] = response.model_dump(mode="json")
+        record["raw_response"] = response_record(response)
         save()
         record["results"].append(summarize_response(response, plan))
         return
     cases = [{"id": "tool-continuation"}] if operation == "continue" else plan["cases"]
     for case in cases:
+        record["phase"] = "operation-identity-check"
+        save()
         check_cli(plan)
         kwargs = {
             "max_output_tokens": plan["max_output_tokens"],
@@ -337,6 +363,8 @@ def execute(project, client, plan, config, record, save):
             }},
         }
         if operation == "continue":
+            record["phase"] = "approval-request-retrieve"
+            save()
             prior = client.responses.retrieve(plan["response_id"])
             summarize_response(prior, plan)
             requests = [item for item in prior.model_dump(mode="json")["output"]
@@ -354,14 +382,25 @@ def execute(project, client, plan, config, record, save):
             kwargs.update(input=case["prompt"], store=case.get("store", False) or bool(case.get("conversation_id")))
             if case.get("conversation_id"):
                 kwargs["conversation"] = case["conversation_id"]
+            if case.get("previous_response_id"):
+                record["phase"] = "followup-response-readback"
+                save()
+                previous = client.responses.retrieve(case["previous_response_id"])
+                summary = summarize_response(previous, plan)
+                require(previous.id == case["previous_response_id"]
+                        and previous.status == "completed" and not any(
+                            item["type"] == "mcp_approval_request" for item in summary["output"]
+                        ), "Follow-up requires the exact completed response with no unresolved tool request")
+                kwargs["previous_response_id"] = case["previous_response_id"]
         record["state"] = "request_started_do_not_repeat"
+        record["phase"] = "response-create"
         record["requests_started"] += 1
         record["pending_case"] = case["id"]
         save()
         started = perf_counter()
         response = client.responses.create(**kwargs)
         duration = perf_counter() - started
-        record["raw_response"] = response.model_dump(mode="json")
+        record["raw_response"] = response_record(response)
         save()
         result = summarize_response(response, plan)
         result["case"] = case
@@ -383,7 +422,7 @@ def run(plan, config):
     folder = ROOT / ".workshop" / "evidence"
     folder.mkdir(parents=True, exist_ok=True)
     evidence = folder / (plan["run_id"] + ".json")
-    record = {"started_at": now(), "state": "preflight", "plan": plan,
+    record = {"started_at": now(), "state": "preflight", "phase": "initializing", "plan": plan,
               "configuration": config, "requests_started": 0, "results": []}
     with evidence.open("x", encoding="utf-8") as handle:
         json.dump(record, handle, indent=2)
@@ -396,15 +435,29 @@ def run(plan, config):
     credential = None
     started = perf_counter()
     try:
+        record["phase"] = "cli-identity-check"
+        save()
         check_cli(plan)
+        record["phase"] = "credential-initialization"
+        save()
         credential = verified_credential(plan)
+        record["phase"] = "project-resource-read"
+        save()
         project_resource = cli("resource", "show", "--ids", plan["project_resource_id"])
         require(project_resource["id"].lower() == plan["project_resource_id"].lower(), "Project resource differs")
+        record["phase"] = "permission-check"
+        save()
         record["authorization"] = verify_permissions(plan, credential)
+        save()
+        record["phase"] = "project-client-initialization"
         save()
         with AIProjectClient(endpoint=plan["endpoint"], credential=credential, retry_total=0) as project:
             # This request establishes access to the exact data-plane project, not just ARM.
+            record["phase"] = "project-access-check"
+            save()
             next(project.connections.list().by_page(), None)
+            record["phase"] = "openai-client-initialization"
+            save()
             with project.get_openai_client(max_retries=0, timeout=60) as client:
                 execute(project, client, plan, config, record, save)
         if record["state"] != "awaiting_separate_tool_approval":
@@ -413,9 +466,25 @@ def run(plan, config):
         record["elapsed_seconds"] = round(perf_counter() - started, 3)
         save()
     except Exception as error:
+        record["stopped_at_state"] = record["state"]
+        record["stopped_at_phase"] = record["phase"]
         record["state"] = "stopped_do_not_retry_without_reconciliation"
         record["elapsed_seconds"] = round(perf_counter() - started, 3)
         record["error"] = {"type": type(error).__name__, "status_code": getattr(error, "status_code", None)}
+        for field in ("code", "param"):
+            value = getattr(error, field, None)
+            if isinstance(value, str) and re.fullmatch(r"[A-Za-z0-9_.-]{1,128}", value):
+                record["error"][field] = value
+        cause = getattr(error, "inner_exception", None) or error.__cause__
+        if cause is not None:
+            record["error"]["cause_type"] = type(cause).__name__
+        response = getattr(error, "response", None)
+        headers = getattr(response, "headers", {}) or {}
+        request_id = getattr(error, "request_id", None)
+        if not isinstance(request_id, str):
+            request_id = headers.get("x-ms-request-id") or headers.get("x-request-id")
+        if isinstance(request_id, str) and re.fullmatch(r"[A-Za-z0-9_.:-]{1,256}", request_id):
+            record["error"]["request_id"] = request_id
         if isinstance(error, ValueError):
             record["error"]["reason"] = str(error)
         save()

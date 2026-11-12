@@ -208,7 +208,13 @@ not call every weather tool for every question.
 
 Use the supported prompt-agent skill-delivery mechanism. If the environment
 requires reviewed static composition, label it accurately; do not claim dynamic
-loading. Run S01 across targeted, ambiguous, general-knowledge, and controlled
+loading. Preserve the governing instructions when composing the procedure:
+Answer, Source and Uncertainty still apply to acknowledgements, clarifications
+and refusals. Check the Weather service's US-only coverage before proposing
+any of its tools, including `geocode`; retained Conversation context does not
+grant unsupported coverage. A successful tool call alone does not pass these
+instruction and routing assertions.
+Run S01 across targeted, ambiguous, general-knowledge, and controlled
 failure cases. Inspect traces to verify the chosen tool sequence, but checkpoint
 04 remains the full trace-navigation lesson.
 
@@ -229,6 +235,22 @@ Add a student-owned persistent-memory capability using the
 Use a low-risk, explicitly consented preference such as Celsius temperature
 units. Store only the minimum useful fact, map scope from trusted identity, and
 support inspection, correction, and deletion.
+
+Inspect every fact retained by automatic memory processing, not just the
+requested preference. Extraction instructions such as `user_profile_details`
+are not proof of an enforced storage allowlist. Include response-linked
+background updates and their usage in the evidence; a completed reply does
+not prove that memory processing has finished. If an out-of-scope fact is
+stored, preserve the failure, obtain approval for its exact cleanup and stop
+further tests until the correction is reviewed. Correct recall alone does not
+pass data minimization.
+
+Do not silently replace automatic memory with an API-managed harness or
+disable extraction to obtain a pass. Such alternatives change the candidate,
+trusted identity/data boundary and consumer behavior, so they require separate
+design/operation approval and matched correction, isolation, deletion and
+consumer-path evidence. A project-client injection of a preference does not
+prove memory works through the Stable Agent Endpoint or a published channel.
 
 Run M01-M03 with weather-appropriate preferences. In a new Conversation, memory
 may supply the preferred unit while Weather MCP tools still supply current

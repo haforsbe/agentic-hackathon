@@ -557,6 +557,15 @@ Do not dump this glossary at startup. Introduce only the terms needed for the
 current step. Check central ideas through the checkpoint's observed result and
 short understanding check, not a separate vocabulary question after each term.
 
+When statically composing a skill, retain the governing reply, coverage and
+approval instructions rather than replacing them with the procedure alone.
+Verify short replies and refusals as well as successful tool answers; check
+coverage before proposing even a location lookup. At memory checkpoints,
+inspect all retained facts and response-linked background updates, not just
+whether recall answered correctly. Follow the lesson's data-minimization and
+consumer-boundary checks; neither tool success nor recall alone passes the
+checkpoint.
+
 ## Make every question answerable
 
 ### Make instructions easy to scan
@@ -589,6 +598,16 @@ curriculum maintenance, not during live workshop coaching. Do not open an
 automated browser or install browser tooling in a participant session.
 Participants navigate and send Playground prompts themselves; a mismatch calls
 for one specific observation and corrected guidance, not automated takeover.
+The coach uses the approved CLI/SDK route for operations. An author-rehearsal
+browser exception does not transfer to live coaching. During separately
+approved preparation, retain only the observed labels, click order, expected
+result and verification limits in APP-GUIDE.md's dated navigation reference;
+do not add paid requests merely to document the interface.
+Distinguish a native `mcp_approval_request` from a plain-text permission question.
+Instructions may initiate the runtime approval mechanism, but only the exact
+human decision authorizes the pending tool and arguments. Reuse an existing
+matching denial for the stage-specific permission-denial assertion in TESTS.md;
+do not claim it proves an upstream outage or a later multi-tool partial failure.
 Do not routinely ask them to
 inventory sidebar labels or send a screenshot before providing a documented
 route. State when the route is documentation-based rather than observed in

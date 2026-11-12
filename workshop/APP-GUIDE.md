@@ -294,6 +294,23 @@ or a different date filter does not authorize another model call or setup change
 
 ### Before adding a Toolbox-backed tool
 
+**Additional observed controls, 2026-11-05:** these English portal observations
+come from an approved author rehearsal, not the participant's current session
+or a supported Toolbox-authentication recipe. Use them only when the actual
+screen matches; inspection does not authorize edits, tool calls or a test.
+
+| Task | Observed route and limit |
+|------|--------------------------|
+| Inspect a saved native binding | On the exact agent's **Playground**, confirm **Version:**, then **Setup -> Tools**. A Toolbox card can show its name/version and upstream server; **YAML** shows the saved definition. Verify the pinned URL and approval settings independently; a card alone proves no runtime access. |
+| Inspect model parameters | On that same **Setup** screen, **Parameters** beside **Model:** exposes **Max output tokens**. In the rehearsal, an entered value did not persist after reopening and the service response reported no limit. A briefly displayed number is not an enforced test bound; stop before sending until the intended route's limit is verified. |
+| Inspect display settings | **Configure** in **Chat** opened display-name, description, starter-prompt and voice settings, not the model-token limit. Do not direct learners there to configure output limits. |
+| Inspect this reply's trace | Under the actual reply, **Traces** opens a drawer with **Trajectories**, **User view** and **Graph view**. Select the matching operation, then **Metadata** or **Input + Output** where present. `tools/list` is discovery, not execution; look for the actual server/tool's execution span and correlate the saved response identifier. Do not resend to recover an identifier. |
+
+These observations do not verify approval controls, effective output limits,
+memory, publishing or other tenants. Continue to apply the
+[Toolbox preparation blocker](TOOLS-AND-TOOLBOXES.md#prepare-the-supported-route-before-teaching);
+no author-only helper or native picker is an authentication workaround.
+
 At 04, before using an agent's **Add** control, the coach explains the route:
 **agent -> pinned Microsoft Foundry Toolbox -> public Weather MCP server ->
 `weather_forecast`**. A Toolbox exposes an MCP endpoint, so the resulting

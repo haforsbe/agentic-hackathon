@@ -121,6 +121,72 @@ class RunnerTests(unittest.TestCase):
             self.execute()
         self.client.responses.create.assert_not_called()
 
+    def test_followup_reuses_exact_completed_response_without_replaying_text(self):
+        self.plan["cases"] = [{
+            "id": "followup", "prompt": "Synthetic new user request", "store": True,
+            "previous_response_id": "resp_synthetic",
+        }]
+        self.client.responses.retrieve.return_value = response()
+        self.execute()
+        self.client.responses.retrieve.assert_called_once_with("resp_synthetic")
+        self.client.responses.create.assert_called_once()
+        kwargs = self.client.responses.create.call_args.kwargs
+        self.assertEqual(kwargs["previous_response_id"], "resp_synthetic")
+        self.assertEqual(kwargs["input"], "Synthetic new user request")
+        self.assertTrue(kwargs["store"])
+        self.assertNotIn("conversation", kwargs)
+        self.assertEqual(self.record["requests_started"], 1)
+
+    def test_followup_rejects_pending_incomplete_wrong_candidate_or_wrong_response(self):
+        self.plan["cases"] = [{
+            "id": "followup", "prompt": "Synthetic request", "store": True,
+            "previous_response_id": "resp_synthetic",
+        }]
+        wrong_id = response()
+        wrong_id.id = "resp_different"
+        for value in (response([{"type": "mcp_approval_request"}]), response(status="incomplete"),
+                      response(version="3"), wrong_id):
+            with self.subTest(value=value):
+                self.client.responses.retrieve.return_value = value
+                with self.assertRaises(ValueError):
+                    self.execute()
+                self.client.responses.create.assert_not_called()
+                self.assertEqual(self.record["requests_started"], 0)
+                self.assertEqual(self.record["phase"], "followup-response-readback")
+
+    def test_failed_followup_retrieval_never_starts_inference_or_retries(self):
+        self.plan["cases"] = [{
+            "id": "followup", "prompt": "Synthetic request", "store": True,
+            "previous_response_id": "resp_synthetic",
+        }]
+        self.client.responses.retrieve.side_effect = TimeoutError()
+        with self.assertRaises(TimeoutError):
+            self.execute()
+        self.client.responses.retrieve.assert_called_once()
+        self.client.responses.create.assert_not_called()
+        self.assertEqual(self.record["requests_started"], 0)
+
+    def test_reasoning_redaction_preserves_decisions_usage_and_sdk_response(self):
+        body = response().model_dump()
+        body["output"] = [
+            {"type": "reasoning", "encrypted_content": "synthetic-encrypted-payload", "summary": []},
+            {"type": "mcp_approval_request", "id": "mcpr_synthetic", "arguments": '{"lat":40}'},
+        ]
+        body["usage"] = {"input_tokens": 12, "output_tokens": 3}
+        value = response()
+        value.model_dump = lambda **kwargs: body
+        for operation in ("run", "retrieve"):
+            with self.subTest(operation=operation):
+                self.plan.update(operation=operation, response_id="resp_synthetic")
+                self.client.responses.create.return_value = value
+                self.client.responses.retrieve.return_value = value
+                self.record = {"state": "preflight", "requests_started": 0, "results": []}
+                self.execute()
+                self.assertNotIn("synthetic-encrypted-payload", json.dumps(self.record))
+                self.assertEqual(self.record["raw_response"]["output"][1], body["output"][1])
+                self.assertEqual(self.record["results"][0]["usage"], body["usage"])
+                self.assertEqual(body["output"][0]["encrypted_content"], "synthetic-encrypted-payload")
+
     def test_readonly_retrieval_never_creates_a_response(self):
         self.plan.update(operation="retrieve", response_id="resp_synthetic")
         self.client.responses.retrieve.return_value = response()
@@ -570,6 +636,21 @@ class PlanTests(unittest.TestCase):
     def test_valid_plan(self):
         self.assertEqual(self.load()[0]["max_requests"], 2)
 
+    def test_followup_plan_requires_stored_response_reference_without_conversation(self):
+        case = self.plan["cases"][0]
+        case.update(previous_response_id="resp_synthetic", store=True)
+        self.assertEqual(self.load()[0]["cases"][0]["previous_response_id"], "resp_synthetic")
+        for changes in ({"store": False}, {"previous_response_id": 42},
+                        {"previous_response_id": "conv_synthetic"},
+                        {"conversation_id": "conv_synthetic"}):
+            with self.subTest(changes=changes):
+                original = copy.deepcopy(case)
+                case.update(changes)
+                with self.assertRaisesRegex(ValueError, "stored response follow-up"):
+                    self.load()
+                case.clear()
+                case.update(original)
+
     def test_unknown_authorization_policy_is_rejected(self):
         self.plan["authorization_policy"] = "skip-permissions"
         with self.assertRaisesRegex(ValueError, "Unsupported authorization policy"):
@@ -667,6 +748,8 @@ class PlanTests(unittest.TestCase):
         self.assertEqual(evidence["state"], "stopped_do_not_retry_without_reconciliation")
         self.assertEqual(evidence["requests_started"], 0)
         self.assertIn("data grant not verified", evidence["error"]["reason"])
+        self.assertEqual(evidence["stopped_at_state"], "preflight")
+        self.assertEqual(evidence["stopped_at_phase"], "permission-check")
 
     def test_project_access_reads_only_first_connection_page_and_propagates_failure(self):
         for index, (items, fails) in enumerate((([], False), ([{"name": "synthetic"}], False), ([], True))):
@@ -718,6 +801,97 @@ class PlanTests(unittest.TestCase):
                     self.assertEqual(evidence["state"], "stopped_do_not_retry_without_reconciliation")
                     self.assertEqual(evidence["requests_started"], 0)
                     self.assertEqual(evidence["error"]["type"], "TimeoutError")
+                    self.assertEqual(evidence["stopped_at_state"], "preflight")
+                    self.assertEqual(evidence["stopped_at_phase"], "project-access-check")
+
+    def test_failure_journal_distinguishes_client_initialization_from_started_writes(self):
+        for index, phase in enumerate(("openai-client-initialization", "conversation-create",
+                                       "agent-version-create", "created-version-readback",
+                                       "response-create")):
+            with self.subTest(phase=phase):
+                self.plan.update(run_id=f"synthetic-failure-{index}")
+                if phase in ("agent-version-create", "created-version-readback"):
+                    self.plan["operation"] = "create-version"
+                elif phase == "response-create":
+                    self.plan["operation"] = "run"
+                else:
+                    self.plan.update(operation="new-conversation",
+                                     authorization_policy="foundry-user-data-access")
+                project_factory = MagicMock()
+                project = project_factory.return_value.__enter__.return_value
+                project.connections.list.return_value.by_page.return_value = iter([iter([])])
+                project.agents.get_version.return_value.definition.as_dict.return_value = CONFIG["definition"]
+                client = project.get_openai_client.return_value.__enter__.return_value
+                error = RuntimeError("Do not retain synthetic authorization=private-value")
+                error.inner_exception = ConnectionError("Do not retain synthetic-token")
+                error.code = "SyntheticFailure"
+                error.param = "input"
+                error.response = SimpleNamespace(headers={
+                    "x-request-id": "synthetic-request-id",
+                    "authorization": "synthetic-secret",
+                })
+                if phase == "openai-client-initialization":
+                    project.get_openai_client.side_effect = error
+                elif phase == "conversation-create":
+                    client.conversations.create.side_effect = error
+                elif phase == "agent-version-create":
+                    project.agents.create_version.side_effect = error
+                elif phase == "created-version-readback":
+                    project.agents.create_version.return_value.version = "5"
+                    project.agents.get_version.side_effect = error
+                else:
+                    error.code = "Do not retain synthetic-token"
+                    error.param = "input\nprivate-value"
+                    error.request_id = "Bearer synthetic-secret"
+                    client.responses.create.side_effect = error
+                definition = Mock()
+                definition.as_dict.return_value = CONFIG["definition"]
+                models = SimpleNamespace(MCPTool=Mock(), PromptAgentDefinition=Mock(return_value=definition))
+                credential = Mock()
+                with patch.dict("sys.modules", {
+                    "azure.ai.projects": SimpleNamespace(AIProjectClient=project_factory),
+                    "azure.ai.projects.models": models,
+                }), patch.object(runner, "readiness", return_value={"prompt_runner_ready": True}), \
+                        patch.object(runner, "check_cli"), \
+                        patch.object(runner, "cli", return_value={"id": self.plan["project_resource_id"]}), \
+                        patch.object(runner, "verified_credential", return_value=credential), \
+                        patch.object(runner, "verify_permissions", return_value={"required_permissions_verified": True}), \
+                        patch.dict(runner.os.environ):
+                    with self.assertRaisesRegex(RuntimeError, "Runner stopped"):
+                        runner.run(self.plan, CONFIG)
+                path = self.root / ".workshop" / "evidence" / f"synthetic-failure-{index}.json"
+                evidence = json.loads(path.read_text())
+                states = {
+                    "openai-client-initialization": "preflight",
+                    "conversation-create": "conversation_creation_started_do_not_repeat",
+                    "agent-version-create": "creation_started_do_not_repeat",
+                    "created-version-readback": "creation_started_do_not_repeat",
+                    "response-create": "request_started_do_not_repeat",
+                }
+                self.assertEqual(evidence["stopped_at_state"], states[phase])
+                self.assertEqual(evidence["stopped_at_phase"], phase)
+                self.assertEqual(evidence["requests_started"], int(phase == "response-create"))
+                self.assertEqual(evidence["error"]["cause_type"], "ConnectionError")
+                if phase == "response-create":
+                    for field in ("request_id", "code", "param"):
+                        self.assertNotIn(field, evidence["error"])
+                else:
+                    self.assertEqual(evidence["error"]["request_id"], "synthetic-request-id")
+                    self.assertEqual(evidence["error"]["code"], "SyntheticFailure")
+                    self.assertEqual(evidence["error"]["param"], "input")
+                for secret in ("private-value", "synthetic-token", "synthetic-secret"):
+                    self.assertNotIn(secret, path.read_text())
+                credential.close.assert_called_once()
+                if phase == "openai-client-initialization":
+                    project.agents.get_version.assert_not_called()
+                    client.conversations.create.assert_not_called()
+                if phase == "response-create":
+                    client.responses.create.assert_called_once()
+                    self.assertEqual(evidence["pending_case"], "B01")
+                else:
+                    client.responses.create.assert_not_called()
+                if phase == "created-version-readback":
+                    self.assertEqual(evidence["created_version"], "5")
 
 
 if __name__ == "__main__":

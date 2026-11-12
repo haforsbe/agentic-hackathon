@@ -56,6 +56,15 @@ The participant reported seeing the resulting Toolbox attachment in Tools.
 These are observations from one project, not universal portal behavior or
 runtime evidence.
 
+An observed native Toolbox picker or a successful save does not resolve the
+authentication preparation blocker below. Inspect approval settings at both
+layers independently: an inner `always` setting does not establish that the
+outer agent binding retained human approval. Stop before tests if either
+effective setting is unsafe or unknown; an instruction to ask permission is
+not a native approval request. Correcting a binding requires its own approved
+candidate change and affected runtime checks, not an automatic retry or a
+direct-upstream substitute.
+
 If the picker only offers direct tools, explain that limitation immediately.
 Do not ask the learner to hunt for a nonexistent option, select the upstream
 as a substitute, or repeatedly save candidates to discover the UI behavior.

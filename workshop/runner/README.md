@@ -82,7 +82,7 @@ Required common fields:
 |-----------|--------------------------------|
 | `inspect` | Read back the pinned version and compare it with the local definition; no inference |
 | `create-version` | Create one reviewed candidate and independently read it back; no tests, routing, or deletion. This narrow helper supports model/instructions/public MCP definitions only; other definition fields fail validation. Discover/check the intended agent name beforehand. |
-| `run` | `cases`: 1-12 `{id, prompt, conversation_id?, store?}`; `max_requests` exactly equals case count; `max_output_tokens`: 16-4096. Separate requests have no replayed history. With an explicit returned `conversation_id`, store and use that managed Conversation. MCP configurations require `store: true` for same-run retrieval/approval; include retention/storage in the approval explanation. |
+| `run` | `cases`: 1-12 `{id, prompt, conversation_id?, previous_response_id?, store?}`; `max_requests` exactly equals case count; `max_output_tokens`: 16-4096. Requests are fresh unless explicit context is approved. A returned `conversation_id` uses that managed Conversation. Alternatively, `previous_response_id` with `store: true` follows one exact stored, completed same-candidate response with no unresolved approval; it cannot also use `conversation_id`. MCP configurations require `store: true` for retrieval/approval; include retention/storage in the approval explanation. |
 | `retrieve` | Exact `response_id`; retrieve a saved existing response, never generate a replacement. Linkage mismatches stop and preserve the raw record for review. Retrieval depends on the original response's storage/retention. |
 | `new-conversation` | Create one managed Conversation without model inference; return its ID for a separately approved run |
 | `continue` | Exact `response_id`, `approval_request_id`, `server_label`, `tool_name`, `arguments`, boolean `approve`, and `max_output_tokens`; inspect and match the pending request before submitting exactly one approval/denial and continuation |
@@ -177,6 +177,15 @@ tool and inputs and obtain a separate scoped decision; a new continuation plan
 cannot approve a different request or multiple calls. Decline is supported.
 An incomplete response, version mismatch or error also stops without retry.
 
+A stored-response follow-up is a new approved user request, not approval of a
+tool or a substitute for the managed Conversation tests. Before sending, the
+runner retrieves and checks the exact response ID, pinned agent/version,
+completed status and absence of an approval request. It sends only the new
+user prompt and service-returned response reference, not copied answer text.
+Include the retained chain in the cost and storage scope; request/output
+limits do not bound accumulated history. Pending tools still require their
+own exact `continue` decision, never a follow-up that skips them.
+
 ## Evidence and recovery
 
 Evidence is written exclusively to `.workshop/evidence/<run_id>.json`, with
@@ -185,11 +194,24 @@ linkage/behavior judgement. The helper does not mark checkpoints passed, edit
 participant progress, change model choice, or calculate a guessed price.
 Usage absent from a response stays `null`. Use response IDs to deduplicate the
 existing progress ledger; apply only separately verified matching token rates.
+Encrypted reasoning payloads are omitted from both retained response records
+and result summaries. Tool arguments, decisions, visible replies, linkage and
+usage remain evidence; this redaction does not remove arbitrary sensitive
+content or permit private prompts.
 
 The record includes prompts, response IDs, reported agent/version, actual
 replies, tool/approval output, Conversation linkage and available usage.
 The coach shows the meaningful paired results together, judges them against
 TESTS.md, then records progress once per result/status boundary.
+
+Failure records retain `stopped_at_phase` and `stopped_at_state`, distinguishing
+preflight/client-initialization failures from a possibly started resource write
+or model request. When available, bounded identifier-shaped SDK error codes,
+parameter names and request IDs, plus the underlying exception type, are
+retained without raw exception bodies, headers or credentials. Missing metadata
+stays unknown. A started marker without a returned resource/response ID is not
+proof that the service did nothing; reconcile before considering another
+attempt. Older records without these fields cannot prove where execution stopped.
 
 Do not delete an attempt record, change its run ID, or rerun after an
 interruption to "see if it worked". Reconcile its service-returned response,
