@@ -1150,6 +1150,52 @@ that a guided lesson pauses at checkpoints. If the user explicitly changes to
 an implementation-only task, exit teaching mode and record the workshop as
 incomplete rather than awarding passes.
 
+## End-of-core notification
+
+Tell participants where the workshop ends proactively; do not wait for them to
+ask whether there are more steps. On entering checkpoint 16, explain that it
+is the **final core checkpoint**, including its release/update and channel
+requirements. Checkpoints 17-19 are a separate optional capstone, not more
+mandatory core lessons.
+
+At the end of checkpoint 16, or when the participant chooses to stop or defer
+its remaining requirements, give an explicit closing message matched to the
+actual evidence:
+
+- **Core complete:** only when all required checkpoints 00-16 and both channel
+  milestones have passed, say: "You've completed the core workshop. There are
+  no further required core lessons. Checkpoints 17-19 are an optional capstone
+  where you apply the method to your own scenario."
+- **Partial completion:** if required evidence, release checks or channel use
+  remain blocked, skipped or unverified, say: "You've reached the final core
+  checkpoint, and we're stopping here with a partially completed workshop.
+  There are no further core lessons, but these required checks remain
+  incomplete: [name the actual gaps]. Checkpoints 17-19 are optional, not a
+  substitute for those checks." Do not call a deployment, demonstration or
+  endpoint-only route a fully completed workshop.
+
+Keep the closing summary short: what the participant built and demonstrated,
+what remains incomplete, the verified endpoints and selected versions, evidence
+locations, and resources still running. Distinguish the version viewed in the
+portal from the version serving consumers. Link existing publication evidence
+when available; do not invent missing URLs or run more tests just to fill the
+handoff. Follow the existing checkpoint usage-summary rules rather than
+repeating unchanged totals.
+
+Record only the actual status in existing local progress: partial completion
+keeps `completed` false and the first unmet requirement visible. An unchosen
+capstone remains `not_started`. Core completion does not complete an already
+agreed capstone extension; preserve that scope and its remaining requirements.
+Do not migrate progress, change cloud resources or clean up automatically.
+
+If a next decision is needed, ask one focused question about stopping,
+returning to an unmet requirement, or choosing the optional extension. Do not
+silently start checkpoint 17 or turn the closing message into another quiz.
+On a later "resume" or "any steps left?" request, lead with the saved completion
+or partial-completion status and distinguish unfinished checks from new
+lessons. Do not restart completed lessons or prerequisite discovery merely
+because the core has ended.
+
 ## Session startup and resume
 
 - Read workshop/README.md and the current lesson. Use TESTS.md for acceptance.
@@ -1385,6 +1431,43 @@ check/reserve the estimate **before execute**. Keep the 1-12-case limit,
 identity/permission checks, no retries and separate exact continuation plans.
 Do not add an unsupported money field and pretend the runner enforces it.
 
+### Managed-agent and hosted-workflow cost readiness
+
+Before a hosted workflow's first paid test, prepare the cost basis as a
+facilitator prerequisite, not a participant debugging exercise. Use
+[the hosted reference's cost-readiness checklist](assets/hosted-workflow/README.md#cost-readiness-before-live-tests).
+The prompt runner's call/output limits and a workflow's native Responses
+submission count do not establish the number of internal managed-agent model
+turns or the cost of memory processing.
+
+A reasonable conservative estimate does **not** require an Azure-enforced
+billing cap or a mathematical worst-case proof. It does require a supported
+basis: documented applicable execution limits, or relevant existing aggregate
+usage with explicit finite assumptions and an uncertainty margin. Match that
+basis to the model/version, agent configuration, tools, memory, input/history,
+and execution route. Count approval and denial continuations, failed/uncertain
+attempts, and any separately charged memory or tool work. A low reasoning
+setting, a short visible prompt, or an instruction to call a tool once is not
+by itself a cumulative token bound.
+
+Do not multiply model context capacity by API submission count unless the
+number of underlying inference turns is also established. Similarly,
+`max_output_tokens` is a requested response-generation limit, not an input,
+memory, or currency limit; workflow iteration limits govern the local graph,
+not the remote agent's internal loop. SDK serialization of `max_tool_calls`
+does not prove acceptance or enforcement by the exact managed route or
+coverage of MCP and memory operations.
+
+If existing evidence cannot support the estimate, name the specific missing
+quantity and stop before sending. Keep the case blocked for facilitator
+preparation; do not make a paid calibration call, increase an arbitrary dollar
+allowance, or restart authentication/inventory checks to resolve a cost gap.
+Read-only reconciliation of existing usage needs its own approved scope and
+must use a supported retrieval route, not a new forensic client or repeated
+failed requests. Do not silently disable memory, change specialists or model
+settings, or add unverified service parameters. Such changes need separate
+approval and affected regressions.
+
 ### Separate operation and tool approvals
 
 - Before cloud mutations, show the exact target and proposed changes, expected
@@ -1428,6 +1511,8 @@ why, terms needed now, change boundary, expected evidence, and one question or
 one action. Do not shorten a turn by removing the explanation a beginner needs,
 but do not dump future lessons or the full glossary.
 At a checkpoint, report tests passed/failed/blocked and ask the teach-back.
+Use the [end-of-core notification](#end-of-core-notification) at the final
+checkpoint or an agreed partial stop, not only after the learner asks.
 At core completion, show both prompt-agent endpoints and the hosted workflow
 endpoint, with selected versions, remaining running resources, and evidence
 locations. Include Weather/workflow publication links, chosen surfaces and

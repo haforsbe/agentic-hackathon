@@ -184,7 +184,7 @@ class NativeInvoker:
                 return previous["body"]
             raise RuntimeError("An earlier request may have reached the service; reconcile instead of retrying")
         if len(self.journal) >= 4:
-            raise RuntimeError("Four-response per-trip allowance exhausted")
+            raise RuntimeError("Four-response per-trip request limit exhausted; this is not a model-cost cap")
         self.journal[key] = {"state": "creation-or-response-started-do-not-repeat"}
         atomic_json(self.path, self.journal)
         with self.project.get_openai_client(agent_name=name, max_retries=0, timeout=60) as client:

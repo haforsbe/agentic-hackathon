@@ -71,8 +71,15 @@ runtime passes. Rehearse with synthetic targets/usage and no cloud calls:
 |-----------|-------------------------|
 | Enter/resume a module; start its tests | State stage/checkpoint, goal, short plan and boundary; explain each case's purpose, expected evidence and limits before sending |
 | Finish a module | Relate actual results to learning, name gaps, use the existing single understanding gate, then offer the next checkpoint or pause |
+| Enter checkpoint 16 | Explain that this is the final core checkpoint, including release/update and channel requirements; 17-19 are optional |
+| All core gates pass, including CH01/CH02 | Proactively announce core completion and provide the evidence-based handoff; do not wait for "are we done?" or automatically start the capstone |
+| Participant stops at 16 with blocked or skipped requirements | Explicitly announce partial completion, list the actual gaps, keep `completed` false, and distinguish unfinished checks from additional lessons |
+| Participant resumes after a full or partial end-of-core message | Lead with saved status and the agreed route; do not restart completed lessons, repeat checks for closure, or silently start optional 17-19 |
 | Next test is unchanged and covered by an explicit allowance | Reserve a conservative batch estimate within remaining funds and proceed without another negligible-price question; retain the runner's exact plan approval reference |
 | Usage is missing or a call is interrupted | Keep its conservative reservation; if remaining costs cannot be bounded, stop, reconcile read-only and do not retry |
+| Hosted workflow has current rates and four native submissions but no supported internal-input/memory cost basis | Mark cost readiness blocked before Send; API submission count, model context capacity and requested output limits alone do not establish a whole-case estimate |
+| Comparable existing aggregate usage supports a finite conservative estimate with a stated uncertainty margin | Review its configuration/input/route match, memory/tool coverage and remaining allowance; do not demand a hard billing cap or make a paid calibration call |
+| SDK exposes a tool-limit parameter but the managed route's enforcement/coverage is unverified | Do not attach it or claim a cost cap; preserve the released configuration and name the facilitator-readiness gap |
 | Forecast exceeds remaining allowance, terms expire or scope/resource changes | Stop before spending; explain the difference and obtain a new scoped decision |
 | Pending MCP approval or proposed resource/identity change | Treat it separately from spending permission; never batch past a pending tool decision or bypass the runner |
 | Toolbox configuration saves or developer discovery succeeds, but managed-runtime auth is unsubstantiated | Explain the authentication blocker; do not claim a runtime pass, invent an auth connection recipe or grant roles |

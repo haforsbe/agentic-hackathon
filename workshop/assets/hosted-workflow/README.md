@@ -109,6 +109,73 @@ continuation and uncertain-request reconciliation; they are not shared fixtures.
 Apply appropriate access, retention and data/cost approval. Never commit those
 records, environment files, configured manifests or local configuration.
 
+## Cost readiness before live tests
+
+Prepare this prerequisite before inviting a participant to run the hosted
+workflow. Configuration confirmation, current pricing and passing offline
+tests are necessary but do not alone establish an affordable live test.
+Follow the coach's [bounded test-spend agreement](../../COACH.md#bounded-test-spend-agreements);
+no example dollar allowance is supplied by this asset.
+
+The reference has these application controls:
+
+| Control | What it bounds | What it does not establish |
+|---|---|---|
+| At most four native Responses submissions per trip, journaled before submission | Two initial specialist requests and their two exact human-decision continuations; uncertain attempts consume entries and cannot be replayed automatically | Four underlying model inference turns or a cumulative input-token limit |
+| `max_output_tokens=500` on each submission | Requested generated response tokens, including reasoning tokens | Cumulative internal input processing, separately billed memory work, or a currency cap |
+| `max_retries=0`, client timeout and exact tool-decision validation | Client retries, individual client waits and which pending decision the application continues | Cancellation of server-side work, a billing timeout, or prevention of costs already incurred before a returned response is rejected |
+| Workflow `max_iterations=10` | Local graph supersteps | The managed specialist's internal model/tool/memory loop |
+| Deterministic itinerary assembly | No extra model call by the assembly executor | The cost of the independently hosted specialists |
+
+Build a sanitized cost-readiness record under ignored `.workshop/`:
+
+1. Identify the exact project, hosted candidate/artifact, specialist versions,
+   model/version, deployment type, region, memory/tool configuration, input
+   and execution route. Obtain current official rates and billing units,
+   including applicable separately charged operations; deployment capacity is
+   not a multiplier on per-token prices.
+2. Record the initial and continuation submissions for the proposed case.
+   Include denial processing even when the denied external tool does not run.
+   Use uncached input rates unless cached usage is actually established.
+3. Give the estimate a supported basis: applicable documented service limits,
+   or relevant existing aggregate usage for comparable inputs on the same
+   reviewed configuration/route. For an empirical estimate, record the
+   observed range, sample limitations, finite assumptions about additional
+   turns/history/tool and memory data, and a justified uncertainty margin.
+   A prior response count or an unmeasured token scenario is not usage evidence.
+4. Account for all model work in that basis. A model's context capacity is
+   per inference, not cumulative billing across a native Response. Do not
+   assume the four submissions are four inference contexts. Memory search,
+   memory updates and other tool operations need applicable billing/usage
+   evidence; do not assume they are free or included in response usage.
+5. Compare the whole-case estimate with the separately approved remaining
+   allowance and preserve reservations for unknown prior usage. Record
+   hosting, telemetry and GitHub Copilot app charges as exclusions, not zero
+   cost. An estimate with disclosed uncertainty is not a hard billing cap.
+
+The native response bodies and available `usage` are retained in the runtime
+`requests.json` journal, keyed by submission, with returned response IDs.
+Existing records can inform an approved read-only reconciliation; deduplicate
+by response ID and treat absent usage as unknown. Do not create another model
+response just to populate usage. The journal's usage is not proof of inclusion
+of separately processed memory work or a full account bill.
+
+If the basis is missing, record **cost readiness blocked**, naming the missing
+internal-turn/input, memory or usage assumption. Stop before any paid
+submission, preserve already valid test evidence and escalate the precise
+prerequisite to the facilitator within the coaching timebox. A larger
+allowance alone does not repair an unsupported estimate. Do not convert an
+old allowance or a resume request into approval for a calibration run.
+
+The reference does not set `max_tool_calls` or claim an aggregate managed-agent
+token/spend control. A parameter in an installed SDK is not proof that the
+exact agent endpoint accepts it, that it covers MCP/memory, or that it enforces
+a billing limit. Adding controls requires documented route semantics, separate
+change approval and affected regressions. Do not bypass human decisions,
+disable memory or replace specialist tools to make the estimate appear bounded.
+This checklist is a preparation gate, not evidence that a deployed candidate
+has passed it.
+
 ## Intended local tests
 
 From this asset directory:
@@ -117,7 +184,7 @@ From this asset directory:
 .\.venv\Scripts\python.exe -m unittest discover -s .\tests -p "test_*.py" -v
 ```
 
-The eight tests use **small synthetic fixtures**. Clients are patched; no
+The nine tests use **small synthetic fixtures**. Clients are patched; no
 Microsoft Foundry account, model request, MCP tool execution or human decision
 is needed or claimed.
 
@@ -140,6 +207,7 @@ or any live gate below.
 | `test_ambiguous_request_requires_clarification` | W03: unsupported constraints do not trigger calls or silent coercion |
 | `test_two_separate_decisions_produce_sourced_reply` | Checkpoint 15 local W04 prerequisite: ordinary chat input, current native decisions, continuation and assembly |
 | `test_denial_stays_partial_without_executing_denied_tool` | W02/local W04 prerequisite: each separate denial remains effective |
+| `test_native_submission_limits_and_uncertain_attempts` | Request/output limits, disabled client retries, recorded-response reuse and unknown usage remain distinct from a model-cost cap; a fifth or uncertain submission cannot be sent |
 
 These are not full live G03/W01 execution proofs. **W04 requires the participant's
 actual Microsoft Foundry chat exchange**, separate native tool decisions, correct

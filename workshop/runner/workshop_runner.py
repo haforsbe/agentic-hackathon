@@ -12,7 +12,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
-from time import perf_counter
+from time import perf_counter, time
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
@@ -224,8 +224,21 @@ def verified_credential(plan):
     inner = AzureCliCredential(tenant_id=plan["tenant"], process_timeout=60)
 
     class VerifiedCredential:
+        def __init__(self):
+            self.arm_token = None
+            self.closed = False
+
         def get_token(self, *scopes, **kwargs):
-            token = inner.get_token(*scopes, **kwargs)
+            require(not self.closed, "Credential is closed")
+            context = (os.getpid(), os.environ.get("AZURE_CONFIG_DIR"),
+                       plan["tenant"], plan["account"], plan["subscription"])
+            cacheable = scopes == ("https://management.azure.com/.default",) and not kwargs
+            cached = self.arm_token
+            self.arm_token = None
+            if cacheable and cached and cached[2] == context and cached[1] > time() + 300:
+                token = cached[0]
+            else:
+                token = inner.get_token(*scopes, **kwargs)
             payload = token.token.split(".")[1]
             claims = json.loads(base64.urlsafe_b64decode(payload + "=" * (-len(payload) % 4)))
             identities = [claims.get(key, "").casefold() for key in ("upn", "preferred_username", "unique_name")]
@@ -238,9 +251,20 @@ def verified_credential(plan):
                         "Selected account directory identity could not be verified")
                 require(claims.get("oid") == user_id,
                         "Actual request identity differs from participant choice")
+            expires_on, expiry = getattr(token, "expires_on", None), claims.get("exp")
+            if (
+                cacheable
+                and claims.get("aud") in ("https://management.azure.com", "https://management.azure.com/")
+                and type(expires_on) in (int, float) and type(expiry) in (int, float)
+                and min(expires_on, expiry) > time() + 300
+            ):
+                # AzureCliCredential launches CLI even for repeated token requests.
+                self.arm_token = (token, min(expires_on, expiry), context)
             return token
 
         def close(self):
+            self.arm_token = None
+            self.closed = True
             inner.close()
 
     return VerifiedCredential()

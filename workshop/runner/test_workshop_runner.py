@@ -291,6 +291,155 @@ class RunnerTests(unittest.TestCase):
             runner.normalized(b)
 
 
+class CredentialTokenCacheTests(unittest.TestCase):
+    scope = "https://management.azure.com/.default"
+
+    def setUp(self):
+        self.plan = plan()
+        clock_patch = patch.object(runner, "time", return_value=1000)
+        self.clock = clock_patch.start()
+        self.addCleanup(clock_patch.stop)
+        profile_patch = patch.dict(runner.os.environ, {"AZURE_CONFIG_DIR": self.plan["azure_config_dir"]})
+        profile_patch.start()
+        self.addCleanup(profile_patch.stop)
+        self.inner = Mock()
+        self.inner.get_token.return_value = self.token()
+        identity = SimpleNamespace(AzureCliCredential=Mock(return_value=self.inner))
+        with patch.dict("sys.modules", {"azure.identity": identity}):
+            self.credential = runner.verified_credential(self.plan)
+        self.addCleanup(self.credential.close)
+
+    def token(self, expires_on=2000, **overrides):
+        claims = {
+            "upn": self.plan["account"], "tid": self.plan["tenant"],
+            "aud": "https://management.azure.com/", "exp": 2000,
+        }
+        claims.update(overrides)
+        payload = base64.urlsafe_b64encode(json.dumps(claims).encode()).decode().rstrip("=")
+        return SimpleNamespace(token=f"header.{payload}.signature", expires_on=expires_on)
+
+    def test_exact_arm_token_is_reused_and_permission_http_is_not_cached(self):
+        grants = {"value": [{"dataActions": [self.plan["required_permissions"][0]["operation"]]}]}
+        token = self.credential.get_token(self.scope)
+        self.assertIs(self.credential.get_token(self.scope), token)
+        with patch.object(runner, "urlopen", side_effect=lambda *a, **k: io.StringIO(json.dumps(grants))) as request:
+            for _ in range(2):
+                self.assertTrue(runner.verify_permissions(
+                    self.plan, self.credential)["required_permissions_verified"])
+        self.inner.get_token.assert_called_once_with(self.scope)
+        self.assertEqual(request.call_count, 2)
+
+    def test_both_expiry_fields_require_five_minutes_remaining(self):
+        for options in ({"expires_on": 1300}, {"exp": 1300}, {"expires_on": None}, {"exp": None}):
+            with self.subTest(options=options):
+                self.credential.arm_token = None
+                self.inner.get_token.reset_mock()
+                self.inner.get_token.return_value = self.token(**options)
+                self.credential.get_token(self.scope)
+                self.credential.get_token(self.scope)
+                self.assertEqual(self.inner.get_token.call_count, 2)
+
+    def test_cached_token_is_refreshed_before_expiry(self):
+        self.credential.get_token(self.scope)
+        self.clock.return_value = 1700
+        fresh = self.token(expires_on=3000, exp=3000)
+        self.inner.get_token.return_value = fresh
+        self.assertIs(self.credential.get_token(self.scope), fresh)
+        self.assertEqual(self.inner.get_token.call_count, 2)
+
+    def test_other_audiences_and_missing_audience_are_not_cached(self):
+        for audience in (None, "https://ai.azure.com", self.scope):
+            with self.subTest(audience=audience):
+                self.inner.get_token.reset_mock()
+                self.inner.get_token.return_value = self.token(aud=audience)
+                self.credential.get_token(self.scope)
+                self.credential.get_token(self.scope)
+                self.assertEqual(self.inner.get_token.call_count, 2)
+
+    def test_options_other_scopes_and_multiple_scopes_do_not_reuse_arm_token(self):
+        calls = [
+            ((self.scope,), {"tenant_id": self.plan["tenant"]}),
+            ((self.scope,), {"claims": "synthetic-claims"}),
+            ((self.scope,), {"enable_cae": False}),
+            (("https://ai.azure.com/.default",), {}),
+            ((self.scope, "https://ai.azure.com/.default"), {}),
+        ]
+        for scopes, options in calls:
+            with self.subTest(scopes=scopes, options=options):
+                self.credential.get_token(self.scope)
+                self.inner.get_token.reset_mock()
+                self.credential.get_token(*scopes, **options)
+                self.credential.get_token(*scopes, **options)
+                self.assertEqual(self.inner.get_token.call_count, 2)
+                self.inner.get_token.assert_called_with(*scopes, **options)
+
+    def test_cli_profile_or_process_change_invalidates_cached_token(self):
+        self.credential.get_token(self.scope)
+        with patch.dict(runner.os.environ, {"AZURE_CONFIG_DIR": "another-synthetic-profile"}):
+            self.credential.get_token(self.scope)
+        self.credential.get_token(self.scope)
+        with patch.object(runner.os, "getpid", return_value=-1):
+            self.credential.get_token(self.scope)
+        self.assertEqual(self.inner.get_token.call_count, 4)
+
+    def test_changed_confirmed_identity_does_not_reuse_old_token(self):
+        for field in ("account", "tenant", "subscription"):
+            with self.subTest(field=field):
+                self.credential.arm_token = None
+                self.credential.get_token(self.scope)
+                old_value = self.plan[field]
+                self.plan[field] = "different-synthetic-value"
+                self.inner.get_token.reset_mock()
+                if field == "subscription":
+                    self.credential.get_token(self.scope)
+                else:
+                    with patch.object(runner, "check_cli", side_effect=ValueError("identity differs")):
+                        with self.assertRaisesRegex(ValueError, "identity differs"):
+                            self.credential.get_token(self.scope)
+                self.inner.get_token.assert_called_once_with(self.scope)
+                self.plan[field] = old_value
+
+    def test_alias_identity_checks_are_repeated_on_cache_hit(self):
+        self.inner.get_token.return_value = self.token(upn="alias@example.invalid", oid="synthetic-user-id")
+        with patch.object(runner, "check_cli") as account_check, patch.object(
+            runner, "cli", return_value="synthetic-user-id",
+        ) as directory_check:
+            self.credential.get_token(self.scope)
+            self.credential.get_token(self.scope)
+            self.assertEqual(account_check.call_count, 2)
+            self.assertEqual(directory_check.call_count, 2)
+            directory_check.return_value = "different-user-id"
+            with self.assertRaisesRegex(ValueError, "identity differs"):
+                self.credential.get_token(self.scope)
+        self.assertIsNone(self.credential.arm_token)
+        self.inner.get_token.assert_called_once_with(self.scope)
+
+    def test_failed_identity_verification_does_not_cache_token(self):
+        self.inner.get_token.return_value = self.token(tid="different-tenant")
+        for _ in range(2):
+            with self.assertRaisesRegex(ValueError, "identity differs"):
+                self.credential.get_token(self.scope)
+        self.assertIsNone(self.credential.arm_token)
+        self.assertEqual(self.inner.get_token.call_count, 2)
+
+    def test_close_clears_token_and_prevents_reuse(self):
+        self.credential.get_token(self.scope)
+        self.credential.close()
+        self.assertIsNone(self.credential.arm_token)
+        with self.assertRaisesRegex(ValueError, "closed"):
+            self.credential.get_token(self.scope)
+
+    def test_acquisition_failure_has_no_retry_or_cached_fallback(self):
+        self.credential.get_token(self.scope)
+        self.clock.return_value = 1700
+        self.inner.get_token.reset_mock()
+        self.inner.get_token.side_effect = RuntimeError("synthetic credential failure")
+        with self.assertRaisesRegex(RuntimeError, "synthetic credential failure"):
+            self.credential.get_token(self.scope)
+        self.assertIsNone(self.credential.arm_token)
+        self.inner.get_token.assert_called_once_with(self.scope)
+
+
 class CredentialAliasTests(unittest.TestCase):
     def setUp(self):
         self.plan = plan()

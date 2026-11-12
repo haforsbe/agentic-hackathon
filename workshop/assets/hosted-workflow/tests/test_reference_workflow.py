@@ -1,12 +1,59 @@
+import json
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest.mock import MagicMock
 
 from fixtures import SyntheticSpecialists, drive_reference, trip
-from trip_workflow import execute_request, itinerary_text
+from trip_workflow import NativeInvoker, execute_request, itinerary_text
 
 
 class ReferenceWorkflowTests(unittest.IsolatedAsyncioTestCase):
+    def test_native_submission_limits_and_uncertain_attempts(self):
+        project = MagicMock()
+        client = project.get_openai_client.return_value.__enter__.return_value
+        client.conversations.create.return_value.id = "conv_synthetic"
+        requested = trip()
+        synthetic = SyntheticSpecialists()
+        with tempfile.TemporaryDirectory() as temporary:
+            invoke = NativeInvoker(project, Path(temporary))
+            for domain in ("weather", "culture"):
+                initial = synthetic(domain, requested, None, None)
+                item = initial["output"][0]
+                pending = {
+                    "response_id": initial["id"], "approval_request_id": item["id"],
+                    "server_label": item["server_label"], "tool_name": item["name"],
+                    "arguments": json.loads(item["arguments"]),
+                }
+                for decision in (None, True):
+                    body = initial if decision is None else synthetic(domain, requested, pending, decision)
+                    body["usage"] = None
+                    client.responses.create.return_value = SimpleNamespace(
+                        id=body["id"], to_dict=lambda body=body: body,
+                    )
+                    self.assertEqual(invoke(domain, requested, pending if decision else None, decision), body)
+                # Returning a recorded response is not a new billable submission.
+                self.assertEqual(invoke(domain, requested, pending, True), body)
+            self.assertEqual(client.responses.create.call_count, 4)
+            self.assertEqual(client.conversations.create.call_count, 2)
+            for call in project.get_openai_client.call_args_list:
+                self.assertEqual(call.kwargs["max_retries"], 0)
+                self.assertEqual(call.kwargs["timeout"], 60)
+            for call in client.responses.create.call_args_list:
+                self.assertEqual(call.kwargs["max_output_tokens"], 500)
+                self.assertTrue(call.kwargs["store"])
+                self.assertNotIn("max_tool_calls", call.kwargs)
+            self.assertTrue(all(entry["body"]["usage"] is None for entry in invoke.journal.values()))
+            with self.assertRaisesRegex(RuntimeError, "request limit exhausted.*not a model-cost cap"):
+                invoke("weather", requested, {**pending, "approval_request_id": "mcpr_additional"}, True)
+            self.assertEqual(client.responses.create.call_count, 4)
+
+            invoke.journal["weather-initial"] = {"state": "response-started-do-not-repeat"}
+            with self.assertRaisesRegex(RuntimeError, "reconcile instead of retrying"):
+                invoke("weather", requested, None, None)
+            self.assertEqual(client.responses.create.call_count, 4)
+
     async def test_supported_trip_combines_both_specialists(self):
         """W01: the graph invokes both domains and preserves sourced tradeoffs."""
         with tempfile.TemporaryDirectory() as temporary:

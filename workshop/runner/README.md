@@ -100,6 +100,18 @@ particular connection. Request failures still stop before operation execution.
 Checks for an approved batch share one process/client; CLI identity is checked
 again before each model request or resource write. No global sign-in changes.
 
+The verified credential reuses an Azure management token only in process
+memory, for the exact same ARM scope with no request options, the same process,
+CLI profile and confirmed account/tenant/subscription, and more than five
+minutes remaining in both token expiry fields. A recognized ARM audience is
+required for reuse; other audiences, options, expired tokens or changed context
+use the explicit CLI credential again. Actual token identity is verified on
+every return, including cache hits, and permission requests still run fresh.
+Closing the credential clears the cached token. Tokens are never written to
+plans or evidence. This avoids duplicate CLI token acquisition, not current
+access checks; it does not guarantee a whole operation will fit a short external
+timeout. Individual subprocess/request timeouts are not a whole-run deadline.
+
 ### Managed Conversation authorization
 
 The [documented Foundry User role](https://learn.microsoft.com/en-us/azure/foundry/concepts/rbac-foundry)

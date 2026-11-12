@@ -213,6 +213,16 @@ specialist releases, approved runtime configuration, an identifiable code and
 contract revision, and explicit cost/change approval. A known-failing hosted
 candidate is not deployed or promoted.
 
+Before any paid hosted test, complete the reference's
+[cost-readiness checklist](assets/hosted-workflow/README.md#cost-readiness-before-live-tests)
+and record a conservative whole-case estimate under the coach's
+[spend agreement](COACH.md#bounded-test-spend-agreements). Four native Responses
+submissions do not mean four internal inference turns; requested output limits
+do not bound cumulative input or memory costs. Current rates without a
+supported usage/limit basis are insufficient. If that basis is missing, leave
+the live case blocked for facilitator preparation; do not spend to discover it
+or change the specialists without separate approval.
+
 Deploy the workflow as a Microsoft Foundry Hosted Agent. Inspect its running
 version, Stable Agent Endpoint, identity, configuration, and nested trace. The
 workflow trace should show request validation, both agent invocations, both
@@ -271,6 +281,13 @@ provenance and explicit failures intact through the channel adapter.
 At least one chosen surface must have real CH02 evidence; installation or a
 raw endpoint response alone is not enough. An unsupported adapter or approval
 flow blocks this milestone; it does not authorize an approval bypass.
+
+**Close the core explicitly:** checkpoint 16 is the final core checkpoint.
+Follow the coach's [end-of-core notification](COACH.md#end-of-core-notification)
+without waiting for the participant to ask. Announce full completion only when
+all core gates pass; otherwise close an agreed stop as partial completion and
+name the remaining checks. Explain that 17-19 are an optional capstone, not
+additional required core lessons, and do not start them automatically.
 
 **App practice:** send the workflow request in the chosen channel, then compare
 the reply with live endpoint/version and nested-trace evidence in the GitHub Copilot app.

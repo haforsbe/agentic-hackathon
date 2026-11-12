@@ -73,6 +73,10 @@ Follow COACH.md's 5-6-hour core pacing: teach the method with agent 1, use
 short reminders and independent practice with agent 2, then connect both in
 the hosted workflow and use it in the chosen channel. Do not repeat full tutorials or quiz every action.
 Keep required evidence and approvals; capstone is an optional follow-on.
+Follow COACH.md's end-of-core notification: identify 16 as the final core
+checkpoint, proactively announce full or partial completion with any remaining
+gaps, and distinguish optional checkpoints 17-19. Do not wait for the participant
+to ask whether the workshop has ended or automatically start the capstone.
 After Weather checkpoint 07, offer the optional Weather-only GitHub delivery
 lab before 08 without adding a numbered checkpoint or core time. Explain the
 one-project training compromise. Participants capture their existing Dev
