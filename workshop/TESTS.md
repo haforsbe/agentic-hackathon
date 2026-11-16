@@ -420,6 +420,18 @@ authentication and MCP runtime behavior remain separate gates.
 
 ## Capstone gates and optional mutations
 
+The optional advanced local IT ticketing route uses LT01-LT03, not the
+two-specialist/hosted K01-K03 gates. These are intended acceptance cases;
+they do not imply that the reference example already implements the route.
+
+| ID | Input/procedure | Pass conditions |
+|----|-----------------|-----------------|
+| LT01 | Start/show the local ticketing web app, then start/explain its MCP server | App responds at the verified local URL and displays synthetic tickets; actual MCP discovery confirms tool names/schemas; before the agent-purpose question, coach explicitly confirms startup/address and explains every discovered tool's purpose and read/write effect, not just its name; discovery is distinguished from execution/approval; participant relates list/get tools to app state and the one-local-agent -> local MCP server -> local app boundary; no Microsoft Foundry agent deployment or workflow requirement |
+| LT02 | Build/connect one local agent from the participant's own description | Coach explicitly offers agreed MCP extensions rather than limiting the scenario to current tools; participant-defined purpose, observable tests, model connection, synthetic data, allowed tools and cost/data limits agreed before implementation/calls; after every MCP tool addition, owned server is restarted, all tools/schemas are freshly discovered/checked, approved new/existing behavior checks run with blockers explicit, and the complete tool list and read/write explanations are shown again; agent connection/inventory refreshed before use without implicit new-tool/write approval; earlier selected Microsoft Foundry model deployment reused after direct project/model, actual identity and permission checks, without creating cloud resources; real agent and chat relay available; writes, if included, additionally pass A01-A02 with enforced human decisions and an approved isolated backend |
+| LT03 | Test the running local agent through the GitHub Copilot app chat, then hand off | Participant requests reach the real local agent; follow-ups preserve its session; actual replies are distinguished from coaching, not simulated or replaced by coach tool calls; list/get and any approved mutations agree with app state; invalid input, missing ticket and unavailable MCP server produce explicit errors without false success; startup/shutdown and model-cost boundaries documented; core releases unchanged |
+
+Other explicitly chosen hosted capstones use K01-K03:
+
 | ID | Input/procedure | Pass conditions |
 |----|-----------------|-----------------|
 | K01 | Review the capstone brief before implementation | Participant explains two evidence domains, workflow need, scope/non-goals, tests, data/resource boundaries, and cost limits |

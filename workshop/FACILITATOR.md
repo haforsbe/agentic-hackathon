@@ -155,6 +155,11 @@ each runner invocation. The main avoidable delays are redundant inspections,
 one process per compatible test, replaying valid unchanged regressions,
 repeated navigation/confirmation questions and unbounded prerequisite diagnosis.
 Follow [the shortest verified path](COACH.md#shortest-verified-execution-path).
+Keep the welcome's critical path to entry guidance and pause-state recovery,
+not a full curriculum read. Then run one offline local installation inventory
+while independent upcoming guidance is prepared in background work packages.
+Report missing software without turning onboarding into an installation/debugging
+session; block its dependent operation, not unrelated experience questions.
 
 Before the cohort:
 
@@ -224,6 +229,13 @@ turns, unexpected failures and whether the correct evidence was captured.
 Use runner elapsed/request times where available; never generate extra model
 traffic merely to fill a timing report. Compare identical fixtures and
 participant paths; use a separate approved budget for any paid rehearsal.
+For startup, record welcome delivery, inventory start/end, each preparation
+task start/end, the first experience question and any dependency-blocking wait.
+Verify that inventory and independent preparation actually overlap, that the
+experience questions do not await later-lesson preparation, and that every
+required identity/approval/evidence gate remains intact. Participant response
+time is separate from coach-induced waiting; an idle background task is not
+evidence that the participant had to wait.
 Compare the same required assertions before/after optimization and record
 which waits were removed: duplicate preflight calls, process launches,
 unnecessary test requests and clarification turns. Use a single compatible
@@ -306,7 +318,7 @@ verifies menus, not model behavior or required participant learning gates.
 | Cultural Travel MCP | Rehearse the selected public `https://mcp.travel.art/` service from MCP-SERVICES.md: `find_museum_guide` first, then the four verified cultural tools; verify catalogue coverage, guide URLs/freshness, approval boundaries, and Foundry-side execution; do not deploy an alternative server |
 | Reusable Foundry tools | Rehearse anonymous upstream connection registration/read-back and reuse inside Toolbox, plus the separate authenticated Toolbox connection; inspect existing owned connections before creation; record APIs/client versions and Build > Tools route without claiming unobserved controls |
 | Toolboxes | Rehearse Weather-only then Cultural-only versioned collections, caller/runtime identity authentication, exact connection reuse, pinned endpoints, discovered qualified names, effective restrictions, actual approval/denial and trace linkage. Keep the agent routing URL alongside its verified connection reference. Record the current inspection route; no VS Code requirement. Unsupported behavior blocks the gate, not permission to disable approvals or use an unclaimed direct fallback. |
-| Optional ticket capstone | Only for students choosing IT support with writes: provide an authenticated reachable synthetic service, isolation, and approval-compatible operations before implementation |
+| Optional advanced local IT ticketing route | One local agent -> local MCP server -> local ticketing app, reusing the participant's verified existing Microsoft Foundry model deployment; no Microsoft Foundry agent deployment or workflow. Rehearse actual request identity, project/model access, inference permission, chat relay and bounded data/cost approval. For writes, require an approved authenticated isolated synthetic backend and enforced human decisions; the existing example is not ready as-is |
 | Memory | Verify store creation, update, retrieval, deletion, identity mapping, retention, and rollout support |
 | Skills | Verify create/version/retrieve and the selected prompt-agent delivery strategy; do not assume prompt runtimes load MCP resources |
 | Hosting | Rehearse the current official scaffold, local host, remote deployment, and required runtime |
@@ -329,7 +341,9 @@ deterministic or that this repository enforces access control.
 | Scenario | Expected coach behavior |
 |----------|-------------------------|
 | "How do I start this workshop?" | Explains typing `/agent` in the repository session, selecting Workshop Coach, then saying "Start the workshop"; distinguishes profile/model/Microsoft Foundry agents; no progress creation or resource changes |
-| Select Workshop Coach, then "Start the workshop" | Welcomes and explains the workshop, asks Foundry then Copilot app experience separately, saves preferences, then starts account/endpoint setup without a second start command; no deployment |
+| Select Workshop Coach, then "Start the workshop" | Loads entry guidance/pause status, delivers the agreed welcome, runs one offline local inventory alongside independent preparation, asks Foundry then Copilot app experience separately, saves preferences, then starts account/endpoint setup without a second start command; no deployment |
+| Local inventory finds missing software | Reports present/missing/mismatched installations without sign-in, network requests or automatic installs; continues experience questions and blocks only dependent operations; no repeated interpreter probes or speculative environment switch |
+| Upcoming preparation is still running | Continues the independent current learner interaction; waits only for its actual prerequisite, consumes each result once, and stops coaching preparation on pause; no future cloud action or early checkpoint pass |
 | Different experience levels for the two products | Adjusts explanation/navigation independently; keeps the same hands-on goals, approvals and evidence |
 | Resume with saved experience preferences | Reuses them without asking again; older progress without the fields uses existing agreed style and is not reset or blocked |
 | "Explain more" or "Keep it brief" | Adjusts guidance immediately without another proficiency questionnaire or changing test requirements |
@@ -459,6 +473,18 @@ Keep each implementation's dependencies isolated and versioned. In-process
 context injection is not durable memory, and small creation/chat scripts do
 not replace release tests. For IT support capstones, provide an approved
 synthetic backend rather than an unauthenticated shared demo.
+For the optional advanced local IT ticketing path, use CAPSTONE.md's local
+17-19 route and LT01-LT03, not hosted capstone release gates. Rehearse the four-step
+learner flow: show the running web app, start/explain MCP, build/connect an agent
+from the participant's own purpose, then test the real agent through the GitHub
+Copilot app chat. The relay must preserve agent-session continuity, show actual
+replies and carry enforced action-specific approvals, not let the coach simulate
+the agent or call its tools in place of it. The existing example's Microsoft
+Foundry model connection matches the intended architecture, but its terminal
+loop is not the required chat relay and it lacks enforced write approvals.
+Treat the relay and read-only restrictions or write-approval protections as
+preparation blockers, not participant troubleshooting or permission to create
+cloud resources.
 
 ## Maintaining the course
 

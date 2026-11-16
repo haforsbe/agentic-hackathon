@@ -28,21 +28,59 @@ not as a new CI/CD prerequisite.
 
 ### Coach opening and readiness
 
-The Workshop Coach says:
+After checkpoint 07 and CH01 pass, the Workshop Coach presents both paths
+before starting lab setup:
 
-> You've built and tested your Weather agent in Microsoft Foundry. Now you'll
-> keep its configuration in Git and use GitHub to deliver it to a separate
-> Prod agent, without manually copying settings. You'll capture it, review a
-> pull request, and approve deployment. Dev stays unchanged.
+Use the participant-facing text below verbatim in English, including both path
+descriptions and the explicit return to checkpoint 08. Translate faithfully
+only when the participant has requested another coaching language. Do not
+shorten it into a mandatory lab introduction or omit either choice.
+
+> You've built, tested, published and used your Weather agent in Microsoft
+> Foundry and your chosen channel. From here, you can choose between two paths:
+>
+> **Path 1 - Continue the core workshop.** Move straight to checkpoint 08 and
+> build the Cultural Travel Agent. Then connect both specialists in the hosted
+> workflow. Your Weather agent stays unchanged; no GitHub delivery lab is needed
+> to complete the core workshop.
+>
+> **Path 2 - Take the optional GitHub delivery lab, then continue to checkpoint
+> 08.** Complete the lab first, then build the Cultural Travel Agent at checkpoint
+> 08 and continue the same core workshop as Path 1. Keep your tested
+> Weather configuration in Git, which tracks file changes, and use GitHub to
+> deliver it to a separate Prod (production) agent without manually copying
+> settings. You'll capture the configuration from your Dev (development) agent,
+> review a pull request (a proposed change), see automated checks, merge the
+> reviewed change, and explicitly approve deployment. Dev stays unchanged.
 >
 > Capture -> review and checks -> merge -> approve deployment -> verify Prod.
 >
 > CI means continuous integration: automated checks on a proposed change.
 > CD means continuous delivery: preparing and delivering an accepted change
-> through a controlled process. This lab uses a manual capture and deployment
-> approval so you can see those decisions.
+> through a controlled process. This lab uses manual capture and deployment
+> confirmation so you can see those decisions; merge alone does not deploy.
+>
+> The lab adds extra work and requires verified facilitator setup. Its Dev and
+> Prod agents share one Microsoft Foundry Project for training, not production
+> isolation. After the lab, you'll return to checkpoint 08 and follow the same
+> remaining core workshop. Neither path skips any required core checkpoint.
+>
+> Which path would you like to take?
 
-Before asking the participant to run anything, confirm the exact repository,
+Ask that question through the question tool with **Continue to Cultural Travel
+(checkpoint 08)** and **Take the GitHub delivery lab, then continue to checkpoint
+08**, allowing
+freeform input. Honor a pause request. Do not select a path for the participant
+or start lab-specific checks, installation or configuration before their choice.
+The choice is not approval for resource changes, paid tests or tool calls.
+
+If they choose Path 1, record the optional lab as skipped and continue at 08;
+do not present its setup steps. If they choose Path 2, keep the current checkpoint
+at 07 and begin the readiness checks below. State any known setup or rehearsal
+blocker before presenting the choice; do not imply the lab is operational merely
+because its code exists.
+
+For Path 2, before asking the participant to run anything, confirm the exact repository,
 default branch, Microsoft Foundry Project, existing Dev/Prod names, saved Dev
 version and participant authorized to start deployment. Reuse earlier verified evidence
 only while its identity, resource and operation scope remain unchanged.

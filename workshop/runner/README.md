@@ -24,6 +24,19 @@ and exact package versions offline; it neither installs packages nor signs in.
 An installed CLI is not proof of project access. On another operating system,
 use its native path separators.
 
+The coach also uses this inventory immediately after the participant welcome,
+before the experience questions. The same invocation reports its running Python
+version; do not launch a separate `python --version` check.
+Report present/missing tools and package-version mismatches; do not perform
+Azure sign-in, account, subscription, project or role checks as part of this
+local-only step. Git and Python are local prerequisites; missing `azd` is flagged
+for the later hosted workflow. This command does not verify the GitHub Copilot
+app/browser installations, licensing or any cloud/runtime capability.
+Keep the runner's JSON as machine-readable inventory; the coach presents one
+requirement per table row with OK/MISSING, separate VERSION MISMATCH or NOT
+CHECKED outcomes when applicable, and concise installed/expected version details.
+Do not combine all SDK packages into one participant-facing status.
+
 Use an isolated environment with `requirements.txt` from this folder. Install
 only after a missing-dependency/version-mismatch result or a manifest change.
 Do not install into unrelated environments. Rehearse SDK upgrades and update

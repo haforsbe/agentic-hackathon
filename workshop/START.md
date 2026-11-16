@@ -83,10 +83,23 @@ do not select an unrelated agent, delete progress, or restart the workshop.
 The profile file and official documentation do not prove discovery in your
 installed build.
 
-**Expected result:** the coach says "Hi!", explains the workshop's four stages
+**Expected result:** the coach says "Hi and welcome to this Agentic Workshop!",
+introduces two Microsoft Foundry agents, consumption through Microsoft Teams
+or Microsoft Copilot Studio, and their collaboration in a multi-agent workflow.
+It explains the workshop's four stages
 (checkpoint 00 setup, Weather with channel publication/use, Cultural Travel,
 and the hosted workflow with channel publication/use then optional capstone).
-It asks the two quick Microsoft Foundry/GitHub Copilot app experience questions,
+Where background execution is available, the coach prepares local guidance for
+the current and upcoming steps in parallel with the welcome, questions and
+practice, reusing results rather than making you wait at each lesson.
+Preparation that depends on your choices waits for those choices.
+This does not start cloud checks or authorize
+changes; account selection, project verification and approvals still come first.
+Immediately after the welcome, it quickly checks local installations from
+the prerequisites: Python, Git, Azure CLI, Azure Developer CLI and the
+prompt-runner SDK packages. This offline inventory does not sign in, check
+Azure accounts/projects/roles, contact services or install anything.
+It then asks the two quick Microsoft Foundry/GitHub Copilot app experience questions,
 then asks which signed-in Microsoft account you want to use for Microsoft Foundry,
 then asks for your Foundry Project Endpoint. If you do not know it or do not
 yet have a project, the coach guides you to locate or create your own dedicated

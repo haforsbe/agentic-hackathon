@@ -43,6 +43,10 @@ To keep that time for learning, the coach uses the
 and reuses already learned navigation. These automate plumbing, not the
 participant's approvals, hands-on tests or understanding. Facilitators can
 offer the [optional advance readiness check](SETUP.md#optional-advance-readiness-same-live-approval-boundaries).
+During active coaching, [parallel preparation](COACH.md#parallel-preparation-protocol)
+keeps the welcome and learner interaction moving while independent background
+work prepares all safely knowable upcoming steps. Unknown choices and required
+execution gates remain dependencies, not reasons to delay unrelated preparation.
 
 ## Learning sequence
 
@@ -141,9 +145,9 @@ this as a vocabulary test. It introduces each term immediately before use:
 | 14 | [Release Cultural Travel Agent](01-prompt-agents.md#14-release-the-cultural-travel-agent) | Cultural final-path regressions/P01-P03, unchanged Weather release/dependency verification, T03 isolation and two-agent comparison | Review two independent Toolbox-backed releases without a planned Weather migration |
 | 15 | [Build Trip Planning Workflow](02-hosted-agents.md#15-build-and-test-the-trip-planning-workflow) | Reviewed portal-compatible scaffold, G01-G03 and W01-W03 locally | Review contracts, request-owned state, approval bindings and traces |
 | 16 | [Deploy, release and publish workflow](02-hosted-agents.md#16-hosted-release) | W01-W03 remotely, actual portal W04 success/denial, P01-P04, then CH02 on the final version | Review sequential tool cards and sourced output; send a channel request and inspect both specialist calls |
-| 17 | [Choose a capstone](CAPSTONE.md#17-choose-and-scope) | K01 | Turn an idea into a bounded two-specialist plan |
-| 18 | [Build capstone specialists](CAPSTONE.md#18-build-and-release-the-specialists) | K02 and applicable specialist regressions | Small tasks, diff review, focused debugging |
-| 19 | [Build and release capstone workflow](CAPSTONE.md#19-build-release-and-demonstrate-the-workflow) | K03, G01-G03, W01-W03, P01-P04 | Handoff with evidence and cleanup choices |
+| 17 | [Explore the local app and MCP server, or scope another capstone](CAPSTONE.md) | LT01 for local IT ticketing; K01 for other capstones | Show the ticketing app, then explain its MCP tools; other capstones define their two-specialist scope |
+| 18 | [Build the chosen follow-on](CAPSTONE.md) | LT02 and A01-A02 for local ticket writes; K02 and applicable regressions for other capstones | Small tasks, diff review, focused debugging |
+| 19 | [Demonstrate and hand off](CAPSTONE.md) | LT03 for local IT ticketing; K03, G01-G03, W01-W03, P01-P04 for other capstones | Test the real local agent through chat, or gather hosted-capstone evidence; cleanup choices |
 
 Each checkpoint depends on the preceding checkpoint. Both prompt agents must
 pass and be released independently before checkpoint 15 introduces executable
@@ -178,6 +182,19 @@ change to required approvals, hands-on practice or evidence.
 | "Clean up" | List exact owned targets and ask before stopping/deleting |
 
 ## Completion
+
+After verified core completion, participants choose between **finishing the
+workshop here** and **continuing with the optional, more advanced local IT
+ticketing system scenario at 17-19**. Use the
+[two-path closing](COACH.md#end-of-core-notification).
+That route runs one local agent against a local MCP server and ticketing app;
+the agent reuses the participant's existing Microsoft Foundry model deployment,
+with no Microsoft Foundry agent deployment or workflow. It uses synthetic data
+and starts with the web app demonstration, then the MCP introduction, before
+the participant describes their agent's purpose. Build and connect that agent,
+then test it through the GitHub Copilot app chat as its interface. This is not
+automatic implementation or approval for ticket writes; other
+explicitly chosen capstones remain valid.
 
 Core completion requires checkpoints 00-16; an explicitly chosen capstone
 extension also requires 17-19. Leave unchosen capstone checkpoints not started,
