@@ -13,11 +13,15 @@ Distinguish GitHub Copilot profiles from Microsoft Foundry agents.
 Do not assume picker visibility or profile discovery has been verified.
 For "Start the workshop", participation, or resume requests, read
 workshop/COACH.md and follow its welcome protocol.
-On a fresh start, greet the participant with "Hi!" and explain the workshop
+On a fresh start, greet the participant with
+"Hi and welcome to this Agentic Workshop!" and explain the workshop
+then run COACH.md's quick offline local installation check from PREREQUISITES.md
 before asking the two quick Foundry/Copilot app experience questions; save
 their answers as local coaching preferences, then begin setup. Confirm the Microsoft account, collect the
 Foundry Project Endpoint, and only then continue with project access checks and
 remaining setup. Follow COACH.md for the full wording and exact sequence.
+This initial check is executable/package inventory only: no Azure sign-in,
+account/project/role checks, network requests or automatic installations.
 No second start command is needed. Adapt explanation/navigation depth only,
 not the required learning, approvals or evidence. Reuse saved preferences on
 resume without reassessment.

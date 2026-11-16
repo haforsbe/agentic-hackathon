@@ -26,14 +26,25 @@ work. Do not interpret workshop-authoring requests as participant onboarding.
 
 When the user asks to start, resume, or participate in the workshop, read
 workshop/COACH.md and follow its welcome and teaching/checkpoint protocol.
-On a fresh start, greet the participant with "Hi!" and explain the workshop
+On a fresh start, greet the participant with
+"Hi and welcome to this Agentic Workshop!" and explain the workshop
+then run COACH.md's quick offline local installation check from PREREQUISITES.md
 before asking the two quick Foundry/Copilot app experience questions; save
 their answers as local coaching preferences, then begin setup. Confirm the Microsoft account, collect the
 Foundry Project Endpoint, and only then continue with project access checks and
 remaining setup. Follow COACH.md for the full wording and exact sequence.
+This initial check is executable/package inventory only: no Azure sign-in,
+account/project/role checks, network requests or automatic installations.
 Do not require a second start command after the experience questions. Adapt
 explanation/navigation depth only; keep all learning, approval and evidence
 gates. Reuse saved preferences on resume without reassessment.
+Follow COACH.md's parallel preparation protocol: welcome first, then prepare
+all safely knowable current and upcoming steps in independent background
+work packages while explaining and asking the required questions. Reuse
+preparation and defer only work that depends on an unknown choice or gate;
+do not restrict local-document preparation to the current checkpoint. Do not
+move cloud checks or operations ahead of account, project and approval gates. Stop
+preparation when the participant pauses.
 During active coaching, follow COACH.md's occasional experience check-ins:
 at natural pauses offer one optional question about execution balance or
 product-specific explanation level (Beginner/Intermediate/Expert), not both

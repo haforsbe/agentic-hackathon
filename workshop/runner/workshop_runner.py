@@ -12,6 +12,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 from time import perf_counter, time
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
@@ -46,6 +47,7 @@ def readiness():
         packages[package] = {"expected": expected, "installed": actual, "matches": actual == expected}
     tools = {name: shutil.which(name) is not None for name in ("git", "az", "azd")}
     return {
+        "python_version": sys.version.split()[0],
         "tools": tools,
         "packages": packages,
         "prompt_runner_ready": tools["az"] and all(item["matches"] for item in packages.values()),

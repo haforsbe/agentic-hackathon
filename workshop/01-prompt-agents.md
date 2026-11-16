@@ -328,6 +328,11 @@ separate Prod Weather agent. It is not a new numbered checkpoint, does not
 alter the 00-16 core or its 5-6-hour estimate, and does not add work for
 Cultural Travel or the hosted workflow.
 
+Use the lab guide's two-path opening and question: continue directly to Cultural
+Travel at 08, or take the optional GitHub delivery lab first and then return to
+08. Wait for the participant's choice before lab-specific readiness checks or
+setup; choosing the lab does not approve any cloud operation.
+
 Explain the tradeoff first: Dev and Prod are separate agent resources in one
 Microsoft Foundry Project, an educational compromise, **not production best
 practice**. Project dependencies, permissions, quotas, and audit boundary are

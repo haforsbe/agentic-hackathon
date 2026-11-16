@@ -24,7 +24,8 @@ Every participant uses one dedicated Microsoft Foundry Project. They may create
 it before the workshop or create it themselves at checkpoint 00 with coach
 guidance after confirming the target and possible costs. The facilitator does
 not assign the project name or endpoint. Follow this opening order: welcome and
-explain the workshop, ask the two quick product-specific experience questions
+explain the workshop, run COACH.md's quick offline local installation inventory
+(no Azure sign-in, access or role checks), ask the two quick product-specific experience questions
 from COACH.md, then begin setup by confirming which Microsoft account the
 participant wants to use and immediately asking for the actual Project
 Endpoint. Save experience preferences locally and reuse them; no second start

@@ -159,7 +159,13 @@ type **`/agent`** in the message box, select **Workshop Coach**, and send:
 
 > Start the workshop.
 
-The coach welcomes you and explains the workshop, then asks how experienced
+The coach welcomes you and explains the workshop, then quickly inventories local
+installations using the existing offline readiness helper. It checks local
+Python, Git, Azure CLI, Azure Developer CLI and prompt-runner SDK dependencies;
+it does not check Azure sign-in, accounts, projects or roles, make network
+requests, or install anything automatically. Missing later hosting tools are
+flagged for their dependent step, not a reason to delay the welcome.
+The coach then asks how experienced
 you feel with **Microsoft Foundry** and the **GitHub Copilot app**, separately.
 Choose Beginner, Intermediate or Expert, or describe it in your own words.
 The answers tailor explanations and navigation, not the goals or safety checks.

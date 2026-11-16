@@ -3,7 +3,19 @@
 Optional local example for an IT support capstone, not a prerequisite for the
 [coached workshop](../../workshop/START.md). The browser UI and MCP (Model
 Context Protocol) server share a synthetic ticket store in `tickets.json`.
-The local agent calls a model in Foundry; it is not a deployed Foundry agent.
+The local agent calls a model in Microsoft Foundry; it is not a deployed
+Microsoft Foundry agent.
+
+**Workshop Path 2:** the optional advanced local IT ticketing route requires
+one local agent, a local MCP server and this local app, reusing the participant's
+existing Microsoft Foundry model deployment. There is no Microsoft Foundry agent
+deployment or workflow. The current `agent_with_mcp.py` is reference material,
+not that finished route: it uses a terminal chat loop instead of the required
+GitHub Copilot app chat relay. Its MCP server also does not enforce human approval
+for writes or a read-only agent boundary.
+Follow [the local route and preparation blocker](../../workshop/CAPSTONE.md#optional-advanced-local-it-ticketing-route-17-19);
+do not create Microsoft Foundry resources or claim runtime/approval readiness from this
+example as-is.
 
 ## Run the browser app
 
