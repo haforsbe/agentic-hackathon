@@ -532,14 +532,14 @@ class ValidationEvidenceTests(unittest.TestCase):
 
 
 class OptionalRouteTests(unittest.TestCase):
-    def test_v9_template_keeps_channel_gates_separate_from_optional_lab(self):
+    def test_v10_template_keeps_channel_gates_separate_from_optional_lab(self):
         import json
         from pathlib import Path
 
         progress = json.loads(
             (Path(__file__).resolve().parents[1] / "templates" / "progress.json").read_text()
         )
-        self.assertEqual(progress["curriculum_version"], "two-specialists-workflow-v9")
+        self.assertEqual(progress["curriculum_version"], "two-specialists-workflow-v10")
         self.assertEqual(set(progress["channel_publications"]), {"weather", "workflow"})
         progress["current_checkpoint"] = "07"
         weather = next(item for item in progress["checkpoints"] if item["id"] == "07")

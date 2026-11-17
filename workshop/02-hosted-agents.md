@@ -52,7 +52,7 @@ upstream guidance automatically.
 Use the builder for framework code, session isolation, approval/resume behavior
 and deterministic workflow tests. Continue using the Microsoft Foundry skill
 for deployment and resource operations, and Microsoft Learn MCP for current
-API documentation. Neither guidance nor installation proves Toolbox execution,
+API documentation. Neither guidance nor installation proves MCP execution,
 human approval, release or CH01/CH02 channel evidence.
 
 ## 15: Build and test the Trip Planning Workflow
@@ -76,9 +76,9 @@ memory scope, and release. The coach supplies both existing agent release
 details and guides their connection into workflow code; the participant does
 not need another MCP server. A travel.art `recommend_art_trip` result alone is
 not the final workflow, because it does not invoke our Weather Research Agent.
-Confirm the checkpoint 14 handoff includes both tested Toolbox-backed releases,
-their pinned dependency versions and T01-T03 evidence. The workflow invokes
-the specialists, not a combined Toolbox; do not give it direct weather or
+Confirm the checkpoint 14 handoff includes both tested direct-MCP releases,
+their exact bindings, skill versions and T01-T03 evidence. The workflow invokes
+the specialists, not their MCP servers; do not give it direct weather or
 cultural tool access as a shortcut around specialist execution.
 
 After approval, use the reviewed
@@ -213,15 +213,15 @@ specialist releases, approved runtime configuration, an identifiable code and
 contract revision, and explicit cost/change approval. A known-failing hosted
 candidate is not deployed or promoted.
 
-Before any paid hosted test, complete the reference's
-[cost-readiness checklist](assets/hosted-workflow/README.md#cost-readiness-before-live-tests)
-and record a conservative whole-case estimate under the coach's
-[spend agreement](COACH.md#bounded-test-spend-agreements). Four native Responses
-submissions do not mean four internal inference turns; requested output limits
-do not bound cumulative input or memory costs. Current rates without a
-supported usage/limit basis are insufficient. If that basis is missing, leave
-the live case blocked for facilitator preparation; do not spend to discover it
-or change the specialists without separate approval.
+Before a paid hosted test, follow the reference's
+[usage and limits guidance](assets/hosted-workflow/README.md#usage-and-limits-before-live-tests)
+and obtain the coach's [scoped test approval](COACH.md#scoped-test-approvals).
+Explain possible charges and supported execution limits; retain available
+response tokens without price lookups or mandatory whole-case calculations.
+Four native Responses submissions do not mean four internal inference turns;
+requested output limits are not input, memory or billing caps. Missing prices
+or a monetary estimate alone do not block tests. Keep all runtime, authorization,
+tool-approval and explicitly participant-imposed cost restrictions.
 
 Deploy the workflow as a Microsoft Foundry Hosted Agent. Inspect its running
 version, Stable Agent Endpoint, identity, configuration, and nested trace. The

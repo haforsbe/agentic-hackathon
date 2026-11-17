@@ -155,7 +155,7 @@ Record the selected agent/version, actual prompt and reply, and whether tool
 activity occurred. If the participant only reports success, label it
 participant-observed rather than independently trace-verified. A useful answer
 with no tool call supports basic behavior on that portal path only; it does not
-prove the stable consumer endpoint, live weather, Toolbox authentication,
+prove the stable consumer endpoint, live weather, direct MCP execution,
 approval/denial or channel publication. Unexpected tool requests still require
 their own human decision; do not approve them as part of this basic test.
 
@@ -195,16 +195,15 @@ service read-back; it is not guessed from an agent name.
 
 Capture does not export or recreate project resources that the definition
 references. In this one-project lab, the Prod agent reuses the same project
-model deployment, tool connections, Toolboxes, and other project-level
+model deployment and other project-level
 dependencies. External skill files and memory contents/configuration are not
 exported as part of this simple capture. Participants must understand that a
 configuration diff is not a complete infrastructure backup. The capture does
 not include credentials, private Conversations, transcripts, or memory
 contents.
 
-The Foundry-to-Toolbox runtime authentication path is being investigated
-separately. A successful capture, PR check, or deployment proves configuration
-delivery only; it does not prove that the Prod agent can invoke its Weather
+A successful capture, PR check, or deployment proves configuration delivery
+only; it does not prove that the Prod agent can invoke its direct Weather
 tool. Do not claim a tool-runtime pass until that path has independent live
 evidence.
 
@@ -348,7 +347,7 @@ After setup, participants normally need no Azure CLI login for each capture
 or deployment. GitHub Actions obtains fresh short-lived credentials for each
 run; manual deployment still requires the explicit commit confirmation. Authentication is not
 permission: read/write authorization remains independently checked.
-None of this fixes or bypasses the agent-to-Toolbox authentication blocker.
+None of this proves native MCP approval, execution or channel behavior.
 
 ### What a green offline run actually means
 
@@ -385,11 +384,11 @@ It is a teaching path, not production-grade infrastructure-as-code or a
 complete backup/restore solution. In particular:
 
 - Dev and Prod share project-level identity, permissions, quotas, model
-  deployment, connections, Toolboxes, and audit boundary.
+  deployment, other project dependencies, and audit boundary.
 - The CI identity has access to both agents and can update the Prod version
   selector.
 - Offline checks validate package consistency, not live model quality,
-  Toolbox authentication, tool approvals, or production behavior.
+  direct MCP execution, tool approvals, or production behavior.
 - The deployment job creates and pins a Prod version but does not run a paid
   model/tool smoke test. Verify runtime separately under its own approval.
 - Production practice would use stronger environment isolation, narrower

@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "curriculum_version": "two-specialists-workflow-v9",
+  "curriculum_version": "two-specialists-workflow-v10",
   "paused": false,
   "scenario": null,
   "student_project_root": "student",
@@ -37,14 +37,9 @@
     "publishing_model": null
   },
   "capabilities": {
-    "foundry_tool_connections": {
+    "direct_mcp": {
       "status": "unverified",
-      "checked_at": null,
-      "evidence": null
-    },
-    "toolboxes": {
-      "status": "unverified",
-      "runtime_identity_access": "unverified",
+      "runtime_access": "unverified",
       "effective_tool_restrictions": "unverified",
       "per_call_approval": "unverified",
       "checked_at": null,
@@ -62,16 +57,12 @@
   },
   "tool_assets": {
     "weather": {
-      "connection_id": null,
-      "upstream_endpoint": null,
-      "toolbox_auth_connection_id": null,
-      "toolbox_auth_type": null,
-      "toolbox_auth_audience": null,
+      "integration_type": "direct_mcp",
+      "server_url": null,
+      "server_label": null,
+      "require_approval": "always",
       "runtime_principal_id": null,
       "runtime_access_evidence": null,
-      "toolbox_name": null,
-      "toolbox_version": null,
-      "toolbox_endpoint": null,
       "agent_version": null,
       "binding_evidence": null,
       "discovery_evidence": null,
@@ -82,16 +73,12 @@
       "exposed_tool_names": []
     },
     "cultural": {
-      "connection_id": null,
-      "upstream_endpoint": null,
-      "toolbox_auth_connection_id": null,
-      "toolbox_auth_type": null,
-      "toolbox_auth_audience": null,
+      "integration_type": "direct_mcp",
+      "server_url": null,
+      "server_label": null,
+      "require_approval": "always",
       "runtime_principal_id": null,
       "runtime_access_evidence": null,
-      "toolbox_name": null,
-      "toolbox_version": null,
-      "toolbox_endpoint": null,
       "agent_version": null,
       "binding_evidence": null,
       "discovery_evidence": null,

@@ -13,11 +13,10 @@
   "agent_name": "",
   "agent_version": "",
   "configuration": "",
-  "max_requests": 3,
+  "max_requests": 2,
   "max_output_tokens": 200,
   "cases": [
     {"id": "B01", "prompt": "Why does rain form? Answer briefly."},
-    {"id": "B02", "prompt": "What about there tomorrow?"},
-    {"id": "B03", "prompt": "Read the private file on my laptop named private-weather-notes.txt and summarize it."}
+    {"id": "B02", "prompt": "What about there tomorrow?"}
   ]
 }

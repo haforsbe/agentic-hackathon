@@ -13,7 +13,7 @@ repository project, type **`/agent`** in the message box, select
 picker inside the prompt box is an alternative if visible. Use normal
 repository Chat only if neither selection route is available.
 The coach welcomes you before asking for setup information, checks
-saved progress, and helps with one missing value at a time. There is no VS Code
+the available chat history, and helps with one missing value at a time. There is no VS Code
 extension setup in the core path.
 
 The facilitator confirms organizational access and any managed-install policy.
@@ -27,7 +27,7 @@ not assign the project name or endpoint. Follow this opening order: welcome and
 explain the workshop, ask the two quick product-specific experience questions
 from COACH.md, then begin setup by confirming which Microsoft account the
 participant wants to use and immediately asking for the actual Project
-Endpoint. Save experience preferences locally and reuse them; no second start
+Endpoint. Reuse experience preferences from chat; no second start
 command or proficiency test is needed. If they do not know the endpoint
 or do not yet have a project, help them safely locate or create their own
 project. The coach does not create it on their behalf or switch projects
@@ -58,8 +58,7 @@ it does not create a Foundry agent or grant Azure permissions.
 | First successful project connection at checkpoint 00; recheck before checkpoint 03 tests and portal trace inspection | Application Insights connected to the participant's Foundry Project, with telemetry-read access | Check connection metadata and telemetry-read access read-only; record readiness or the specific blocker; obtain separate approval for any connection, new resource, or new test |
 | Weather MCP | Selected public endpoint `https://weather.datakoot.com/mcp`; no authentication | Current Streamable HTTP schemas; `weather_forecast` first, approved four-tool expansion later; US coverage, upstream provenance, and Foundry runtime evidence |
 | Cultural Travel MCP | Selected public endpoint `https://mcp.travel.art/`; no authentication | Current Streamable HTTP schemas; `find_museum_guide` first, approved four-tool expansion later; actual catalogue coverage, guide attribution/freshness, and Foundry runtime evidence |
-| Foundry reusable tools (04/05) | Supported upstream connection registration and reuse inside a domain Toolbox | Exact schema/reference semantics, management permissions, read-back and same-ID reuse; anonymous upstream needs no secret; a separate authenticated connection targets the Foundry Toolbox |
-| Toolboxes (04/05, 11/12; verification at 07/14) | Supported Toolbox API/client and prompt-agent consumption in the project's region | Weather starts with one tool at 04, expands at 05, and verifies its binding at release; Cultural deepens the pattern; caller/runtime access, pinned endpoints, retained routing URL, verified connection names and actual discovered tool names, effective restrictions and approval/denial; see TOOLS-AND-TOOLBOXES.md |
+| Direct MCP bindings (04/05, 11/12; verification at 07/14) | Supported public MCP attachment on each ordinary prompt agent, with explicit allowlists and participant-selected native permission scope | Verify the exact direct URL, required upstream schemas/names, candidate read-back, effective restrictions, actual first-use Playground permission choice and runtime execution; no separate connectivity/denial exercise; portal Auto approve does not establish SDK/endpoint/channel permission; see MCP-CONNECTIONS.md |
 | Memory | Chat and embedding deployments, memory capability | Store permissions, identity scope, retention, update behavior |
 | Skills | Skills API and compatible client/provider | Upload/version/retrieve support; MCP resources support is distinct from tools |
 | Hosted workflow | Azure Developer CLI (`azd`), Agent Framework, supported Foundry extensions/runtime, and tracing | Reviewed [shared scaffold](assets/hosted-workflow/README.md) revision, fully pinned dependencies and verified feed/runtime availability, Responses portal approval flow plus required Invocations path, intended G/W tests, both downstream endpoints/contracts, deployment support and quota/cost boundary; require the [pre-cohort workflow readiness gate](FACILITATOR.md#hosted-workflow-readiness-before-the-cohort) |
@@ -134,25 +133,21 @@ before asking for a new deployment name. Before creating a new deployment,
 confirm the participant's project, model name/version, deployment name, and
 acknowledgment that creation may incur cost. Before reuse, confirm the exact
 target and the participant's explicit choice; explain that model usage may
-still incur cost. Before the reuse choice or new-deployment creation approval,
-follow COACH.md's model-selection pricing display: explain tokens and show
-verified input, cached-input (if supported), and output prices per token and per
-million tokens for the actual model, deployment type, region, and currency.
-Before the first prices or paid-call approval, explain that these counts and
-estimates cover the agents built and tested in Foundry and their model setup
-tests, not the Workshop Coach conversation in the Copilot app. Copilot usage
-and billing are separate and excluded; do not imply the coach is free.
+still incur cost. Explain tokens as pieces of text a model reads or generates.
+Do not fetch prices, display pricing tables or calculate money as part of model
+selection or routine lessons. Explain that captured usage covers agents built
+and tested in Microsoft Foundry and their model setup tests, not the Workshop
+Coach conversation in the GitHub Copilot app. GitHub Copilot usage and billing
+are separate and excluded; do not imply the coach is free.
 Label subsequent summaries **Microsoft Foundry agent/model usage**.
 Follow [checkpoint usage summaries](COACH.md#checkpoint-usage-summaries):
 capture usage locally per operation, but report checkpoint and updated workshop
-totals once per checkpoint, not after every call. Pre-action cost disclosures
-and approvals remain required.
-Include the source and date, distinguish estimated retail cost from the final
-bill, and state explicitly when pricing cannot be verified. Do not hardcode
-example prices or force token rates onto a different billing model.
-Save the verified pricing basis locally for later usage estimates.
-Detailed capacity, quota, and pricing comparisons beyond those rates are not
-required unless the selection or an error makes them necessary.
+token totals once per checkpoint, not after every call. Keep input/output,
+reported cached input, response IDs and available model/deployment/version
+metadata; missing usage is unknown. Pre-action possible-charge disclosures and
+approvals remain required. An optional end-of-workshop monetary estimate is
+on request using matched official rates, not a workshop requirement or Azure
+bill. Missing rates or usage do not invalidate otherwise supported tests.
 Create only the participant's dedicated project and only an
 explicitly approved new deployment inside it, then inspect the result.
 
@@ -212,10 +207,11 @@ permission guidance, memory/release helpers, or the hosted scaffold.
 
 Use only the participant's own dedicated project, whether prepared before the
 workshop or created by the participant at checkpoint 00. Record the confirmed
-subscription, project endpoint, ownership, participant-created model deployment,
-and a unique student prefix in `.workshop/progress.json`. Also record exact
-resource IDs when resources are created later, with `owned_by_student` and
-`cleanup_approved` flags.
+subscription, project endpoint, ownership, participant-created model deployment
+and unique student prefix in the conversation, without copying participant
+answers into `progress.json`. Retain service-returned resource IDs in execution
+evidence when resources are created; identify ownership and obtain separate
+cleanup approval before deletion.
 
 An existing project endpoint is not an ARM resource ID. Resolve resource IDs
 through supported discovery; do not reconstruct them from guessed names.
@@ -247,7 +243,7 @@ that access as unverified rather than inferring it from the coach's identity.
 Project or model access alone is not proof of telemetry access. Follow the current
 [Foundry tracing prerequisites and setup](https://learn.microsoft.com/azure/foundry/observability/how-to/trace-agent-setup).
 
-Save the result in `capabilities.portal_tracing` in local progress: readiness
+Report the result in chat and retain its sanitized execution evidence: readiness
 `status` (`available`, `unavailable`, or `unverified`), connection status,
 discovered Application Insights resource ID, telemetry-read access,
 trace visibility, check time, and sanitized evidence naming the checked
@@ -265,13 +261,13 @@ Application Insights resource is a project change; creating one is an
 additional resource change. Confirm the exact targets, permissions, possible
 ingestion/storage/retention costs, and data captured before either action.
 Do not create resources or change permissions without separate approval.
-Telemetry charges are not included in model-token cost estimates.
+Telemetry can incur charges that are not measured by model-token usage.
 
 Preserve successful Conversation tests and service-returned identifiers if
 tracing is blocked, but leave the required portal exercise incomplete.
 Do not assume enabling tracing backfills earlier executions. If a new
 invocation is needed after setup, obtain explicit approval for that bounded
-test and its model cost; do not automatically repeat previous tests.
+test and acknowledgment of possible model charges; do not automatically repeat previous tests.
 
 ## Student workspace
 
@@ -284,11 +280,13 @@ student/
   hosted-agent/      Trip Planning Workflow and result contracts, added at checkpoint 15
   capstone/          Chosen final project, added at checkpoint 17
 .workshop/
-  progress.json      Local progress, never committed
   evidence/          Sanitized test observations, never committed
 ```
 
 Source artifacts under `student/` can be reviewed and committed by the student.
+Coaching input and progress stay in the chat. Do not create or synchronize
+`progress.json`; existing copies are legacy records, left untouched unless the
+participant explicitly requests import/export.
 Keep secrets in an appropriate secret store or ignored environment files.
 Do not commit local transcripts or endpoint response dumps under `student/`.
 
@@ -305,14 +303,13 @@ services, and telemetry can incur charges. Before creating/changing resources,
 agree on the target, scope, and cost boundary. Reusing a project does not make
 operations free. Pausing a lesson does not stop hosted compute.
 
-For specified low-cost tests on confirmed resources, the participant may approve
-a bounded batch or allowance using
-[COACH.md's test-spend agreement](COACH.md#bounded-test-spend-agreements).
-Explain costs and exclusions once, track conservative cumulative estimates
-locally, and do not repeatedly seek negligible-price approval for unchanged
-covered tests. Stop before exceeding the remaining allowance or when costs
-cannot reasonably be bounded. No universal dollar amount or billing hard cap
-is implied; changed scope/resources and further spend require a new decision.
+For specified tests on confirmed resources, the participant may approve a
+bounded batch using [COACH.md's scoped test approvals](COACH.md#scoped-test-approvals).
+Explain possible charge categories once and retain available token usage, not
+mandatory price tables or cumulative monetary estimates. Unchanged covered
+tests need no repeated per-call cost approval. No dollar allowance or billing
+cap is implied; changed scope/resources, extra cases or expired terms need a
+new decision. Honor explicit participant-imposed cost restrictions.
 Resource writes, identity/permission changes, deployments and every human MCP
 tool approval remain separate.
 
@@ -343,7 +340,7 @@ references before use.
 - [Official Foundry samples](https://github.com/microsoft-foundry/foundry-samples)
 - [MCP tools](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/model-context-protocol)
 - [Selected workshop MCP services, configuration, and story](MCP-SERVICES.md)
-- [Reusable Foundry tools and Toolboxes](TOOLS-AND-TOOLBOXES.md)
+- [Direct MCP connections](MCP-CONNECTIONS.md)
 - [Weather MCP provider](https://datakoot.com/weather-geo)
 - [travel.art MCP provider](https://mcp.travel.art/)
 - [Memory stores](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/memory-usage)

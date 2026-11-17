@@ -5,16 +5,22 @@ for the installed Foundry skill. Use that skill's applicable workflow first.
 The helper implements the established explicit-Azure-CLI-credential fallback
 for ordinary prompt agents. It does not configure hosted agents, memory,
 consumer endpoints, telemetry, or role assignments.
-It also does **not** register reusable Foundry tool connections, manage
-Toolboxes, accept connection-backed MCP definitions, or authenticate Toolbox
-endpoints. Its public direct-MCP examples are reference/partial-route
-operations, not the full v9 core tool-management implementation. Use the
-rehearsed current Foundry skill/API route in
-[Tools and Toolboxes](../TOOLS-AND-TOOLBOXES.md) for those gates and their
-runtime tests. Do not relax the helper's endpoint checks to bypass this limit.
+Its public direct-MCP definitions support the v10 core's selected Weather and
+travel.art servers, explicit allowlists and approval-always policy. Follow
+[Direct MCP connections](../MCP-CONNECTIONS.md) for the corresponding T01-T03
+evidence and participant inspection. The helper does **not** register project
+connections, manage Toolboxes, accept authenticated connection-backed MCP
+definitions or authenticate Toolbox endpoints; none is needed for these
+anonymous upstream services. Do not relax its endpoint or approval checks.
 It also does not publish to or test Microsoft Teams/Microsoft 365 Copilot.
 Use [the publishing guide](../PUBLISHING.md) for the required CH01/CH02 gates;
 a project-client response is not a channel test.
+
+The [first-use Playground flow](../APP-GUIDE.md#first-tool-use-in-the-playground)
+lets the participant select the portal's reported **Auto approve** option for
+the displayed permitted-tool scope. It does not configure this SDK client.
+Do not infer `require_approval: "never"` or auto-submit a pending continuation;
+the helper retains its approval-always validation and exact human decisions.
 
 ## Prepare before the cohort
 
@@ -36,9 +42,9 @@ this manifest and the runner's version check together. Run offline tests with:
 The coach creates a plan under ignored `.workshop/`, displays its target,
 prompts/actions, context, output/call limits and possible cost, and obtains
 current-step participant approval **before executing** it. An existing explicit
-[bounded test-spend agreement](../COACH.md#bounded-test-spend-agreements) may
+[scoped test approval](../COACH.md#scoped-test-approvals) may
 cover the exact displayed test plan; do not ask again solely because each
-covered model call has a negligible price:
+covered model call may incur charges:
 
 `python workshop\runner\workshop_runner.py execute --plan .workshop\approved-step.json`
 
@@ -52,15 +58,16 @@ confirmed context, and use the exact previously saved inputs for regressions.
 The example's empty target/permission/approval fields deliberately prevent
 execution; its Weather prompts are not a Cultural baseline.
 
-The runner bounds requests and output tokens, **not currency**. Before execution,
-the coach must conservatively estimate/reserve the whole batch against the
-agreed remaining allowance, including input/history, output and uncertainty,
-and record sanitized cumulative estimates locally. Missing usage is unknown,
-not zero; stop if costs cannot reasonably be bounded. No money field in a plan
-enforces a billing cap. Changed targets/scope or further spending need renewed
-approval; ongoing resource, telemetry and GitHub Copilot billing are outside a
-model-token estimate. Never treat a spend allowance as resource-write or MCP
-tool approval. All validation and pending-approval stops below still apply.
+The runner bounds requests and output tokens, **not currency**. The coach
+obtains approval for the exact cases, input/history scope and execution limits
+with acknowledgment of possible charges; no price lookup, monetary reservation
+or cost calculation is required. Capture available usage and deduplicate by
+response ID. Missing usage is unknown, not zero. An optional monetary estimate
+at the end is separate from execution and completion gates.
+No money field in a plan enforces a billing cap. Changed targets/scope, extra
+cases or expired terms need renewed approval; honor any explicit cost restriction.
+Test approval never grants resource-write permission or human MCP tool approval.
+All validation and pending-approval stops below still apply.
 
 Required common fields:
 
@@ -193,7 +200,12 @@ pending markers **before** a write or paid request. Responses are saved before
 linkage/behavior judgement. The helper does not mark checkpoints passed, edit
 participant progress, change model choice, or calculate a guessed price.
 Usage absent from a response stays `null`. Use response IDs to deduplicate the
-existing progress ledger; apply only separately verified matching token rates.
+chat's running token totals. Only an explicitly requested optional monetary
+estimate needs separately verified matching rates; routine coaching does not.
+The coach uses chat history for participant input and progress, without routine
+`progress.json` reads/writes. This does not remove the helper's execution
+evidence or required pending markers; those protect against duplicate operations
+and are not a second participant-progress store.
 Encrypted reasoning payloads are omitted from both retained response records
 and result summaries. Tool arguments, decisions, visible replies, linkage and
 usage remain evidence; this redaction does not remove arbitrary sensitive
