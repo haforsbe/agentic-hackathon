@@ -32,10 +32,12 @@ use, either directly or after the Microsoft Copilot Studio integration.
 Each module opens with its checkpoint, plain-language goal and short plan.
 Before tests, the coach explains their purpose and expected evidence; at the
 close, actual results lead to a short learning summary, the existing single
-understanding check and the next step. For specified low-cost tests, you may
-approve a [bounded test-spend agreement](COACH.md#bounded-test-spend-agreements)
-instead of repeated negligible-price approvals. Resource changes and human
-tool approvals remain separate; this estimate is not a billing hard cap.
+understanding check and the next step. For specified tests, you may give a
+[scoped batch approval](COACH.md#scoped-test-approvals) instead of repeated
+per-call cost approvals. The coach retains available Microsoft Foundry tokens;
+routine price lookups/calculations are removed. A monetary estimate at the end
+is optional, not a completion requirement or billing cap. Resource changes,
+explicit cost restrictions and human tool approvals remain separate.
 
 To keep that time for learning, the coach uses the
 [checkpoint execution matrix](TESTS.md#checkpoint-execution-matrix) and
@@ -59,19 +61,22 @@ offer the [optional advance readiness check](SETUP.md#optional-advance-readiness
 | Agent collaboration | Specialists stay independently callable | Specialists stay independently callable | 15-16 coordinate both releases |
 
 The learning path keeps both prompt agents independently publishable.
-It also teaches [Foundry tools and Toolboxes](TOOLS-AND-TOOLBOXES.md):
-register Weather's reusable tool connection and forecast-only Toolbox at 04,
-expand that Toolbox at 05, verify its existing binding at 07, and deepen independent Toolbox
-practice with Cultural at 11. At 14 verify both releases, without migrating
-and re-releasing Weather.
-Tools supply operations, Toolboxes manage collections, and skills guide use.
-Each specialist retains only its own tools. This replaces connection plumbing
-within the existing checkpoints; changed bindings still require regressions.
-The current curriculum is `two-specialists-workflow-v9`; earlier progress
-requires an agreed migration, not automatic new passes.
-Version 9 preserves the sequence and adds required Weather CH01 and workflow
-CH02 channel gates inside 07 and 16; the second agent and workflow build are
-unchanged. Existing endpoint evidence is not channel evidence. See
+It teaches [direct MCP connections](MCP-CONNECTIONS.md): attach Weather's
+public server with only `weather_forecast` at 04, expand its allowlist at 05,
+and verify the final binding at 07. Apply the same one-tool/multiple-tool
+progression independently to Cultural at 11/12. At 14 verify both releases
+without migrating or re-releasing unchanged Weather.
+Tools supply operations; skills guide use without granting access.
+Each specialist retains only its own tools, explicit allowlists and native
+per-call human approval. Toolboxes and authentication connections for them
+are deferred, not prerequisites or core exercises.
+The current curriculum is `two-specialists-workflow-v10`; earlier progress
+requires an agreed migration, not automatic new passes. Version 10 replaces
+Toolbox requirements with direct-MCP T01-T03 evidence without renumbering.
+Preserve the required Weather CH01 and workflow CH02 channel gates at 07 and
+16. The hosted workflow and seven-step specialist progression are unchanged.
+Existing Toolbox-path evidence does not prove a direct binding, and endpoint
+evidence is not channel evidence. See
 [publishing prerequisites and steps](PUBLISHING.md#required-channel-publication-at-07-and-16).
 The Weather Research Agent and
 Cultural Travel Agent own different tools and evidence domains. Formal
@@ -94,7 +99,7 @@ capture opens a reviewed PR, offline checks validate its package, and a
 manual workflow with explicit commit/intent confirmation deploys to the separate
 Prod agent. No GitHub Environment is required; merge alone does not deploy.
 The workflow is not live-rehearsed or configured with Azure OIDC/project
-permissions; a successful deploy does not establish Toolbox runtime access or
+permissions; a successful deploy does not establish MCP runtime execution or
 per-call approval.
 
 ## Terms the coach introduces when needed
@@ -125,20 +130,20 @@ this as a vocabulary test. It introduces each term immediately before use:
 | ID | Lesson | Required test evidence | App practice |
 |----|--------|------------------------|--------------|
 | 00 | [Setup](SETUP.md) | Participant's dedicated project (existing or created during setup), direct project identity check, operation-specific permission verification, deployment inventory, participant choice to reuse or explicitly approve a Model Deployment, ownership, capability inventory | Repo context, cost boundary, and approvals |
-| 01 | [Weather baseline](01-prompt-agents.md#01-create-the-weather-research-agent) | B01-B03 | Explain vs implement |
+| 01 | [Weather baseline](01-prompt-agents.md#01-create-the-weather-research-agent) | B01-B02 | Explain vs implement |
 | 02 | [Weather instructions](01-prompt-agents.md#02-refine-weather-instructions) | I01 | Review a focused instruction diff |
 | 03 | [Weather conversations](01-prompt-agents.md#03-test-weather-managed-conversations) | D01-D02 | App session vs runtime Conversation |
-| 04 | [First Weather MCP tool](01-prompt-agents.md#04-connect-the-first-weather-mcp-tool) | T01 reusable tool, T03 forecast-only Toolbox, C01, C03 and guided trace inspection | Inspect upstream connection, Toolbox authentication and agent binding |
-| 05 | [Weather skill and multiple tools](01-prompt-agents.md#05-guide-multiple-weather-tools-with-a-skill) | T03 four-tool Toolbox expansion, S01 | Review skill delivery, pinned binding and tool routing |
-| 06 | [Weather memory](01-prompt-agents.md#06-add-and-test-weather-memory) | M01-M03 | Save/resume vs agent memory |
-| 07 | [Release and publish Weather Research Agent](01-prompt-agents.md#07-release-the-weather-research-agent) | T03 existing Toolbox verification, final-path regressions, P01-P03, then CH01 channel publication/use before 08 | Distinguish release from publishing; review the participant's channel test evidence |
-| 08 | [Cultural baseline](01-prompt-agents.md#08-create-the-cultural-travel-agent) | B01-B03 | Compare independent agent definitions |
+| 04 | [First Weather MCP tool](01-prompt-agents.md#04-connect-the-first-weather-mcp-tool) | T01 direct forecast-only binding, participant-sent C01, C03a and guided trace inspection | First-use Playground permission choice, scoped Auto approve and forecast evidence |
+| 05 | [Weather skill and multiple tools](01-prompt-agents.md#05-guide-multiple-weather-tools-with-a-skill) | T02 four-tool direct allowlist, S01 | Review skill delivery, candidate binding and tool routing |
+| 06 | [Weather memory](01-prompt-agents.md#06-add-and-test-weather-memory) | M01-M03 | Chat resume vs agent memory |
+| 07 | [Release and publish Weather Research Agent](01-prompt-agents.md#07-release-the-weather-research-agent) | T03 final direct binding, final-path regressions, P01-P03, then CH01 channel publication/use before 08 | Distinguish release from publishing; review the participant's channel test evidence |
+| 08 | [Cultural baseline](01-prompt-agents.md#08-create-the-cultural-travel-agent) | B01-B02 | Compare independent agent definitions |
 | 09 | [Cultural instructions](01-prompt-agents.md#09-refine-cultural-instructions) | I01 | Review a focused instruction diff |
 | 10 | [Cultural conversations](01-prompt-agents.md#10-test-cultural-managed-conversations) | D01-D02 | Verify isolated runtime state |
-| 11 | [First Cultural Travel MCP tool](01-prompt-agents.md#11-connect-the-first-cultural-travel-mcp-tool) | T01/T02 reusable tool and Cultural Toolbox, C02, C03 | Inspect Toolbox version, agent binding, effective allowlist and provenance |
-| 12 | [Cultural skill and multiple tools](01-prompt-agents.md#12-guide-multiple-cultural-tools-with-a-skill) | S02 | Review skill delivery and tool routing |
+| 11 | [First Cultural Travel MCP tool](01-prompt-agents.md#11-connect-the-first-cultural-travel-mcp-tool) | T01 direct museum-guide-only binding, participant-sent C02, C03a | First-use Playground permission reminder, scoped Auto approve and guide evidence |
+| 12 | [Cultural skill and multiple tools](01-prompt-agents.md#12-guide-multiple-cultural-tools-with-a-skill) | T02 four-tool direct allowlist, S02 | Review skill delivery and tool routing |
 | 13 | [Cultural memory](01-prompt-agents.md#13-add-and-test-cultural-memory) | M01-M03 | Verify separate memory scope |
-| 14 | [Release Cultural Travel Agent](01-prompt-agents.md#14-release-the-cultural-travel-agent) | Cultural final-path regressions/P01-P03, unchanged Weather release/dependency verification, T03 isolation and two-agent comparison | Review two independent Toolbox-backed releases without a planned Weather migration |
+| 14 | [Release Cultural Travel Agent](01-prompt-agents.md#14-release-the-cultural-travel-agent) | Cultural final-path regressions/P01-P03, unchanged Weather release/dependency verification, T03 isolation and two-agent comparison | Review two independent direct-MCP releases without a planned Weather migration |
 | 15 | [Build Trip Planning Workflow](02-hosted-agents.md#15-build-and-test-the-trip-planning-workflow) | Reviewed portal-compatible scaffold, G01-G03 and W01-W03 locally | Review contracts, request-owned state, approval bindings and traces |
 | 16 | [Deploy, release and publish workflow](02-hosted-agents.md#16-hosted-release) | W01-W03 remotely, actual portal W04 success/denial, P01-P04, then CH02 on the final version | Review sequential tool cards and sourced output; send a channel request and inspect both specialist calls |
 | 17 | [Choose a capstone](CAPSTONE.md#17-choose-and-scope) | K01 | Turn an idea into a bounded two-specialist plan |
@@ -167,15 +172,22 @@ change to required approvals, hands-on practice or evidence.
 | Say | Coach behavior |
 |-----|----------------|
 | "Start the workshop" | Begin 00; one question at a time |
-| "Resume the workshop" | Recheck local progress and the target, then continue |
+| "Resume the workshop" | Recover the current step from chat and recheck the target, then continue |
 | "Give me a hint" | Explain the smallest missing idea without solving future steps |
 | "Explain, don't edit" | Inspect and teach without modifying files or resources |
 | "Help me implement this step" | Make only the current agreed change |
 | "Show another way" | Compare a relevant alternative and its tradeoff |
 | "Test this checkpoint" | Execute the current tests and applicable regressions |
 | "Show my progress" | Show passed, failed, blocked, and not-started gates |
-| "Pause the workshop" | Save progress; leave cloud resources unchanged |
+| "Pause the workshop" | Acknowledge the pause/current step in chat; leave files and cloud resources unchanged |
 | "Clean up" | List exact owned targets and ask before stopping/deleting |
+
+Participant answers, preferences and coaching progress stay in chat history.
+The coach reuses loaded context rather than reading/writing `progress.json`.
+Legacy files remain untouched unless an import/export is explicitly requested;
+required execution evidence and interrupted-operation recovery are separate.
+If earlier chat context is unavailable, recover or ask for the missing fact,
+not the whole questionnaire; never infer a pass or missing approval.
 
 ## Completion
 

@@ -71,13 +71,20 @@ it cannot prove. At module close, review actual evidence and what you learned,
 complete the existing single understanding check, and choose continue or pause.
 There is no extra quiz after each action.
 
+Use [the coach's learner-instruction rule](COACH.md#explain-what-and-why-before-every-step):
+give the actual action or copy-ready prompt, its purpose, the starting
+location/context and the expected result. Internal acceptance IDs belong in
+coach records, never in participant messages, question dialogs or choices.
+Do not ask learners to look up a case code to discover what they should do.
+The lesson files provide concrete starting prompts for both specialists.
+
 The coach names the route before every test or exploration:
 
 | Route | What you do | What the coach does |
 |-------|-------------|---------------------|
 | **Run from the GitHub Copilot app - coach sends** | Stay in this GitHub Copilot app session and approve the stated test. Do not enter the prompt in Microsoft Foundry as well. | Send the prompt to your actual agent in Microsoft Foundry and show its reply here; capture usage locally for the checkpoint and cumulative workshop summary, not a per-call report. |
 | **Run in the Microsoft Foundry portal - participant sends** | Follow the coach's verified steps from https://ai.azure.com/ to your exact project and agent, send the agreed prompt yourself, then report the result here. | Give the exact prompt, conversation context, controls and evidence to report, then wait without sending a duplicate call. |
-| **Inspect in Microsoft Foundry - no prompt sent** | Look at the agent's saved settings or the specified test trace. Do not send a message or edit settings. | Explain what to inspect and compare your observation with service-returned evidence. |
+| **Inspect in Microsoft Foundry - no prompt sent** | Look at the agent's saved settings or the specified test trace. Do not send a message or edit settings. | Explain what to inspect and accept your clear confirmation for routine hands-on completion. Corroborate only when a specific required assertion needs service evidence. |
 | **Run in Microsoft Teams or Microsoft 365 Copilot - participant sends** | At 07/16 open your exact published Weather/workflow app in the chosen surface, send the approved prompt once, and return the actual reply. | Verify publication/target and channel identity, provide documented navigation from the returned launch link, then inspect the same run's Microsoft Foundry evidence without resending. |
 | **Run in Microsoft Copilot Studio - participant sends** | At 16, if this integration route is chosen and rehearsed, test the primary agent connected to the released workflow using the same approved Playground behavior cases. | Verify the actual connected workflow/version, native approval controls and same-run specialist evidence; distinguish Studio integration testing from later published-channel CH02 evidence. |
 
@@ -92,10 +99,10 @@ chat playground.
 
 | Lesson | Suggested mix of required tests |
 |--------|---------------------------------|
-| Baseline (01, 08) | Coach sends B01 to demonstrate the exchange; participant sends B02 and B03 in separate fresh Conversations and copies each result back. |
-| Instructions (02, 09) | Reuse the saved baseline replies as the before side; send each exact input once to the new instruction version on the same route as its baseline. With the allocation above this yields two coach-sent and four participant-sent prompts across baseline/instructions. Balance later suitable cases, not extra before-change calls. |
-| Conversations (03, 10) | Participant sends the three-message D01-D02 sequence if the interface supports the required history and identifier evidence. Otherwise use the supported client route and explain the limitation. Rebalance using later suitable tests. |
-| MCP and skills (04-05, 11-12) | Coach demonstrates the first tool request and approval boundary. Divide remaining required prompts between routes to bring the running split toward half each; participant returns the answer plus tool evidence. Keep controlled failures on the coach route when they need an isolated test client. |
+| Baseline (01, 08) | Coach demonstrates a general-knowledge question; participant sends the lesson's missing-context question in a fresh Conversation and reports what happened. Supply the actual prompt and explain that the agent should ask for the missing location. A clear confirmation is enough for routine observation; copy an excerpt only when helpful or needed for a specific assertion. |
+| Instructions (02, 09) | Reuse the saved baseline replies as the before side; send each exact input once to the new instruction version on the same route as its baseline. With the allocation above this yields two coach-sent and two participant-sent prompts across baseline/instructions. Balance later suitable cases, not extra before-change calls. |
+| Conversations (03, 10) | Participant supplies a destination, sends a dependent follow-up in that same Conversation, then repeats the follow-up in a fresh Conversation. Give each exact prompt when needed and explain the expected context difference. Use this route if the interface supports the required history and identifier evidence; otherwise demonstrate through the supported client. |
+| MCP and skills (04-05, 11-12) | Participant sends the first useful forecast or museum-guide prompt in the agent Playground. Explain the permission choices when they appear and let the participant select **Auto approve** for the displayed permitted-tool scope; continue to the answer and trace, not a separate denial drill. Divide remaining required prompts between routes to bring the running split toward half each. Keep isolated failure checks on the coach route. |
 | Memory and release (06-07, 13-16) | Coach handles identity/scope, deletion, consumer-endpoint, and automated regression checks. A participant may send a required recall or normal-path test only when the interface can preserve its exact scope and target. Playground-only evidence never substitutes for a consumer-endpoint test. |
 | Channel publication (07, 16) | Participant uses Weather in Microsoft Teams and/or Microsoft 365 Copilot before 08, then uses the released workflow there at 16. CH01/CH02 require channel-originated requests and same-run runtime evidence; a publish dialog is not a pass. |
 
@@ -131,12 +138,16 @@ For each participant-run test, the coach provides one copy-ready prompt, the
 exact project/agent/version, fresh-or-existing Conversation instructions, the
 documented or observed navigation and send control, and the bounded call/tool
 approval scope and possible cost. The participant sends it once, waits for the
-reply, and copies the actual reply back here, with the Response/Conversation
-identifiers and relevant tool details if available. Do not paste secrets or
-personal data; a safe excerpt can be labeled as such. If a reply fails, stalls,
-or a control differs, report that instead of retrying. The coach waits, reviews
-the returned evidence, and uses one demonstrated understanding check for the
-checkpoint, not another quiz after every reply.
+reply, and reports what happened. Follow
+[participant trust](COACH.md#supportive-coaching-and-participant-trust):
+clear confirmation of a routine manual step or visible response format is
+enough to continue; no default screenshot, full pasted reply or identifier hunt.
+Ask for an excerpt or specific Response/Conversation/tool details only when the
+participant wants review, reports a problem, or a required assertion needs
+them. Do not paste secrets or personal data. If a reply fails, stalls, or a
+control differs, report that instead of retrying. The coach waits and uses one
+demonstrated understanding check for the checkpoint, not another quiz after
+every reply.
 
 ### Capture evidence before leaving the test
 
@@ -145,10 +156,14 @@ context and test case. Selecting "latest" is not a version check. Keep the
 same selected version for the approved exchange and any matching tool
 approval; do not switch versions in the middle.
 
-Return this short public/synthetic record in one message:
+For routine hands-on work, a confirmation such as "I saved the instructions
+and can see all three headings" is sufficient. The coach accepts it as
+participant-confirmed and moves on without automatically requesting a second
+inspection. When a specific runtime assertion or requested review needs more
+detail, return only the relevant fields from this public/synthetic record:
 
 ```text
-Case:
+Activity or question:
 Selected agent / version:
 Actual answer (or labeled safe excerpt):
 Response ID, if exposed:
@@ -157,8 +172,9 @@ Tool name / arguments / result or error, when relevant:
 Usage, if exposed:
 ```
 
-Missing fields are **unknown**, not an invitation to guess or to repeat the
-request. The coach checks required linkage read-only on the same run within
+This is not a form to complete after every action. Missing fields are
+**unknown**, not an invitation to guess or to repeat the request.
+The coach checks required linkage read-only on the same run within
 scope. For coach-sent tests, the [runner](runner/README.md) captures those
 fields automatically; the participant still practices the required portal
 tests and trace inspection. Confirm which answer a trace belongs to before
@@ -168,14 +184,14 @@ Both test routes use the agent in Foundry and may incur Foundry charges.
 Neither route's token totals measure the Workshop Coach conversation in the
 Copilot app. Missing portal-test usage is marked unknown, not zero.
 Switching routes does not approve extra calls, changes, or a different agent.
-You may agree a bounded batch or allowance for specified low-cost tests on
-confirmed resources using [COACH.md's spending agreement](COACH.md#bounded-test-spend-agreements).
-Covered tests do not need repeated negligible-price approvals. The coach tracks
-conservative cumulative estimates, including uncertain portal usage, and stops
-before the remaining allowance would be exceeded or costs cannot be bounded.
-This is not a billing hard cap and excludes ongoing resource/telemetry charges
-and GitHub Copilot billing. Scope/resource changes or further spend need a new
-decision; resource writes and each human MCP tool approval remain separate.
+You may approve a bounded batch of specified tests on confirmed resources
+using [COACH.md's scoped test approvals](COACH.md#scoped-test-approvals).
+Covered tests do not need repeated per-call cost approvals. The coach retains
+available Microsoft Foundry tokens, marking missing portal usage unknown,
+without price lookups or mandatory money calculations. An end-of-workshop
+estimate is optional, not a bill or completion gate. Scope/resource changes,
+extra cases or expired terms need a new decision; explicit cost restrictions,
+resource-write approvals and each human MCP tool approval remain separate.
 
 For portal navigation, the coach gives a concrete, documented route first:
 starting URL, your exact project and resource, control labels, and the expected
@@ -191,7 +207,7 @@ you can read the records. Saved Conversation history does not establish this
 connection. The first check reads existing settings and access; it does not
 enable tracing or send a model prompt. If it is missing, the coach explains the blocker before asking you
 to search for a trace. Connection or resource changes need separate approval
-and can incur telemetry charges beyond the displayed model-token estimates.
+and can incur telemetry charges not measured by model-token usage.
 
 ### Hosted workflow portal test at 16
 
@@ -218,7 +234,7 @@ For the approved W04 trip:
    trip prompt and press **Send** once. Do not also invoke it from the
    GitHub Copilot app.
 2. Read the Weather tool name and arguments. The participant chooses
-   **Approve** or **Deny** on that exact card once. A general test allowance
+   **Approve** or **Deny** on that exact card once. A general test approval
    is not that tool decision.
 3. If Weather is approved, wait for the separate Cultural card. Review its
    own tool name/arguments and make its own decision once; do not click the
@@ -241,8 +257,8 @@ tools; facilitator support owns deeper transport diagnosis.
 Do not infer the cause from a generic HTTP 400, an outer HTTP 200, or the
 last card still visible. A model/tool run may already have advanced.
 No native-ID/API approval fallback or relaxed stale-reference check is allowed.
-Any fresh diagnostic trip requires an explicitly approved scope and remaining
-allowance; it does not resume or erase the failed run. Apply the coach's
+Any fresh diagnostic trip requires explicit approval for that additional
+case and possible charges; it does not resume or erase the failed run. Apply the coach's
 five-minute/two-attempt timebox and keep unresolved required gates blocked.
 
 ## Foundry navigation rehearsed before the workshop
@@ -292,54 +308,88 @@ flows were not rehearsed. Do not invent their exact labels or treat this
 read-only walkthrough as test evidence for those behaviors. Missing telemetry
 or a different date filter does not authorize another model call or setup change.
 
-### Before adding a Toolbox-backed tool
+### Before adding a direct MCP tool
 
 **Additional observed controls, 2026-11-05:** these English portal observations
 come from an approved author rehearsal, not the participant's current session
-or a supported Toolbox-authentication recipe. Use them only when the actual
+or a new direct-MCP runtime rehearsal. Use them only when the actual
 screen matches; inspection does not authorize edits, tool calls or a test.
 
 | Task | Observed route and limit |
 |------|--------------------------|
-| Inspect a saved native binding | On the exact agent's **Playground**, confirm **Version:**, then **Setup -> Tools**. A Toolbox card can show its name/version and upstream server; **YAML** shows the saved definition. Verify the pinned URL and approval settings independently; a card alone proves no runtime access. |
+| Inspect a saved agent binding | On the exact agent's **Playground**, confirm **Version:**, then **Setup -> Tools**. **YAML** shows the saved definition. Verify the direct server URL, allowlist and approval settings independently; a card alone proves no runtime access. |
 | Inspect model parameters | On that same **Setup** screen, **Parameters** beside **Model:** exposes **Max output tokens**. In the rehearsal, an entered value did not persist after reopening and the service response reported no limit. A briefly displayed number is not an enforced test bound; stop before sending until the intended route's limit is verified. |
 | Inspect display settings | **Configure** in **Chat** opened display-name, description, starter-prompt and voice settings, not the model-token limit. Do not direct learners there to configure output limits. |
 | Inspect this reply's trace | Under the actual reply, **Traces** opens a drawer with **Trajectories**, **User view** and **Graph view**. Select the matching operation, then **Metadata** or **Input + Output** where present. `tools/list` is discovery, not execution; look for the actual server/tool's execution span and correlate the saved response identifier. Do not resend to recover an identifier. |
 
 These observations do not verify approval controls, effective output limits,
-memory, publishing or other tenants. Continue to apply the
-[Toolbox preparation blocker](TOOLS-AND-TOOLBOXES.md#prepare-the-supported-route-before-teaching);
-no author-only helper or native picker is an authentication workaround.
+memory, publishing or other tenants. Follow
+[Direct MCP connections](MCP-CONNECTIONS.md) for the approved configuration
+and actual runtime checks; portal visibility is not tool-execution evidence.
 
 At 04, before using an agent's **Add** control, the coach explains the route:
-**agent -> pinned Microsoft Foundry Toolbox -> public Weather MCP server ->
-`weather_forecast`**. A Toolbox exposes an MCP endpoint, so the resulting
-entry in **Tools** can look like an ordinary MCP tool. You are not expected
-to find a special Toolbox card or tab.
+**agent -> public Weather MCP server -> `weather_forecast`**. The first
+candidate permits only this one tool. No Toolbox or upstream credential
+connection is part of the core path.
 
-The agent's saved server URL must be the verified Microsoft Foundry Toolbox
-URL containing `/toolboxes/<name>/versions/<version>/mcp`, not the public
-Weather URL. Its authentication reference must name the separate
-Toolbox-authentication connection, not the anonymous upstream connection.
-The coach supplies your exact approved values and checks the saved tool
-allowlist and approval setting independently; a familiar display name is
-not proof of the route.
-
-**Participant-reported on 2026-10-30:** one project's **Add** picker offered
-direct tools but no Toolbox option. After a separately approved coach-executed
-SDK attachment, the participant saw the Toolbox attachment in the resulting
-agent version's **Tools** area. This does not establish a universal picker
-layout or prove any tool executed.
-
-If your picker offers only direct tools, stop before adding or saving one as
-a substitute. The coach explains the supported alternative before requesting
-approval, makes only the approved configuration change, and reads it back.
+The saved `server_url` must be `https://weather.datakoot.com/mcp`, with only
+`weather_forecast` in the allowlist and `require_approval: "always"`. Do not
+add `project_connection_id`, keys or authorization headers for this anonymous
+server. The coach supplies these exact values, explains what is sent outside
+Microsoft Foundry and obtains approval before one candidate change.
+Do not assume the picker exposes every setting. If it cannot express the
+approved definition, use the supported coach-executed skill/API route after
+explaining it; do not save trial versions or invent controls.
 Then, on the established agent page, refresh if needed, select the actual
 returned **Version:** and inspect **Tools** without editing. If connection
 details are not exposed there, review the coach's service-returned read-back;
 do not guess a details control. Sending a test or publishing requires its own
-approval. At 11, apply the same check to the Cultural Travel MCP server's
-`find_museum_guide` through its separate Toolbox, with a shorter reminder.
+approval. At 11, use a short reminder and inspect Cultural's direct
+`https://mcp.travel.art/` binding with only `find_museum_guide`, leaving
+Weather unchanged. First use of either route still needs the starting
+portal URL, confirmed project, exact agent/version and documented controls.
+
+### First tool use in the Playground
+
+At 04 and 11, teach permissions when the first useful tool-backed question
+reaches them, not through a separate approval/denial exercise:
+
+1. On the exact agent's **Playground -> Chat**, confirm **Version:** and the
+   approved fresh-or-existing Conversation. Supply the copy-ready forecast or
+   museum-guide prompt from [MCP-SERVICES.md](MCP-SERVICES.md), the **Message
+   the agent...** field and **Send** control, and the agreed execution limits
+   and possible Microsoft Foundry charges. The participant sends once.
+2. When the first tool-permission prompt appears, explain briefly:
+   "**Approve** permits this proposed tool call; **Deny** blocks it.
+   **Auto approve** lets the Playground approve subsequent calls within the
+   permission scope shown here without asking each time."
+3. Have the participant review the named service, tool and displayed scope,
+   then select **Auto approve** for this specialist's permitted read-only MCP
+   tools. Keep the effective one-tool allowlist at 04/11; review the scope
+   again when expanding it at 05/12. If the scope is unclear or broader than
+   intended, stop for that decision rather than accepting a blanket permission.
+4. Continue to the returned forecast or museum guidance and inspect that same
+   execution's tool arguments, result, sources and available timestamps. At
+   04, give the full trace walkthrough; at 11, reuse it with a short reminder.
+   Capture the participant's choice and actual execution evidence together.
+   Do not add a deliberate denial or duplicate call to test the permission UI.
+
+**Participant-reported portal behavior, 2026-11-17:** the user reports
+**Auto approve** and denial choices at first tool use in a Playground chat.
+This is not an independently observed runtime rehearsal or proof of the
+setting's persistence. Use the actual displayed control and scope. If it is
+absent or different, ask for that specific observation and agree a supported
+explicit-approval route; do not invent clicks or silently broaden permission.
+
+The Playground choice is not a GitHub Copilot app permission and does not
+establish automatic approval through the SDK, Stable Agent Endpoint, hosted
+workflow or published channel. Retain the documented
+`require_approval: "always"` definitions and the runner's pending-approval
+stops; do not infer `require_approval: "never"` or auto-submit runner
+continuations from a portal choice. Inspect any actual saved configuration
+change and obtain its scoped approval before using it elsewhere. Runtime
+denial handling remains intact if a participant declines a real request;
+the specialist lesson simply has no separate denial drill.
 
 ## Techniques to introduce along the way
 
@@ -349,7 +399,7 @@ approval. At 11, apply the same check to the Cultural Travel MCP server's
 | 01, 08 | "Explain this agent definition before editing it." Then explicitly request the small change | Ask for a proposed definition diff first to retain more control |
 | 02, 09 | Review the focused instruction diff and compare the same test before and after | Ask for an instruction proposal without applying it |
 | 03, 10 | Keep this coaching session; create separate runtime Conversations for each agent test | Use a new app session for an independent task; do not assume it inherits runtime history |
-| 04, 11 | For each specialist inspect the upstream connection, Toolbox version/endpoint, separate authentication connection, agent binding, one-tool effective allowlist and runtime identity; 04 includes the first full tool-trace walkthrough | Compare Copilot registration, reusable Foundry connection, Toolbox and authenticated agent binding |
+| 04, 11 | For each specialist inspect the direct server URL, exact agent version, one-tool effective allowlist and native approval policy; 04 includes the first full tool-trace walkthrough | Compare the GitHub Copilot app's MCP registration with the separate Microsoft Foundry agent binding |
 | 05, 12 | Review each skill diff, tool allowlist, exact version, and delivery strategy | Use a file/editor panel if available; reading an artifact is not deployment evidence |
 | 06, 13 | "Pause and save my progress." Then "Resume and recheck my target." | A new worktree needs an approved progress import and does not share agent memory |
 | 07, 14, 16 | "Show the endpoint, selected version, and actual test results; don't infer success." | Use supported hosted controls when available; return to Chat for evidence review |

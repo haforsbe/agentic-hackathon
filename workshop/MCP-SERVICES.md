@@ -8,12 +8,14 @@ replacement MCP servers. The final workflow calls the two released agents,
 not the MCP servers directly.
 
 An MCP server is a remote service exposing callable operations called tools.
-Connecting a server to Copilot does not connect it to a Foundry agent.
-The core now teaches [reusable Foundry tools and Toolboxes](TOOLS-AND-TOOLBOXES.md):
-save Weather's project tool connection and use it in a forecast-only
-Weather Toolbox at 04, expand at 05 and verify the binding at 07, then deepen Toolbox practice
-with Cultural at 11. No planned Weather migration is needed at 14.
-Registration, attachment and actual execution are separate evidence boundaries.
+Connecting a server to the GitHub Copilot app does not connect it to a
+Microsoft Foundry agent. The core teaches
+[direct MCP connections](MCP-CONNECTIONS.md): attach Weather's public server
+with only its forecast tool at 04, expand the allowlist at 05 and verify the
+binding at 07. Repeat independently for Cultural at 11/12. No Toolbox or
+upstream authentication connection is required, and no planned Weather
+migration is needed at 14. Local discovery, saved attachment and actual
+execution are separate evidence boundaries.
 
 ## Selected services
 
@@ -41,9 +43,26 @@ Foundry runtime tests, student passes, or guarantees of future free access.
 No weather retrieval or model request was made for these checks.
 
 Provider references: [Weather & Geo](https://datakoot.com/weather-geo) and
-[travel.art MCP](https://mcp.travel.art/). Recheck the live schemas before
-attaching or expanding tools. Use actual returned fields, not website sample
-outputs, as runtime evidence.
+[travel.art MCP](https://mcp.travel.art/). Use this reference for the planned
+connection; resolve current schema details needed during configuration or
+recovery without adding standalone connectivity tests or a participant
+`initialize`/`tools/list` exercise. The first useful agent request establishes
+runtime access. Use actual returned fields, not website sample outputs, as
+runtime evidence.
+
+### Explain the Weather service when using it
+
+Whenever introducing, using or revisiting Weather MCP, give a short relevant
+reminder: it is a **free public online service used for workshop learning and
+testing**, not a production or future-pricing guarantee. It covers US
+locations, forecasts only within returned periods and potentially cached
+results. Inspect the returned source and weather timestamps; `served_at` is
+the server response time. Availability, terms and limits can change. Use public
+locations, not participant home addresses. Microsoft Foundry model execution
+and telemetry can still incur charges.
+
+This reminder explains the limitations; it is not a request for participants
+to test service reachability or investigate infrastructure.
 
 ## Weather tools and boundaries
 
@@ -100,21 +119,16 @@ prove that our hosted workflow invoked the Weather Agent.
 
 ## First-tool configuration
 
-These are **upstream direct-MCP reference fragments**, not the complete
-reusable-connection/Toolbox configuration for the core route. They document
-the selected public endpoints, tool names and approval policy, and remain
-useful for historical direct-path evidence. At 04 and 11 reference the
-saved upstream connection inside the domain Toolbox and attach its verified
-version-specific endpoint through a separate authenticated connection,
-not the direct fragment below. Retain `server_url`; the connection reference
-does not replace it. Use discovered qualified names. Do not append a guessed connection
-field or use a public upstream URL in place of a Toolbox endpoint.
+These are the **direct-MCP tool fragments for the v10 core**. They specify
+the selected public endpoints, upstream tool names and native approval policy.
+Keep `server_url`; do not add `project_connection_id`, credentials or a
+Toolbox endpoint for either anonymous upstream service. Resolve any current
+schema details needed as part of configuration, not a separate learner test.
 
 These fragments are not complete agent definitions or
-permission to create versions. After project access, current API support, live
-schema discovery, and participant approval, attach only the fragment for the
-current specialist on an explicitly agreed direct/partial route, or use its
-upstream settings in the rehearsed core integration. Keep the chosen model and existing
+permission to create versions. After project access, current API support,
+required tool metadata, and participant approval, attach only the fragment for the
+current specialist. Keep the chosen model and existing
 versions unchanged. Do not attach both servers to one specialist.
 
 Weather checkpoint 04:
@@ -144,8 +158,13 @@ Cultural checkpoint 11:
 Use the installed Foundry skill and currently supported client to create and
 independently read back the approved candidate. SDKs may normalize allowlists;
 verify equivalent semantics and no additional tools. Do not create a credential
-connection for an authless server or weaken approvals. Approve a bounded model
-request separately from its actual proposed tool call and continuation.
+connection for an authless server or weaken approvals. Follow
+[first-use Playground permissions](APP-GUIDE.md#first-tool-use-in-the-playground):
+the participant sends the useful prompt, learns the permission choices when
+they appear, selects Auto approve for the displayed permitted-tool scope and
+continues to the answer and trace. Explain Deny without adding a denial drill.
+This portal choice does not authorize SDK/runner continuations; those still
+require an exact participant decision and separately approved continuation.
 
 ## Build-up story the coach teaches
 
@@ -162,11 +181,11 @@ to switch this example or balance the coach/participant sending ratio.
 | Checkpoints | Small learning steps and evidence |
 |-------------|-----------------------------------|
 | 01-03 Weather foundation | Create the tool-free agent; test a stable concept such as why rain forms. Improve only instructions and compare the same inputs. Prove follow-up context in one managed Conversation and isolation in a new one. It cannot retrieve a forecast yet. |
-| 04 Weather first tool | Connect only `weather_forecast`. Example prompt: "For New York, US, latitude 40.7128 and longitude -74.0060, retrieve the daily forecast with hourly=false. Use those coordinates exactly." Review the actual tool approval, result, grounded answer, and matching trace. |
+| 04 Weather first tool | Connect only `weather_forecast`. Participant sends: "For New York, US, latitude 40.7128 and longitude -74.0060, retrieve the daily forecast with hourly=false. Use those coordinates exactly." At first permission prompt, explain Approve/Deny/Auto approve and let the participant select Auto approve for the permitted Weather-tool scope. Continue to the result, grounded answer and matching trace; no separate denial drill. |
 | 05 Weather skill | Add the approved geocoding/current/alerts tools and a versioned research procedure. Practice a public museum address, appropriate weather-tool choice, restraint, and partial failure. |
 | 06-07 Weather memory and release | With consent, store a Celsius preference; prove recall, isolation, correction, and deletion. Retest tools and skill; release only a passing independent weather specialist. |
 | 08-10 Cultural foundation | Create a separate tool-free agent; test a stable question such as how an art museum differs from an art fair. Refine its instructions and independently prove Conversation continuity and isolation. Do not copy Weather state. |
-| 11 Cultural first tool | Connect only `find_museum_guide`. Example prompt: "Use the museum-guide tool to find the Metropolitan Museum of Art in New York, US. Summarize the returned guidance, cite its guide URL, and state its verification date if supplied." Inspect actual arguments, result, attribution, and trace; no weather retrieval. |
+| 11 Cultural first tool | Connect only `find_museum_guide`. Participant sends: "Use the museum-guide tool to find the Metropolitan Museum of Art in New York, US. Summarize the returned guidance, cite its guide URL, and state its verification date if supplied." Briefly repeat the first-use permission explanation and let the participant select Auto approve for the permitted Cultural-tool scope. Inspect actual arguments, result, attribution and trace. |
 | 12 Cultural skill | Expand only to the four verified cultural tools. Use museum-plus-event questions for multi-tool practice; use a covered European city for a separate layover test, not a US weather request. Demonstrate missing catalogue/accessibility data and a controlled partial failure. |
 | 13-14 Cultural memory and release | With consent, remember museums over nightlife in an independent scope. Prove the same memory lifecycle, regressions, and independent release as for Weather. |
 | 15-16 Final workflow | After both releases pass, define result contracts and implement a hosted Agent Framework workflow. One trip request invokes both released specialists, validates both results, and assembles a sourced itinerary with weather-aware choices, guide links, uncertainties, and explicit partial failures. Correlated traces must prove both calls; two manual replies or `recommend_art_trip` alone do not pass. |
@@ -186,12 +205,13 @@ tour. The student-chosen capstone is an optional separate follow-on.
 
 1. Read this file before asking a participant for an MCP endpoint. Both core
    addresses and tool progressions are already selected.
-2. Discover `initialize` and `tools/list` on the exact service without sending
-   credentials or private data. Discovery is not tool execution or proof of
-   Foundry-side reachability. Inspect tool calls only within the approved scope.
-3. If discovery succeeds, compare the live names and inputs with this reference,
-   explain the current one-tool or multi-tool change, and request approval.
-   Never attach all discovered tools automatically.
+2. Use the documented connection and inputs for configuration. Resolve any
+   missing metadata within that operation's approved scope; do not run
+   standalone connectivity probes or ask the participant to predict
+   reachability. Discovery is not proof of Microsoft Foundry execution.
+3. Explain and approve the current one-tool or multi-tool change, then use the
+   first useful agent request for runtime evidence. Never attach every
+   advertised tool automatically.
 4. If blocked, report the exact endpoint, operation, and error, distinguishing
    missing local tooling, public-service availability, and Foundry access or
    runtime failure. Preserve progress and involve the facilitator. Do not ask a

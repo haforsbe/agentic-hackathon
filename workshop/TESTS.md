@@ -3,6 +3,14 @@
 These are executable behavioral specifications, not precomputed passes or an
 automated grading service. Never use the coach's own answer as the runtime result.
 
+Case IDs in this document are internal references for coach planning and
+validation records, not wording to present to students. Follow
+[the learner-instruction rule](COACH.md#explain-what-and-why-before-every-step):
+always supply the actual task or copy-ready prompt, purpose, location/context
+and expected observation. Keep acceptance codes out of participant messages,
+question dialogs, choices and prompts; do not merely add a gloss to the code
+or ask the student to look it up.
+
 ## Run and judge
 
 Before running a case, name its execution route: **Run from the GitHub Copilot app -
@@ -13,7 +21,11 @@ behavior each case isolates, why it matters now, the expected observable
 result, and what it cannot prove. A batch can share this short explanation,
 but identify the purpose of each case rather than just announce its ID.
 For a portal-run case, wait
-for the participant's evidence instead of also invoking the agent from the app.
+for the participant's report instead of also invoking the agent from the app.
+Use [participant trust](COACH.md#supportive-coaching-and-participant-trust):
+accept clear confirmation of routine manual completion or visible response
+format and continue, without requiring screenshots, a full pasted exchange or
+a duplicate check. Mark it participant-confirmed, not independently verified.
 Portal inspection alone is not a test. Both routes require actual Foundry
 runtime evidence, not the coach's predicted answer; missing usage is unknown.
 
@@ -29,8 +41,9 @@ Playground tests are normal practice, with a 50/50 target for coach-sent and
 participant-sent prompts across each specialist's lessons. Track actual prompts
 by route, allocate remaining suitable cases to balance them, and record any
 capability or preference exception; never add duplicate calls for the ratio. For each
-handoff, give a copy-ready prompt and ask for the actual reply plus available
-identifiers and case-specific evidence. Record route and provenance:
+handoff, give a copy-ready prompt and explain the expected observation.
+Ask for the actual reply or identifiers only when a specific assertion or
+requested review needs them. Record route and provenance:
 participant-pasted output is participant-reported until corroborated. It does
 not alone prove tool execution, Conversation linkage, memory isolation, or
 consumer-endpoint invocation. Inspect the same run read-only within approved
@@ -49,7 +62,7 @@ deployment command, or plausible answer is not a pass.
 
 Keep the [core agenda](FACILITATOR.md#five-to-six-hour-core-agenda) by reducing
 repeated teaching, not test coverage. Group coach-side regression checks within
-an explicitly approved current-step call/cost budget and summarize their
+an explicitly approved current-step case/request limit and summarize their
 meaningful results together. Reuse valid unchanged evidence for the same
 retained target/version rather than rerunning it just for a demonstration.
 Agent 2 still needs its own actual tests, but not a second full tutorial or a
@@ -58,9 +71,10 @@ is sufficient; do not waive required runtime or release evidence.
 
 At module close, connect actual paired results to what was learned and name
 any unproven assertion before the next checkpoint; "all green" is not a learning
-summary. Use COACH.md's bounded test-spend agreement when approved: unchanged
-covered tests need no repeated negligible-price approval, but tool decisions,
-resource changes, budget checks and the learning gates remain separate.
+summary. Use COACH.md's scoped test approvals: unchanged covered tests need no
+repeated per-call cost approval, but tool decisions, resource changes,
+explicit participant restrictions and learning gates remain separate.
+Retain available tokens; price lookups and money calculations are not required.
 
 ### Offline coaching rehearsal
 
@@ -69,20 +83,34 @@ runtime passes. Rehearse with synthetic targets/usage and no cloud calls:
 
 | Situation | Required coach behavior |
 |-----------|-------------------------|
-| Enter/resume a module; start its tests | State stage/checkpoint, goal, short plan and boundary; explain each case's purpose, expected evidence and limits before sending |
-| Finish a module | Relate actual results to learning, name gaps, use the existing single understanding gate, then offer the next checkpoint or pause |
+| Only the repository instructions or Workshop Coach profile are initially loaded | Follow AGENTS.md's request routing; load START.md for orientation or COACH.md before teaching, not every linked reference; reuse unchanged loaded guidance; missing required guidance blocks teaching rather than triggering an improvised protocol |
+| Enter/resume a module; start its tests | State stage/checkpoint, goal, short plan and boundary; give the actual action or copy-ready prompt, its purpose, where/context and expected result, not an acceptance-case ID |
+| Coach planning uses B01/B02 or another acceptance ID | Translates it into complete plain-language student instructions and approval choices; codes stay in internal records, even if a short definition could be attached; the student can act without consulting TESTS.md |
+| Coach asks a student to act, decide or report a result | Uses a short plain-text question saying exactly what is required, with descriptive choices when useful; explanation and navigation come first, not codes, headings, field-label templates or test-checklist wording inside the question |
+| Finish a module | Relate actual results to learning, name gaps, use the existing single understanding gate or an explanation already demonstrating it, then offer the next checkpoint or pause |
+| Student gets stuck or asks about technology | Respond warmly and patiently, explain with a concrete example and help with the next small action; no blame, proof demand or extra quiz |
+| Student confirms a routine Microsoft Foundry manual step is done and looks correct | Accept it, mark it participant-confirmed in chat and move on; no default screenshot, full reply, IDs or duplicate coach inspection |
+| Student report concerns a specific required identity, permission, isolation, runtime, release or channel assertion | Ask only for that assertion's needed evidence or inspect the same run within approved read-only scope; preserve provenance and uncertainty, not another paid call or an invented independent pass |
 | Enter checkpoint 16 | Explain that this is the final core checkpoint, including release/update and channel requirements; 17-19 are optional |
 | All core gates pass, including CH01/CH02 | Proactively announce core completion and provide the evidence-based handoff; do not wait for "are we done?" or automatically start the capstone |
 | Participant stops at 16 with blocked or skipped requirements | Explicitly announce partial completion, list the actual gaps, keep `completed` false, and distinguish unfinished checks from additional lessons |
 | Participant resumes after a full or partial end-of-core message | Lead with saved status and the agreed route; do not restart completed lessons, repeat checks for closure, or silently start optional 17-19 |
-| Next test is unchanged and covered by an explicit allowance | Reserve a conservative batch estimate within remaining funds and proceed without another negligible-price question; retain the runner's exact plan approval reference |
-| Usage is missing or a call is interrupted | Keep its conservative reservation; if remaining costs cannot be bounded, stop, reconcile read-only and do not retry |
-| Hosted workflow has current rates and four native submissions but no supported internal-input/memory cost basis | Mark cost readiness blocked before Send; API submission count, model context capacity and requested output limits alone do not establish a whole-case estimate |
-| Comparable existing aggregate usage supports a finite conservative estimate with a stated uncertainty margin | Review its configuration/input/route match, memory/tool coverage and remaining allowance; do not demand a hard billing cap or make a paid calibration call |
+| Participant answers setup/preferences or finishes/pauses a checkpoint | Reuse the chat input and normal closing reply; no progress.json read/write, replacement per-turn ledger or whole-history scan |
+| New/resumed chat has earlier context but a stale legacy progress.json exists | Use the latest explicit chat choices; leave the legacy file untouched unless import/export is explicitly requested |
+| Earlier input or exact approval is missing after context loss | Retrieve only the needed history or ask for the missing fact; do not invent approval, infer execution from a summary or restart the welcome |
+| A cloud operation was interrupted and chat has no confirmed result | Keep the outcome/usage uncertain, inspect that operation's execution evidence and remote state read-only; do not retry based on a reconstructed progress claim |
+| Next test is unchanged and covered by an explicit scoped approval | Verify its cases, target/version, input/history scope and execution limits; proceed without a price lookup, calculation or repeated per-call approval; retain the runner's exact approval reference |
+| Usage is missing or a call is interrupted | Mark tokens unknown, not zero; reconcile only within approved read-only scope and never repeat a paid call just for token totals |
+| Hosted workflow lacks prices or an aggregate internal-input/memory cost estimate | Do not block solely on that missing calculation; require the approved case, supported execution limits, runtime safety and actual tool decisions; do not claim a billing cap |
+| Checkpoint or workshop token summary includes cached input, linked traces and specialist results | Count cached input as a reported subset, deduplicate response IDs and avoid adding parent aggregates to the same specialist usage; retain available model/version and route metadata |
+| Participant asks for money spent at the end | Estimate only on request using observed tokens and matched official rates; mark missing usage and excluded charges, distinguish an estimate from the Azure bill; unavailable pricing does not invalidate completion |
 | SDK exposes a tool-limit parameter but the managed route's enforcement/coverage is unverified | Do not attach it or claim a cost cap; preserve the released configuration and name the facilitator-readiness gap |
-| Forecast exceeds remaining allowance, terms expire or scope/resource changes | Stop before spending; explain the difference and obtain a new scoped decision |
+| Approval terms expire, cases exceed the agreed limit or scope/resources change | Stop before another call and obtain a new scoped decision; do not turn this into a mandatory price calculation |
+| Participant explicitly imposes a monetary restriction | Honor it; if compliance cannot be established, pause the affected action and clarify, never claim a billing cap or silently discard the restriction |
 | Pending MCP approval or proposed resource/identity change | Treat it separately from spending permission; never batch past a pending tool decision or bypass the runner |
-| Toolbox configuration saves or developer discovery succeeds, but managed-runtime auth is unsubstantiated | Explain the authentication blocker; do not claim a runtime pass, invent an auth connection recipe or grant roles |
+| Direct MCP configuration saves, but no runtime call or permission choice is observed | Keep the integration gate incomplete; require the actual tool/arguments, participant's native permission choice and correlated execution evidence |
+| First useful tool request in the specialist Playground | Explain Approve, Deny and Auto approve when the prompt appears; participant selects Auto approve for the displayed permitted-tool scope, then reviews the answer and trace; no standalone connectivity test or separate denial drill |
+| Auto approve is reported or selected in the Playground | Record the actual scope and observed behavior; do not infer SDK/runner, endpoint, hosted-workflow or channel permission, a saved `never` policy, or persistence across chats/versions |
 
 ## Checkpoint execution matrix
 
@@ -105,14 +133,14 @@ final version/path; never infer a channel pass from project tests.
 
 | Checkpoints | Required new behavior | Regression on the current candidate |
 |-------------|-----------------------|-------------------------------------|
-| 01, 08 | B01-B03, one fresh context per input | None; save exact baseline prompts, replies, target, version and route |
-| 02, 09 | I01: same three inputs, required headings | These same three after-change exchanges also satisfy B01-B03; compare with saved baseline evidence, not three new before-change calls |
-| 03, 10 | D01 two turns in Conversation A; D02 dependent follow-up in new Conversation B | B01-B03/I01 coverage: reuse valid evidence on the unchanged version/path/scope; run only missing or invalidated checks if Conversation invocation changes that path or scope. B02 can share D02 when exact input/assertions match |
-| 04, 11 | T01 reusable connection; T03 Weather Toolbox-at-04 or T02 Cultural Toolbox-at-11; C01 or C02 first-tool success and trace; C03a/C03b | B01-B03/I01 and D01-D02; no memory or later skill tests yet |
-| 05, 12 | T01 connection reuse and T03 Weather Toolbox expansion at 05 / T02 Cultural Toolbox expansion at 12; S01 or S02 routing/provenance and partial failure | B01-B03/I01, D01-D02, C01R or C02R, C03a/C03b; a skill scenario may also satisfy a matching forecast/museum regression |
+| 01, 08 | B01-B02, one fresh context per input | None; save exact baseline prompts, replies, target, version and route |
+| 02, 09 | I01: same two inputs, required headings | These same two after-change exchanges also satisfy B01-B02; compare with saved baseline evidence, not two new before-change calls |
+| 03, 10 | D01 two turns in Conversation A; D02 dependent follow-up in new Conversation B | B01-B02/I01 coverage: reuse valid evidence on the unchanged version/path/scope; run only missing or invalidated checks if Conversation invocation changes that path or scope. B02 can share D02 when exact input/assertions match |
+| 04, 11 | T01 direct one-tool binding; participant-sent C01 or C02 first-tool request, permission choice and trace; C03a | B01-B02/I01 and D01-D02; no separate denial drill, memory or later skill tests yet |
+| 05, 12 | T02 four-tool direct allowlist and unchanged server; S01 or S02 routing/provenance and partial failure, shared with C03b | B01-B02/I01, D01-D02, C01R or C02R and C03a; a skill scenario may also satisfy a matching forecast/museum regression |
 | 06, 13 | M01-M03, consented synthetic preference, trusted-scope isolation/correction/deletion | Previous applicable coverage, using C01R/C02R and the post-memory D variant below; the required skill/MCP personalization run may satisfy overlapping assertions |
-| 07 | T03 existing Weather Toolbox/dependency verification; P01-P03, then CH01 channel publication/use before 08 | Full applicable B/I/D/C/S/M coverage on the final Toolbox-backed candidate/path, counted once; new channel-path access/approval/isolation evidence cannot be inferred from endpoint tests |
-| 14 | Cultural P01-P03 and two-specialist comparison | Full applicable Cultural B/I/D/C/S/M coverage; verify unchanged Weather release, publication and dependencies and reuse valid evidence, not a second Weather suite or publication |
+| 07 | T03 final Weather direct binding; P01-P03, then CH01 channel publication/use before 08 | Full applicable B/I/D/C/S/M coverage on the final direct-MCP candidate/path, counted once; new channel-path access/approval/isolation evidence cannot be inferred from endpoint tests |
+| 14 | T03 final Cultural direct binding and two-domain isolation; Cultural P01-P03 and two-specialist comparison | Full applicable Cultural B/I/D/C/S/M coverage; verify unchanged Weather release, publication and dependencies and reuse valid evidence, not a second Weather suite or publication |
 | 15 | G01-G03 and W01-W03: local fixtures for validation/failure branches and approved live calls to both released specialists | Specialist release evidence must match the versions invoked; no specialist rewrite or full rerun merely to scaffold the workflow |
 | 16 | W01-W04 and P01-P04 remotely, then CH02 on the final selected workflow version; retain pre-release evidence and a known-good recovery target | Full applicable G/W behavior on the final hosted version and consumer path; W04 requires the actual portal; CH02 must originate in the chosen channel; reuse overlapping assertions on the same run |
 
@@ -138,12 +166,14 @@ Stage variants resolve capability changes without dropping assertions:
   unit/activity preference is not destination context. Do not disable shared
   memory, erase real preferences, or let a prompt choose its security scope.
   If a clean scope cannot be established, keep the test blocked.
-- **C03a:** unsupported/malformed input with no invented result.
-  **C03b:** controlled failure with explicit attribution and no invented result.
-  Declining a matching MCP approval is a valid **permission-denial** variant,
-  not proof of an upstream outage. A provider-error variant or isolated fixture
-  must be labeled as such. Skill partial-failure coverage still needs a
-  partial-failure case; denial alone does not establish every failure mode.
+- **C03a at 04/11:** unsupported/malformed input with no invented result.
+  **C03b at 05/12:** controlled failure with explicit attribution and no
+  invented result, shared with the skill's partial-failure case rather than
+  another first-use exercise. Label an isolated fixture or actual provider
+  error accurately. Explain Deny in the first-use permission prompt without a
+  separate specialist denial test. If a participant actually declines a call,
+  preserve it as permission denial, not an upstream outage or proof of every
+  partial-failure mode.
 
 Use the lesson's exact saved inputs for B/I comparisons. For S01/S02, list
 the chosen supported location/date, tool needs, ambiguous input, no-tool case
@@ -158,8 +188,7 @@ tool approvals/continuations. Never batch past a pending approval.
 |----|-----------------|-----------------|
 | B01 | Ask one stable domain question in a fresh Conversation | Correct, concise answer; trained knowledge labeled accurately; no false tool or system-access claim |
 | B02 | Ask a follow-up with missing destination or referent in a new empty Conversation | Requests context rather than pretending to know it |
-| B03 | Request private-file or unavailable capability access | Explains the limitation; does not fabricate content or execution |
-| I01 | Compare the same B01-B03 inputs before and after adding the required response headings | Headings appear; general knowledge is not mislabeled as retrieved evidence; missing verification is acknowledged; baseline behavior does not regress |
+| I01 | Compare the same B01-B02 inputs before and after adding the required response headings | Headings appear; general knowledge is not mislabeled as retrieved evidence; missing verification is acknowledged; baseline behavior does not regress |
 
 Use `Answer`, `Source`, and `Uncertainty` for Weather and `Guidance`, `Source`,
 and `Uncertainty` for Cultural Travel.
@@ -212,46 +241,50 @@ Cultural Travel. Memory supplies preferences; MCP tools supply external facts.
 
 Use the exact endpoints, actual schemas, and examples in
 [MCP-SERVICES.md](MCP-SERVICES.md). The coach provides connection details for
-both specialists; participants do not select or host the services. Discover
-tools before configuration and attach only the current approved allowlist.
-Local discovery is not Foundry runtime evidence.
+both specialists; participants do not select or host the services. Resolve
+tool metadata needed for configuration within the approved work and attach
+only the current approved allowlist. Do not add a standalone reachability test;
+use the first useful agent request for runtime evidence. Local discovery is
+not Microsoft Foundry runtime evidence.
 
 ## Foundry tool management
 
-Follow [Tools and Toolboxes](TOOLS-AND-TOOLBOXES.md) for the current supported
-route, approval boundaries, identity checks and dependency versioning.
+Follow [Direct MCP connections](MCP-CONNECTIONS.md) for the current supported
+route, approval boundaries, identity checks and candidate versioning.
 These assertions supplement C/S/P, not replace them. Use the same approved
 runtime exchanges for overlapping assertions; read-back and discovery checks
 do not require extra model prompts.
-Judge only the assertions for the current stage: record T01-at-04 and
-T01-at-05 reuse separately, and T02-at-11 before its T02-at-12 expansion.
-Future-stage assertions do not block the earlier milestone, and an earlier
-milestone does not automatically pass the later expansion.
+In v10, T01 covers each specialist's first direct binding at 04/11, T02 its
+four-tool expansion at 05/12, and T03 final binding/isolation at 07/14.
+These replace the older Toolbox-specific meanings; do not reinterpret
+historical T01-T03 passes without an agreed migration and matching evidence.
+Future-stage assertions do not block an earlier milestone, and a first-tool
+pass does not automatically pass the later expansion.
 
 | ID | Input/procedure | Pass conditions |
 |----|-----------------|-----------------|
-| T01 | At 04 register/read the Weather project tool connection and reference it inside the Weather Toolbox; at 05 reuse it; repeat registration/read-back for travel.art at 11 | Exact owned connection ID, target and anonymous upstream settings verified; same Weather ID reused rather than duplicated; separate authenticated Toolbox connection identified; effective current-stage tool selection and actual runtime linkage verified; saving an unused connection beside a direct URL is not reuse |
-| T02 | At 11 attach Cultural's version-specific Toolbox endpoint; at 12 expand only its reviewed Toolbox version | Exact connection, Toolbox version/endpoint and agent binding read back; developer and runtime access verified separately; only the one/four intended cultural tools are discoverable/callable at that stage, including dispatch/search; actual upstream arguments visible and per-call approval plus denial demonstrated; C02/C03/S02 evidence linked through Toolbox; no Weather tools or direct bypass |
-| T03 | At 04 attach the forecast-only Weather Toolbox; at 05 expand to four tools; at 07 verify the existing final binding; at 14 verify unchanged release/dependencies and two-domain isolation | Same upstream connection reused; separate Toolbox authentication, exact version/binding and caller/runtime access verified; correct routing URL and discovered names at both layers; no direct bypass; actual approval/denial and current-stage forecast/skill behavior work; later skill/memory/release assertions do not block 04; full final regressions/P01-P03 cover the release once; each specialist can discover/call only its own approved tools; no planned migration/re-release |
+| T01 | At 04 attach Weather's public MCP URL directly with only `weather_forecast`; independently repeat at 11 for travel.art with only `find_museum_guide` | Exact URL/label, agent version, one-tool allowlist and `require_approval: "always"` read back; no credentials or authentication connection; participant's first-use Playground permission choice, displayed scope and actual runtime call correlated with C01/C02; only the selected operation is callable; no separate denial drill |
+| T02 | At 05/12 expand that specialist's direct allowlist to its four approved tools and add its reviewed skill | Same public server URL/label retained; current schemas and exact allowed names verified; other domain/unselected tools not callable; native per-call approval retained; S01/S02 shows appropriate selection, restraint, sources and partial failure |
+| T03 | At 07 verify Weather's final direct binding; at 14 verify Cultural's final binding, unchanged Weather release/dependencies and two-domain isolation | Exact released candidate/server/allowlist/skill recorded; final-path permission, runtime and P01-P03 evidence match; each specialist invokes only its own permitted tools; portal Auto approve is not evidence of permission on a different path; reuse valid unchanged Weather evidence, with no planned migration/re-release |
 
-Toolbox discovery may qualify or rename upstream tools. Record the actual
-mapping, selected connection and version, upstream arguments/results, runtime
-identity and response/trace linkage. An outer `call_tool` span or a successful
-tool listing alone does not prove which upstream operation executed.
-Record a negative excluded-tool check using supported discovery/authorization
-inspection and an isolated denied invocation when needed; never perform an
-unauthorized upstream action as the negative test. Instructions saying
-"ignore other tools" are not access control.
+Record actual upstream names, server URL/label, candidate version,
+arguments/results, runtime context and response/trace linkage. A successful
+tool listing alone does not prove which operation executed.
+Verify excluded tools through supported read-only authorization/configuration
+inspection, not an extra participant denial exercise or an unauthorized
+upstream action. Instructions saying
+"ignore other tools" are not access control. The public server may advertise
+more tools than the agent is permitted to call; do not equate server discovery
+with the effective agent allowlist.
 
-Changing a Toolbox binding/version or its referenced connection settings
-invalidates affected current-path evidence even if the agent instructions
-are unchanged. Unsupported approval propagation, unrestricted dispatch,
-missing runtime permission or unavailable connection/Toolbox APIs block the
-affected gate. Do not mark a direct-MCP fallback as a T01/T02/T03 pass.
-Toolbox `require_approval` is metadata for the consuming runtime, not an
-endpoint-enforced block on `tools/call`. Read-back of `"always"` alone does
-not pass the approval assertion; observe actual pending approval and denial
-without upstream execution in the selected runtime.
+Changing the direct binding, allowlist or upstream behavior invalidates
+affected current-path evidence even if instructions are unchanged. Missing
+runtime access, unsupported native approval or unsafe restrictions block
+the affected gate. Read-back of `"always"` alone does not establish the
+participant's permission choice or successful tool execution. Follow
+[the first-use Playground flow](APP-GUIDE.md#first-tool-use-in-the-playground);
+record the actual displayed scope, participant choice and correlated result.
+SDK/runner pending requests still need exact decisions and continuations.
 
 ### MCP behavior cases
 
@@ -259,7 +292,7 @@ without upstream execution in the selected runtime.
 |----|-----------------|-----------------|
 | C01 | With only the verified Weather MCP forecast tool allowlisted, ask one supported weather question | Runtime tool call, validated arguments, result, upstream provenance/timestamp, grounded answer, and a guided Microsoft Foundry trace inspection of the tool span |
 | C02 | With only travel.art `find_museum_guide` allowlisted, ask one supported museum question, such as the Metropolitan Museum of Art in New York | Runtime tool call, validated arguments, returned guide attribution/URL, available verification date, grounded answer, and corresponding tool span; no weather claim or invented dataset version |
-| C03 | For each specialist, try malformed/unsupported input and an isolated controlled MCP/upstream failure | Failure is attributed and reported; no invented result, unrelated-tool substitution, or blanket approval bypass |
+| C03 | At 04/11, try malformed/unsupported input (C03a); at 05/12, share the skill's isolated controlled MCP/upstream partial-failure case (C03b) | Failure is attributed and reported; fixtures labeled accurately; no invented result, unrelated-tool substitution, blanket approval bypass or separate participant denial drill |
 
 The checkpoint 04 C01 run is the full trace-navigation lesson: inspect tool name,
 arguments, status, timing, result, and relationship to the final response.
@@ -415,8 +448,8 @@ They are not an AI review or a Foundry runtime test. The workshop uses two
 agents in one project as a teaching shortcut; model and project-level tool
 dependencies, permissions, quotas and audit boundary remain shared. Live
 rehearsal must independently verify OIDC, Foundry permissions, PR automation,
-manual deployment confirmation, version creation and endpoint pinning. Toolbox
-authentication and MCP runtime behavior remain separate gates.
+manual deployment confirmation, version creation and endpoint pinning.
+MCP runtime execution and per-call approval remain separate gates.
 
 ## Capstone gates and optional mutations
 

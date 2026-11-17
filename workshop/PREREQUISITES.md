@@ -144,8 +144,10 @@ No agents need to be published in advance.
 
 Agree on an approved spending arrangement: models, memory, hosted compute,
 and telemetry can incur charges, even with existing resources. The coach asks
-for approval before changes or paid tests and shows available Foundry model
-usage and cost estimates, excluding Copilot coaching and other service charges.
+for approval before changes or paid tests and retains available Microsoft
+Foundry input/output token usage, excluding GitHub Copilot coaching. Routine
+price lookups and money calculations are not required. An end-of-workshop
+estimate is optional, on request, and cannot replace the actual bill.
 
 Use only **public or synthetic data**; traces may capture prompts and replies.
 Never share credentials or confidential files. Agree on resource cleanup;
@@ -170,11 +172,15 @@ explanation level and the balance between coach-executed and hands-on steps.
 You can defer a check-in; it is not an assessment and does not change approvals
 or required learning evidence.
 
-The core includes reusable **Foundry tool connections** and **Toolboxes**
-(managed collections of tools). Your project must support their management
-and your agents' runtime access; the facilitator checks this before delivery.
-Public Weather/travel.art services require no keys, but that does not remove
-Foundry permissions or possible costs. No VS Code setup is required.
+The core connects each Microsoft Foundry agent directly to its public Weather
+or travel.art MCP server, first with one allowed tool and then four.
+No Toolbox or upstream authentication connection is required. The facilitator
+rehearses actual tool execution, restrictions and the first-use Playground
+permission flow before delivery. You send a useful question, learn the
+Approve/Deny/Auto approve choices when they appear, and select Auto approve
+for the permitted specialist tools; there is no separate denial drill.
+These services require no keys, but Microsoft Foundry permissions
+and possible costs remain. No VS Code setup is required.
 
 You can also request coaching in your preferred language, for example:
 

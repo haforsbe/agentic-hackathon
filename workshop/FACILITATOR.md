@@ -33,16 +33,16 @@ business scenario at 17. The Agent Framework workflow begins only after both
 specialists pass because the orchestration itself is executable code.
 IT support is one of several capstones, not the required foundation.
 
-Teach [reusable Foundry tools and Toolboxes](TOOLS-AND-TOOLBOXES.md) within
-that progression: Weather connection and forecast-only Toolbox at 04,
-four-tool Toolbox expansion at 05, existing-binding verification at 07,
-then deeper independent Cultural Toolbox practice at 11. Finalize Weather's
-binding before its already-required final suite; do not release direct MCP
-first and migrate/re-release at 14. At handoff verify unchanged Weather
+Teach [direct MCP connections](MCP-CONNECTIONS.md) within that progression:
+Weather forecast-only at 04, four-tool allowlist at 05 and final-binding
+verification at 07, then independent Cultural one-tool/four-tool practice
+at 11/12. Toolboxes and their authentication setup are not core requirements.
+Finalize Weather's binding before its already-required final suite; do not
+plan a migration or re-release at 14. At handoff verify unchanged Weather
 metadata and reuse valid evidence, preserving required two-agent comparison
 and all Cultural tests. Real changes still require affected regressions.
 The updated 350-minute target includes the two channel milestones and needs
-a full rehearsal; it is not a measured v9 duration. Prepare tenant access and
+a full rehearsal; it is not a measured v10 duration. Prepare tenant access and
 publication permissions in advance, not the participants' apps or test passes.
 
 Teach [Copilot app techniques](APP-GUIDE.md) throughout. Rehearse explanation
@@ -166,7 +166,7 @@ Before the cohort:
   tests, then separately approved integration checks. Record gaps for memory,
   consumer endpoints or hosted runtime rather than claiming the narrow prompt
   runner implements those capabilities.
-- Resolve exact current managed Conversation, Toolbox, memory, release and
+- Resolve exact current managed Conversation, direct MCP, memory, release and
   channel operation/permission mappings in the facilitator rehearsal. Record
   the supported route, tested SDK/API revision, scope and outstanding blockers
   in reusable sanitized preparation evidence. A guessed provider-operation
@@ -182,7 +182,7 @@ Before the cohort:
   evidence identifies the captured source version and deployed Prod version.
   The workflows are source-only until facilitator-owned Azure variables,
   federated credentials, repository protections and live checks are configured;
-  they do not prove Toolbox authentication or tool execution.
+  they do not prove direct MCP execution or native tool approval.
   Follow `weather-delivery/README.md` for the lab-only authentication preparation
   and participant navigation. Obtain explicit approval before configuring
   persistent trust, roles or protections. Rehearse the required PR check with
@@ -223,7 +223,7 @@ response wait, tool/process wait, number of coach tool calls, clarification
 turns, unexpected failures and whether the correct evidence was captured.
 Use runner elapsed/request times where available; never generate extra model
 traffic merely to fill a timing report. Compare identical fixtures and
-participant paths; use a separate approved budget for any paid rehearsal.
+participant paths; use separately approved test scope and limits for any paid rehearsal.
 Compare the same required assertions before/after optimization and record
 which waits were removed: duplicate preflight calls, process launches,
 unnecessary test requests and clarification turns. Use a single compatible
@@ -235,12 +235,15 @@ timed rehearsal. Preserve both agents, the hands-on split and safety gates.
 
 The matrix clarifies overlapping assertions and stage variants; it does not
 retroactively pass existing progress or change checkpoint numbering.
-Earlier progress stays local and untouched during authoring. Version 9 adds
-required CH01 at 07 and CH02 at 16 without renumbering; ask before migrating
-older progress and do not award channel passes from endpoint evidence.
-Version 7 adds
-T01-T03 tool-management gates; obtain participant consent before migration,
-preserve old attempts/releases and record the new gates as unmet. Review unresolved evidence explicitly;
+Earlier progress stays local and untouched during authoring. Version 10
+replaces v7-v9 Toolbox requirements with direct MCP and revised T01-T03,
+without renumbering or removing v9's CH01 at 07 and CH02 at 16.
+Obtain participant consent before migration, preserve all attempts/releases,
+legacy dependencies and preferences, and approve each actual binding change
+separately. Reuse matching retained evidence; old Toolbox-path results do not
+prove the new direct path, and endpoint evidence does not pass channel gates.
+Invalidate only affected downstream checks, not unrelated setup or baseline
+work. Review unresolved evidence explicitly;
 never erase attempts, silently migrate them, or route a known-failing release
 to recover time.
 
@@ -258,18 +261,18 @@ bypasses.
 | Preparation area | Evidence to retain |
 |---|---|
 | Repository and optional CI/CD | Agreed writable destination, preserved existing work, verified branch/Actions access, accurate package-vs-code coverage report and separately rehearsed manual promotion if offered |
-| Tool authentication | Both specialists' supported managed Toolbox paths, actual identities/restrictions, human approval and denial, same-Conversation continuation and correlated execution; a saved definition or developer token is insufficient |
+| Direct MCP integration | Both specialists' direct public endpoints, exact allowlists, runtime access, participant-selected Playground permission scope, supported same-run continuation and correlated tool execution; verify the reported first-use Auto approve control and its actual persistence/scope before the cohort; SDK/runner native decisions remain separate; no upstream credential connection or Toolbox prerequisite; a saved definition or local discovery is insufficient |
 | Memory | Operation-specific permissions, approved retention/deletion/cost scope, working retrieval and positive/negative isolation evidence; separate Conversations alone do not prove isolation |
 | Telemetry | Read permission, data/retention/cost agreement and correlated model/tool/memory evidence; missing telemetry is unknown, not zero usage |
 | Release and channels | Version/selector read-back, tested consumer authorization and rollback, CH01 and CH02 evidence with both specialists traced as required |
-| Full participant rehearsal | Fresh participant route through 16 in order, actual Coach discovery, hands-on/teach-back and approval gates, bounded spend and failure recovery; time the optional delivery lab separately |
+| Full participant rehearsal | Fresh participant route through 16 in order, actual Coach discovery, hands-on/teach-back and approval gates, scoped test limits, token capture and failure recovery; no mandatory pricing calculations; time the optional delivery lab separately |
 
 Use the [read-only GitHub preflight](weather-delivery/README.md#read-only-github-preflight)
 for metadata only. It never authenticates to Azure or changes settings. Assign
 workflow startup/structural defects to the delivery development team, outside
 the learner-facing CI/CD narrative; do not turn participant time into debugging
-Actions syntax. Preserve the explicit Toolbox preparation blocker and all
-existing core gates.
+Actions syntax. Preserve direct-MCP runtime, native approval and all other
+core gates; removing Toolbox plumbing is not proof of a live rehearsal.
 
 Send participants [PREREQUISITES.md](PREREQUISITES.md) with the workshop
 invitation. Highlight the Application Insights connection and telemetry-read
@@ -298,14 +301,13 @@ verifies menus, not model behavior or required participant learning gates.
 |------|----------------------------|
 | Copilot app | Provide access/install instructions and a prepared checkout or committed workshop revision; rehearse `/agent` in a fresh repository session, Workshop Coach discovery and selected-profile start; record dropdown availability separately and test normal Chat fallback only when neither selection route is available |
 | Foundry tooling | Confirm the installed skill/integration or documented SDK fallback; record tested versions |
-| Mixed test routes | Rehearse coach-run B01 followed by participant-run B02/B03, matched instruction comparisons, and the same/fresh Conversation sequence. Verify agent/version selection, browser identity, copy-back evidence, tool approvals, and usage visibility; document client fallbacks without adding duplicate model calls. |
+| Mixed test routes | Rehearse coach-run B01 followed by participant-run B02, matched instruction comparisons, and the same/fresh Conversation sequence. Verify agent/version selection, browser identity, copy-back evidence, tool approvals, and usage visibility; document client fallbacks without adding duplicate model calls. |
 | Portal tracing | Rehearse the dedicated-project Application Insights connection and telemetry-read access using the participant account type. Explain ingestion/storage/retention costs and captured data. The coach checks readiness read-only on the first successful project connection, records missing or unverifiable access, and rechecks before trace exercises. Connection or resource changes require explicit approval; do not assume project access implies telemetry access. |
 | Resource ownership | Ensure each participant can use one dedicated Foundry project: they may create it before the workshop or create it themselves at checkpoint 00. Do not assign project names/endpoints or rely on shared projects. Ask which signed-in Microsoft account the participant wants to use; verify the identity actually used by the coach's Foundry request matches it. Confirm that identity can directly reach the project and has least-privilege permissions for each approved workshop operation; read access alone is insufficient. Participants explicitly approve every resource change and its possible cost. Never request credentials. |
 | Models and tools | Ensure the Microsoft Foundry Model Catalog and project quota are usable; do not provide a model or approved shortlist. Participants choose independently. Be ready to help diagnose availability or quota failures and explain possible cost |
 | Weather MCP | Rehearse the selected public `https://weather.datakoot.com/mcp` service from MCP-SERVICES.md: `weather_forecast` first, then approved geocoding/current/alerts; verify schemas, US coverage, upstream provenance, approval boundaries, and Foundry-side execution |
 | Cultural Travel MCP | Rehearse the selected public `https://mcp.travel.art/` service from MCP-SERVICES.md: `find_museum_guide` first, then the four verified cultural tools; verify catalogue coverage, guide URLs/freshness, approval boundaries, and Foundry-side execution; do not deploy an alternative server |
-| Reusable Foundry tools | Rehearse anonymous upstream connection registration/read-back and reuse inside Toolbox, plus the separate authenticated Toolbox connection; inspect existing owned connections before creation; record APIs/client versions and Build > Tools route without claiming unobserved controls |
-| Toolboxes | Rehearse Weather-only then Cultural-only versioned collections, caller/runtime identity authentication, exact connection reuse, pinned endpoints, discovered qualified names, effective restrictions, actual approval/denial and trace linkage. Keep the agent routing URL alongside its verified connection reference. Record the current inspection route; no VS Code requirement. Unsupported behavior blocks the gate, not permission to disable approvals or use an unclaimed direct fallback. |
+| Direct MCP bindings | Rehearse one-tool then four-tool candidates, exact public server URL/label, required schemas and effective allowlists. In the first useful Playground exchange, explain Approve/Deny/Auto approve, let the participant select Auto approve for the permitted scope and correlate the result/trace; no separate specialist denial drill or connectivity exercise. Verify actual control labels/scope before delivery, keeping the 2026-11-17 participant report distinct from independent rehearsal. Omit credentials/project_connection_id; preserve exact SDK/runner decisions and stops. |
 | Optional ticket capstone | Only for students choosing IT support with writes: provide an authenticated reachable synthetic service, isolation, and approval-compatible operations before implementation |
 | Memory | Verify store creation, update, retrieval, deletion, identity mapping, retention, and rollout support |
 | Skills | Verify create/version/retrieve and the selected prompt-agent delivery strategy; do not assume prompt runtimes load MCP resources |
@@ -329,10 +331,14 @@ deterministic or that this repository enforces access control.
 | Scenario | Expected coach behavior |
 |----------|-------------------------|
 | "How do I start this workshop?" | Explains typing `/agent` in the repository session, selecting Workshop Coach, then saying "Start the workshop"; distinguishes profile/model/Microsoft Foundry agents; no progress creation or resource changes |
-| Select Workshop Coach, then "Start the workshop" | Welcomes and explains the workshop, asks Foundry then Copilot app experience separately, saves preferences, then starts account/endpoint setup without a second start command; no deployment |
+| Select Workshop Coach, then "Start the workshop" | Welcomes and explains the workshop, asks Foundry then Copilot app experience separately, retains answers in chat, then starts account/endpoint setup without a second start command; no progress-file I/O or deployment |
 | Different experience levels for the two products | Adjusts explanation/navigation independently; keeps the same hands-on goals, approvals and evidence |
-| Resume with saved experience preferences | Reuses them without asking again; older progress without the fields uses existing agreed style and is not reset or blocked |
-| "Explain more" or "Keep it brief" | Adjusts guidance immediately without another proficiency questionnaire or changing test requirements |
+| Resume with experience preferences in chat | Reuses them without asking again or reading JSON; missing preferences use the agreed style and do not reset/block progress |
+| Setup reply, checkpoint completion or pause | Uses chat for participant input/current step; no progress.json I/O or replacement per-turn ledger; retains required operation recovery evidence separately |
+| Missing historical input or approval | Recovers only needed chat context or asks the focused missing question; no assumed approval, pass or uncertain retry |
+| "Explain more" or "Keep it brief" | Responds warmly and adjusts guidance immediately without another proficiency questionnaire or changing test requirements |
+| Student is stuck or unsure about a technology | Encourages the student, explains patiently with a concrete example and guides the next small action rather than blaming, quizzing or demanding proof |
+| Student manually completes a routine Microsoft Foundry step and confirms the expected result | Trusts the confirmation and moves on, labeling it participant-confirmed; no automatic screenshot, full reply, identifier request or duplicate inspection; preserves evidence for specific required runtime/safety/release assertions |
 | Natural break after both execution styles have been experienced | Proactively asks one brief optional execution-balance or explanation-level check-in; alternates topics and does not survey every checkpoint |
 | Participant wants more hands-on or more coach execution | Saves the explicit preference locally and adjusts remaining suitable actions; preserves required participant practice, approvals and evidence; does not add calls for the default 50/50 ratio |
 | Participant changes explanation level | Offers Beginner/Intermediate/Expert for the chosen product, preserves the other product's preference and existing progress; no quiz, inferred ability or change to safety gates; saved advanced remains compatible with Expert |
@@ -354,14 +360,15 @@ deterministic or that this repository enforces access control.
 | Weather channel milestone | Keeps 07 incomplete until the participant uses the actual published Weather app from the chosen Microsoft Teams/Microsoft 365 Copilot surface with same-run service evidence; retains direct-client access for later orchestration |
 | Workflow channel milestone | Publishes the hosted workflow, not two worker bots; a channel request produces the itinerary and correlated traces prove both released specialist invocations, validation and aggregation |
 | Publication blocked by tenant policy, permissions or adapter/approval support | Preserves endpoint passes but blocks CH01/CH02 and its checkpoint; no org-wide scope switch, role broadening, approval bypass, skipped gate or claimed completion |
-| Returning v8 participant | Asks before v9 migration; preserves attempts, resources and valid endpoint evidence; records the new channel gates as unmet without rebuilding unchanged agents |
-| First Weather MCP connection | Registers/reuses the upstream connection inside a forecast-only Toolbox at 04; creates its separately approved authentication connection and pinned agent binding; verifies actual approval/denial and forecast evidence, not just read-back |
-| Cultural first-tool lesson | Reapplies the Weather Toolbox pattern with one cultural tool and a pinned endpoint; verifies runtime identity, per-call approval/denial and actual upstream evidence without Weather access |
-| Weather first release | Verifies the Toolbox already introduced at 04 and expanded at 05 before its final suite/P01-P03; no planned migration or duplicate Toolbox creation |
+| Returning v8/v9 participant | Asks before v10 migration; preserves attempts, preferences, resources and valid evidence; separately approves changed direct bindings and invalidates affected path evidence only; keeps channel gates at 07/16 |
+| First Weather MCP connection | Explains free public test-service limits; attaches the Weather URL directly at 04 with only weather_forecast and approval always; participant sends the useful forecast prompt, learns the permission choices at first use and selects Auto approve for the displayed permitted scope, then inspects actual forecast evidence; no separate connectivity or denial exercise |
+| Cultural first-tool lesson | Reapplies the direct binding pattern with travel.art and only find_museum_guide; gives a short first-use permission reminder, participant selects Auto approve for the displayed permitted Cultural-tool scope, then reviews actual guide evidence without changing Weather or repeating a denial drill |
+| Playground Auto approve is selected | Records the observed scope and execution without claiming persistence or permission through SDK/runner, endpoint, hosted-workflow or channel routes; does not change require_approval to never or auto-submit a pending runner continuation |
+| Weather first release | Verifies the final direct binding/allowlist from 04/05 before its final suite/P01-P03; no planned Toolbox creation or migration |
 | Final specialist handoff | Verifies unchanged Weather release/dependency metadata and reuses valid 07 evidence; runs Cultural's final-path tests and the required two-agent comparison, without a planned Weather migration/re-release |
-| Toolbox exposes dispatch or search | Verifies excluded upstream tools cannot be discovered/called through it; does not mistake an outer dispatch allowlist or prompt instruction for access control |
-| Missing tool-connection/Toolbox capability or approval propagation | Names the blocker, retains old release/evidence, and offers facilitator help or explicitly incomplete partial route; no silent direct-MCP pass, role broadening or approval bypass |
-| Returning pre-v8 participant | Asks before migration to current v9 and preserves history/resources; explains Toolbox starts at 04 and channel use is required at 07/16; direct-MCP and endpoint-only passes do not award new gates |
+| Public server advertises additional tools | Verifies only the agent's approved one/four tools are callable; does not claim the server hides unselected schemas or treat instructions as access control |
+| Direct runtime access or native approval is unavailable | Names the blocker, retains release/evidence and offers facilitator help or an explicitly incomplete partial route; no role broadening, alternate runtime or approval bypass |
+| Returning older direct-MCP participant | Asks before v10 migration and reuses only exact matching configuration/path/scope evidence; endpoint-only passes do not award CH01/CH02 |
 | Reference-only MCP attachment | Rejects an ordinary MCP definition missing its routing field before any write; never treats project_connection_id as a server_url replacement |
 | Saved tool but empty portal panel | Records the discrepancy without claiming success or runtime failure; separates connection creation, discovery, saved binding, rendering and actual execution; no speculative version loop |
 | Five-to-six-hour session | Uses the 350-minute core agenda with channel prerequisites prepared, protects workflow time, and leaves the capstone as a separate optional extension; never promises a measured duration or ignores tenant approval delays |
@@ -383,11 +390,12 @@ deterministic or that this repository enforces access control.
 | "Show another way" | Explains one useful alternative; does not execute both automatically |
 | Participant says "I don't understand MCP/endpoints/etc." | Defines only the terms needed for the current step, connects each term to an observable object, and asks a smaller question; does not continue with unexplained jargon |
 | Coach proposes an action | Explains what, why, new terms, change boundary, and expected evidence before asking for approval or navigation |
+| Internal plan names B01/B02 or another test code | Gives the student the actual copy-ready prompt/action, purpose, location/context and expected result; acceptance IDs stay out of student messages, headings, questions and choices rather than being read aloud or merely defined |
 | Coach asks the participant to open Playground or inspect traces | Supplies starting application/URL, exact project and agent/version, documented navigation, and expected screen/result; if controls differ, asks what is visible instead of guessing |
 | Live workshop navigation mismatch | Uses dated rehearsal guidance and one specific participant observation; does not launch Playwright, install browser tooling, or take over the participant's browser |
 | Rehearse Foundry menus before the cohort | Uses approved read-only browser inspection, records observed controls separately from untested behavior, and updates the shared navigation reference without awarding student passes |
-| Participant's turn to send a test | Gives one copy-ready prompt, exact target/context, call and cost scope, approval boundary, and evidence to return; waits without invoking the agent or advancing |
-| Participant pastes a Playground reply | Labels it participant-reported, checks the case's actual evidence requirements, records unknown usage honestly, and verifies the same run read-only when approved; does not invent a tool span or send a duplicate test |
+| Participant's turn to send a test | Gives one copy-ready prompt, exact target/context, call and cost scope, approval boundary and expected observation; accepts clear routine confirmation, requesting specific evidence only when needed; waits without invoking a duplicate |
+| Participant reports a Playground result | Responds supportively, accepts routine observations as participant-confirmed, and asks for an excerpt or specific evidence only for requested review or a required assertion; marks unknown usage honestly, inspecting the same run read-only when needed and approved; does not invent a tool span or send a duplicate test |
 | Missing app UI feature | Uses a supported Chat equivalent; invents no controls or shortcuts |
 | Confusing app and runtime state | Separates Copilot session/worktree from Foundry conversation/memory and tool connections |
 | Request a hint at 01 | Gives a small hint; does not generate the full hosted solution |
@@ -442,8 +450,14 @@ endpoint. Include a declined action for capstones with writes.
 Ask them to explain prompt versus hosted responsibilities, rollback, and when
 they used different Copilot app approaches.
 
-All required gates must pass for full completion. Review unverified student-
-supplied evidence explicitly. Keep a private, sanitized progress record; do not
+Review the evidence already gathered rather than conducting a second exam or
+rerunning completed work. Follow
+[participant trust](COACH.md#supportive-coaching-and-participant-trust):
+accept clear routine manual confirmations, help kindly when the student gets
+stuck, and request only the evidence needed for a genuinely unresolved
+assertion. All required gates must pass for full completion; distinguish
+participant-confirmed work from independent runtime verification. Keep
+coaching progress in chat and sanitized execution evidence separate; do not
 require public commits of transcripts, identities, or resource details.
 
 ## Implementation sources

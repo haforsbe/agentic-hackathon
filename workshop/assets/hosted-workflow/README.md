@@ -109,13 +109,14 @@ continuation and uncertain-request reconciliation; they are not shared fixtures.
 Apply appropriate access, retention and data/cost approval. Never commit those
 records, environment files, configured manifests or local configuration.
 
-## Cost readiness before live tests
+## Usage and limits before live tests
 
-Prepare this prerequisite before inviting a participant to run the hosted
-workflow. Configuration confirmation, current pricing and passing offline
-tests are necessary but do not alone establish an affordable live test.
-Follow the coach's [bounded test-spend agreement](../../COACH.md#bounded-test-spend-agreements);
-no example dollar allowance is supplied by this asset.
+Before a participant runs the hosted workflow, require passing offline tests,
+the exact reviewed configuration and a [scoped test approval](../../COACH.md#scoped-test-approvals).
+Explain possible charges, execution scope and supported controls. Price lookup,
+monetary reservations and whole-case cost estimates are not workshop gates.
+Keep available service-reported tokens for an optional end-of-workshop estimate;
+missing pricing or internal-turn counts do not by themselves block a test.
 
 The reference has these application controls:
 
@@ -127,54 +128,30 @@ The reference has these application controls:
 | Workflow `max_iterations=10` | Local graph supersteps | The managed specialist's internal model/tool/memory loop |
 | Deterministic itinerary assembly | No extra model call by the assembly executor | The cost of the independently hosted specialists |
 
-Build a sanitized cost-readiness record under ignored `.workshop/`:
-
-1. Identify the exact project, hosted candidate/artifact, specialist versions,
-   model/version, deployment type, region, memory/tool configuration, input
-   and execution route. Obtain current official rates and billing units,
-   including applicable separately charged operations; deployment capacity is
-   not a multiplier on per-token prices.
-2. Record the initial and continuation submissions for the proposed case.
-   Include denial processing even when the denied external tool does not run.
-   Use uncached input rates unless cached usage is actually established.
-3. Give the estimate a supported basis: applicable documented service limits,
-   or relevant existing aggregate usage for comparable inputs on the same
-   reviewed configuration/route. For an empirical estimate, record the
-   observed range, sample limitations, finite assumptions about additional
-   turns/history/tool and memory data, and a justified uncertainty margin.
-   A prior response count or an unmeasured token scenario is not usage evidence.
-4. Account for all model work in that basis. A model's context capacity is
-   per inference, not cumulative billing across a native Response. Do not
-   assume the four submissions are four inference contexts. Memory search,
-   memory updates and other tool operations need applicable billing/usage
-   evidence; do not assume they are free or included in response usage.
-5. Compare the whole-case estimate with the separately approved remaining
-   allowance and preserve reservations for unknown prior usage. Record
-   hosting, telemetry and GitHub Copilot app charges as exclusions, not zero
-   cost. An estimate with disclosed uncertainty is not a hard billing cap.
-
 The native response bodies and available `usage` are retained in the runtime
 `requests.json` journal, keyed by submission, with returned response IDs.
 Existing records can inform an approved read-only reconciliation; deduplicate
 by response ID and treat absent usage as unknown. Do not create another model
 response just to populate usage. The journal's usage is not proof of inclusion
-of separately processed memory work or a full account bill.
+of separately processed memory work or a full account bill. Do not add a
+workflow aggregate to the same specialist usage twice; retain the actual
+model/deployment/version, checkpoint and execution route where available.
+Keep summaries in chat; do not create a separate cost-readiness ledger.
 
-If the basis is missing, record **cost readiness blocked**, naming the missing
-internal-turn/input, memory or usage assumption. Stop before any paid
-submission, preserve already valid test evidence and escalate the precise
-prerequisite to the facilitator within the coaching timebox. A larger
-allowance alone does not repair an unsupported estimate. Do not convert an
-old allowance or a resume request into approval for a calibration run.
+An optional monetary estimate is on request, never a completion gate. Follow
+the coach's [usage-summary policy](../../COACH.md#checkpoint-usage-summaries)
+for matched official rates and explicit missing-usage/excluded-charge limits.
+Any participant-imposed cost restriction still applies; if compliance cannot
+be established, pause the affected action and clarify. A prior test approval
+or resume request never authorizes extra calls.
 
 The reference does not set `max_tool_calls` or claim an aggregate managed-agent
 token/spend control. A parameter in an installed SDK is not proof that the
 exact agent endpoint accepts it, that it covers MCP/memory, or that it enforces
 a billing limit. Adding controls requires documented route semantics, separate
-change approval and affected regressions. Do not bypass human decisions,
-disable memory or replace specialist tools to make the estimate appear bounded.
-This checklist is a preparation gate, not evidence that a deployed candidate
-has passed it.
+change approval and affected regressions. Do not bypass human decisions or
+silently disable memory or replace specialist tools. Preserve uncertain-request
+recovery; no usage record alone proves runtime behavior passed.
 
 ## Intended local tests
 

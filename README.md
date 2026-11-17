@@ -10,12 +10,12 @@ MCP server**. Both specialists use the selected free-to-use, no-authentication
 [MCP services](workshop/MCP-SERVICES.md); the coach supplies connection details
 and guides the same incremental process for each. Participants do not host
 MCP servers. Microsoft Foundry resources and model usage can still incur charges.
-Learn reusable **Microsoft Foundry tool connections** and a forecast-only **Toolbox**
-with Weather's first tool at checkpoint 04; expand that Toolbox at 05.
-Verify the existing binding before release and deepen Toolbox management
-with Cultural Travel, then verify both existing releases at handoff without
-a planned Weather migration or repeat release cycle. Each specialist keeps
-only its own tools; a skill guides their use rather than granting access.
+Connect each agent **directly to its own public MCP server**, starting with
+one allowed tool and then expanding to four with a skill. Verify the actual
+tool calls, human approval and denial, and domain isolation before release.
+Toolboxes and their authentication setup are not part of this core workshop.
+Each specialist keeps only its own tools; a skill guides their use rather
+than granting access.
 After both agents pass independently, deploy a hosted
 **Trip Planning Workflow** that invokes them and assembles a sourced itinerary.
 Then **publish the workflow to Microsoft Teams and/or Microsoft 365 Copilot**,
@@ -63,7 +63,8 @@ Its one-project setup is an educational compromise, not a production pattern.
 Workshop Coach will welcome you, explain how the guided lessons work, check that it can
 read this repository, and help you through setup one question at a time. You do
 not need to know an agent name, internal file path, or Azure command to begin.
-If you already have local progress, the coach will help you resume safely.
+If you already started, the coach uses the earlier chat to help you resume
+safely. Legacy progress files are imported only on explicit request.
 If neither `/agent` nor an agent picker is available, use normal repository Chat
 and send the same message as a fallback. A missing dropdown alone does not mean
 selection is unavailable. If selection works but Workshop Coach is missing, use
@@ -122,14 +123,15 @@ equivalent acceptance criteria and what extra infrastructure each choice needs.
   and [Copilot app techniques](workshop/APP-GUIDE.md)
 - [Prompt-agent lessons](workshop/01-prompt-agents.md)
 - [Selected MCP services and the shared travel story](workshop/MCP-SERVICES.md)
-- [Reusable Foundry tools and Toolboxes](workshop/TOOLS-AND-TOOLBOXES.md)
+- [Direct MCP connections](workshop/MCP-CONNECTIONS.md)
 - [Optional Weather-agent GitHub delivery lab](workshop/weather-delivery/README.md)
 - [Hosted-agent lessons](workshop/02-hosted-agents.md)
 - [Tests](workshop/TESTS.md) and [stable-endpoint release](workshop/PUBLISHING.md)
 - [Capstone choices](workshop/CAPSTONE.md) and [facilitator guide](workshop/FACILITATOR.md)
 
-Student implementations live in `student/`; local progress and sanitized test
-evidence live in ignored `.workshop/` files. The coach is a formative tutor, not
+Student implementations live in `student/`; participant input and coaching
+progress stay in chat history, without routine `progress.json` reads/writes.
+Sanitized execution evidence lives in ignored `.workshop/` files. The coach is a formative tutor, not
 an independent examiner or a secure grading system.
 
 **Microsoft Foundry terminology:** new-model agents receive a stable endpoint on creation.
@@ -145,11 +147,11 @@ legacy Agent Applications are explained in the publishing guide.
 |----------|---------|
 | `workshop/` | Participant guides, lessons, coach protocol, tests, and facilitator guidance |
 | `workshop/assets/` | Supporting lesson assets |
-| `workshop/templates/` | Templates for local workshop progress |
+| `workshop/templates/` | Legacy/optional progress import/export template; not routine coaching state |
 | `.github/` | Workshop Coach profile and repository instructions |
 | `student/` | Student implementations and reproducible agent definitions |
 | `examples/support-ticket-system/` | Optional IT support example app with shared storage, web server, and local MCP tools |
-| `.workshop/` | Ignored local progress and sanitized evidence; never published |
+| `.workshop/` | Ignored execution evidence and retained legacy progress; never published |
 
 Dependencies are introduced per lesson in isolated student environments.
 The optional [IT support example app](examples/support-ticket-system/README.md)

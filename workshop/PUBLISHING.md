@@ -16,28 +16,29 @@ The GitHub Copilot app is the coaching application, not this distribution target
 
 ## Tool dependencies are part of the release
 
-Follow [Tools and Toolboxes](TOOLS-AND-TOOLBOXES.md). Record the reusable
-connection ID/target, Toolbox version-specific endpoint, actual exposed
-tool names and effective allowlist alongside the agent/skill versions.
-At 07 verify the Weather Toolbox introduced at 04 and expanded at 05 before
-running the already-required full final-path regressions and P01-P03. Record
-both the upstream connection and Toolbox-authentication connection. Its first release is
-Toolbox-backed; do not release direct MCP first and migrate later. At 14
-Cultural has its own Toolbox and independent final-path tests; verify Weather's
-unchanged release/dependencies and reuse valid evidence rather than repeating
-its full suite. Real changes still require affected regressions.
-No shared mixed Toolbox or direct-MCP bypass is left in the final candidates.
+Follow [Direct MCP connections](MCP-CONNECTIONS.md). Record each direct server
+URL/label, actual upstream names, effective allowlist and native approval
+policy alongside the agent/skill versions.
+At 07 verify Weather's binding from 04/05 before the required final-path
+regressions and P01-P03. At 14 Cultural has its own direct binding and
+independent final-path tests; verify Weather's unchanged release/dependencies
+and reuse valid evidence rather than repeating its full suite. Require T03.
+Real changes still require affected regressions. Neither final specialist
+is configured with the other's server or tools.
 
-Verify the **agent runtime identity**, not just the developer, can invoke its
-Toolbox and only the permitted upstream tools. Keep human approval observable
-for the actual tool/arguments. Do not copy documentation examples that disable
-approval. If access or approval propagation cannot be verified, block release.
+Verify actual **managed-agent runtime execution**, not just a developer's
+local discovery. Both selected upstream services are anonymous; do not
+create Toolbox authentication connections or send them Microsoft Foundry
+tokens. Microsoft Foundry consumer and channel authorization remain required.
+Keep native human approval observable for the actual tool/arguments.
+Do not copy examples that disable approval. If runtime access or approval
+cannot be verified on the release/channel path, block the affected gate.
 
-Pin tested dependency versions rather than consuming an unreviewed Toolbox
-default. Agent-version rollback cannot undo a separately mutated connection
-or default Toolbox. Retain the tested versions/bindings, review affected
-consumers before dependency changes, and obtain separate approval for any
-promotion or role change.
+Pin the tested agent and skill versions and retain the exact bindings.
+Agent rollback restores that definition, not an external provider's service
+implementation; revalidate affected behavior after upstream changes.
+Review affected consumers before changes and obtain separate approval for
+any promotion or role change.
 
 ## Current model versus legacy publishing
 
@@ -87,8 +88,9 @@ agent endpoint.
    endpoint and supported protocol. Verify the SDK's base-URL semantics so
    `/responses` is not appended twice. Do not print or persist bearer tokens.
    Run P01-P03 and inspect actual results.
-6. **Save the release record.** Store the endpoint, selected version, identity/
-   access configuration, test evidence, and rollback target in local progress.
+6. **Report the release record.** Include the endpoint, selected version, identity/
+   access configuration, test evidence references and rollback target in the
+   normal checkpoint handoff in chat, without a progress-file update.
    Never copy access tokens into a shareable handoff.
 
 Use one approved consumer-path regression batch where supported. The same
@@ -104,7 +106,7 @@ endpoint. It does not rely on a
 local custom-function executor or client-side workflow.
 
 At 07 continue to the channel milestone below and pass CH01 before starting 08.
-Preserve the prompt release, channel publication and pinned Toolbox dependencies
+Preserve the prompt release, channel publication and direct MCP bindings
 while Cultural is developed. Checkpoint 14 does not plan a Weather migration,
 routing change or repeat publication.
 
@@ -371,8 +373,9 @@ If required attribution or approval behavior cannot survive the path, leave
 the channel gate blocked rather than silently lowering the evidence standard.
 
 Record CH01/CH02 separately from P01-P04. A raw endpoint pass, app installation
-or admin approval alone cannot satisfy them. Save sanitized publication and
-test references under `channel_publications` in local progress; unknown usage
+or admin approval alone cannot satisfy them. Include sanitized publication and
+test references in the checkpoint handoff in chat, not a `channel_publications`
+progress-file update; unknown usage
 stays unknown. Changed audience, identity, protocol, routing or dependencies
 requires affected rechecks. Preserve direct-client protocols and authorization
 when configuring channels; the documented REST update can replace those
@@ -398,8 +401,9 @@ CH01/CH02 evidence, evidence locations, and every workshop-owned
 resource still running.
 Ask before stopping or deleting specific
 resources. Keep shared projects/models and other students' resources untouched.
-Include saved tool connections and Toolbox versions in the owned-resource
-inventory, including published apps and any separately owned legacy/custom
+Include direct MCP binding references and any retained legacy connections or
+Toolboxes in the owned-resource inventory, including published apps and any
+separately owned legacy/custom
 Azure Bot Service resources. Do not treat a service-managed registration as
 an independently provisioned resource to delete. Channel
 unpublishing/removal is separate from stopping a hosted runtime or deleting an
