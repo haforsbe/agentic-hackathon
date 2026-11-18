@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from fixtures import SyntheticSpecialists, drive_reference, trip
-from trip_workflow import NativeInvoker, execute_request, itinerary_text
+from trip_workflow import NativeInvoker, execute_request, itinerary_text, result_evidence
 
 
 class ReferenceWorkflowTests(unittest.IsolatedAsyncioTestCase):
@@ -41,7 +41,7 @@ class ReferenceWorkflowTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(call.kwargs["max_retries"], 0)
                 self.assertEqual(call.kwargs["timeout"], 60)
             for call in client.responses.create.call_args_list:
-                self.assertEqual(call.kwargs["max_output_tokens"], 500)
+                self.assertEqual(call.kwargs["max_output_tokens"], 2048)
                 self.assertTrue(call.kwargs["store"])
                 self.assertNotIn("max_tool_calls", call.kwargs)
             self.assertTrue(all(entry["body"]["usage"] is None for entry in invoke.journal.values()))
@@ -71,6 +71,27 @@ class ReferenceWorkflowTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn("Rain may favor an indoor visit", rendered)
         self.assertIn("outdoor plans remain subject to the forecast", rendered)
         self.assertIn("accessibility are not verified", rendered)
+
+    async def test_automatic_and_mixed_policies_preserve_completed_tool_evidence(self):
+        for automatic in (("weather", "culture"), ("weather",), ("culture",)):
+            with self.subTest(automatic=automatic), tempfile.TemporaryDirectory() as temporary:
+                invoke = SyntheticSpecialists(automatic=automatic)
+                result = await drive_reference(Path(temporary), invoke)
+                self.assertEqual(result["status"], "completed")
+                self.assertEqual(invoke.executed_tools, ["weather", "culture"])
+                for domain in ("weather", "culture"):
+                    self.assertTrue(result["specialists"][domain]["source_evidence"])
+                    self.assertEqual(invoke.calls.count((domain, True)), int(domain not in automatic))
+
+    def test_automatic_execution_still_checks_tool_origin_and_approval_linkage(self):
+        requested = trip()
+        for changes in ({"server_label": "wrong-server"}, {"name": "unselected-tool"},
+                        {"approval_request_id": "mcpr_unobserved"}, {"status": "failed"}):
+            with self.subTest(changes=changes):
+                body = SyntheticSpecialists(automatic=("weather",))("weather", requested, None, None)
+                body["output"][0].update(changes)
+                with self.assertRaises(ValueError):
+                    result_evidence("weather", requested, body, None, None)
 
     async def test_failed_or_invalid_specialist_preserves_other_evidence(self):
         """W02/W03: failures isolate one domain, preserving the other and limits."""

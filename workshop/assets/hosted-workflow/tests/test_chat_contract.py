@@ -120,3 +120,12 @@ class ChatContractTests(unittest.TestCase):
                 label = "Weather" if denied == "weather" else "Cultural guide"
                 self.assertIn(label + " (denied)", text)
                 self.assertIn("Tool execution was denied", text)
+
+    def test_automatic_tool_execution_needs_no_synthetic_permission_cards(self):
+        self.specialists.automatic = ("weather", "culture")
+        final = self.start()
+        self.assertFalse(any(item["type"] == "mcp_approval_request" for item in final["output"]))
+        self.assertEqual(self.specialists.calls, [("weather", None), ("culture", None)])
+        self.assertIn("Workflow result: completed", self.text(final))
+        for domain in ("weather", "culture"):
+            self.assertIn(f"https://{domain}.example/source", self.text(final))

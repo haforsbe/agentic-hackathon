@@ -36,11 +36,12 @@ def trip():
 
 
 class SyntheticSpecialists:
-    def __init__(self, *, failure=None, final_text=None):
+    def __init__(self, *, failure=None, final_text=None, automatic=()):
         self.failure = failure or {}
         self.final_text = final_text or {}
         self.calls = []
         self.executed_tools = []
+        self.automatic = automatic
 
     def __call__(self, domain, requested_trip, pending, approved):
         self.calls.append((domain, approved))
@@ -52,7 +53,7 @@ class SyntheticSpecialists:
             if domain == "weather" else
             {"query": "Metropolitan Museum of Art", "city": "New York", "country": "US"}
         )
-        if pending is None:
+        if pending is None and domain not in self.automatic:
             output = [{
                 "type": "mcp_approval_request", "id": "mcpr_synthetic_" + domain,
                 "name": tool, "server_label": SERVER_LABELS[domain],
@@ -60,20 +61,21 @@ class SyntheticSpecialists:
             }]
         else:
             output = []
-            if approved:
+            executed = approved is True or (pending is None and domain in self.automatic)
+            if executed:
                 self.executed_tools.append(domain)
                 output.append({
                     "type": "mcp_call", "name": tool,
                     "server_label": SERVER_LABELS[domain],
                     "arguments": json.dumps(arguments),
-                    "approval_request_id": pending["approval_request_id"],
+                    "approval_request_id": pending["approval_request_id"] if pending else None,
                     "status": "completed", "error": None,
                     "output": f"Synthetic {domain} source; not live provider data",
                 })
             findings = (
                 "Rain may favor an indoor visit." if domain == "weather" else
                 "A guide is available; outdoor plans remain subject to the forecast."
-            ) if approved else "The tool call was denied; no result is available."
+            ) if executed else "The tool call was denied; no result is available."
             text = self.final_text.get(domain, (
                 f"## {heading}\n{findings}\n\n## Source\n"
                 f"https://{domain}.example/source\n\n## Uncertainty\n"

@@ -20,10 +20,14 @@ The coach supplies the endpoints, current schemas and coverage information
 from [MCP-SERVICES.md](MCP-SERVICES.md). Participants do not host MCP servers,
 research URLs or obtain upstream credentials.
 
-| Specialist | Direct route | First tool | Expanded allowlist |
+| Specialist | Direct route | Default route tool through release | Deferred expanded allowlist |
 |---|---|---|---|
-| Weather Research Agent | Agent -> `https://weather.datakoot.com/mcp` -> requested Weather tool | `weather_forecast` at 04 | `geocode`, `weather_forecast`, `weather_current`, `weather_alerts` at 05 |
-| Cultural Travel Agent | Agent -> `https://mcp.travel.art/` -> requested cultural tool | `find_museum_guide` at 11 | `find_museum_guide`, `find_art_events`, `find_layover_itinerary`, `recommend_art_trip` at 12 |
+| Weather Research Agent | Agent -> `https://weather.datakoot.com/mcp` -> requested Weather tool | Only `weather_forecast`, from 04 through 07 | `geocode`, `weather_forecast`, `weather_current`, `weather_alerts` at retained 05 |
+| Cultural Travel Agent | Agent -> `https://mcp.travel.art/` -> requested cultural tool | Only `find_museum_guide`, from 11 through 14 | `find_museum_guide`, `find_art_events`, `find_layover_itinerary`, `recommend_art_trip` at retained 12 |
+
+Skills and expansion at 05/12 are temporarily deferred under the
+[skills policy](README.md#temporary-skills-and-multi-tool-deferral).
+Do not expand the default one-tool bindings or run T02/S01/S02.
 
 These are separate domain-scoped bindings, not both servers attached to both
 agents. At 07 verify Weather's final binding before release and CH01 channel
@@ -49,19 +53,24 @@ MCP servers directly.
    a paid model test or any proposed tool call.
 4. Attach the current specialist's [first-tool fragment](MCP-SERVICES.md#first-tool-configuration)
    to a new candidate. Retain `server_url`, an unambiguous `server_label`,
-   the explicit `allowed_tools` and `require_approval: "always"`. The participant's
-   later Playground Auto approve choice does not establish a saved
-   `require_approval: "never"` policy or permission on another route. Do not add a
+   the explicit `allowed_tools`. For a new coach-created tool use always allow
+   (`require_approval: "never"`); encourage the participant to choose the same
+   at creation, especially for Microsoft Teams. Existing tools keep their
+   supported policy, with no required value or later setting question. Do not
+   instruct a post-creation policy edit or create a corrective version.
+   A Playground choice alone does not
+   establish the saved policy or behavior on another route. Do not add a
    `project_connection_id`, bearer token, API key or authorization header:
    neither selected public upstream service needs an authentication connection.
    Microsoft Foundry project and consumer authentication remain separate.
 5. Independently read back the saved candidate, then guide one read-only
    participant inspection using [APP-GUIDE.md](APP-GUIDE.md#before-adding-a-direct-mcp-tool).
-   Verify URL, tool names, allowlist and native approval policy, not just the
-   display name. Preserve model, governing instructions, previous versions
+   Verify URL, tool names and allowlist, not just the display name. Record the
+   saved approval policy internally without asking the participant about it
+   again. Preserve model, governing instructions, previous versions
    and the other specialist.
 
-At 05/12 expand only that candidate's direct allowlist to its four approved
+Only after explicit reintroduction of retained 05/12, expand that candidate's direct allowlist to its four approved
 tools, after schema discovery and separate approval. Keep the same server URL
 and label; do not create an unused saved project connection to demonstrate
 reuse. Review the skill references against the actual upstream tool names.
@@ -69,16 +78,25 @@ This path has no Toolbox-qualified tool-name mapping or mutable Toolbox default.
 
 ## First use and permission
 
-Run the existing C/S/P cases and [T01-T03](TESTS.md#foundry-tool-management)
+Run the applicable C/P cases and [T01/T03](TESTS.md#foundry-tool-management)
 on the actual current candidate/path, sharing exchanges for overlapping
-assertions rather than adding model prompts.
+assertions rather than adding model prompts. T02 and S cases remain deferred
+unless skills/expanded tools are reintroduced or already configured.
 
-- At 04/11, the participant sends the first useful prompt in the exact agent's
-  Playground. Follow [the first-use permission flow](APP-GUIDE.md#first-tool-use-in-the-playground):
+- At 04/11, offer both execution choices. When the participant sends the first
+  useful prompt in the exact agent's Playground, follow
+  [the first-use permission flow](APP-GUIDE.md#first-tool-use-in-the-playground):
   explain Approve, Deny and Auto approve when the prompt appears, then let the
-  participant select Auto approve for the displayed permitted-tool scope.
+  participant decide whether to use the recommended optional Auto approve for
+  the displayed permitted-tool scope. If the saved policy already permits
+  automatic execution, continue without inventing a prompt or decision.
   Record the actual choice, scope and observed execution. Do not run a separate
   denial exercise; if a participant actually declines, preserve that decision.
+- When Workshop Coach execution is selected, follow
+  [the native-request decision flow](APP-GUIDE.md#first-tool-use-when-workshop-coach-sends).
+  The participant decides each actual pending request; execution approval is
+  not tool approval. Retain the portal inspection and trace practice, and
+  record the selected route without claiming Playground controls were used.
 - Continue to the answer and correlate the actual tool execution, arguments,
   result, source/available timestamps and grounded answer. Share this exchange
   with C01/C02 and T01 rather than sending a coach-side duplicate.
@@ -98,21 +116,23 @@ assertions rather than adding model prompts.
   Prompt instructions alone are not enforcement. Never execute an unauthorized
   upstream call as a negative test.
 
-Use C03a for unsupported input at 04/11. Share C03b's isolated tool/service
-failure with the skill partial-failure case at 05/12, not an extra first-use
-approval/denial test.
+Use supported requests to test each newly connected tool and its released
+version. Do not require C03a/C03b unsupported-input or injected-failure
+demonstrations. If a real error occurs, preserve and attribute it accurately,
+then recover within scope before claiming the tool works.
 
 Weather checkpoint 04 includes the first full trace walkthrough; Cultural 11
 reuses that navigation with its own tool and evidence. Saving a definition,
 portal visibility, local discovery and an agent saying it used a tool are
-not runtime proof. Missing native approvals, unreachable services, unsafe
-restrictions or uncorrelated results block the affected gate. Do not disable
-approval or silently change the endpoint, runtime, identity or model.
+not runtime proof. An unresolved actual approval request, unreachable service,
+unsafe restrictions or uncorrelated results block the affected gate. Automatic
+approval itself is not a blocker. Do not silently change the approval policy,
+endpoint, runtime, identity or model.
 
 Before release, verify actual consumer-path and required channel behavior.
 Anonymous upstream services remove upstream credential setup, not the need
 for Microsoft Foundry authorization, trusted Conversation/memory mapping,
-per-call decisions or CH01/CH02 evidence. This documentation revision does
+decisions on actual pending requests or CH01/CH02 evidence. This documentation revision does
 not claim a newly completed live rehearsal.
 
 ## Evidence, rollback and existing participants

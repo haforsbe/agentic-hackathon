@@ -4,8 +4,12 @@ Build two independently publishable Microsoft Foundry Prompt Agents. The
 **Weather Research Agent** owns weather evidence. The **Cultural Travel Agent**
 owns published art-tourism, museum, and cultural-trip evidence, including only
 the accessibility information its sources actually supply.
-Each follows the same seven-step learning progression with independent
-evidence. Teach the method with the first agent, then use shorter reminders
+Each follows the same numbered progression with independent evidence; skills
+and memory at 05/06 and 12/13 are temporarily deferred under the
+[skills](README.md#temporary-skills-and-multi-tool-deferral) and
+[memory](README.md#temporary-memory-deferral) policies. Keep one tool per
+specialist and continue 04 -> 07 and 11 -> 14.
+Teach the method with the first agent, then use shorter reminders
 and focus on differences with the second; do not repeat introductory lectures.
 
 Keep reproducible definitions and test clients under `student/prompt-agents/`.
@@ -38,7 +42,7 @@ Allocate remaining
 required tests between the routes, tracking the running split rather than
 adding duplicate calls. Explain and record capability or participant-preference
 exceptions to the target. Keep
-controlled identity, failure, and consumer-endpoint checks on a supported client
+identity/scope verification and supported consumer-endpoint checks on a supported client
 when the Playground cannot supply the required evidence. Agree on each handoff,
 its context, cost, and tool approvals before sending.
 
@@ -87,16 +91,16 @@ Playground and selected version. Ask the participant to start a new empty
 Conversation and send:
 
 ```text
-What will the weather be like there tomorrow?
+How do clouds form?
 ```
 
-Explain the purpose before sending: no place has been named in this new
-Conversation, so the agent should ask which location "there" means rather
-than guess. Ask the participant to report what happened in the GitHub Copilot app.
-Accept a clear description that the agent asked for the missing context;
+Explain the purpose before sending: this checks another useful general-weather
+explanation that the tool-free agent can provide. Ask the participant to
+report what it explained in the GitHub Copilot app.
+Accept a clear description of the answer;
 request the actual reply only when needed for review or a specific assertion.
 
-**Internal coach validation:** B01 (general knowledge) and B02 (missing context).
+**Internal coach validation:** B01-B02, two supported general-knowledge answers.
 
 **App practice:** ask "Explain, don't edit," then separately request the change.
 **Alternative:** ask for a proposed definition diff before implementation.
@@ -112,7 +116,7 @@ knowledge to be labeled accurately and prohibit invented sources, current
 weather claims, or unsupported capabilities. Create a candidate version rather
 than silently changing the tested version.
 
-Repeat the same general-weather and missing-location questions on the revised
+Repeat the same two supported general-weather questions on the revised
 agent and compare its replies with the saved earlier ones. Explain that this
 checks whether the new sections improve clarity while the answers remain
 accurate and honest. Inspect the actual
@@ -144,8 +148,10 @@ the portal exercise passed. Do not connect resources or repeat paid tests
 without separate approval.
 
 In one Conversation, provide a destination and weather interest, then ask a
-follow-up that relies on that context. In a new Conversation, ask the follow-up
-again. Follow the [rehearsed navigation](APP-GUIDE.md#foundry-navigation-rehearsed-before-the-workshop):
+follow-up that relies on that context. Then create a new Conversation, supply
+a different destination and interest, and ask the same follow-up. Test each
+Conversation's own context rather than an intentionally context-free question.
+Follow the [rehearsed navigation](APP-GUIDE.md#foundry-navigation-rehearsed-before-the-workshop):
 **Build → Agents → the exact agent → Traces**. Use **Trace view** to find
 a response and inspect its relevant span's **Metadata**, and **Conversation
 view** to locate a saved Conversation (`conv_`). Explain that the Response
@@ -155,16 +161,21 @@ to verify identifier linkage when it is not exposed. Do not infer linkage
 from a similar-looking reply or adjacent table row.
 Do not build a custom history store or manually replay messages.
 
-Run D01-D02 with weather-appropriate prompts. The application remains
-responsible for mapping an authorized user/session to the correct Conversation
-identifier. A GitHub Copilot app session is not a runtime Conversation.
+Run D01-D02 with weather-appropriate prompts. Explain the observed difference:
+each Conversation retains the destination and interest supplied to it, with
+distinct service-returned identifiers. A GitHub Copilot app session is not a runtime Conversation.
+For coach-sent tests, the workshop runner supplies the Conversation identifier;
+for participant-sent tests, the Microsoft Foundry Playground manages the test
+interaction. Keep user/session mapping implementation details out of this
+introductory explanation. When that boundary matters for a later consumer test,
+name the actual backend or channel integration responsible for the mapping.
 Prefer participant-run messages for the complete sequence when the Playground
 supports the required Conversation behavior and identifier evidence; otherwise
 demonstrate with the supported client without claiming a UI feature exists.
 
 **App practice:** contrast the coaching session with both runtime Conversations.
 **Alternative:** discuss when a separate app session helps isolate another task.
-**Teach-back:** "What did Microsoft Foundry manage, and what remains the client's responsibility?"
+**Teach-back:** "How did the agent's reply differ between the same Conversation and a new one?"
 
 ## 04: Connect the first Weather MCP tool
 
@@ -190,27 +201,39 @@ to configure for this public service.
 
 After scoped approval, attach the direct first-tool fragment to a new Weather
 candidate. Keep `server_url: "https://weather.datakoot.com/mcp"`, the explicit
-one-tool allowlist and `require_approval: "always"`; omit
+one-tool allowlist; for a new coach-created tool set always allow
+(`require_approval: "never"`), or encourage the participant to choose always
+allow at creation. Keep existing tools as configured and do not ask about their
+approval setting again. Omit
 `project_connection_id` and credentials. Use the supported skill/API route
 and shared runner where applicable, then independently read back the
 definition and inspect the exact candidate. Keep the chosen model,
 instructions and other agents unchanged. Saving a binding does not run or
-authorize its tools. Require T01 as well as C01/C03.
+authorize its tools. Require T01 and the supported C01 result.
 Do not ask the participant to supply server details or host a service.
 Verify Foundry-side execution rather than assuming local discovery proves it.
 
-Use the [first-use Playground flow](APP-GUIDE.md#first-tool-use-in-the-playground).
-The participant sends the copy-ready New York forecast prompt from
-MCP-SERVICES.md to this exact candidate. When the first tool-permission prompt
+Offer both execution choices for the copy-ready New York forecast prompt from
+MCP-SERVICES.md on this exact candidate. For participant execution, use the
+[first-use Playground flow](APP-GUIDE.md#first-tool-use-in-the-playground).
+If a tool-permission prompt
 appears, briefly explain Approve, Deny and Auto approve, then have the
-participant select **Auto approve** for the displayed permitted Weather-tool
-scope. Continue directly to the returned forecast and its evidence. Do not
+participant consider optional **Auto approve** for the displayed permitted Weather-tool
+scope, especially for later Microsoft Teams use. Keep the existing setting if
+preferred; automatic execution without a prompt is valid. Continue directly
+to the returned forecast and its evidence. Do not
 add a standalone connectivity check or a separate approval/denial drill;
 record the actual choice and do not assume it applies outside the Playground.
 
-Use this same exchange for C01 and T01. Cover unsupported input with C03a;
-share the controlled-failure case C03b with the skill's partial-failure work at
-05 rather than adding another first-use exercise. For this first successful
+For Workshop Coach execution, use the
+[native-request decision flow](APP-GUIDE.md#first-tool-use-when-workshop-coach-sends)
+and wait for the participant's exact decision before each matching runner
+continuation. Keep the participant's configuration inspection and guided
+trace exercise; record the route rather than claiming portal permission
+controls were used. Do not send a duplicate demonstration prompt.
+
+Use this same supported exchange for C01 and T01; do not add unsupported-input
+or injected-failure exercises. For this first successful
 MCP call, guide the participant through Microsoft Foundry trace inspection. Locate the forecast
 tool span and inspect its arguments, status, timing, returned source/timestamp,
 and relationship to the final response. The agent must report failure rather
@@ -219,11 +242,18 @@ than invent weather.
 Registering an MCP server for the GitHub Copilot app does not attach it to the
 Microsoft Foundry agent. Never disable approvals globally to make a test pass.
 
-**App practice:** inspect the direct server URL, one-tool allowlist and native approval policy; compare the agent binding with the GitHub Copilot app's separate MCP registration.
+**App practice:** inspect the direct server URL and one-tool allowlist; compare the agent binding with the GitHub Copilot app's separate MCP registration without another approval-setting question.
 **Alternative:** inspect a sanitized direct MCP response before the agent call.
 **Teach-back:** "Which trace evidence proves the forecast tool supplied the result?"
 
 ## 05: Guide multiple Weather tools with a skill
+
+**Temporarily deferred.** Skip this checkpoint and memory 06 on the default
+route; continue from 04 to 07 with only `weather_forecast`. Retain the material
+below for later explicit reintroduction under the
+[skills deferral policy](README.md#temporary-skills-and-multi-tool-deferral).
+Do not apply a draft skill, expand the allowlist, create a skill-only candidate
+or run T02/S01 on this route.
 
 **Concept:** a skill can guide how an agent selects and sequences already
 available tools; it does not connect tools or grant authorization.
@@ -240,7 +270,7 @@ from `weather_forecast` to these four Weather MCP tools:
 
 Keep checkpoint 04's direct server URL and label. Create a new Weather
 candidate expanding only its allowlist to the four approved tools; verify
-their actual upstream names and retain native per-call approval. Do not
+their actual upstream names and retain the configured approval policy. Do not
 register a project connection or alter another consumer. Require T02 and S01.
 Cultural applies the same direct-connection pattern independently at 11/12.
 
@@ -262,11 +292,10 @@ and refusals. Check the Weather service's US-only coverage before proposing
 any of its tools, including `geocode`; retained Conversation context does not
 grant unsupported coverage. A successful tool call alone does not pass these
 instruction and routing assertions.
-Run S01 across targeted, ambiguous, general-knowledge, and controlled
-failure cases. Inspect traces to verify the chosen tool sequence, but checkpoint
+Run S01 with supported tool-backed and general-knowledge requests.
+Inspect traces to verify the chosen tool sequence, but checkpoint
 04 remains the full trace-navigation lesson.
-Use that controlled partial-failure exchange for C03b as well; do not add a
-separate participant denial exercise.
+Do not inject a partial failure or add a participant denial exercise.
 
 Formal machine-readable result contracts are intentionally deferred until
 checkpoint 15, when workflow code needs to validate two agent results.
@@ -276,6 +305,11 @@ checkpoint 15, when workflow code needs to validate two agent results.
 **Teach-back:** "How can a skill guide tool use without granting access?"
 
 ## 06: Add and test Weather memory
+
+**Temporarily deferred.** Do not execute this checkpoint on the default route;
+continue from 04 to 07 while skills 05 is also deferred. The material below is retained for later reintroduction
+under the [memory deferral policy](README.md#temporary-memory-deferral).
+Do not create memory resources or run memory tests merely to complete this slot.
 
 **Concept:** managed Conversation history and persistent memory solve different
 problems.
@@ -307,8 +341,9 @@ may supply the preferred unit while Weather MCP tools still supply current
 weather evidence. A retrieval failure must not become a false claim that the
 preference was remembered.
 
-Re-run one MCP and skill-guided response to prove memory personalizes
-presentation without changing tool authorization, provenance, or factual data.
+Re-run one MCP response, and skill-guided behavior only if a skill is configured,
+to prove memory personalizes presentation without changing tool authorization,
+provenance or factual data. Reintroducing memory alone does not require adding a skill.
 
 **App practice:** save and resume workshop progress; identify where it is stored.
 **Alternative:** discuss progress import into another worktree without confusing it with agent memory.
@@ -320,7 +355,7 @@ presentation without changing tool authorization, provenance, or factual data.
 Endpoint. A known-failing candidate is never promoted as the stable release.
 
 The candidate already connects directly to the Weather MCP server introduced
-at 04, with the four-tool allowlist from 05. Follow
+at 04, with only `weather_forecast` on the default skills-deferred route. Follow
 [Direct MCP connections](MCP-CONNECTIONS.md): verify its exact agent version,
 server URL, effective restrictions and actual permission behavior on the release
 path. Require T03-at-07. Do not add a Toolbox or authentication connection as
@@ -328,9 +363,14 @@ a release task. Finalize any separately approved correction before the suite
 below, so the checks cover the actual release path once.
 
 Follow [PUBLISHING.md](PUBLISHING.md). Run the complete Weather Agent regression
-suite, verify its exact agent version, skill revision, tool allowlist, memory
-configuration, and Microsoft Foundry Model Deployment, then run P01-P03 through
+suite, verify its exact agent version, any configured skill revision, tool allowlist, and
+Microsoft Foundry Model Deployment, then run P01-P03 through
 the Stable Agent Endpoint.
+For the default skills-and-memory-deferred route, omit T02/S01, M01-M03 and
+post-memory variants; skills and memory are not release prerequisites.
+Verify the single allowed tool with a supported request; no injected failure is required.
+If skills, expanded tools or memory are already configured, retain their
+applicable checks rather than silently disabling or removing them.
 
 Before moving to checkpoint 08, follow
 [channel publication at 07](PUBLISHING.md#required-channel-publication-at-07-and-16).
@@ -448,16 +488,16 @@ honestly.
 with this agent's selected version and give the actual prompt:
 
 ```text
-What should I see there tomorrow?
+How can I pace a day of museum visits?
 ```
 
-Explain that the agent should ask which destination the participant means
-instead of assuming one or inventing current venue details. Ask what it does.
+Explain that this checks useful general planning guidance without claiming
+current venue details. Ask what practical guidance the agent gives.
 Accept a clear confirmation for routine observations; ask for an excerpt
 only when it helps the participant or a specific assertion needs it.
 For returning participants, reuse their saved cultural baseline inputs.
 
-**Internal coach validation:** B01 (general knowledge) and B02 (missing context).
+**Internal coach validation:** B01-B02, two supported general-knowledge answers.
 
 **App practice:** compare the two minimal agent definitions.
 **Alternative:** request a proposed definition before implementation.
@@ -468,13 +508,38 @@ For returning participants, reuse their saved cultural baseline inputs.
 **Concept:** improve the second specialist through the same controlled
 instruction-version comparison.
 
-Add `Guidance`, `Source`, and `Uncertainty` headings. Require respectful language,
-stereotype avoidance, missing-context questions, and clear separation between
-general knowledge and current venue-specific evidence. Keep the Microsoft
-Foundry Model Deployment and capabilities unchanged. Repeat the same saved
-general-cultural and missing-destination questions, then compare the replies
-with the earlier ones. Explain how the new sections help distinguish guidance,
-its source and what remains uncertain.
+**Participant-facing opening:** adapt this explanation to the actual baseline,
+not a compressed list of headings or configuration requirements.
+
+Your agent already gives general cultural advice. Now we'll change its
+**instructions - the written rules guiding its answers** - so you can
+distinguish the advice from its evidence and limitations.
+
+Each answer will have three sections:
+
+- **Guidance:** the practical advice, such as how to pace museum visits.
+- **Source:** what the answer is based on - general model knowledge or
+  information you supplied.
+- **Uncertainty:** missing trip details or venue-specific information that
+  hasn't been verified, such as current opening hours.
+
+We'll also instruct it to avoid cultural stereotypes and ask for important
+missing details rather than guessing.
+
+We'll **save the changed instructions as a new version**, inspect them in
+Microsoft Foundry, then repeat the same two questions you already tested.
+You'll compare the earlier and new answers to see whether these instructions
+actually make the advice clearer and easier to assess.
+
+**We're changing how the agent explains its answers - not adding live museum
+information or changing its model.**
+
+**Coach execution:** obtain scoped approval before the version update or tests.
+Change only the instructions, including respectful language, stereotype
+avoidance, missing-context questions and the distinction between general
+knowledge and current venue-specific evidence. Keep the Microsoft Foundry Model
+Deployment and capabilities unchanged. Reuse the exact saved baseline inputs
+on their original execution routes with equivalent fresh context.
 
 **Internal coach validation:** I01, using the exact saved baseline inputs.
 
@@ -492,15 +557,16 @@ The Weather Agent's successful tracing exercise is not proof of trace access
 for another project or identity.
 
 Within one Conversation, state a destination and interest, then ask a follow-up.
-In a new Conversation, verify that the destination is not imported
-automatically. Run D01-D02 with cultural-travel prompts.
+Create a new Conversation with a different destination and interest, then
+verify that its follow-up uses that supplied context. Run D01-D02 with
+supported cultural-travel prompts.
 
 The Cultural Travel Agent has its own authorized Conversation mapping. It
 cannot read the Weather Research Agent's Conversation history.
 
 **App practice:** keep one coaching session while testing separate runtime Conversations.
 **Alternative:** use a separate app session only for a genuinely separate task.
-**Teach-back:** "Why does a new Cultural Agent Conversation ask for context again?"
+**Teach-back:** "How did each Conversation keep track of its own destination?"
 
 ## 11: Connect the first Cultural Travel MCP tool
 
@@ -517,36 +583,54 @@ endpoint, obtain a key, register a Cloudflare account, or deploy a server.
 
 Follow [Direct MCP connections](MCP-CONNECTIONS.md): attach the public
 `https://mcp.travel.art/` URL directly to this agent's new candidate, with
-only `find_museum_guide` allowlisted and `require_approval: "always"`.
+only `find_museum_guide` allowlisted. Use always allow
+(`require_approval: "never"`) for a new coach-created tool; encourage the same
+when the participant creates it. Keep existing settings without later questions
+or approval-setting edits.
 Omit `project_connection_id` and credentials. Reuse 04's supported
 configuration and inspection route with a short reminder, not another full
 navigation tour. Approve current-step changes explicitly, independently read
 back the candidate, and verify the actual permission choice and execution.
-Require T01 as well as C02/C03a. Do not change the released Weather Agent
+Require T01 and the supported C02 result. Do not change the released Weather Agent
 or attach its tools to Cultural Travel. No Toolbox or authentication
 connection is required for this public upstream service.
 The source is travel.art's published museum guides, not live ticket inventory
 or an official venue verification service.
 
-Use [the first-use Playground flow](APP-GUIDE.md#first-tool-use-in-the-playground)
-with the copy-ready museum-guide prompt. Give a short reminder of Approve,
+Offer both execution choices for the copy-ready museum-guide prompt. For
+participant execution, use
+[the first-use Playground flow](APP-GUIDE.md#first-tool-use-in-the-playground).
+Give a short reminder of Approve,
 Deny and Auto approve when the first tool request appears, then let the
-participant select **Auto approve** for the displayed permitted Cultural-tool
-scope and continue to the guidance and source evidence. Do not repeat a
+participant consider optional **Auto approve** for the displayed permitted Cultural-tool
+scope, especially for later channel use. Automatic execution without a prompt
+is valid; continue to the guidance and source evidence. Do not repeat a
 connectivity exercise or run a separate denial drill.
-Use the same exchange for C02 and T01; cover unsupported/malformed input with
-C03a. Share C03b with the controlled partial-failure work at 12.
+For Workshop Coach execution, use the
+[native-request decision flow](APP-GUIDE.md#first-tool-use-when-workshop-coach-sends);
+the participant still decides every exact pending tool request. Preserve portal
+inspection and trace practice without claiming Playground controls were used
+or sending a duplicate request.
+Use the same supported exchange for C02 and T01 without an additional
+unsupported-input or controlled-failure exercise.
 Inspect the MCP Server Endpoint, tool schema, arguments, result, `guideUrl`,
 available `lastVerified` metadata, attribution, and grounded response. Do not
 require an invented dataset version. Reuse the trace-inspection knowledge
 from checkpoint 04: verify the tool span and result without repeating the full
 navigation lesson unless the participant needs it.
 
-**App practice:** inspect the direct server URL, agent version and native approval policy; verify the one-tool effective allowlist.
+**App practice:** inspect the direct server URL and agent version; verify the one-tool effective allowlist without another approval-setting question.
 **Alternative:** inspect a sanitized direct MCP response before the agent call.
 **Teach-back:** "What proves the museum-guide tool supplied the attributed facts?"
 
 ## 12: Guide multiple Cultural tools with a skill
+
+**Temporarily deferred.** Skip this checkpoint and memory 13 on the default
+route; continue from 11 to 14 with only `find_museum_guide`. Retain the material
+below for later explicit reintroduction under the
+[skills deferral policy](README.md#temporary-skills-and-multi-tool-deferral).
+Do not add skills or tools, create a skill-only candidate or run T02/S02
+on this route.
 
 **Concept:** repeat skill-guided tool routing in a new evidence domain.
 
@@ -557,7 +641,7 @@ their exact filters, date formats, catalogue limits, and source fields.
 There is no standalone accessibility or etiquette tool.
 Keep the same direct server URL and label in a new Cultural candidate.
 Expand only its allowlist, read back the agent version, check actual upstream
-names against the skill, and retain native per-call approval. Require T02
+names against the skill, and retain the configured approval policy. Require T02
 and S02. Do not change Weather's binding or expose Weather tools.
 
 Create a versioned cultural-research skill that guides which tool to use, in
@@ -571,10 +655,9 @@ event lookup fails, preserve the grounded museum guidance and report the event
 failure. If accessibility information is absent from the returned guides,
 state that it is unavailable; do not invent a separate retrieval.
 
-Run S02 across museum lookup, art events, covered layovers, cultural trip
-recommendations, missing accessibility information, unrelated-tool restraint,
-and partial-failure cases. Use the same controlled partial-failure exchange
-for C03b; do not add a separate participant denial exercise. Use separate
+Run S02 across supported museum lookup, art events, covered layovers and
+cultural trip recommendations. Report any genuinely missing information
+honestly, without manufacturing a failure or denial exercise. Use separate
 requests to exercise tool roles rather than calling all four for every question.
 
 **App practice:** review the skill and allowlist diffs separately.
@@ -582,6 +665,11 @@ requests to exercise tool roles rather than calling all four for every question.
 **Teach-back:** "How did the skill choose only the tools needed for this request?"
 
 ## 13: Add and test Cultural memory
+
+**Temporarily deferred.** Do not execute this checkpoint on the default route;
+continue from 11 to 14 while skills 12 is also deferred. The material below is retained for later reintroduction
+under the [memory deferral policy](README.md#temporary-memory-deferral).
+Do not create memory resources or run memory tests merely to complete this slot.
 
 **Concept:** repeat the persistent-memory lifecycle with an independent,
 low-risk cultural preference.
@@ -612,9 +700,11 @@ scope change invalidates evidence, explain it and approve the affected
 regressions separately. Keep the two direct domain bindings independent.
 
 Run the complete Cultural Agent regression suite. Verify its exact version,
-skill revision, travel.art tool allowlist, memory configuration, source
+any configured skill revision, travel.art tool allowlist, source
 attribution, and freshness caveats. Promote only a fully passing candidate to
 its own Stable Agent Endpoint and run P01-P03.
+Apply the same skills-and-memory-deferred release rules as at 07, keeping only
+`find_museum_guide` and testing its supported result without injecting a failure.
 
 Apply the same pre-release handoff checklist to actual Cultural results:
 owning agent/version, destination/constraints, findings, guide/source
@@ -626,7 +716,7 @@ Runtime agent/version identity comes from service metadata, not a model guess.
 Invoke both stable specialists independently for the same destination. The
 Weather Research Agent must not claim cultural retrieval; the Cultural Travel
 Agent must not claim weather retrieval. Record both names, versions, endpoints,
-identities, tool connections, skill revisions, memory scopes, and release
+identities, tool connections, any configured skill revisions or memory scopes, and release
 evidence.
 Include each direct server URL/label, effective tool selection and native
 approval policy. Require T03-at-14. Verify neither agent is configured with

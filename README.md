@@ -2,7 +2,7 @@
 
 Learn to build and test Microsoft Foundry agents with **GitHub Copilot as your
 coach**. Create a **Weather Research Agent**, test it, add managed conversations,
-a remote Weather MCP, skills, and memory, then release it and **publish it to
+a remote Weather MCP forecast tool, then release it and **publish it to
 Microsoft Teams and/or Microsoft 365 Copilot**. Use the Weather agent there
 before moving on. Next create and
 enhance a separate **Cultural Travel Agent** backed by the public **travel.art
@@ -11,11 +11,16 @@ MCP server**. Both specialists use the selected free-to-use, no-authentication
 and guides the same incremental process for each. Participants do not host
 MCP servers. Microsoft Foundry resources and model usage can still incur charges.
 Connect each agent **directly to its own public MCP server**, starting with
-one allowed tool and then expanding to four with a skill. Verify the actual
-tool calls, human approval and denial, and domain isolation before release.
+one allowed tool per specialist on the default route. Verify the actual
+tool calls, the configured tool-approval behavior, and domain isolation before release.
 Toolboxes and their authentication setup are not part of this core workshop.
-Each specialist keeps only its own tools; a skill guides their use rather
-than granting access.
+Agent skills and their multi-tool expansion are temporarily deferred at
+05/12, as is persistent Microsoft Foundry memory at 06/13. Retain all four
+lessons for later reintroduction; continue 04 -> 07 and 11 -> 14.
+Managed Conversations remain in the workshop. See the
+[skills deferral policy](workshop/README.md#temporary-skills-and-multi-tool-deferral)
+and [memory deferral policy](workshop/README.md#temporary-memory-deferral).
+Weather keeps only `weather_forecast`; Cultural keeps only `find_museum_guide`.
 After both agents pass independently, deploy a hosted
 **Trip Planning Workflow** that invokes them and assembles a sourced itinerary.
 Then **publish the workflow to Microsoft Teams and/or Microsoft 365 Copilot**,
@@ -36,6 +41,11 @@ Alongside agent development, learn to use the **GitHub Copilot app itself**: ask
 explanations or implementation, reviewing changes, inspecting tool calls,
 working with sessions, and choosing between Chat and available visual tools.
 VS Code is not required.
+
+The learning loop is **create one capability, test that it works, then build
+the next**. Use supported inputs and inspect the real result. Deliberate
+failure, denial and unsupported-input demonstrations are not participant
+exercises. If a real error occurs, the coach helps resolve it before continuing.
 
 The core workshop is planned for **5-6 hours**, including breaks, and finishes
 with the two specialists connected through the hosted workflow and used from
@@ -91,8 +101,8 @@ the starter message does not authorize creating paid resources.
 | Stage | Agent concepts | GitHub Copilot app practice |
 |-------|----------------|----------------------|
 | 00 | Verify or create the participant's dedicated project, then reuse or explicitly approve a workshop model deployment | Read repository context; understand approvals and cost boundaries |
-| 01-07 | Weather Research Agent: create, test, add conversations, Weather MCP, skills, memory, release, then publish and use in Microsoft Teams and/or Microsoft 365 Copilot | Explain vs implement; inspect evidence; resume sessions; compare connections and channel results |
-| 08-14 | Cultural Travel Agent: repeat baseline, instructions, conversations, MCP, skill, memory, and release | Reinforce the full lifecycle with separate evidence |
+| 01-07 | Weather Research Agent: create, test, add conversations, one Weather MCP tool, release, then publish and use in Microsoft Teams and/or Microsoft 365 Copilot; 05/06 deferred | Explain vs implement; inspect evidence; resume sessions; compare connections and channel results |
+| 08-14 | Cultural Travel Agent: repeat baseline, instructions, conversations, one MCP tool, and release; 12/13 deferred | Reinforce the lifecycle with separate evidence |
 | 15-16 | Hosted Trip Planning Workflow: define contracts, orchestrate, trace, release, update, and roll back; then publish and use the workflow in Microsoft Teams and/or Microsoft 365 Copilot | Inspect generated files and nested traces; connect a channel request to both specialists' execution |
 | 17-19 (optional follow-on) | Choose, implement, and release a two-specialist capstone | Write a scoped brief; review changes; demonstrate and hand off |
 

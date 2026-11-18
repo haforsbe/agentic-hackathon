@@ -19,6 +19,7 @@ Workshop Coach profile.
 | How to begin or select Workshop Coach | [Participant start guide](workshop/START.md); orientation is not a lesson or cloud approval |
 | Start, resume or participate | [Coach protocol](workshop/COACH.md), including welcome, setup, teaching, approvals, progress and recovery |
 | Current checkpoint and required tests | [Curriculum](workshop/README.md), current lesson and [acceptance cases](workshop/TESTS.md) |
+| Temporarily deferred skills/memory and completion scope | [Skills deferral](workshop/README.md#temporary-skills-and-multi-tool-deferral) and [memory deferral](workshop/README.md#temporary-memory-deferral): skip 05/06 and 12/13 on the default route; retain the lessons for later |
 | Edit the workshop, examples or coach | Perform the repository task; read only the guidance relevant to the edit; do not start/resume a participant or deploy resources |
 
 Load the full coach protocol when entering coaching or when it changes, then
@@ -49,7 +50,7 @@ maintaining shortened copies of their rules in entry-point instructions:
 
 References preserve the full requirements, not optional alternatives. Retain
 checkpoint order, independent evidence, participant learning, explicit scope/
-cost approval and every native human tool decision. Never infer approvals or
+cost approval and every requested native human tool decision. Never infer approvals or
 passes from a summary, bypass a blocked gate, or migrate/resume a paused
 participant during authoring.
 

@@ -11,16 +11,28 @@ console script as a server entry point.
 The [shared hosted-workflow asset](assets/hosted-workflow/README.md) contains
 the reusable host, confirmed-configuration contract, exact dependency pins and
 intended local tests. Its graph is a facilitator reference, not a substitute
-for the participant's implementation or live release evidence.
+for the participant-specific workflow, participant learning or live release
+evidence.
+
+**Creation is coach-only.** Workshop Coach writes the code-first workflow and
+creates/deploys its hosted agent through the supported SDK/CLI route, after the
+required scoped approvals. Participants do not write the workflow themselves
+or create this hosted agent directly in the Microsoft Foundry portal. They
+review and explain the generated implementation, then inspect and test the
+deployed agent. Follow the
+[execution ownership rule](COACH.md#hosted-workflow-execution-ownership).
 
 ## Participant delivery flow
 
-1. **Create the workflow (15).** Implement coordination and contracts using
-   the prepared host; run the intended local contract and workflow tests.
-2. **Test in Microsoft Foundry (16).** Deploy the hosted candidate to
-   Microsoft Foundry, then test it in the agent Playground, including separate
-   Weather/Cultural decisions, denial and explicit failures. Hosting deployment
-   is necessary before this portal test; deployment alone is not a pass.
+1. **Create the workflow (15).** Workshop Coach implements coordination and
+   contracts using the prepared host and runs the intended local tests.
+   Participants review and explain the generated contracts and workflow.
+2. **Test in Microsoft Foundry (16).** Workshop Coach deploys the approved
+   hosted candidate, then participants test a supported trip in the agent
+   Playground, including sourced output and any actual Weather/Cultural tool
+   decisions. Do not force permission cards, denials or failure demonstrations.
+   Hosting deployment is necessary before this portal test; deployment alone
+   is not a pass.
 3. **Connect and test in the destination (16).** Publish that same tested
    workflow to Microsoft Teams, or connect it to Microsoft Copilot Studio.
    Repeat the same applicable behavior tests and inspect the same-run evidence.
@@ -63,27 +75,36 @@ the first place formal machine-readable result contracts are required.
 Start with a workflow orientation:
 
 - both prompt agents already work through separate Stable Agent Endpoints;
-- each agent owns its tested domain reasoning and skill-guided MCP tool use;
+- each agent owns its tested domain reasoning and permitted MCP tool use;
 - workflow code owns request validation, agent invocation, result validation,
   partial-failure policy, aggregation, and correlation;
 - the retiring visual Microsoft Foundry Workflow designer and Prompt Flow are
   not used.
 
 Continue the [shared story](MCP-SERVICES.md) with a fictional New York art trip.
-Use dates inside the actual weather forecast horizon and museum/event coverage
-returned by travel.art. Each specialist keeps its own MCP connection, skill,
-memory scope, and release. The coach supplies both existing agent release
+Use dates inside the actual weather forecast horizon and museum coverage
+returned by travel.art. Each specialist keeps its own MCP connection and
+release, plus any configured skill or memory scope. The default route keeps
+only `weather_forecast` and `find_museum_guide`; do not add event tools to make
+the itinerary broader. Skills and persistent memory are temporarily deferred,
+not prerequisites for either specialist or this workflow; follow the
+[skills](README.md#temporary-skills-and-multi-tool-deferral) and
+[memory](README.md#temporary-memory-deferral) policies.
+The coach supplies both existing agent release
 details and guides their connection into workflow code; the participant does
 not need another MCP server. A travel.art `recommend_art_trip` result alone is
 not the final workflow, because it does not invoke our Weather Research Agent.
 Confirm the checkpoint 14 handoff includes both tested direct-MCP releases,
-their exact bindings, skill versions and T01-T03 evidence. The workflow invokes
+their exact bindings, T01/T03 evidence and any configured skill versions.
+T02/S01/S02 remain deferred unless those capabilities are configured.
+The workflow invokes
 the specialists, not their MCP servers; do not give it direct weather or
 cultural tool access as a shortcut around specialist execution.
 
-After approval, use the reviewed
+After approval, Workshop Coach uses the reviewed
 [shared hosting plumbing](assets/hosted-workflow/README.md) under
-`student/hosted-agent/`, preserving the participant's own graph implementation.
+`student/hosted-agent/` and builds the participant-specific graph and contracts
+incrementally, explaining the generated changes for participant review.
 Record the repository revision and dependency versions. If a replacement is
 necessary, rehearse the smallest appropriate
 [official sample](https://github.com/microsoft-foundry/foundry-samples) before
@@ -97,9 +118,10 @@ hosting stack during the lesson. If it is incompatible, timebox the blocker
 instead of substituting an unverified scaffold.
 
 The prepared scaffold supplies hosting plumbing, not completed specialists or
-itinerary logic. Participants still review the entry point, implement and
-explain agent invocation/validation/aggregation, run the actual workflow and
-inspect its correlated traces. No future code is deployed by preparation.
+itinerary logic. Workshop Coach writes agent invocation, validation and
+aggregation. Participants review the entry point and generated logic, explain
+the coordination, test the actual workflow and inspect its correlated traces.
+No future code is deployed by preparation.
 
 ### Prepare the portal-compatible host before teaching
 
@@ -107,7 +129,7 @@ The workflow must work in the Microsoft Foundry portal's agent **Playground**,
 not only through a custom API client. A **protocol** is the request/response
 contract between that interface and the hosted code. The prepared host must
 support the portal's Responses contract, including streamed replies and
-separate human tool approvals, while retaining the required Invocations
+human tool decisions whenever requested by the saved policies, while retaining the required Invocations
 consumer path. An Invocations-only success is not portal evidence.
 
 Use the reviewed native workflow hosting route for the recorded SDK versions.
@@ -122,11 +144,13 @@ executors between requests. The scaffold must establish these boundaries:
   owner of conversation history. Restore only the current authenticated
   user's conversation and pending approval.
 - Preserve the host's outer approval reference and its binding to the exact
-  pending native specialist request. Weather and Cultural need distinct
-  sequential cards. Reject stale, replayed, forged and cross-user decisions;
+  pending native specialist request. If Weather or Cultural requests permission,
+  show its distinct card in sequence; do not invent cards for automatic execution.
+  Reject stale, replayed, forged and cross-user decisions;
   never accept an inner tool ID as a replacement for a missing portal card.
 - Keep each specialist's instructions consistent with native approval:
-  pause when a tool request needs approval, but after that exact approval and
+  follow its saved policy, pausing only when a native request needs approval.
+  After automatic execution or an exact human decision and
   actual tool completion, report the result rather than claiming approval is
   still pending. Do not send synthetic "approved" prose or remove inconvenient
   text from the assembled evidence to manufacture consistency.
@@ -165,7 +189,8 @@ validation failure or documented partial result; do not mark it `ok` or publish
 an unqualified completed itinerary. The native approval state remains
 authoritative: prose cannot approve a tool or undo an actual decision.
 Do not silently strip the contradiction or retry the model to obtain a pass.
-Cover invalid or contradictory results with the intended G02/W02 cases.
+Keep invalid or contradictory results covered by the existing automated
+G02/W02 implementation tests, not participant or live failure demonstrations.
 
 Use the pre-release content checklist from 07/14 to avoid discovering missing
 source fields for the first time here. That checklist is not a schema pass:
@@ -173,7 +198,7 @@ the formal contracts are introduced, implemented and tested now. A genuine
 incompatibility still requires an explicitly approved specialist candidate
 and its applicable regressions/release; do not hide the resulting time cost.
 
-Implement a code-first Agent Framework workflow:
+Workshop Coach implements a code-first Agent Framework workflow:
 
 1. normalize and validate the trip request;
 2. invoke the released Weather Research Agent;
@@ -187,28 +212,30 @@ The two specialist calls may run independently after request validation when
 the participant explains the tradeoff. Bound retries and timeouts. Preserve
 correlation identifiers without exposing credentials.
 
-Run G01-G03/W01-W03 locally with synthetic
-fixtures, then run the applicable approved live tests through both specialists'
+Run the existing automated implementation suite locally, then verify G01/G03
+and a supported W01/W03 trip through both specialists'
 Stable Agent Endpoints. Inspect workflow, executor, agent-call, validation, and
 aggregation spans when supported. Two manual agent calls followed by a manually
 written itinerary do not prove the workflow ran.
 
-Group deterministic contract/failure fixtures in one local test command.
-Keep live happy-path calls and correlated evidence mandatory; do not use
-fixtures to claim live specialist success. An isolated injected failure at
-the workflow boundary tests the workflow's failure policy, not an outage in
-the provider. Record which variant and execution path each case exercised.
+Group existing deterministic tests in one local build check, without turning
+their defensive fixtures into learner demonstrations. Workshop Coach creates
+the coordination and contracts; the participant reviews and explains them,
+then tests a working trip. Keep live supported
+calls and correlated evidence mandatory; fixtures do not prove live specialist
+success. Do not inject a failure or ask the participant to demonstrate an outage.
 
 **App practice:** review the workflow plan, contracts, generated entry point, and tests.
 **Alternative:** use Plan mode when available, then return to Chat for evidence review.
-**Teach-back:** "Why do formal contracts appear here rather than in the first skill lesson?"
+**Teach-back:** "Why does coordinating two released agents need formal result contracts?"
 
 ## 16: Hosted release
 
 **Concept:** deploy the fully passing workflow as a Microsoft Foundry Hosted
 Agent and prove its end-to-end behavior through nested traces.
 
-Before deployment, require passing local G01-G03 and W01-W03, compatible
+Before deployment, require passing existing local implementation tests and
+supported G01/G03 and W01/W03 results, compatible
 specialist releases, approved runtime configuration, an identifiable code and
 contract revision, and explicit cost/change approval. A known-failing hosted
 candidate is not deployed or promoted.
@@ -223,7 +250,8 @@ requested output limits are not input, memory or billing caps. Missing prices
 or a monetary estimate alone do not block tests. Keep all runtime, authorization,
 tool-approval and explicitly participant-imposed cost restrictions.
 
-Deploy the workflow as a Microsoft Foundry Hosted Agent. Inspect its running
+Workshop Coach deploys the approved workflow as a Microsoft Foundry Hosted
+Agent. Inspect its running
 version, Stable Agent Endpoint, identity, configuration, and nested trace. The
 workflow trace should show request validation, both agent invocations, both
 contract validations, and aggregation. Correlated specialist traces remain the
@@ -233,17 +261,20 @@ rather than attaching their tools directly or replacing either with model
 knowledge. If forecast dates or catalogue coverage are unavailable, preserve
 the usable evidence and explicitly report the missing part.
 
-Run W01-W03 and P01-P04 remotely. Demonstrate a successful itinerary, each
-single-specialist failure, structurally invalid specialist data, timeout or
-authorization failure, and no fabricated replacement evidence.
+Run a supported W01/W03 trip and P01-P04 remotely. Demonstrate the working
+itinerary, both specialist contributions and the implemented traveler
+preferences. No deliberate specialist failure, invalid result, timeout or
+authorization-denial demonstration is required.
 
 Run W04 through the actual Microsoft Foundry portal on this same candidate
-before promotion: one trip with Weather approval followed by Cultural approval,
-plus a separately approved denial case. Follow the
+before promotion: one trip with the specialists' saved approval policies.
+Handle any actual Weather/Cultural requests separately; respect the
+participant's decisions without adding a denial case. Do not change settings
+or ask approval-configuration questions to force cards. Follow the
 [portal workflow procedure](APP-GUIDE.md#hosted-workflow-portal-test-at-16).
-Correlate the final answer with both native tool executions and their human
+Correlate the final answer with both native tool executions and any actual human
 decisions. A plausible answer, two approved-looking cards or an HTTP 200 alone
-does not prove execution. A successful trip does not also prove denial.
+does not prove execution. Do not claim a successful trip proves denial.
 Contradictory pending-approval text in a completed result is a failed output
 assertion, not something the coach should explain away.
 
@@ -276,7 +307,7 @@ channel and receives the workflow's sourced itinerary. Inspect the same run's
 correlated Microsoft Foundry workflow and specialist traces together to show
 both agents being invoked, both results validated and the itinerary assembled.
 The channel displays the combined reply; do not promise it exposes internal
-agent-to-agent messages. Keep per-call approvals, identity isolation,
+agent-to-agent messages. Keep the configured approval behavior, identity isolation,
 provenance and explicit failures intact through the channel adapter.
 At least one chosen surface must have real CH02 evidence; installation or a
 raw endpoint response alone is not enough. An unsupported adapter or approval

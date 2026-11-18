@@ -78,6 +78,110 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(self.client.responses.create.call_count, 1)
         self.assertEqual(self.record["state"], "awaiting_separate_tool_approval")
 
+    def test_version_readback_accepts_equivalent_policy_filters_but_not_policy_changes(self):
+        config = copy.deepcopy(CONFIG)
+        config["definition"]["tools"] = [{
+            "type": "mcp", "allowed_tools": ["weather_forecast"], "require_approval": "never",
+        }]
+        observed = copy.deepcopy(config["definition"])
+        observed["tools"][0]["allowed_tools"] = {"tool_names": ["weather_forecast"]}
+        observed["tools"][0]["require_approval"] = {"never": {"tool_names": ["weather_forecast"]}}
+        self.project.agents.get_version.return_value.definition.as_dict.return_value = observed
+        runner.verify_version(self.project, self.plan, config)
+        observed["tools"][0]["require_approval"] = "always"
+        with self.assertRaisesRegex(ValueError, "Pinned version differs"):
+            runner.verify_version(self.project, self.plan, config)
+
+    def test_cli_compacts_output_without_mutating_full_evidence_or_approval_scope(self):
+        approval = {
+            "type": "mcp_approval_request", "id": "mcpr_test", "server_label": "weather",
+            "name": "weather_forecast", "arguments": '{"latitude":40,"longitude":-74}',
+        }
+        tool_call = {
+            "type": "mcp_call", "id": "mcp_test", "server_label": "weather",
+            "name": "weather_forecast", "arguments": approval["arguments"],
+            "approval_request_id": "mcpr_prior", "status": "completed", "error": None,
+            "output": "Synthetic full forecast " * 1000,
+        }
+        discovery = {
+            "type": "mcp_list_tools", "id": "mcpl_test", "server_label": "weather",
+            "tools": [{"name": "weather_forecast", "input_schema": {"description": "schema " * 1000}}],
+        }
+        output = [
+            {"type": "message", "content": [{"type": "output_text", "text": "Synthetic answer"}]},
+            discovery, tool_call, approval,
+        ]
+        self.client.responses.create.return_value = response(output)
+        self.execute()
+        self.record["plan"] = self.plan
+        original = copy.deepcopy(self.record)
+        evidence = Path(".workshop") / "evidence" / "synthetic-test.json"
+        with patch("sys.argv", ["workshop_runner.py", "execute", "--plan", ".workshop/step.json"]), \
+                patch.object(runner, "load_plan", return_value=(self.plan, CONFIG)), \
+                patch.object(runner, "run", return_value=(evidence, self.record)) as run, \
+                patch("sys.stdout", new_callable=io.StringIO) as stdout:
+            runner.main()
+        run.assert_called_once_with(self.plan, CONFIG)
+        printed = stdout.getvalue()
+        summary = json.loads(printed)
+        self.assertEqual(summary["evidence"], str(evidence))
+        self.assertEqual(summary["state"], "awaiting_separate_tool_approval")
+        self.assertEqual(summary["requests_started"], 1)
+        result = summary["results"][0]
+        self.assertEqual(result["reply"], "Synthetic answer")
+        self.assertEqual(printed.count("Synthetic answer"), 1)
+        self.assertEqual(result["response_id"], "resp_synthetic")
+        self.assertEqual(result["agent_reference"], REFERENCE)
+        self.assertEqual(result["status"], "completed")
+        self.assertIsNone(result["usage"])
+        self.assertEqual(result["case_id"], "B01")
+        self.assertEqual(result["request_seconds"], self.record["results"][0]["request_seconds"])
+        self.assertNotIn("case", result)
+        self.assertNotIn("output", result)
+        self.assertEqual(result["output_types"], ["message", "mcp_list_tools", "mcp_call", "mcp_approval_request"])
+        self.assertEqual(result["tool_activity"], [
+            {"type": "mcp_list_tools", "id": "mcpl_test", "server_label": "weather",
+             "tool_names": ["weather_forecast"]},
+            {**{key: value for key, value in tool_call.items() if key != "output"}, "output_in_evidence": True},
+            approval,
+        ])
+        self.assertLess(len(printed), len(json.dumps(original["results"])) // 4)
+        self.assertEqual(self.record, original)
+        self.assertEqual(self.record["raw_response"]["output"], output)
+        self.assertEqual(self.record["results"][0]["output"], output)
+
+    def test_console_summary_keeps_resource_results_and_conversation_linkage(self):
+        self.execute()
+        self.record["results"][0]["conversation"] = {"id": "conv_synthetic"}
+        for details in (
+            {"created_version": "5", "definition_readback_matches": True},
+            {"conversation_id": "conv_created"},
+            {"definition_readback_matches": True},
+        ):
+            with self.subTest(details=details):
+                record = {**self.record, **details, "plan": self.plan, "elapsed_seconds": 1.25}
+                if "conversation_id" in details or "created_version" in details:
+                    record["results"] = []
+                summary = runner.console_summary(Path("synthetic.json"), record)
+                for key, value in details.items():
+                    self.assertEqual(summary[key], value)
+                self.assertEqual(summary["elapsed_seconds"], 1.25)
+                self.assertEqual(len(summary["results"]), len(record["results"]))
+                if summary["results"]:
+                    self.assertEqual(summary["results"][0]["conversation"], {"id": "conv_synthetic"})
+
+    def test_console_summary_preserves_exact_approval_and_denial_decisions(self):
+        for approve in (True, False):
+            with self.subTest(approve=approve):
+                decision = {
+                    "response_id": "resp_synthetic", "approval_request_id": "mcpr_test",
+                    "server_label": "weather", "tool_name": "weather_forecast",
+                    "arguments": {"latitude": 40, "longitude": -74}, "approve": approve,
+                }
+                record = {**self.record, "plan": {**self.plan, "operation": "continue", **decision}}
+                summary = runner.console_summary(Path("synthetic.json"), record)
+                self.assertEqual(summary["tool_decision"], decision)
+
     def test_version_mismatch_is_not_a_pass_and_keeps_raw_response(self):
         self.client.responses.create.return_value = response(version="3")
         with self.assertRaisesRegex(ValueError, "linkage"):
@@ -695,7 +799,7 @@ class PlanTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             runner.local_path("../outside.json", "student")
 
-    def test_tool_config_needs_storage_and_cannot_bypass_approval(self):
+    def test_tool_config_needs_storage_and_preserves_supported_approval_policies(self):
         config = copy.deepcopy(CONFIG)
         config["definition"]["tools"] = [{
             "type": "mcp", "server_label": "weather_intelligence",
@@ -707,11 +811,29 @@ class PlanTests(unittest.TestCase):
             self.load()
         for case in self.plan["cases"]:
             case["store"] = True
-        self.load()
-        config["definition"]["tools"][0]["require_approval"] = "never"
-        (self.root / "student" / "agent.json").write_text(json.dumps(config), encoding="utf-8")
-        with self.assertRaisesRegex(ValueError, "approval always"):
-            self.load()
+        for policy in ("always", "never", {"never": {"tool_names": ["weather_forecast"]}},
+                       {"always": {"read_only": False}, "never": {"read_only": True}}, None):
+            with self.subTest(policy=policy):
+                config["definition"]["tools"][0]["require_approval"] = policy
+                (self.root / "student" / "agent.json").write_text(json.dumps(config), encoding="utf-8")
+                observed = self.load()[1]
+                self.assertEqual(observed["definition"]["tools"][0]["require_approval"], policy)
+
+    def test_invalid_approval_filters_are_rejected(self):
+        config = copy.deepcopy(CONFIG)
+        config["definition"]["tools"] = [{
+            "type": "mcp", "server_label": "weather_intelligence",
+            "server_url": "https://weather.datakoot.com/mcp",
+            "allowed_tools": ["weather_forecast"],
+        }]
+        for policy in ("sometimes", False, {}, {"skip": {}}, {"never": True},
+                       {"never": {"tool_names": "weather_forecast"}},
+                       {"never": {"read_only": "yes"}}):
+            with self.subTest(policy=policy):
+                config["definition"]["tools"][0]["require_approval"] = policy
+                (self.root / "student" / "agent.json").write_text(json.dumps(config), encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "approval"):
+                    self.load()
 
     def test_existing_attempt_refused_before_any_cloud_call(self):
         folder = self.root / ".workshop" / "evidence"
@@ -785,7 +907,7 @@ class PlanTests(unittest.TestCase):
                         self.assertEqual(record["state"], "operation_completed_not_graded")
                         project.agents.get_version.assert_called_once_with(
                             agent_name=self.plan["agent_name"], agent_version=self.plan["agent_version"])
-                        project.get_openai_client.assert_called_once_with(max_retries=0, timeout=60)
+                        project.get_openai_client.assert_not_called()
                 check_cli.assert_called_once_with(self.plan)
                 permissions.assert_called_once_with(self.plan, credential)
                 project_factory.assert_called_once_with(
@@ -803,6 +925,43 @@ class PlanTests(unittest.TestCase):
                     self.assertEqual(evidence["error"]["type"], "TimeoutError")
                     self.assertEqual(evidence["stopped_at_state"], "preflight")
                     self.assertEqual(evidence["stopped_at_phase"], "project-access-check")
+
+    def test_run_opens_response_client_only_for_operations_that_use_it(self):
+        for operation in sorted(runner.OPERATIONS):
+            with self.subTest(operation=operation):
+                self.plan.update(operation=operation, run_id=f"synthetic-client-{operation}")
+                project_factory = MagicMock()
+                project = project_factory.return_value.__enter__.return_value
+                project.connections.list.return_value.by_page.return_value = iter([iter([])])
+                needs_client = operation not in ("inspect", "create-version")
+                if needs_client:
+                    client = project.get_openai_client.return_value.__enter__.return_value
+                else:
+                    client = None
+                    project.get_openai_client.side_effect = AssertionError("Unused response client initialized")
+                credential = Mock()
+                with patch.dict("sys.modules", {"azure.ai.projects": SimpleNamespace(AIProjectClient=project_factory)}), \
+                        patch.object(runner, "readiness", return_value={"prompt_runner_ready": True}), \
+                        patch.object(runner, "check_cli") as check_cli, \
+                        patch.object(runner, "cli", return_value={"id": self.plan["project_resource_id"]}), \
+                        patch.object(runner, "verified_credential", return_value=credential), \
+                        patch.object(runner, "verify_permissions", return_value={"required_permissions_verified": True}) as permissions, \
+                        patch.object(runner, "execute") as execute, \
+                        patch.dict(runner.os.environ):
+                    _, record = runner.run(self.plan, CONFIG)
+                self.assertEqual(record["state"], "operation_completed_not_graded")
+                self.assertEqual(execute.call_count, 1)
+                self.assertEqual(execute.call_args.args[:5], (project, client, self.plan, CONFIG, record))
+                check_cli.assert_called_once_with(self.plan)
+                permissions.assert_called_once_with(self.plan, credential)
+                project.connections.list.assert_called_once()
+                project_factory.return_value.__exit__.assert_called_once()
+                credential.close.assert_called_once()
+                if needs_client:
+                    project.get_openai_client.assert_called_once_with(max_retries=0, timeout=60)
+                    project.get_openai_client.return_value.__exit__.assert_called_once()
+                else:
+                    project.get_openai_client.assert_not_called()
 
     def test_failure_journal_distinguishes_client_initialization_from_started_writes(self):
         for index, phase in enumerate(("openai-client-initialization", "conversation-create",

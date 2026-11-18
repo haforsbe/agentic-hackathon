@@ -11,8 +11,11 @@ An MCP server is a remote service exposing callable operations called tools.
 Connecting a server to the GitHub Copilot app does not connect it to a
 Microsoft Foundry agent. The core teaches
 [direct MCP connections](MCP-CONNECTIONS.md): attach Weather's public server
-with only its forecast tool at 04, expand the allowlist at 05 and verify the
-binding at 07. Repeat independently for Cultural at 11/12. No Toolbox or
+with only its forecast tool at 04 and verify that same one-tool binding at 07.
+Repeat independently for Cultural with only `find_museum_guide` at 11/14.
+Skills and four-tool expansion at 05/12 are
+[temporarily deferred](README.md#temporary-skills-and-multi-tool-deferral).
+No Toolbox or
 upstream authentication connection is required, and no planned Weather
 migration is needed at 14. Local discovery, saved attachment and actual
 execution are separate evidence boundaries.
@@ -69,9 +72,9 @@ to test service reachability or investigate infrastructure.
 | Tool | Inputs from the verified schema | Workshop use |
 |------|---------------------------------|--------------|
 | `weather_forecast` | Required numeric `lat`, `lon`; optional boolean `hourly`, default `false` | Checkpoint 04: sole allowed tool; retrieve daily forecast periods |
-| `geocode` | Required string `address`; US address or city | Checkpoint 05: resolve a supplied public location before weather retrieval |
-| `weather_current` | Required numeric `lat`, `lon` | Checkpoint 05: latest station observation, not an exact measurement at a landmark |
-| `weather_alerts` | Required string `area`, normally a two-letter US state code | Checkpoint 05: relevant official alerts when requested |
+| `geocode` | Required string `address`; US address or city | Deferred checkpoint 05: resolve a supplied public location before weather retrieval |
+| `weather_current` | Required numeric `lat`, `lon` | Deferred checkpoint 05: latest station observation, not an exact measurement at a landmark |
+| `weather_alerts` | Required string `area`, normally a two-letter US state code | Deferred checkpoint 05: relevant official alerts when requested |
 | `earthquakes`, `elevation` | Discover their schemas if needed for a separately approved extension | Not part of the core weather allowlist |
 
 The provider describes US coverage for forecasts, observations, alerts, and
@@ -81,8 +84,9 @@ Census data. Confirm provenance from each result. A response may be cached:
 observation time. Preserve units, station, source timestamps, and forecast
 period meanings; never turn a period's start into an inferred end.
 
-At checkpoint 04, supply public coordinates directly. Do not enable `geocode`
-early merely because it appears in discovery. At 05, separately approve the
+On the default route, supply public coordinates directly and retain only
+`weather_forecast`; do not enable `geocode` merely because it appears in
+discovery. Only when 05 is explicitly reintroduced, separately approve the
 expanded four-tool allowlist and skill. The skill resolves text locations only
 when necessary, chooses forecast/current/alerts according to the question, and
 does not call all tools routinely. Weather evidence does not establish museum
@@ -93,9 +97,9 @@ facts, booking availability, or emergency safety.
 | Tool | Inputs from the verified schema | Workshop use |
 |------|---------------------------------|--------------|
 | `find_museum_guide` | Optional strings `query`, `city`, `country` (two-letter country code) | Checkpoint 11: sole allowed tool; retrieve published museum guidance |
-| `find_art_events` | Optional strings `query`, `country`, `type`, `activeOn`, `startsAfter`, `endsBefore`; `type` is `biennale`, `art-fair`, `festival`, or `museum-exhibition` | Checkpoint 12: find relevant art events using the requested dates |
-| `find_layover_itinerary` | Optional strings `query`, `city`, `country`, `airport`; optional numeric `maxDurationHours` | Checkpoint 12: published short art-focused layovers where catalogue coverage exists |
-| `recommend_art_trip` | Required string `city`; optional date strings `startDate`, `endDate` | Checkpoint 12: published cultural trip suggestions, not the final two-agent workflow |
+| `find_art_events` | Optional strings `query`, `country`, `type`, `activeOn`, `startsAfter`, `endsBefore`; `type` is `biennale`, `art-fair`, `festival`, or `museum-exhibition` | Deferred checkpoint 12: find relevant art events using the requested dates |
+| `find_layover_itinerary` | Optional strings `query`, `city`, `country`, `airport`; optional numeric `maxDurationHours` | Deferred checkpoint 12: published short art-focused layovers where catalogue coverage exists |
+| `recommend_art_trip` | Required string `city`; optional date strings `startDate`, `endDate` | Deferred checkpoint 12: published cultural trip suggestions, not the final two-agent workflow |
 
 Date inputs use `YYYY-MM-DD`. The source is travel.art's published, curated
 guides, not a live reservation system, unrestricted web search, or an official
@@ -111,7 +115,8 @@ when actually returned; missing information remains unknown. Opening hours,
 prices, event dates, transit timing, and accessibility require appropriate
 freshness caveats. Never claim a booking, purchase, or live availability check.
 
-At checkpoint 12 the skill selects museum, event, layover, or recommendation
+On the default route Cultural retains only `find_museum_guide`. If retained
+checkpoint 12 is explicitly reintroduced, the skill selects museum, event, layover, or recommendation
 tools according to the request and actual coverage. It preserves empty results
 and failures rather than inventing venues or calling unrelated tools. A
 provider-supplied cultural itinerary is only one evidence source: it does not
@@ -120,7 +125,12 @@ prove that our hosted workflow invoked the Weather Agent.
 ## First-tool configuration
 
 These are the **direct-MCP tool fragments for the v10 core**. They specify
-the selected public endpoints, upstream tool names and native approval policy.
+the selected public endpoints and upstream tool names. For a new tool created
+by Workshop Coach, use always allow (`"never"`, meaning no per-call prompt).
+Encourage participants to choose the same when creating their tools,
+especially for Microsoft Teams. Preserve existing tools' supported settings:
+no fixed value is a workshop gate, and no later setting question, editing
+exercise or corrective version is required.
 Keep `server_url`; do not add `project_connection_id`, credentials or a
 Toolbox endpoint for either anonymous upstream service. Resolve any current
 schema details needed as part of configuration, not a separate learner test.
@@ -139,7 +149,7 @@ Weather checkpoint 04:
   "server_label": "weather_intelligence",
   "server_url": "https://weather.datakoot.com/mcp",
   "allowed_tools": ["weather_forecast"],
-  "require_approval": "always"
+  "require_approval": "never"
 }
 ```
 
@@ -151,20 +161,27 @@ Cultural checkpoint 11:
   "server_label": "cultural_travel",
   "server_url": "https://mcp.travel.art/",
   "allowed_tools": ["find_museum_guide"],
-  "require_approval": "always"
+  "require_approval": "never"
 }
 ```
 
 Use the installed Foundry skill and currently supported client to create and
 independently read back the approved candidate. SDKs may normalize allowlists;
 verify equivalent semantics and no additional tools. Do not create a credential
-connection for an authless server or weaken approvals. Follow
-[first-use Playground permissions](APP-GUIDE.md#first-tool-use-in-the-playground):
-the participant sends the useful prompt, learns the permission choices when
-they appear, selects Auto approve for the displayed permitted-tool scope and
+connection for an authless server or change its policy without approval. Follow
+[first-use Playground permissions](APP-GUIDE.md#first-tool-use-in-the-playground)
+when the participant chooses that route: the participant sends the useful
+prompt, learns the permission choices if they appear, and may select the
+recommended optional Auto approve for the displayed permitted-tool scope, then
 continues to the answer and trace. Explain Deny without adding a denial drill.
-This portal choice does not authorize SDK/runner continuations; those still
+No prompt is required under automatic approval; inspect the actual execution.
+This portal choice does not authorize SDK/runner continuations; actual requests still
 require an exact participant decision and separately approved continuation.
+Always offer both execution choices. When Workshop Coach execution is selected, use
+[the native-request decision flow](APP-GUIDE.md#first-tool-use-when-workshop-coach-sends);
+the participant still decides each exact pending tool request. Retain the
+participant's portal inspection and trace practice, and distinguish this route
+from an actual Playground Auto approve decision.
 
 ## Build-up story the coach teaches
 
@@ -181,13 +198,13 @@ to switch this example or balance the coach/participant sending ratio.
 | Checkpoints | Small learning steps and evidence |
 |-------------|-----------------------------------|
 | 01-03 Weather foundation | Create the tool-free agent; test a stable concept such as why rain forms. Improve only instructions and compare the same inputs. Prove follow-up context in one managed Conversation and isolation in a new one. It cannot retrieve a forecast yet. |
-| 04 Weather first tool | Connect only `weather_forecast`. Participant sends: "For New York, US, latitude 40.7128 and longitude -74.0060, retrieve the daily forecast with hourly=false. Use those coordinates exactly." At first permission prompt, explain Approve/Deny/Auto approve and let the participant select Auto approve for the permitted Weather-tool scope. Continue to the result, grounded answer and matching trace; no separate denial drill. |
-| 05 Weather skill | Add the approved geocoding/current/alerts tools and a versioned research procedure. Practice a public museum address, appropriate weather-tool choice, restraint, and partial failure. |
-| 06-07 Weather memory and release | With consent, store a Celsius preference; prove recall, isolation, correction, and deletion. Retest tools and skill; release only a passing independent weather specialist. |
+| 04 Weather first tool | Connect only `weather_forecast`, using always allow for a new coach-created tool and encouraging the same at participant creation. Offer both execution routes for: "For New York, US, latitude 40.7128 and longitude -74.0060, retrieve the daily forecast with hourly=false. Use those coordinates exactly." Handle any actual native permission request on the chosen route; otherwise continue automatically to the result, grounded answer and matching trace, without another setting question, separate denial drill or duplicate demonstration. |
+| 05 Weather skill (deferred) | Retain multi-tool expansion and the versioned procedure for later. Do not apply a draft skill or expand the default forecast-only binding. |
+| 06 deferred; 07 Weather release | Continue 04 -> 07, skipping skills and memory. Verify supported one-tool results and Conversations, reusing valid evidence; no injected failure exercise; release only a working independent weather specialist. |
 | 08-10 Cultural foundation | Create a separate tool-free agent; test a stable question such as how an art museum differs from an art fair. Refine its instructions and independently prove Conversation continuity and isolation. Do not copy Weather state. |
-| 11 Cultural first tool | Connect only `find_museum_guide`. Participant sends: "Use the museum-guide tool to find the Metropolitan Museum of Art in New York, US. Summarize the returned guidance, cite its guide URL, and state its verification date if supplied." Briefly repeat the first-use permission explanation and let the participant select Auto approve for the permitted Cultural-tool scope. Inspect actual arguments, result, attribution and trace. |
-| 12 Cultural skill | Expand only to the four verified cultural tools. Use museum-plus-event questions for multi-tool practice; use a covered European city for a separate layover test, not a US weather request. Demonstrate missing catalogue/accessibility data and a controlled partial failure. |
-| 13-14 Cultural memory and release | With consent, remember museums over nightlife in an independent scope. Prove the same memory lifecycle, regressions, and independent release as for Weather. |
+| 11 Cultural first tool | Connect only `find_museum_guide`, using always allow for a new coach-created tool and encouraging the same at participant creation. Offer both execution routes for: "Use the museum-guide tool to find the Metropolitan Museum of Art in New York, US. Summarize the returned guidance, cite its guide URL, and state its verification date if supplied." Handle actual permission requests if emitted, without another setting question. Inspect actual arguments, result, attribution and trace. |
+| 12 Cultural skill (deferred) | Retain the four-tool expansion, supported tool-routing practice and error-handling implementation for later; keep only `find_museum_guide` on the default route. |
+| 13 deferred; 14 Cultural release | Continue 11 -> 14, skipping skills and memory. Verify supported one-tool results and an independent release as for Weather, without a failure demonstration. |
 | 15-16 Final workflow | After both releases pass, define result contracts and implement a hosted Agent Framework workflow. One trip request invokes both released specialists, validates both results, and assembles a sourced itinerary with weather-aware choices, guide links, uncertainties, and explicit partial failures. Correlated traces must prove both calls; two manual replies or `recommend_art_trip` alone do not pass. |
 
 Follow the lesson files and tests for each gate; this table is the fixed teaching
@@ -216,4 +233,4 @@ tour. The student-chosen capstone is an optional separate follow-on.
    missing local tooling, public-service availability, and Foundry access or
    runtime failure. Preserve progress and involve the facilitator. Do not ask a
    beginner to design infrastructure, request an API key, deploy a substitute,
-   disable approval, or fabricate an unavailable result.
+   change the saved approval policy, or fabricate an unavailable result.

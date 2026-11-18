@@ -160,7 +160,8 @@ approval/denial or channel publication. Unexpected tool requests still require
 their own human decision; do not approve them as part of this basic test.
 
 A live Weather test is separate and optional for this delivery lab, with its own
-scope/data/spend approval and actual per-call tool approvals. Inspect the returned
+scope/data/spend approval and decisions on any actual pending tool requests.
+Preserve the captured policy without later approval-setting questions. Inspect the returned
 Weather evidence and its relationship to the reply; plausible prose alone is
 not tool execution evidence. Do not add these tests to the deployment job or
 turn them into new core checkpoint gates.

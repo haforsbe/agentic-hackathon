@@ -67,6 +67,15 @@ def normalized(definition):
         if isinstance(allowed, dict):
             require(set(allowed) == {"tool_names"}, "Unexpected allowlist fields")
             tool["allowed_tools"] = allowed["tool_names"]
+        allowed = tool.get("allowed_tools")
+        policy = tool.get("require_approval")
+        if isinstance(policy, dict) and len(policy) == 1:
+            mode, selection = next(iter(policy.items()))
+            if (mode in ("always", "never") and isinstance(selection, dict)
+                    and set(selection) == {"tool_names"}
+                    and isinstance(selection["tool_names"], list) and isinstance(allowed, list)
+                    and sorted(selection["tool_names"]) == sorted(allowed)):
+                tool["require_approval"] = mode
     return value
 
 
@@ -111,10 +120,23 @@ def load_plan(path):
     require(config["definition"]["kind"] == "prompt", "Only ordinary prompt agents are supported")
     for tool in config["definition"].get("tools", []):
         require(
-            tool.get("type") == "mcp" and tool.get("require_approval") == "always"
-            and tool.get("allowed_tools"),
-            "Runner supports only explicit MCP allowlists with approval always",
+            tool.get("type") == "mcp" and tool.get("allowed_tools"),
+            "Runner supports only explicit MCP allowlists",
         )
+        policy = tool.get("require_approval")
+        require(policy is None or policy in ("always", "never") or isinstance(policy, dict),
+                "Unsupported MCP approval policy")
+        if isinstance(policy, dict):
+            require(bool(policy) and set(policy) <= {"always", "never"}, "Invalid MCP approval filters")
+            for selection in policy.values():
+                require(isinstance(selection, dict) and set(selection) <= {"tool_names", "read_only"},
+                        "Invalid MCP approval filter")
+                if "tool_names" in selection:
+                    require(isinstance(selection["tool_names"], list)
+                            and all(isinstance(name, str) and name for name in selection["tool_names"]),
+                            "MCP approval tool_names must be a list of tool names")
+                if "read_only" in selection:
+                    require(type(selection["read_only"]) is bool, "MCP approval read_only must be boolean")
         require(not any(tool.get(key) for key in ("authorization", "headers", "project_connection_id")),
                 "Do not put credentials or authenticated connections in these public-service plans")
         require(tool["server_url"] in ("https://weather.datakoot.com/mcp", "https://mcp.travel.art/"),
@@ -456,10 +478,13 @@ def run(plan, config):
             record["phase"] = "project-access-check"
             save()
             next(project.connections.list().by_page(), None)
-            record["phase"] = "openai-client-initialization"
-            save()
-            with project.get_openai_client(max_retries=0, timeout=60) as client:
-                execute(project, client, plan, config, record, save)
+            if plan["operation"] in ("inspect", "create-version"):
+                execute(project, None, plan, config, record, save)
+            else:
+                record["phase"] = "openai-client-initialization"
+                save()
+                with project.get_openai_client(max_retries=0, timeout=60) as client:
+                    execute(project, client, plan, config, record, save)
         if record["state"] != "awaiting_separate_tool_approval":
             record["state"] = "operation_completed_not_graded"
         record["finished_at"] = now()
@@ -495,6 +520,39 @@ def run(plan, config):
     return evidence, record
 
 
+def console_summary(evidence, record):
+    summary = {"evidence": str(evidence), **{
+        key: record[key] for key in (
+            "state", "requests_started", "created_version", "conversation_id",
+            "definition_readback_matches", "elapsed_seconds",
+        ) if key in record
+    }}
+    if record["plan"]["operation"] == "continue":
+        summary["tool_decision"] = {
+            key: record["plan"][key] for key in (
+                "response_id", "approval_request_id", "server_label", "tool_name", "arguments", "approve",
+            )
+        }
+    summary["results"] = []
+    for result in record["results"]:
+        compact = {key: value for key, value in result.items() if key not in ("case", "output")}
+        if "case" in result:
+            compact["case_id"] = result["case"]["id"]
+        compact["output_types"] = list(dict.fromkeys(item["type"] for item in result["output"]))
+        compact["tool_activity"] = []
+        for item in result["output"]:
+            if not item["type"].startswith("mcp_"):
+                continue
+            activity = {key: value for key, value in item.items() if key not in ("output", "tools")}
+            if "tools" in item:
+                activity["tool_names"] = [tool["name"] for tool in item["tools"]]
+            if "output" in item:
+                activity["output_in_evidence"] = True
+            compact["tool_activity"].append(activity)
+        summary["results"].append(compact)
+    return summary
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("readiness", "execute"))
@@ -506,8 +564,7 @@ def main():
     require(args.plan, "An approved local plan is required")
     plan, config = load_plan(args.plan)
     evidence, record = run(plan, config)
-    print(json.dumps({"evidence": str(evidence), "state": record["state"],
-                      "requests_started": record["requests_started"], "results": record["results"]}, indent=2))
+    print(json.dumps(console_summary(evidence, record), indent=2))
 
 
 if __name__ == "__main__":

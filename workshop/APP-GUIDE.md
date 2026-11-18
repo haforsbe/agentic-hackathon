@@ -68,8 +68,11 @@ Each module starts with where you are (plain-language stage and checkpoint),
 its goal, a short plan and what will change or stay unchanged. Before a test,
 the coach explains why you are running it, what you should observe and what
 it cannot prove. At module close, review actual evidence and what you learned,
-complete the existing single understanding check, and choose continue or pause.
-There is no extra quiz after each action.
+complete the existing single understanding check, then move directly into the
+next required checkpoint without a routine continue/pause question. Explicit
+pauses and agreed stops remain binding, and the next step still needs any
+required input or approval. Optional delivery-lab and capstone choices remain
+explicit. There is no extra quiz after each action.
 
 Use [the coach's learner-instruction rule](COACH.md#explain-what-and-why-before-every-step):
 give the actual action or copy-ready prompt, its purpose, the starting
@@ -78,11 +81,26 @@ coach records, never in participant messages, question dialogs or choices.
 Do not ask learners to look up a case code to discover what they should do.
 The lesson files provide concrete starting prompts for both specialists.
 
-The coach names the route before every test or exploration:
+Workshop Coach names the route before every test or exploration. Approval
+choices also name the actor explicitly, following
+[the coaching wording rules](COACH.md#make-instructions-easy-to-scan):
 
-| Route | What you do | What the coach does |
+When both actors have supported routes, an execution-choice menu includes
+**Workshop Coach will execute...** and **Participant can execute...**, naming
+the actual action and surface. The
+participant chooses a supported route within the stated approval scope.
+If a required personal action cannot be delegated, label the coach option's
+supported preparation and the remaining participant action explicitly.
+Hosted workflow creation is coach-only under the
+[execution ownership rule](COACH.md#hosted-workflow-execution-ownership):
+Workshop Coach writes and creates the code-first hosted agent through the
+supported SDK/CLI route, with the required approvals. Participants review its
+code and use the Microsoft Foundry Playground after deployment; do not offer
+them a portal creation or manual workflow-writing route.
+
+| Route | What the participant does | What Workshop Coach does |
 |-------|-------------|---------------------|
-| **Run from the GitHub Copilot app - coach sends** | Stay in this GitHub Copilot app session and approve the stated test. Do not enter the prompt in Microsoft Foundry as well. | Send the prompt to your actual agent in Microsoft Foundry and show its reply here; capture usage locally for the checkpoint and cumulative workshop summary, not a per-call report. |
+| **Run from the GitHub Copilot app - Workshop Coach sends** | Stay in this GitHub Copilot app session and approve the stated test. Do not enter the prompt in Microsoft Foundry as well. | Send the prompt to your actual agent in Microsoft Foundry and show its reply here; capture detailed usage in execution evidence and show only a compact token total at the completed exercise's end. |
 | **Run in the Microsoft Foundry portal - participant sends** | Follow the coach's verified steps from https://ai.azure.com/ to your exact project and agent, send the agreed prompt yourself, then report the result here. | Give the exact prompt, conversation context, controls and evidence to report, then wait without sending a duplicate call. |
 | **Inspect in Microsoft Foundry - no prompt sent** | Look at the agent's saved settings or the specified test trace. Do not send a message or edit settings. | Explain what to inspect and accept your clear confirmation for routine hands-on completion. Corroborate only when a specific required assertion needs service evidence. |
 | **Run in Microsoft Teams or Microsoft 365 Copilot - participant sends** | At 07/16 open your exact published Weather/workflow app in the chosen surface, send the approved prompt once, and return the actual reply. | Verify publication/target and channel identity, provide documented navigation from the returned launch link, then inspect the same run's Microsoft Foundry evidence without resending. |
@@ -99,11 +117,11 @@ chat playground.
 
 | Lesson | Suggested mix of required tests |
 |--------|---------------------------------|
-| Baseline (01, 08) | Coach demonstrates a general-knowledge question; participant sends the lesson's missing-context question in a fresh Conversation and reports what happened. Supply the actual prompt and explain that the agent should ask for the missing location. A clear confirmation is enough for routine observation; copy an excerpt only when helpful or needed for a specific assertion. |
+| Baseline (01, 08) | Coach demonstrates a supported general-knowledge question; participant sends the lesson's second supported question in a fresh Conversation and reports the useful answer. A clear confirmation is enough for routine observation; copy an excerpt only when helpful or needed for a specific assertion. |
 | Instructions (02, 09) | Reuse the saved baseline replies as the before side; send each exact input once to the new instruction version on the same route as its baseline. With the allocation above this yields two coach-sent and two participant-sent prompts across baseline/instructions. Balance later suitable cases, not extra before-change calls. |
-| Conversations (03, 10) | Participant supplies a destination, sends a dependent follow-up in that same Conversation, then repeats the follow-up in a fresh Conversation. Give each exact prompt when needed and explain the expected context difference. Use this route if the interface supports the required history and identifier evidence; otherwise demonstrate through the supported client. |
-| MCP and skills (04-05, 11-12) | Participant sends the first useful forecast or museum-guide prompt in the agent Playground. Explain the permission choices when they appear and let the participant select **Auto approve** for the displayed permitted-tool scope; continue to the answer and trace, not a separate denial drill. Divide remaining required prompts between routes to bring the running split toward half each. Keep isolated failure checks on the coach route. |
-| Memory and release (06-07, 13-16) | Coach handles identity/scope, deletion, consumer-endpoint, and automated regression checks. A participant may send a required recall or normal-path test only when the interface can preserve its exact scope and target. Playground-only evidence never substitutes for a consumer-endpoint test. |
+| Conversations (03, 10) | Participant supplies a destination/interest and sends a dependent follow-up in Conversation A, then creates B with a different destination/interest and repeats the follow-up. Each reply should use its own supplied context. Use this route if the interface supports the required history and identifier evidence; otherwise demonstrate through the supported client. |
+| MCP (04, 11; skills 05/12 deferred) | Offer both execution choices. At tool creation Workshop Coach uses always allow and encourages participants to do the same, especially for Microsoft Teams; do not ask about settings afterward. On either route handle any actual permission request exactly, or proceed under automatic execution without inventing a decision. Inspect the answer and trace without a separate denial drill or duplicate prompt to rebalance practice. |
+| Release (07, 14-16; skills/memory deferred) | Coach verifies identity/scope, the consumer endpoint and supported functional results, reusing valid evidence. No deliberate failure or denial checks. Skip T02/S01/S02 and memory-only exercises under the deferral policies; keep one tool per specialist unless an expanded configuration already exists. Playground-only evidence never substitutes for a consumer-endpoint test. |
 | Channel publication (07, 16) | Participant uses Weather in Microsoft Teams and/or Microsoft 365 Copilot before 08, then uses the released workflow there at 16. CH01/CH02 require channel-originated requests and same-run runtime evidence; a publish dialog is not a pass. |
 
 Keep the channel prompts labeled and counted as participant-sent prompts on
@@ -233,13 +251,13 @@ For the approved W04 trip:
 1. Select **New chat** for a fresh Conversation, enter the agreed supported
    trip prompt and press **Send** once. Do not also invoke it from the
    GitHub Copilot app.
-2. Read the Weather tool name and arguments. The participant chooses
+2. If a Weather permission card appears, read its tool name and arguments. The participant chooses
    **Approve** or **Deny** on that exact card once. A general test approval
    is not that tool decision.
-3. If Weather is approved, wait for the separate Cultural card. Review its
-   own tool name/arguments and make its own decision once; do not click the
-   old Weather card again. For the success case, both cards must resolve and
-   the combined answer must appear.
+3. If a Cultural permission card appears, review its own tool name/arguments
+   and decide once; do not click an old Weather card again. With automatic
+   approval, proceed without cards or invented decisions. The success case
+   requires the combined answer and both actual completed tool calls.
 4. Open **Traces** associated with that answer and capture the Conversation
    and available run/response IDs. The coach corroborates both native calls
    and approval bindings read-only; the participant does not need to discover
@@ -317,8 +335,8 @@ screen matches; inspection does not authorize edits, tool calls or a test.
 
 | Task | Observed route and limit |
 |------|--------------------------|
-| Inspect a saved agent binding | On the exact agent's **Playground**, confirm **Version:**, then **Setup -> Tools**. **YAML** shows the saved definition. Verify the direct server URL, allowlist and approval settings independently; a card alone proves no runtime access. |
-| Inspect model parameters | On that same **Setup** screen, **Parameters** beside **Model:** exposes **Max output tokens**. In the rehearsal, an entered value did not persist after reopening and the service response reported no limit. A briefly displayed number is not an enforced test bound; stop before sending until the intended route's limit is verified. |
+| Inspect a saved agent binding | On the exact agent's **Playground**, confirm **Version:**, then **Setup -> Tools**. **YAML** shows the saved definition. Verify the direct server URL and allowlist; Workshop Coach records the approval policy internally without another participant setting question. A card alone proves no runtime access. |
+| Inspect model parameters only when needed | On that same **Setup** screen, **Parameters** beside **Model:** exposes **Max output tokens**. In the rehearsal, an entered value did not persist after reopening and the service response reported no limit. A briefly displayed number is not an enforced test bound. Do not make parameter inspection or persistence checks a routine participant exercise or gate. An otherwise approved, bounded portal test may proceed without a verified output-token limit unless an explicit participant-imposed limit requires one; never claim an unverified limit is enforced. |
 | Inspect display settings | **Configure** in **Chat** opened display-name, description, starter-prompt and voice settings, not the model-token limit. Do not direct learners there to configure output limits. |
 | Inspect this reply's trace | Under the actual reply, **Traces** opens a drawer with **Trajectories**, **User view** and **Graph view**. Select the matching operation, then **Metadata** or **Input + Output** where present. `tools/list` is discovery, not execution; look for the actual server/tool's execution span and correlate the saved response identifier. Do not resend to recover an identifier. |
 
@@ -333,7 +351,11 @@ candidate permits only this one tool. No Toolbox or upstream credential
 connection is part of the core path.
 
 The saved `server_url` must be `https://weather.datakoot.com/mcp`, with only
-`weather_forecast` in the allowlist and `require_approval: "always"`. Do not
+`weather_forecast` in the allowlist. At creation, Workshop Coach uses always
+allow (`require_approval: "never"`), and encourages participants to choose the
+same for a smoother Microsoft Teams experience. Existing tools keep their
+supported setting with no required value. Do not ask about that setting after
+creation, instruct a later edit or create a corrective version. Do not
 add `project_connection_id`, keys or authorization headers for this anonymous
 server. The coach supplies these exact values, explains what is sent outside
 Microsoft Foundry and obtains approval before one candidate change.
@@ -351,22 +373,32 @@ portal URL, confirmed project, exact agent/version and documented controls.
 
 ### First tool use in the Playground
 
+Offer both execution choices before the test. This section applies when the
+participant chooses **Participant can execute...**; use the following section
+when **Workshop Coach will execute...** is selected.
+
 At 04 and 11, teach permissions when the first useful tool-backed question
 reaches them, not through a separate approval/denial exercise:
 
 1. On the exact agent's **Playground -> Chat**, confirm **Version:** and the
    approved fresh-or-existing Conversation. Supply the copy-ready forecast or
    museum-guide prompt from [MCP-SERVICES.md](MCP-SERVICES.md), the **Message
-   the agent...** field and **Send** control, and the agreed execution limits
-   and possible Microsoft Foundry charges. The participant sends once.
-2. When the first tool-permission prompt appears, explain briefly:
+   the agent...** field and **Send** control, and explain the approved request
+   count and possible Microsoft Foundry charges. Keep numeric output-token caps
+   coach-side unless explicitly requested or participant-imposed.
+   The participant sends once.
+2. If a tool-permission prompt appears, explain briefly:
    "**Approve** permits this proposed tool call; **Deny** blocks it.
    **Auto approve** lets the Playground approve subsequent calls within the
    permission scope shown here without asking each time."
 3. Have the participant review the named service, tool and displayed scope,
-   then select **Auto approve** for this specialist's permitted read-only MCP
-   tools. Keep the effective one-tool allowlist at 04/11; review the scope
-   again when expanding it at 05/12. If the scope is unclear or broader than
+   then recommend optional **Auto approve** for this specialist's permitted read-only MCP
+   tools. Accept the existing setting or the participant's decision to keep
+   per-call approval. If no prompt appears, continue to the actual execution;
+   Workshop Coach records the saved policy internally without another setting
+   question or permission exercise.
+   Keep the effective one-tool allowlist at 04/11; review the scope
+   again when expanding it at 05/12. If the    scope is unclear or broader than
    intended, stop for that decision rather than accepting a blanket permission.
 4. Continue to the returned forecast or museum guidance and inspect that same
    execution's tool arguments, result, sources and available timestamps. At
@@ -379,17 +411,36 @@ reaches them, not through a separate approval/denial exercise:
 This is not an independently observed runtime rehearsal or proof of the
 setting's persistence. Use the actual displayed control and scope. If it is
 absent or different, ask for that specific observation and agree a supported
-explicit-approval route; do not invent clicks or silently broaden permission.
+route matching the existing policy; do not invent clicks or silently broaden permission.
 
 The Playground choice is not a GitHub Copilot app permission and does not
 establish automatic approval through the SDK, Stable Agent Endpoint, hosted
-workflow or published channel. Retain the documented
-`require_approval: "always"` definitions and the runner's pending-approval
-stops; do not infer `require_approval: "never"` or auto-submit runner
-continuations from a portal choice. Inspect any actual saved configuration
-change and obtain its scoped approval before using it elsewhere. Runtime
+workflow or published channel. Inspect the saved policy and verify actual
+behavior on the selected path. `require_approval: "never"` and per-tool filters
+are valid; a different value alone does not require a corrective version.
+Retain the runner's stops for actual pending requests; do not auto-submit
+continuations from a portal choice. Any new configuration change still needs
+scoped approval. Runtime
 denial handling remains intact if a participant declines a real request;
 the specialist lesson simply has no separate denial drill.
+
+### First tool use when Workshop Coach sends
+
+For **Workshop Coach will execute...**, use the shared runner with the exact
+approved agent/version, prompt, context and stored-response scope. Automatic
+execution under the saved policy needs no invented permission step. Stop at a
+service-returned `mcp_approval_request`. Show its response/request identifiers,
+actual server, tool and arguments, explain approval and denial, and obtain the participant's decision
+for that exact request before submitting one matching continuation.
+Neither execution-route selection nor a previous Playground Auto approve
+choice authorizes that continuation. Never auto-approve, replay the prompt or
+apply an earlier decision to a replacement request. Preserve a denial and any further pending
+request. Follow [the runner's continuation contract](runner/README.md).
+
+Keep the participant's portal configuration inspection and guided trace
+practice. Record that permission practice used the SDK/runner route, not the
+Playground controls; do not claim a portal Auto approve decision occurred.
+Inspect the same tool result and trace without a second demonstration call.
 
 ## Techniques to introduce along the way
 
@@ -399,9 +450,9 @@ the specialist lesson simply has no separate denial drill.
 | 01, 08 | "Explain this agent definition before editing it." Then explicitly request the small change | Ask for a proposed definition diff first to retain more control |
 | 02, 09 | Review the focused instruction diff and compare the same test before and after | Ask for an instruction proposal without applying it |
 | 03, 10 | Keep this coaching session; create separate runtime Conversations for each agent test | Use a new app session for an independent task; do not assume it inherits runtime history |
-| 04, 11 | For each specialist inspect the direct server URL, exact agent version, one-tool effective allowlist and native approval policy; 04 includes the first full tool-trace walkthrough | Compare the GitHub Copilot app's MCP registration with the separate Microsoft Foundry agent binding |
-| 05, 12 | Review each skill diff, tool allowlist, exact version, and delivery strategy | Use a file/editor panel if available; reading an artifact is not deployment evidence |
-| 06, 13 | "Pause and save my progress." Then "Resume and recheck my target." | A new worktree needs an approved progress import and does not share agent memory |
+| 04, 11 | For each specialist inspect the direct server URL, exact agent version and one-tool effective allowlist; no post-creation approval-setting question; 04 includes the first full tool-trace walkthrough | Compare the GitHub Copilot app's MCP registration with the separate Microsoft Foundry agent binding |
+| 05, 12 (deferred) | Retain for later explicit reintroduction: review each skill diff, tool allowlist, exact version, and delivery strategy | Use a file/editor panel if available; reading an artifact is not deployment evidence |
+| 06, 13 (deferred) | No memory exercise now; retain these slots for later | Chat-based pause/resume remains available throughout; no memory resource or proof required |
 | 07, 14, 16 | "Show the endpoint, selected version, and actual test results; don't infer success." | Use supported hosted controls when available; return to Chat for evidence review |
 | 15 | "Show both agent versions, result contracts, workflow spans, and validation decisions." | Read sanitized trace/log evidence when no visual trace view is available |
 | 17 | Write a two-specialist brief with scope, non-goals, tests, and cost boundaries | Choose a preset capstone or propose an equivalent custom scenario |
