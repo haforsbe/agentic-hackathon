@@ -56,14 +56,14 @@ it does not create a Foundry agent or grant Azure permissions.
 | Workshop model | Microsoft Foundry Model Catalog access, usable project quota, and model-deployment permissions | Inspect existing deployments first; participant chooses whether to reuse a suitable one or independently selects a compatible model and explicitly approves a new named deployment and possible cost |
 | SDK fallback | Python and isolated environment | Use the current prompt quickstart's package versions in the student implementation |
 | First successful project connection at checkpoint 00; recheck before checkpoint 03 tests and portal trace inspection | Application Insights connected to the participant's Foundry Project, with telemetry-read access | Check connection metadata and telemetry-read access read-only; record readiness or the specific blocker; obtain separate approval for any connection, new resource, or new test |
-| Weather MCP | Selected public endpoint `https://weather.datakoot.com/mcp`; no authentication | Current Streamable HTTP schemas; `weather_forecast` first, approved four-tool expansion later; US coverage, upstream provenance, and Foundry runtime evidence |
-| Cultural Travel MCP | Selected public endpoint `https://mcp.travel.art/`; no authentication | Current Streamable HTTP schemas; `find_museum_guide` first, approved four-tool expansion later; actual catalogue coverage, guide attribution/freshness, and Foundry runtime evidence |
-| Direct MCP bindings (04/05, 11/12; verification at 07/14) | Supported public MCP attachment on each ordinary prompt agent, with explicit allowlists and participant-selected native permission scope | Verify the exact direct URL, required upstream schemas/names, candidate read-back, effective restrictions, actual first-use Playground permission choice and runtime execution; no separate connectivity/denial exercise; portal Auto approve does not establish SDK/endpoint/channel permission; see MCP-CONNECTIONS.md |
+| Weather MCP | Selected public endpoint `https://weather.datakoot.com/mcp`; no authentication | Current Streamable HTTP schema; only `weather_forecast` through release on the default route; US coverage, upstream provenance, and Foundry runtime evidence |
+| Cultural Travel MCP | Selected public endpoint `https://mcp.travel.art/`; no authentication | Current Streamable HTTP schema; only `find_museum_guide` through release on the default route; actual catalogue coverage, guide attribution/freshness, and Foundry runtime evidence |
+| Direct MCP bindings (04/11; verification at 07/14) | Supported public MCP attachment on each ordinary prompt agent, with explicit one-tool allowlists and participant-selected native permission scope | Verify the exact direct URL, required upstream schemas/names, candidate read-back, effective restrictions, actual native permission choice on the selected route and runtime execution; no separate connectivity/denial exercise; portal Auto approve does not establish SDK/endpoint/channel permission; see MCP-CONNECTIONS.md |
 | Memory (temporarily deferred) | No memory store or embedding deployment needed on the default route | Skip 06/13; retain the lesson for later separately approved reintroduction |
-| Skills | Skills API and compatible client/provider | Upload/version/retrieve support; MCP resources support is distinct from tools |
+| Agent skills and multi-tool expansion (temporarily deferred) | No student agent skill support or expanded allowlist needed on the default route | Skip 05/12 and T02/S01/S02; retain lessons and verify delivery/API support only for later approved reintroduction; installed coach/builder skills remain in use |
 | Hosted workflow | Azure Developer CLI (`azd`), Agent Framework, supported Foundry extensions/runtime, and tracing | Reviewed [shared scaffold](assets/hosted-workflow/README.md) revision, fully pinned dependencies and verified feed/runtime availability, Responses portal approval flow plus required Invocations path, intended G/W tests, both downstream endpoints/contracts, deployment support and quota/cost boundary; require the [pre-cohort workflow readiness gate](FACILITATOR.md#hosted-workflow-readiness-before-the-cohort) |
-| Consumer access | Approved test caller identities | Endpoint invocation permission and a caller without permission for the negative test |
-| Microsoft Teams/Microsoft 365 Copilot (07, 16) | At least one chosen surface, licensed/allowed tenant access and current project publishing permission; Microsoft Foundry manages direct-publishing bot registration without a separate Azure Bot Service resource | Rehearsed Weather and hosted-workflow publication/installation, compatible activity adapter or documented service translation, channel identity and trusted user/state mapping, downstream runtime access, actual tool approval/denial and correlated traces; separate audience/data/cost approval; see PUBLISHING.md |
+| Consumer access | Approved consumer identity | Verify the actual caller and endpoint invocation permission; reuse the successful consumer-path request as access evidence, with no second account or separate access-denial exercise |
+| Microsoft Teams/Microsoft 365 Copilot (07, 16) | At least one chosen surface, licensed/allowed tenant access and current project publishing permission; Microsoft Foundry manages direct-publishing bot registration without a separate Azure Bot Service resource | Rehearsed Weather and hosted-workflow publication/installation, compatible activity adapter or documented service translation, channel identity and trusted user/state mapping, downstream runtime access, any actual native permission decisions and correlated traces; separate audience/data/cost approval; see PUBLISHING.md |
 
 Use the installed `microsoft-foundry` skill, including its dependency check and
 workflow instructions, when available. Otherwise follow the official references
@@ -139,12 +139,15 @@ selection or routine lessons. Explain that captured usage covers agents built
 and tested in Microsoft Foundry and their model setup tests, not the Workshop
 Coach conversation in the GitHub Copilot app. GitHub Copilot usage and billing
 are separate and excluded; do not imply the coach is free.
-Label subsequent summaries **Microsoft Foundry agent/model usage**.
-Follow [checkpoint usage summaries](COACH.md#checkpoint-usage-summaries):
-capture usage locally per operation, but report checkpoint and updated workshop
-token totals once per checkpoint, not after every call. Keep input/output,
-reported cached input, response IDs and available model/deployment/version
-metadata; missing usage is unknown. Pre-action possible-charge disclosures and
+Label the exercise-end total **Microsoft Foundry tokens**.
+Follow the [exercise-end token policy](COACH.md#checkpoint-usage-summaries):
+capture detailed usage in existing execution evidence, but show only one compact
+token total only when the whole Weather Agent, Cultural Travel Agent or
+hosted-workflow exercise ends, not at individual checkpoint completions,
+pauses or transitions.
+Keep input/output, reported cached input, response IDs and available
+model/deployment/version metadata in the evidence; missing usage is unknown.
+Pre-action possible-charge disclosures and
 approvals remain required. An optional end-of-workshop monetary estimate is
 on request using matched official rates, not a workshop requirement or Azure
 bill. Missing rates or usage do not invalidate otherwise supported tests.
@@ -182,8 +185,8 @@ generating model usage. See [runner scope and setup](runner/README.md).
 Arrange tools in an isolated environment before the cohort when possible;
 otherwise install only when a prerequisite check identifies a missing tool.
 Then, with participant-confirmed account/project and agreed read-only scope,
-verify direct access, telemetry readiness and later skill, consumer
-identity and hosted-runtime prerequisites. Mark each available, unavailable
+verify direct access, telemetry readiness, consumer identity and hosted-runtime
+prerequisites. Deferred student skills/memory need no setup. Mark each available, unavailable
 or unverified; metadata alone does not demonstrate runtime behavior.
 No project/model creation, memory-store write, deployment, paid test or role
 change is authorized by advance readiness. The live coach still confirms the

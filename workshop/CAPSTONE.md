@@ -29,7 +29,7 @@ Create a short source-controlled brief under `student/capstone/` containing:
 - two genuinely distinct specialist responsibilities;
 - approved MCP servers and exact tools, or another approved evidence mechanism;
 - conversation boundaries and any justified persistent-memory facts;
-- skill responsibilities and delivery strategy;
+- skill responsibilities and delivery strategy only if explicitly included;
 - safety, privacy, authorization, cost, and data boundaries;
 - proposed workflow result contracts and partial-failure policy;
 - concrete specialist and workflow tests;
@@ -54,12 +54,13 @@ Build each capstone Microsoft Foundry Prompt Agent using the practiced sequence:
 2. one controlled instruction refinement;
 3. managed Conversation continuity and isolation;
 4. one approved MCP server tool with grounded trace evidence;
-5. a skill guiding any justified multi-tool selection and sequencing;
+5. a skill guiding justified multi-tool selection and sequencing only after
+   explicit reintroduction of the retained skill lessons; otherwise keep it deferred;
 6. optional consented persistent memory when genuinely useful;
 7. full regressions and promotion of only a fully passing candidate.
 
 Each specialist needs separate names, versions, Stable Agent Endpoints, MCP
-server/tool allowlists, skills, memory scopes when configured, tests, and release
+server/tool allowlists, any configured skills or memory scopes, tests, and release
 evidence. One specialist's success never substitutes for the other's.
 
 Run K02 and the adapted B, I, D, C, S, M, and P tests appropriate to each
@@ -75,14 +76,17 @@ Define versioned result contracts for both capstone specialists. Implement a
 Microsoft Agent Framework workflow that invokes their Stable Agent Endpoints,
 validates each result, and combines only supported evidence.
 
-Run G01-G03 and W01-W03 locally, including:
+Run the existing local implementation checks, then demonstrate G01/G03 and a
+supported W01/W03 result, including:
 
 - both specialists succeed;
-- each specialist fails while the other remains valid;
-- a specialist returns structurally invalid data;
-- a dependency times out or rejects authorization;
-- no missing evidence is fabricated;
+- the combined result respects valid user preferences;
+- both source domains and any actual uncertainty remain visible;
 - repeated runs preserve contract and release compatibility.
+
+Do not add deliberate invalid-input, failure, timeout or denial demonstrations.
+Existing automated tests retain defensive coverage; handle real problems if
+they occur while building or using the capstone.
 
 After explicit approval, deploy only a fully passing workflow candidate as a
 Microsoft Foundry Hosted Agent. Run P01-P04 and K03 through its Stable Agent
@@ -100,9 +104,11 @@ resources still running. Review cleanup separately.
 ## Optional write actions
 
 Read-only capstones are fully valid. If a scenario performs writes, require an
-authenticated, participant-isolated synthetic service and run A01-A02. Verify
-decline/no mutation, approved mutation, invalid input, not-found behavior, and
-downstream failure independently. Never introduce real payments, bookings,
+authenticated, participant-isolated synthetic service. Run A01 with one
+explicitly approved valid action, then verify the exact resulting state.
+Keep A02 in automated implementation coverage, not a participant failure
+exercise. Respect any actual decline without executing the action.
+Never introduce real payments, bookings,
 production tickets, or sensitive personal data.
 
 Build any ticket-service integration under `student/` using the

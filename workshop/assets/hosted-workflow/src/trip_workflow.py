@@ -119,8 +119,11 @@ def sections(text: str, first: str) -> dict[str, str]:
     }
 
 
-def result_evidence(domain: str, trip: dict, body: dict, pending: dict, approved: bool) -> dict:
+def result_evidence(domain: str, trip: dict, body: dict, pending: dict | None, approved: bool | None) -> dict:
     name, version, tool, first = SPECIALISTS[domain]
+    if (pending is None) != (approved is None) or (approved is not None and type(approved) is not bool):
+        raise ValueError("A pending request requires its exact boolean decision")
+    successful = approved is not False
     reference = body["agent_reference"]
     if reference["name"] != name or reference["version"] != version or body["status"] != "completed":
         raise ValueError("Unexpected specialist version or incomplete response")
@@ -130,34 +133,44 @@ def result_evidence(domain: str, trip: dict, body: dict, pending: dict, approved
     )
     parts = sections(text, first)
     calls = [item for item in body["output"] if item["type"] == "mcp_call"]
-    if approved:
+    if successful:
         if len(calls) != 1:
-            raise ValueError("Exactly one independently approved completed tool result is required")
+            raise ValueError("Exactly one completed tool result is required")
         call = calls[0]
-        if (call["name"] != tool or call["server_label"] != pending["server_label"]
-                or call["approval_request_id"] != pending["approval_request_id"]
-                or json.loads(call["arguments"]) != pending["arguments"]
+        arguments = json.loads(call["arguments"])
+        if (call["name"] != tool or call["server_label"] != SERVER_LABELS[domain]
+                or not isinstance(arguments, dict)
                 or call["status"] != "completed" or call.get("error")):
-            raise ValueError("Tool result does not match the exact approved request")
+            raise ValueError("Tool result does not match the configured specialist tool")
+        if pending:
+            if (call["server_label"] != pending["server_label"]
+                    or call.get("approval_request_id") != pending["approval_request_id"]
+                    or arguments != pending["arguments"]):
+                raise ValueError("Tool result does not match the exact approved request")
+        elif call.get("approval_request_id") is not None:
+            raise ValueError("Tool result references an unobserved approval request")
         source_evidence = call["output"]
     else:
+        if pending is None:
+            raise ValueError("A denial requires its pending request")
         if calls:
             raise ValueError("A denied request unexpectedly executed a tool")
         source_evidence = ""
+        arguments = pending["arguments"]
     fields = dict(
         domain=domain,
         agent_name=name, agent_version=version, response_id=body["id"],
         requested_trip=Trip.model_validate(trip), findings=parts[first], source=parts["Source"],
-        uncertainty=parts["Uncertainty"], tool_name=tool, tool_arguments=pending["arguments"],
+        uncertainty=parts["Uncertainty"], tool_name=tool, tool_arguments=arguments,
         source_evidence=source_evidence, retrieved_at=datetime.now(timezone.utc).isoformat(),
-        missing_information=[] if approved else ["Tool execution was denied; no replacement evidence"],
+        missing_information=[] if successful else ["Tool execution was denied; no replacement evidence"],
     )
     try:
         validate_final_approval_narrative(parts[first], parts["Source"], parts["Uncertainty"])
     except ApprovalStateMismatch as error:
         fields.update(
             findings="",
-            source=parts["Source"] if approved and not _PENDING_APPROVAL.search(parts["Source"]) else "",
+            source=parts["Source"] if successful and not _PENDING_APPROVAL.search(parts["Source"]) else "",
             uncertainty=(
                 parts["Uncertainty"] + " "
                 if not _PENDING_APPROVAL.search(parts["Uncertainty"]) else ""
@@ -166,7 +179,7 @@ def result_evidence(domain: str, trip: dict, body: dict, pending: dict, approved
         )
         error.evidence = Evidence(status="failed", **fields).model_dump()
         raise
-    return Evidence(status="ok" if approved else "denied", **fields).model_dump()
+    return Evidence(status="ok" if successful else "denied", **fields).model_dump()
 
 
 class NativeInvoker:
@@ -207,13 +220,15 @@ class NativeInvoker:
                     "weather_forecast only. Preserve actual "
                     "forecast dates, source and uncertainty."
                     if domain == "weather" else
-                    "Find a visitor guide for the Metropolitan Museum of Art, New York, US. "
+                    "Give a concise visitor summary for the Metropolitan Museum of Art, New York, US; "
+                    "do not reproduce the full catalogue. "
                     "Use find_museum_guide with query Metropolitan Museum of Art, city New York, country US. "
                     "Preserve guide URLs, verification dates and uncertainty."
                 )
                 prompt += (
-                    " Before the native tool decision, pause for separate human approval. "
-                    "After the actual native approval and a completed tool call, give the final "
+                    " Follow the saved tool-approval policy. If a native approval request appears, "
+                    "pause for its human decision. If the policy permits automatic execution, "
+                    "do not invent an approval request. After a completed tool call, give the final "
                     "findings from that result; do not claim approval is still pending. "
                     "If the native decision denies the call, report the denial and missing evidence. "
                     "Prose is never an approval, and no retry or replacement tool is authorized."
@@ -222,7 +237,7 @@ class NativeInvoker:
             self.journal[key]["state"] = "response-started-do-not-repeat"
             atomic_json(self.path, self.journal)
             try:
-                response = client.responses.create(**request, store=True, max_output_tokens=500)
+                response = client.responses.create(**request, store=True, max_output_tokens=2048)
             except (APIConnectionError, APITimeoutError) as error:
                 raise RuntimeError("Ambiguous response attempt; reconcile the journal before continuing") from error
             body = response.to_dict()
@@ -312,8 +327,6 @@ class Specialist(Executor):
                             {"state": state, "pending": observed}, dict, request_id=item["id"],
                         )
                     return
-                if not pending:
-                    raise ValueError("Specialist did not request its required evidence tool")
                 with tracer.start_as_current_span("validate." + self.domain):
                     evidence = result_evidence(self.domain, state["trip"], body, pending, approved)
             except (APIError, AzureError, TimeoutError, ValueError) as error:

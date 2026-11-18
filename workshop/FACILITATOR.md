@@ -24,9 +24,9 @@ publication/use is required at 16 after final release/update checks. The
 Cultural build and workflow implementation remain in their current order.
 
 Agent 1 lessons cover baseline behavior, instructions, managed Conversations,
-one Weather MCP tool, skill-guided multiple tools, and release. Agent 2
+one Weather MCP tool, and release. Agent 2
 repeats the same active evidence loop with separate instructions, state, a
-public travel.art Cultural Travel MCP server, skill, and
+public travel.art Cultural Travel MCP server with one allowed tool, and
 release. Formal contracts begin with the hosted workflow. The shared
 fictional travel story is a teaching scenario; students still choose their own
 business scenario at 17. The Agent Framework workflow begins only after both
@@ -34,14 +34,19 @@ specialists pass because the orchestration itself is executable code.
 IT support is one of several capstones, not the required foundation.
 
 Teach [direct MCP connections](MCP-CONNECTIONS.md) within that progression:
-Weather forecast-only at 04, four-tool allowlist at 05 and final-binding
-verification at 07, then independent Cultural one-tool/four-tool practice
-at 11/12. Toolboxes and their authentication setup are not core requirements.
+Weather forecast-only at 04 through final-binding verification at 07, then
+independent Cultural museum-guide-only practice at 11/14.
+Skills and four-tool expansion at 05/12 are temporarily deferred under the
+[skills policy](README.md#temporary-skills-and-multi-tool-deferral).
+Continue 04 -> 07 and 11 -> 14, keeping T02/S01/S02 deferred, not passed.
+Use supported single-tool results at release 07/14, without a failure exercise.
+Toolboxes and their authentication setup are not core requirements.
 Persistent memory is also temporarily deferred under the
 [memory deferral policy](README.md#temporary-memory-deferral): skip 06/13
 without awarding passes, retain their lessons/tests for later, and omit
 memory-only preparation and release/channel assertions for memory-free agents.
-Do not silently remove memory from existing resources.
+Do not silently remove skills or memory, shrink existing expanded allowlists,
+or apply local skill drafts. Retain the lessons/tests for later reintroduction.
 Finalize Weather's binding before its already-required final suite; do not
 plan a migration or re-release at 14. At handoff verify unchanged Weather
 metadata and reuse valid evidence, preserving required two-agent comparison
@@ -119,9 +124,10 @@ login profiles, native journals and local student implementations out of that
 handoff. A separate local author worktree or running author deployment is not
 a published participant scaffold.
 
-Rehearse the intended G01-G03/W01-W04 cases, including the actual portal
-route, sequential approvals, denial, sourced output and explicit failure
-handling. Capture same-run native execution/approval linkage and usage, not
+Run the existing automated implementation suite and rehearse supported
+G01/G03 and W01/W03/W04 trips, including the actual portal route with
+automatic or requested approvals and sourced output.
+Capture same-run native execution/approval linkage and usage, not
 just cards or a plausible final answer. Preserve request-owned state,
 current-checkpoint validation, pinned specialists and both required protocols.
 Use the troubleshooting conclusions to prepare correct reusable code, not
@@ -132,13 +138,13 @@ Only the intended workshop tests belong in the shared scaffold.
 Rehearse the same Playground behavior cases through each offered destination,
 using [the parity plan](PUBLISHING.md#workflow-destination-test-parity).
 Microsoft Teams and Microsoft Copilot Studio must preserve separate native
-decisions, denial, state boundaries and sourced results; do not offer an
+decisions, trusted state boundaries and sourced results; do not offer an
 untested connection as a supported workshop route. A Microsoft Copilot Studio
 test-pane pass is distinct from its eventual published-channel CH02 test.
 Prepare this integration before the cohort, not during the final lesson.
 
 Block delivery of the affected checkpoints if the reviewed scaffold, intended
-portal evidence, final-output consistency or required denial coverage is
+portal evidence, final-output consistency or actual permission handling is
 missing. Escalate a reproducible portal/platform mismatch with sanitized
 request/correlation evidence. Do not substitute an Invocations-only demo,
 fake discovery metadata, automatic approvals or speculative deployments.
@@ -165,7 +171,7 @@ Before the cohort:
 
 - Offer the optional readiness slot in SETUP.md. Check tools in the actual
   coach execution environment; arrange isolated dependencies, chosen-identity
-  access and later skill/release/hosting prerequisites within approved
+  access and release/hosting prerequisites within approved
   scope. Do not silently provision resources or run paid probes.
 - Rehearse the helper's supported SDK version and operations. Run its offline
   tests, then separately approved integration checks. Record gaps for
@@ -201,9 +207,14 @@ Before the cohort:
   and evidence locally, not credentials or a claim that unit tests prove access.
 - Record a compatible official hosted sample URL/revision, dependency set,
   local test command, hosting/runtime prerequisites and known limitations in
-  sanitized facilitator evidence. Prepare reusable failure fixtures and the
-  hosting skeleton; participants still implement and explain coordination,
-  contracts, failure policy and aggregation at 15.
+  sanitized facilitator evidence. Keep defensive fixtures in the existing
+  automated implementation tests and prepare the hosting skeleton, without
+  learner failure demonstrations. At 15, Workshop Coach creates the
+  participant-specific coordination, contracts, failure policy and aggregation;
+  participants review and explain that code, then test the workflow. Do not
+  plan participant creation of this code-first hosted agent in the Microsoft
+  Foundry portal or ask participants to write it themselves. Creation/deployment
+  stays coach-executed with separate scoped approvals.
 - Check actual specialist release outputs contain the handoff content listed
   at 07/14. Formal schemas still begin at 15; avoid a preventable
   redesign/release loop at the start of the final 90-minute block.
@@ -267,7 +278,7 @@ bypasses.
 |---|---|
 | Repository and optional CI/CD | Agreed writable destination, preserved existing work, verified branch/Actions access, accurate package-vs-code coverage report and separately rehearsed manual promotion if offered |
 | Direct MCP integration | Both specialists' direct public endpoints, exact allowlists, runtime access, participant-selected Playground permission scope, supported same-run continuation and correlated tool execution; verify the reported first-use Auto approve control and its actual persistence/scope before the cohort; SDK/runner native decisions remain separate; no upstream credential connection or Toolbox prerequisite; a saved definition or local discovery is insufficient |
-| Memory | Operation-specific permissions, approved retention/deletion/cost scope, working retrieval and positive/negative isolation evidence; separate Conversations alone do not prove isolation |
+| Memory | Operation-specific permissions, approved retention/deletion/cost scope, working scoped retrieval and verified user/memory mapping; no separate unauthorized-caller exercise or claim that separate Conversations alone prove isolation |
 | Telemetry | Read permission, data/retention/cost agreement and correlated model/tool evidence, plus memory evidence only if configured; missing telemetry is unknown, not zero usage |
 | Release and channels | Version/selector read-back, tested consumer authorization and rollback, CH01 and CH02 evidence with both specialists traced as required |
 | Full participant rehearsal | Fresh participant route through 16 in order, actual Coach discovery, hands-on/teach-back and approval gates, scoped test limits, token capture and failure recovery; no mandatory pricing calculations; time the optional delivery lab separately |
@@ -306,21 +317,21 @@ verifies menus, not model behavior or required participant learning gates.
 |------|----------------------------|
 | Copilot app | Provide access/install instructions and a prepared checkout or committed workshop revision; rehearse `/agent` in a fresh repository session, Workshop Coach discovery and selected-profile start; record dropdown availability separately and test normal Chat fallback only when neither selection route is available |
 | Foundry tooling | Confirm the installed skill/integration or documented SDK fallback; record tested versions |
-| Mixed test routes | Rehearse coach-run B01 followed by participant-run B02, matched instruction comparisons, and the same/fresh Conversation sequence. Verify agent/version selection, browser identity, copy-back evidence, tool approvals, and usage visibility; document client fallbacks without adding duplicate model calls. |
+| Mixed test routes | Rehearse two supported baseline questions, matched instruction comparisons, and two Conversations each given its own destination/interest before a follow-up. Verify agent/version selection, browser identity, copy-back evidence, actual tool decisions and usage visibility; document client fallbacks without duplicate model calls or intentional context gaps. |
 | Portal tracing | Rehearse the dedicated-project Application Insights connection and telemetry-read access using the participant account type. Explain ingestion/storage/retention costs and captured data. The coach checks readiness read-only on the first successful project connection, records missing or unverifiable access, and rechecks before trace exercises. Connection or resource changes require explicit approval; do not assume project access implies telemetry access. |
 | Resource ownership | Ensure each participant can use one dedicated Foundry project: they may create it before the workshop or create it themselves at checkpoint 00. Do not assign project names/endpoints or rely on shared projects. Ask which signed-in Microsoft account the participant wants to use; verify the identity actually used by the coach's Foundry request matches it. Confirm that identity can directly reach the project and has least-privilege permissions for each approved workshop operation; read access alone is insufficient. Participants explicitly approve every resource change and its possible cost. Never request credentials. |
 | Models and tools | Ensure the Microsoft Foundry Model Catalog and project quota are usable; do not provide a model or approved shortlist. Participants choose independently. Be ready to help diagnose availability or quota failures and explain possible cost |
 | Weather MCP | Rehearse the selected public `https://weather.datakoot.com/mcp` service from MCP-SERVICES.md: `weather_forecast` first, then approved geocoding/current/alerts; verify schemas, US coverage, upstream provenance, approval boundaries, and Foundry-side execution |
 | Cultural Travel MCP | Rehearse the selected public `https://mcp.travel.art/` service from MCP-SERVICES.md: `find_museum_guide` first, then the four verified cultural tools; verify catalogue coverage, guide URLs/freshness, approval boundaries, and Foundry-side execution; do not deploy an alternative server |
-| Direct MCP bindings | Rehearse one-tool then four-tool candidates, exact public server URL/label, required schemas and effective allowlists. In the first useful Playground exchange, explain Approve/Deny/Auto approve, let the participant select Auto approve for the permitted scope and correlate the result/trace; no separate specialist denial drill or connectivity exercise. Verify actual control labels/scope before delivery, keeping the 2026-11-17 participant report distinct from independent rehearsal. Omit credentials/project_connection_id; preserve exact SDK/runner decisions and stops. |
+| Direct MCP bindings | Rehearse one-tool candidates through release; retain four-tool expansion for later explicit reintroduction. Verify exact public server URL/label, required schemas and effective allowlists. At creation, Workshop Coach uses always allow and encourages participants to do the same, especially for Microsoft Teams; accept existing settings without later configuration questions. Correlate the result/trace, handling any actual permission request without a separate denial drill or connectivity exercise. Verify control labels/scope before delivery, keeping participant reports distinct from rehearsal. Omit credentials/project_connection_id; preserve exact decisions and stops for actual SDK/runner requests. |
 | Optional ticket capstone | Only for students choosing IT support with writes: provide an authenticated reachable synthetic service, isolation, and approval-compatible operations before implementation |
 | Memory | Verify store creation, update, retrieval, deletion, identity mapping, retention, and rollout support |
 | Skills | Verify create/version/retrieve and the selected prompt-agent delivery strategy; do not assume prompt runtimes load MCP resources |
 | Hosting | Rehearse the current official scaffold, local host, remote deployment, and required runtime |
-| Multi-agent workflow | Rehearse both prompt-agent endpoints, workflow result contracts, Agent Framework instrumentation, nested agent calls, partial/contract failures, itinerary attribution, and hosted trace visibility |
+| Multi-agent workflow | Rehearse both prompt-agent endpoints, workflow result contracts, Agent Framework instrumentation, nested agent calls, a supported itinerary matching traveler preferences, source attribution and hosted traces; retain defensive cases in automated implementation coverage |
 | Release | Verify the current agent object model, version selection, stable endpoint invocation, and downgrade/rollback route |
 | Microsoft Teams/Microsoft 365 Copilot publishing | Rehearse Weather at 07 and the final hosted workflow at 16 in at least one participant-chosen surface each. Verify licensing/access, tenant app policies, current project publishing permissions, approved audience and separate channel identities. Direct publishing uses service-managed bot registration, not a separately created Azure Bot Service resource. Rehearse active-version pinning, actual installation/use, Activity Protocol/hosted adapter or documented service translation, trusted Conversation/memory mapping, tool approval/denial and same-run trace linkage. Test readable source attribution despite native citation/streaming limitations. Record date, exact controls, limitations, registration/cost/data flows and cleanup route. No admin-policy bypass or assumed channel approval support. |
-| Consumer identities | Provide an approved caller and a valid test caller without invocation access; avoid broad inherited roles that invalidate the negative test |
+| Consumer identities | Verify the approved caller's identity/access and reuse the supported consumer invocation as P02 evidence; no second account or dedicated access-denial test |
 | Cleanup | Record ownership and retention requirements; agree how to stop paid resources without deleting shared dependencies |
 
 If a capability is unavailable, publish that limitation before the course.
@@ -351,7 +362,7 @@ deterministic or that this repository enforces access control.
 | Supported runner operation already approved | Executes directly using built-in preflight/read-back; no duplicate manual inspection, repeated approval or one-process-per-case batch fragmentation |
 | Conversation lesson leaves the agent version unchanged | Runs D01/D02 and missing/invalidated regressions, retaining valid B/I evidence only when version, configuration, path, identity and state scope still match |
 | Same unresolved blocker after another reply or resume | Preserves the original troubleshooting budget; does not restart catalog searches or another client without a documented fix/changed relevant context and approved scope |
-| Checkpoint usage reporting | Captures usage locally per operation; shows checkpoint and cumulative Microsoft Foundry model totals once per checkpoint, not per call or unchanged resume; unknown amounts stay unknown and paid-action approvals remain required |
+| Exercise-end token reporting | Captures detailed usage in existing execution evidence; shows one compact token total only after the whole Weather Agent, Cultural Travel Agent or hosted-workflow exercise, never at intermediate checkpoint completions; no input/output or cumulative breakdown, pause/block/resume report or missing-call narrative; partial totals are labeled, unknown amounts stay unknown and paid-action approvals remain required |
 | Paused session or curriculum authoring | Does not launch participant check-ins, resume lessons or edit the paused participant's preferences |
 | Profile selected without a start request | Does not start onboarding or provision resources merely from selection |
 | No visible custom-agent dropdown | Offers documented `/agent` selection in the repository session; does not infer unavailable custom agents from the missing dropdown |
@@ -366,22 +377,26 @@ deterministic or that this repository enforces access control.
 | Workflow channel milestone | Publishes the hosted workflow, not two worker bots; a channel request produces the itinerary and correlated traces prove both released specialist invocations, validation and aggregation |
 | Publication blocked by tenant policy, permissions or adapter/approval support | Preserves endpoint passes but blocks CH01/CH02 and its checkpoint; no org-wide scope switch, role broadening, approval bypass, skipped gate or claimed completion |
 | Returning v8/v9 participant | Asks before v10 migration; preserves attempts, preferences, resources and valid evidence; separately approves changed direct bindings and invalidates affected path evidence only; keeps channel gates at 07/16 |
-| First Weather MCP connection | Explains free public test-service limits; attaches the Weather URL directly at 04 with only weather_forecast and approval always; participant sends the useful forecast prompt, learns the permission choices at first use and selects Auto approve for the displayed permitted scope, then inspects actual forecast evidence; no separate connectivity or denial exercise |
-| Cultural first-tool lesson | Reapplies the direct binding pattern with travel.art and only find_museum_guide; gives a short first-use permission reminder, participant selects Auto approve for the displayed permitted Cultural-tool scope, then reviews actual guide evidence without changing Weather or repeating a denial drill |
-| Playground Auto approve is selected | Records the observed scope and execution without claiming persistence or permission through SDK/runner, endpoint, hosted-workflow or channel routes; does not change require_approval to never or auto-submit a pending runner continuation |
-| Weather first release | Verifies the final direct binding/allowlist from 04/05 before its final suite/P01-P03; no planned Toolbox creation or migration |
+| First Weather MCP connection | Explains free public test-service limits; for a new coach-created direct tool uses only weather_forecast and always allow (`require_approval: "never"`); encourages participants to choose the same at creation, especially for Microsoft Teams; preserves existing settings without later questions or corrections; handles actual native requests if emitted, and preserves portal inspection and forecast trace evidence without a duplicate demonstration |
+| Cultural first-tool lesson | Reapplies the direct binding pattern with travel.art and only find_museum_guide; offers both execution choices, gives a short native-permission reminder for the selected route and waits for the participant's actual decision, then reviews actual guide evidence without changing Weather or repeating a denial drill |
+| A direct tool has already been created | Accepts its supported approval setting without asking about it again, instructing a portal edit, creating a corrective version or changing routing for that reason; records policy internally, verifies execution and decides only actual pending requests; a Playground choice does not prove cross-path persistence |
+| Weather first release | Verifies the forecast-only direct binding/allowlist and supported final-path results/P01-P03, reusing valid evidence; no isolated failure exercise, skill/memory prerequisite, planned Toolbox creation or migration |
+| Participant creates the next capability | Tests a valid supported result, then continues; no malformed-input, unsupported-location, outage, timeout or deliberate denial exercise; real errors are resolved within scope without fabricating a pass |
 | Final specialist handoff | Verifies unchanged Weather release/dependency metadata and reuses valid 07 evidence; runs Cultural's final-path tests and the required two-agent comparison, without a planned Weather migration/re-release |
-| Public server advertises additional tools | Verifies only the agent's approved one/four tools are callable; does not claim the server hides unselected schemas or treat instructions as access control |
-| Direct runtime access or native approval is unavailable | Names the blocker, retains release/evidence and offers facilitator help or an explicitly incomplete partial route; no role broadening, alternate runtime or approval bypass |
+| Public server advertises additional tools | Verifies only the agent's single approved tool is callable on the default route; expanded candidates retain their applicable checks; does not claim the server hides unselected schemas or treat instructions as access control |
+| Default route reaches 05/06 or 12/13 | Defers skill expansion and memory without awarding passes or asking another skip question; continues 04 -> 07 or 11 -> 14 only during active coaching, leaving a paused participant paused and local skill drafts unapplied |
+| Direct runtime access or a required pending-request continuation is unavailable | Names that specific blocker, retains release/evidence and offers facilitator help or an explicitly incomplete partial route; automatic approval or a missing permission card under that policy is not a blocker; no role broadening, alternate runtime or fabricated decision |
 | Returning older direct-MCP participant | Asks before v10 migration and reuses only exact matching configuration/path/scope evidence; endpoint-only passes do not award CH01/CH02 |
 | Reference-only MCP attachment | Rejects an ordinary MCP definition missing its routing field before any write; never treats project_connection_id as a server_url replacement |
 | Saved tool but empty portal panel | Records the discrepancy without claiming success or runtime failure; separates connection creation, discovery, saved binding, rendering and actual execution; no speculative version loop |
 | Five-to-six-hour session | Uses the 350-minute core agenda with channel prerequisites prepared, protects workflow time, and leaves the capstone as a separate optional extension; never promises a measured duration or ignores tenant approval delays |
 | Agent 2 repeats a learned concept | Uses a short reminder and explains domain differences; provides the same MCP support and independent test evidence without repeating the full lesson or trace tour |
 | Learner already demonstrated understanding | Records that explanation for the checkpoint; does not add another quiz after every test or UI action |
+| Checkpoint passes | Gives its evidence-based close and introduces the next required checkpoint without a routine continue/pause question; still waits for required input, learning evidence and scoped/native approvals, and retains explicit optional-work choices |
+| Participant explicitly pauses or reaches an agreed stop | Stops coaching and cloud work until explicit resume; changing the default pacing does not restart a paused participant |
 | Routine approved prompt operation | Uses the shared helper when supported, rather than writing another client; executes within scope, saves actual linkage/usage, and shows grouped meaningful results |
 | Instruction comparison after baseline | Reuses the saved before-side exchange on its original route and sends each after-side input once; no extra calls to balance the route ratio |
-| Release with four tools and memory | Uses C01R/C02R and clean-scope D variants; does not shrink the allowlist or disable memory to repeat an earlier configuration |
+| Existing release with four tools, skills or memory | Keeps applicable T02/S/M and clean-scope D variants; does not shrink the allowlist or disable configured capabilities to fit the default deferred route |
 | Participant remains on a verified screen | Gives the exact next control/resource/version and expected result, not a full repeated menu tour or confirmation after every click |
 | Portal test selected version differs from returned version | Preserves the mismatch, blocks that candidate's case, and retrieves the same run within scope; no guessed linkage or automatic replacement request |
 | Advance readiness requested | Checks offline tools first, then only participant-approved account/project read-only scope; no cloud writes, sign-in switch or paid probes |
@@ -389,7 +404,7 @@ deterministic or that this repository enforces access control.
 | Troubleshooting reaches five minutes or two recovery attempts | Saves the blocker and involves facilitator/pause; no unrequested deep investigation, skipped gate, or fabricated completion |
 | Either specialist reaches its first MCP lesson | Coach reads MCP-SERVICES.md, provides the exact selected public endpoint and actual tool inputs, explains/gets approval/configures/reads back/tests/inspects with the same support for both agents; never asks the beginner to research URLs, obtain keys, or host a server |
 | Cultural coach says connection information is missing | Checks the supplied travel.art endpoint and current schemas; reports a specific discovery, local-tooling, or Foundry blocker rather than asking for unspecified facilitator infrastructure |
-| Cultural skill asks for an example-only tool name | Uses actual travel.art tools; reports absent accessibility data honestly instead of inventing get_accessibility_notes or get_cultural_guidance |
+| Retained Cultural skill is explicitly reintroduced and asks for an example-only tool name | Uses actual travel.art tools; reports absent accessibility data honestly instead of inventing get_accessibility_notes or get_cultural_guidance |
 | Shared workflow trip | Uses a destination supported by both services, such as New York, with dates within the observed forecast horizon; invokes both independent releases and retains domain-specific provenance |
 | "Explain, don't edit" | Reads and explains without changing files or resources |
 | "Show another way" | Explains one useful alternative; does not execute both automatically |
@@ -417,8 +432,8 @@ deterministic or that this repository enforces access control.
 | Corrupt progress JSON | Reports the error and asks to recover; does not overwrite it |
 | Older curriculum progress | Detects curriculum version mismatch; preserves attempts and asks to migrate; no numeric pass remapping |
 | Instructions changed after release | Retains historical attempts, invalidates affected gates, re-runs tests |
-| Missing memory/skills preview | Deferred memory does not block the default route; missing required skills support blocks its affected milestone |
-| Prompt skills unsupported dynamically | Labels versioned static composition accurately; reserves runtime loading for hosted |
+| Missing memory/skills preview | Neither deferred capability blocks the default one-tool route; required support must be verified before an explicitly approved reintroduction |
+| Prompt skills explicitly reintroduced but unsupported dynamically | Labels versioned static composition accurately; reserves runtime loading for hosted |
 | Candidate fails a release test | Keeps it outside Stable Agent Endpoint routing or hosted deployment; fixes and retests rather than deploying a known failure |
 | "Edit the workshop README" | Performs repository maintenance without starting a student lesson |
 | Cleanup request | Lists exact owned targets, asks for approval, leaves shared resources untouched |
@@ -448,11 +463,12 @@ dead-end status summary.
 ## Reviewing student evidence
 
 Ask the student to demonstrate the baseline, instruction change, conversation
-isolation, both specialist MCP integrations and
-skill-guided tool routing, independent state boundaries, workflow result
+isolation, both specialist one-tool MCP integrations,
+independent state boundaries, workflow result
 contracts, hosted multi-agent workflow execution and traces, and each stable
 endpoint. Include a declined action for capstones with writes.
-Memory recall/isolation/correction/deletion is required only for a separately
+Skills/routing and T02/S01/S02 apply only when explicitly reintroduced or already
+configured. Memory recall/isolation/correction/deletion is required only for a separately
 reintroduced or already configured memory capability, not the deferred route.
 Ask them to explain prompt versus hosted responsibilities, rollback, and when
 they used different Copilot app approaches.

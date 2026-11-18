@@ -78,6 +78,20 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(self.client.responses.create.call_count, 1)
         self.assertEqual(self.record["state"], "awaiting_separate_tool_approval")
 
+    def test_version_readback_accepts_equivalent_policy_filters_but_not_policy_changes(self):
+        config = copy.deepcopy(CONFIG)
+        config["definition"]["tools"] = [{
+            "type": "mcp", "allowed_tools": ["weather_forecast"], "require_approval": "never",
+        }]
+        observed = copy.deepcopy(config["definition"])
+        observed["tools"][0]["allowed_tools"] = {"tool_names": ["weather_forecast"]}
+        observed["tools"][0]["require_approval"] = {"never": {"tool_names": ["weather_forecast"]}}
+        self.project.agents.get_version.return_value.definition.as_dict.return_value = observed
+        runner.verify_version(self.project, self.plan, config)
+        observed["tools"][0]["require_approval"] = "always"
+        with self.assertRaisesRegex(ValueError, "Pinned version differs"):
+            runner.verify_version(self.project, self.plan, config)
+
     def test_cli_compacts_output_without_mutating_full_evidence_or_approval_scope(self):
         approval = {
             "type": "mcp_approval_request", "id": "mcpr_test", "server_label": "weather",
@@ -785,7 +799,7 @@ class PlanTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             runner.local_path("../outside.json", "student")
 
-    def test_tool_config_needs_storage_and_cannot_bypass_approval(self):
+    def test_tool_config_needs_storage_and_preserves_supported_approval_policies(self):
         config = copy.deepcopy(CONFIG)
         config["definition"]["tools"] = [{
             "type": "mcp", "server_label": "weather_intelligence",
@@ -797,11 +811,29 @@ class PlanTests(unittest.TestCase):
             self.load()
         for case in self.plan["cases"]:
             case["store"] = True
-        self.load()
-        config["definition"]["tools"][0]["require_approval"] = "never"
-        (self.root / "student" / "agent.json").write_text(json.dumps(config), encoding="utf-8")
-        with self.assertRaisesRegex(ValueError, "approval always"):
-            self.load()
+        for policy in ("always", "never", {"never": {"tool_names": ["weather_forecast"]}},
+                       {"always": {"read_only": False}, "never": {"read_only": True}}, None):
+            with self.subTest(policy=policy):
+                config["definition"]["tools"][0]["require_approval"] = policy
+                (self.root / "student" / "agent.json").write_text(json.dumps(config), encoding="utf-8")
+                observed = self.load()[1]
+                self.assertEqual(observed["definition"]["tools"][0]["require_approval"], policy)
+
+    def test_invalid_approval_filters_are_rejected(self):
+        config = copy.deepcopy(CONFIG)
+        config["definition"]["tools"] = [{
+            "type": "mcp", "server_label": "weather_intelligence",
+            "server_url": "https://weather.datakoot.com/mcp",
+            "allowed_tools": ["weather_forecast"],
+        }]
+        for policy in ("sometimes", False, {}, {"skip": {}}, {"never": True},
+                       {"never": {"tool_names": "weather_forecast"}},
+                       {"never": {"read_only": "yes"}}):
+            with self.subTest(policy=policy):
+                config["definition"]["tools"][0]["require_approval"] = policy
+                (self.root / "student" / "agent.json").write_text(json.dumps(config), encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "approval"):
+                    self.load()
 
     def test_existing_attempt_refused_before_any_cloud_call(self):
         folder = self.root / ".workshop" / "evidence"

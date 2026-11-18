@@ -55,8 +55,9 @@ An optional advance readiness session checks installed tools and, after you
 confirm your account/project and agree to read-only checks, access and later
 lesson prerequisites. It does not build your agents, send paid test prompts
 or authorize resource changes. The live workshop still confirms your account
-and exact project. Persistent memory is temporarily deferred and needs no
-advance setup. Flag missing skills, release or hosting support early rather
+and exact project. Student agent skills/multi-tool expansion and persistent
+memory are temporarily deferred and need no advance setup. Keep one tool per
+specialist; retain the lessons for later approved reintroduction. Flag missing release or hosting support early rather
 than discovering it near the end.
 
 ## 2. Prepare your Microsoft account and Azure access
@@ -137,7 +138,7 @@ handling commitments, separately from Microsoft Foundry. Agree on this flow
 and any channel costs before publishing. Private-network projects need a
 separately approved, rehearsed supported route; do not relax security settings.
 See [publication readiness and steps](PUBLISHING.md#required-channel-publication-at-07-and-16).
-A missing required channel/runtime or tool-approval capability leaves the
+A missing required channel/runtime or capability to handle an actual pending tool request leaves the
 affected checkpoint blocked, not passed with a screenshot or endpoint-only test.
 No agents need to be published in advance.
 

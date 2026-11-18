@@ -6,7 +6,7 @@ The helper implements the established explicit-Azure-CLI-credential fallback
 for ordinary prompt agents. It does not configure hosted agents, memory,
 consumer endpoints, telemetry, or role assignments.
 Its public direct-MCP definitions support the v10 core's selected Weather and
-travel.art servers, explicit allowlists and approval-always policy. Follow
+travel.art servers, explicit allowlists and existing supported approval policies. Follow
 [Direct MCP connections](../MCP-CONNECTIONS.md) for the corresponding T01-T03
 evidence and participant inspection. The helper does **not** register project
 connections, manage Toolboxes, accept authenticated connection-backed MCP
@@ -19,8 +19,16 @@ a project-client response is not a channel test.
 The [first-use Playground flow](../APP-GUIDE.md#first-tool-use-in-the-playground)
 lets the participant select the portal's reported **Auto approve** option for
 the displayed permitted-tool scope. It does not configure this SDK client.
-Do not infer `require_approval: "never"` or auto-submit a pending continuation;
-the helper retains its approval-always validation and exact human decisions.
+No particular `require_approval` value is required: `"always"`, `"never"`,
+supported per-tool filters and an omitted policy are accepted without rewriting
+the configuration. When Workshop Coach creates a direct tool, use always allow
+(`"never"`); encourage the participant to choose the same at creation, especially
+for Microsoft Teams. Do not ask about its configuration again or require a
+corrective version. A portal choice alone is not
+proof of a saved policy or permission on another route. The helper does not
+auto-submit pending continuations; each actual request needs its exact human
+decision. Under automatic execution, retain the actual tool call/result without
+inventing an approval request.
 
 ## Prepare before the cohort
 
@@ -83,7 +91,7 @@ Required common fields:
 | `required_permissions` | Nonempty list of `{ "kind": "actions" or "dataActions", "operation": "exact operation name" }`; discover the correct current permission names using supported guidance before presenting the plan |
 | `authorization_policy` | Defaults to `operation-specific`. Set `foundry-user-data-access` explicitly for managed Conversation creation or runs using a Conversation ID; this additionally verifies the documented broad project data grant, not guessed Conversation operation names |
 | `agent_name`, `agent_version` | Exact target and immutable version; version omitted only for creation |
-| `configuration` | Reviewed JSON file under `student/`, with `name` and `definition`; only ordinary prompt agents and the selected public MCP services, always approval |
+| `configuration` | Reviewed JSON file under `student/`, with `name` and `definition`; only ordinary prompt agents and the selected public MCP services, retaining the configured approval policy |
 
 | Operation | Additional fields and boundary |
 |-----------|--------------------------------|
@@ -202,8 +210,9 @@ Evidence is written exclusively to `.workshop/evidence/<run_id>.json`, with
 pending markers **before** a write or paid request. Responses are saved before
 linkage/behavior judgement. The helper does not mark checkpoints passed, edit
 participant progress, change model choice, or calculate a guessed price.
-Usage absent from a response stays `null`. Use response IDs to deduplicate the
-chat's running token totals. Only an explicitly requested optional monetary
+Usage absent from a response stays `null`. Use response IDs to deduplicate
+recorded usage for the coach's [exercise-end token total](../COACH.md#checkpoint-usage-summaries);
+do not display running totals. Only an explicitly requested optional monetary
 estimate needs separately verified matching rates; routine coaching does not.
 The coach uses chat history for participant input and progress, without routine
 `progress.json` reads/writes. This does not remove the helper's execution

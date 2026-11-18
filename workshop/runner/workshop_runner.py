@@ -67,6 +67,15 @@ def normalized(definition):
         if isinstance(allowed, dict):
             require(set(allowed) == {"tool_names"}, "Unexpected allowlist fields")
             tool["allowed_tools"] = allowed["tool_names"]
+        allowed = tool.get("allowed_tools")
+        policy = tool.get("require_approval")
+        if isinstance(policy, dict) and len(policy) == 1:
+            mode, selection = next(iter(policy.items()))
+            if (mode in ("always", "never") and isinstance(selection, dict)
+                    and set(selection) == {"tool_names"}
+                    and isinstance(selection["tool_names"], list) and isinstance(allowed, list)
+                    and sorted(selection["tool_names"]) == sorted(allowed)):
+                tool["require_approval"] = mode
     return value
 
 
@@ -111,10 +120,23 @@ def load_plan(path):
     require(config["definition"]["kind"] == "prompt", "Only ordinary prompt agents are supported")
     for tool in config["definition"].get("tools", []):
         require(
-            tool.get("type") == "mcp" and tool.get("require_approval") == "always"
-            and tool.get("allowed_tools"),
-            "Runner supports only explicit MCP allowlists with approval always",
+            tool.get("type") == "mcp" and tool.get("allowed_tools"),
+            "Runner supports only explicit MCP allowlists",
         )
+        policy = tool.get("require_approval")
+        require(policy is None or policy in ("always", "never") or isinstance(policy, dict),
+                "Unsupported MCP approval policy")
+        if isinstance(policy, dict):
+            require(bool(policy) and set(policy) <= {"always", "never"}, "Invalid MCP approval filters")
+            for selection in policy.values():
+                require(isinstance(selection, dict) and set(selection) <= {"tool_names", "read_only"},
+                        "Invalid MCP approval filter")
+                if "tool_names" in selection:
+                    require(isinstance(selection["tool_names"], list)
+                            and all(isinstance(name, str) and name for name in selection["tool_names"]),
+                            "MCP approval tool_names must be a list of tool names")
+                if "read_only" in selection:
+                    require(type(selection["read_only"]) is bool, "MCP approval read_only must be boolean")
         require(not any(tool.get(key) for key in ("authorization", "headers", "project_connection_id")),
                 "Do not put credentials or authenticated connections in these public-service plans")
         require(tool["server_url"] in ("https://weather.datakoot.com/mcp", "https://mcp.travel.art/"),

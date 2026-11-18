@@ -18,8 +18,8 @@ The GitHub Copilot app is the coaching application, not this distribution target
 
 Follow [Direct MCP connections](MCP-CONNECTIONS.md). Record each direct server
 URL/label, actual upstream names, effective allowlist and native approval
-policy alongside the agent/skill versions.
-At 07 verify Weather's binding from 04/05 before the required final-path
+policy alongside the agent and any configured skill versions.
+At 07 verify Weather's binding from 04 before the required final-path
 regressions and P01-P03. At 14 Cultural has its own direct binding and
 independent final-path tests; verify Weather's unchanged release/dependencies
 and reuse valid evidence rather than repeating its full suite. Require T03.
@@ -30,11 +30,18 @@ Verify actual **managed-agent runtime execution**, not just a developer's
 local discovery. Both selected upstream services are anonymous; do not
 create Toolbox authentication connections or send them Microsoft Foundry
 tokens. Microsoft Foundry consumer and channel authorization remain required.
-Keep native human approval observable for the actual tool/arguments.
-Do not copy examples that disable approval. If runtime access or approval
-cannot be verified on the release/channel path, block the affected gate.
+Accept the existing supported tool-approval policy; no particular value is
+required for release or publishing. The always-allow recommendation belongs
+at tool creation, not another release or channel question. Do not instruct
+post-creation approval edits or create corrective candidates for the policy.
+Record the actual policy internally and verify runtime behavior on this path.
+If it emits permission requests,
+preserve exact human decisions and continuations. If it executes automatically,
+verify the tool result without requiring a permission card or denial drill.
+Unresolved actual requests or missing runtime evidence block the affected gate,
+not the policy value itself.
 
-Pin the tested agent and skill versions and retain the exact bindings.
+Pin the tested agent and any configured skill versions and retain the exact bindings.
 Agent rollback restores that definition, not an external provider's service
 implementation; revalidate affected behavior after upstream changes.
 Review affected consumers before changes and obtain separate approval for
@@ -60,14 +67,17 @@ agent endpoint.
 
 ## Release one fully tested version
 
-Apply the [temporary memory deferral](README.md#temporary-memory-deferral).
-For the default memory-free candidates, memory stores, M tests and post-memory
-D variants are not release or channel prerequisites. Keep ordinary Conversation
-and identity isolation checks. Memory references below apply only when memory
-is actually configured; never silently disable existing memory to avoid checks.
+Apply the [skills deferral](README.md#temporary-skills-and-multi-tool-deferral)
+and [memory deferral](README.md#temporary-memory-deferral).
+The default route keeps only Weather `weather_forecast` and Cultural
+`find_museum_guide`. T02/S01/S02, memory stores, M tests and post-memory D
+variants are not release or channel prerequisites. Keep ordinary Conversation,
+identity/state-scope evidence and supported single-tool result checks. Skill and memory
+references below apply only when configured; never remove existing capabilities
+or shrink an expanded allowlist to avoid applicable checks.
 
 1. **Review the candidate.** Run every required pre-release test. Record agent name/version, instructions, model,
-   tools/allowlist, memory store/scoping if configured, skill version/delivery strategy, and
+   tools/allowlist, memory store/scoping and skill version/delivery strategy if configured, and
    the passing test evidence. For a hosted update, identify the current
    known-good running deployment and the separately tested candidate source/
    configuration revision.
@@ -85,9 +95,9 @@ is actually configured; never silently disable existing memory to avoid checks.
    consumer access, cost, and rollback target. Obtain approval before making
    changes. If the endpoint already selects the tested version, verify it
    rather than creating duplicate release resources.
-4. **Configure least-privilege access.** Confirm the consumer identity can
+4. **Verify least-privilege access.** Confirm the consumer identity can
    invoke the endpoint and the agent identity can access downstream tools,
-   configured memory, and skills. Developer credentials succeeding locally do not prove
+   any configured memory and skills. Developer credentials succeeding locally do not prove
    the deployed identity has permission. Use current role/permission guidance;
    do not substitute an owner role for diagnosis.
 5. **Invoke as a consumer.** Use a separate client configured for the returned
@@ -105,9 +115,17 @@ record those assertions separately, not duplicate model calls. Project-path
 results are not consumer-path passes. Keep model usage/cost and unavailable
 usage clearly labeled. Helpers do not approve operations or grade results.
 
+Reuse the successful approved-consumer invocation and its verified caller,
+endpoint/version and access metadata for P02. This is shared access evidence,
+not a separate exercise: do not ask for a second account, provision another
+identity or run an additional access-denial request for workshop completion.
+Authorized success does not demonstrate unauthorized-caller denial or
+cross-user isolation. Keep the separately required Conversation, isolation,
+downstream-access and channel evidence.
+
 For the Weather Research Agent, verify its managed conversation behavior,
 Weather MCP server and forecast tool connection, instructions,
-evidence-aware weather output and skill-guided tool behavior through the released
+evidence-aware weather output and permitted forecast-tool behavior through the released
 endpoint. It does not rely on a
 local custom-function executor or client-side workflow.
 
@@ -118,17 +136,19 @@ routing change or repeat publication.
 
 At checkpoint 14, release the Cultural Travel Agent through its own stable
 endpoint. Verify its instructions, conversation isolation, selected travel.art MCP,
-skill-guided multi-tool behavior, and memory only if configured. Record both specialist versions
+museum-guide tool behavior, and skills/memory only if configured. Record both specialist versions
 and prove neither claims the other's
 tools or evidence domain.
 
 ## Hosted update and rollback
 
-For the participant, keep the flow explicit: **create the workflow, deploy
-and test it in Microsoft Foundry, then connect/publish and test that same
-workflow in the chosen destination**. Deployment to Microsoft Foundry precedes
-Playground testing; destination publication is a separate approved operation,
-not another implementation of the workflow.
+For the participant, keep the flow explicit: **Workshop Coach creates and
+deploys the approved code-first hosted workflow; the participant reviews its
+code and tests the deployed agent in Microsoft Foundry; then connect/publish
+and test that same workflow in the chosen destination**. This is not a
+participant portal-creation or manual workflow-writing step. Deployment to
+Microsoft Foundry precedes Playground testing; destination publication is a
+separate approved operation, not another implementation of the workflow.
 
 At checkpoint 16, first pass the same release checks for the hosted workflow.
 Then make one small visible instruction change as a separate candidate version,
@@ -170,11 +190,15 @@ new baseline explicitly rather than comparing unlike cases.
 
 | Playground assertion | Required destination evidence |
 |----------------------|-------------------------------|
-| W01/W04 successful trip | Same workflow invokes both pinned specialists, with separate human decisions and completed native tool calls; final sourced output and uncertainty agree with actual evidence |
-| W04 denial | The exact denied tool does not execute; the reply explicitly reports denied/partial evidence without fabrication |
-| W02/W03 validation and failure policy | Matching controlled failures, invalid results, ambiguity and timeout/authorization scenarios preserve the same documented outcome; use a rehearsed isolated harness where needed, never break shared services |
-| Approval/state boundaries | No automatic approval, stale-card replay, cross-user decision or substituted inner ID; caller and Conversation mapping remain trusted across the destination route |
+| W01/W03/W04 supported trip | Same workflow invokes both pinned specialists under their saved approval policies; both results validate and shape a sourced itinerary matching valid traveler preferences; any actual permission decisions and completed native tool calls correlate; automatic execution requires no cards |
+| Approval/state boundaries | Saved automatic approval is respected; no fabricated decision, unsolicited continuation, stale-card replay, cross-user decision or substituted inner ID; caller and Conversation mapping remain trusted across the destination route |
 | Final result consistency | A completed answer cannot claim approval is pending; invalid or contradictory evidence fails explicitly, without silent rewriting or model retries |
+
+Use valid supported requests to test what was built. Do not require injected
+failures, malformed results, timeouts, unauthorized callers or deliberate tool
+denials through any destination. Existing automated defensive coverage is not
+a participant/channel exercise. Respect actual declines and resolve real errors
+without presenting an incomplete result as a successful trip.
 
 Record each case's baseline and destination run IDs, actual replies, native
 approval/execution evidence, version, route and available usage. Responses
@@ -183,9 +207,9 @@ other interface affordances may differ, but human decision control, readable
 sources and result semantics must not be reduced.
 
 Reuse a destination exchange for matching W and CH02 assertions rather than
-duplicating it for labels. Do not equate P02 access checks through an endpoint
-with destination-specific access checks. If a failure cannot be exercised
-safely or a required approval cannot be represented, leave that assertion
+duplicating it for labels. Endpoint access evidence does not replace the
+destination-specific caller/access evidence required by CH01/CH02. If a
+supported trip or an actual required approval cannot be represented, leave that assertion
 blocked; do not silently replace it with an unrelated API-only test.
 
 ### Microsoft Copilot Studio integration
@@ -215,9 +239,10 @@ authorization rather than replacing their collections.
 
 Test from that Microsoft Copilot Studio agent, not directly from Microsoft
 Foundry, against the parity plan above. Verify which supported control presents
-each native human tool decision; an orchestrator choosing to call the workflow
-is not approval for its Weather or Cultural tool. Missing native decision or
-resume support blocks the integration; do not substitute prose consent.
+each requested native human tool decision; an orchestrator choosing to call the workflow
+is not approval for a pending Weather or Cultural request. Missing native
+decision/resume support blocks the integration only if the saved policy
+requests it; automatic approval is not a blocker. Do not substitute prose consent.
 
 A passing Microsoft Copilot Studio test pane proves that integration path,
 not Microsoft Teams/Microsoft 365 Copilot publication. Publish and rerun the
@@ -271,7 +296,7 @@ Direct publishing does not require creating a separate Azure Bot Service
 resource. Publication enables the activity protocol and changes channel
 authorization. It does not replace the tested specialist or workflow.
 Verify that the hosted runtime or a documented service translation supports
-the required channel contract and native approval continuation; enabling a
+the required channel contract and any needed native approval continuation; enabling a
 protocol in metadata alone does not establish that behavior.
 
 Before any publishing write, verify the selected Azure CLI sign-in and actual
@@ -295,8 +320,9 @@ Check these prerequisites without creating a throwaway resource:
   workflow, rehearse the compatible hosted adapter and channel approvals, not
   just the prompt-agent publishing screen.
 - Consumer authorization, trusted user/Conversation/memory mapping, downstream
-  runtime access and effective per-call tool approval/denial through this path.
-  Do not disable approvals or share one user's memory to make the channel work.
+  runtime access and behavior matching the saved approval policy through this path.
+  Require decisions/denial handling only when permission is requested. Do not
+  silently change the policy or share one user's memory to make the channel work.
   If the channel/runtime cannot support these requirements, block the milestone.
 - Network and data-governance requirements. Publishing sends metadata and
   messages through Microsoft 365 services with their own processing, storage

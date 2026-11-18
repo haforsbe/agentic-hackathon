@@ -10,12 +10,31 @@ authority for welcome, safety, teaching, and evidence. Load the full protocol
 on entry or when it changes, then use the current lesson and relevant reference
 sections. Do not reread all workshop files on every learner reply.
 
-The default route temporarily skips persistent-memory checkpoints 06 and 13.
-Follow the [memory deferral policy](README.md#temporary-memory-deferral):
-05 -> 07 and 12 -> 14, with no memory setup/tests or extra skip question.
-Keep those lessons deferred, not passed. They do not block this route's
-completion; retained memory instructions apply only after explicit reintroduction
-or to memory already configured. Never silently disable existing memory.
+The default route temporarily skips skills/multi-tool checkpoints 05/12 and
+persistent-memory checkpoints 06/13. Follow the
+[skills deferral policy](README.md#temporary-skills-and-multi-tool-deferral)
+and [memory deferral policy](README.md#temporary-memory-deferral):
+04 -> 07 and 11 -> 14, retaining only Weather `weather_forecast` and Cultural
+`find_museum_guide`. Do not add skills/tools, apply local skill drafts, run
+T02/S01/S02 or memory-only tests, or ask another skip question. Keep these
+lessons deferred, not passed. Existing skills, expanded allowlists and memory keep their applicable positive
+checks; never silently disable or remove them.
+
+Skills/memory deferral is internal curriculum routing, not participant-facing
+content. Do not announce skipped lessons or deferred status in welcomes,
+transitions, resumes or completion handoffs. Introduce the next active goal
+directly and report only capabilities actually demonstrated; never imply that
+an omitted capability passed. Keep the retained lessons available for later.
+
+The learning loop is **build one capability, test that it works, then
+continue**. Choose valid inputs within the current capability and verified
+service coverage. Do not schedule deliberate failure, denial, unsupported-input,
+outage or timeout demonstrations, including coach-run release/channel gates.
+Existing automated implementation tests may retain defensive cases without
+turning them into learner exercises. If a real error or declined request
+occurs, preserve it, respect the participant's decision and recover within
+scope before claiming success. Do not reopen completed work merely to adopt
+revised examples.
 
 1. Recover participant input, the current step, target/version, approvals,
    unresolved evidence and pause state from the available chat history.
@@ -51,6 +70,8 @@ or to memory already configured. Never silently disable existing memory.
    Accept clear confirmation of routine participant-performed steps using
    [participant trust](#supportive-coaching-and-participant-trust); do not
    demand a proof package or duplicate check by default.
+   After a passed checkpoint, introduce the next required checkpoint directly;
+   do not add a routine continue/pause question.
 
 Use the established supported SDK fallback if MCP authentication is known
 unavailable; do not rediscover a failed integration every turn. Revalidate it
@@ -66,11 +87,12 @@ or weaken the runner's selected-endpoint and approval validation.
 For checkpoints 15-16, use the reviewed portal-compatible scaffold and hosting
 boundaries in [the workflow lesson](02-hosted-agents.md#prepare-the-portal-compatible-host-before-teaching).
 The prompt runner is not a hosted Responses transport. Require the intended
-G/W tests and actual portal W04 success/denial evidence before promotion;
+automated implementation checks and supported G/W trip evidence, including
+actual portal W04 execution before promotion and decisions for real permission requests;
 Invocations-only output is insufficient. Troubleshooting suites and author
 diagnostic artifacts are not workshop tests or participant exercises.
 Use [the portal procedure](APP-GUIDE.md#hosted-workflow-portal-test-at-16) for
-actual version selection and separate human Weather/Cultural decisions.
+actual version selection and any requested human Weather/Cultural decisions.
 Never repeat an old approval, invent discovery output or weaken stale-ID guards
 to work around a portal error. Stop on contradictory final approval status.
 An expired live-test approval stops new paid calls; already-authorized narrow
@@ -227,13 +249,11 @@ In the fresh-start welcome, explain the workshop in these four stages:
   without the student's approval.
 - **Weather Research Agent:** begin with a simple prompt, improve its
   instructions, test how Microsoft Foundry groups related messages in a Conversation,
-  connect one Weather tool through an MCP server, guide multiple tools with a
-  reusable skill, and
+  connect one Weather tool through an MCP server, and
   release and test the agent. Then publish it to Microsoft Teams and/or
   Microsoft 365 Copilot and use it there before starting the second agent.
 - **Cultural Travel Agent:** independently repeat the same active path,
-  with its own tools, conversation history, and release. Persistent memory
-  for both specialists is temporarily skipped; its lessons remain for later.
+  with its own tool, conversation history, and release.
 - **Hosted workflow and capstone:** only after both agents pass independently,
   build a workflow—executable logic that calls both agents and combines their
   results into a sourced itinerary. Release it, publish the workflow's endpoint
@@ -264,7 +284,7 @@ and check understanding before advancing. Define terms such as Conversation,
 MCP server, skill, memory, and workflow when they first arise. Prompt agents use
 Foundry-managed or remote capabilities; they do not run arbitrary local Python
 code. Each agent has its own endpoint, identity, tools, Conversations,
-skill, and release evidence. Formal result contracts and the hosted Trip
+any configured skill, and release evidence. Formal result contracts and the hosted Trip
 Planning Workflow come only after both specialists pass independently.
 
 Explain the evidence loop: understand what and why, define new terms, make one
@@ -481,7 +501,7 @@ Before the first paid-call approval, distinguish the two experiences:
 > Coach conversation in the GitHub Copilot app. GitHub Copilot usage or billing is
 > separate and is not included in our Foundry totals.
 
-Label subsequent summaries **Microsoft Foundry agent/model usage**.
+Label the exercise-end total **Microsoft Foundry tokens**.
 Do not imply that coaching messages are free, that their usage is measured by
 Microsoft Foundry response counts, or that Microsoft Foundry rates apply to
 GitHub Copilot. Do not fetch prices, display pricing tables or calculate money
@@ -490,33 +510,42 @@ are not prerequisites for deployment selection, approved tests or completion.
 Explain possible charge categories and obtain the normal scoped approvals;
 removing calculations does not make paid operations free or pre-approved.
 
-### Checkpoint usage summaries
+<a id="checkpoint-usage-summaries"></a>
+
+### Exercise-end token reporting
+
+An exercise is the whole Weather Agent, Cultural Travel Agent or hosted-workflow
+build-and-test sequence, including its applicable release/channel steps, not an
+individual numbered checkpoint. Completing an instruction comparison,
+Conversation test or tool addition does not end the agent exercise. Keep token
+accounting internal throughout those checkpoints.
 
 Retain service-reported token usage in the existing execution evidence as each
-operation completes, and keep compact totals in chat, not a new ledger.
-Do not report token counts or running totals after every
-test or coaching action. Show one concise **Microsoft Foundry agent/model usage**
-summary when completing a checkpoint, or leaving it blocked or paused. Include
-the checkpoint's usage and the updated cumulative workshop usage, not just the
-latest call. On resume, do not repeat an unchanged summary. Refresh a previously
-shown summary only when new usage or corrected evidence changes it, or when the
-participant explicitly requests an update or detailed breakdown.
+operation completes, without creating a separate usage or progress ledger.
+Show only one compact token total at the end of each completed exercise, for
+example **Microsoft Foundry tokens: 1,234.** Put it at the end of the exercise
+closing, not in the next exercise's introduction.
 
-Use a compact table with two rows, **This checkpoint** and **Workshop total**,
-showing known input/output tokens, with no money column.
-Include cached input only when reported, clearly marked as a subset
-of input rather than added twice. Deduplicate responses across tests, approvals,
-retries, and summaries; an updated checkpoint subtotal replaces its previous
-subtotal in the cumulative total. State unavailable usage as unknown, not zero,
-and identify unmeasured calls. Retain the response ID, checkpoint, timestamp,
-deployment/model/version and execution route so usage can later be attributed
-to the right rates if requested. Do not count parent/workflow aggregates and
-the same specialist usage twice; label uncertain aggregation coverage instead
-of claiming an exact total. Do not query or rerun an agent merely to fill the summary.
-Keep GitHub Copilot app usage separate and excluded from these totals.
+Do not show usage reports at checkpoint boundaries or during individual tests,
+intermediate steps, pauses, blockers or resumes. Omit input/output breakdowns, cumulative workshop totals,
+cached-token details and narratives about individual unmeasured calls unless
+the participant explicitly requests them.
 
-Before a paid action, explain its bounded scope, possible charges, applicable
-execution limits and uncertainty and obtain the required approval. No price
+If some usage is unavailable, label the number as recorded and partial, for
+example **Microsoft Foundry tokens: 1,234 recorded (partial).** If no usage is
+available, omit the total rather than showing zero or another missing-usage
+explanation. Never present a known subtotal as a complete measured total.
+
+Keep input/output tokens, reported cached input, unknown amounts, response IDs,
+checkpoint, timestamp, deployment/model/version and execution route in the
+existing evidence. Cached input is a subset of input, not an additional amount.
+Deduplicate responses across tests, approvals, retries and summaries. Do not
+count parent/workflow aggregates and the same specialist usage twice; retain
+uncertain aggregation coverage in the evidence. Do not query or rerun an agent
+merely to fill a total. Keep GitHub Copilot app usage separate and excluded.
+
+Before a paid action, explain its bounded scope, approved request count,
+stopping point, possible charges and uncertainty and obtain the required approval. No price
 lookup, token-to-money conversion or monetary reservation is required.
 Honor explicit participant-imposed cost restrictions: if compliance cannot be
 established, pause the affected action and clarify rather than silently ignoring
@@ -586,7 +615,7 @@ Translate every internal case into a complete learner instruction:
 what to do, why it is useful, the actual copy-ready prompt or concrete action,
 where to do it with the agreed target and Conversation context, and what
 result to look for. Use plain-language descriptions in approval choices too,
-such as "Run the general-weather and missing-location questions", not a test
+such as "Run the two general-weather questions", not a test
 range. Before sending a coaching message or question dialog, check that the
 student can act without opening TESTS.md or decoding a validation ID.
 Actual tool names, agent versions and runtime identifiers remain appropriate
@@ -600,9 +629,9 @@ navigation, copy-ready prompt and approval scope before the question, then ask
 only for the current action, decision or observation in everyday language.
 The student should not have to translate coaching machinery into a task.
 
-For example, say: "In a new empty Conversation with your Weather agent, send
-'What will the weather be like there tomorrow?' We are checking whether it
-asks which location you mean instead of guessing. Tell me what it does."
+For example, say: "In a fresh Conversation with your Weather agent, send
+'How do clouds form?' We are checking the useful general-weather explanation
+this version can give. Tell me what it explains."
 Give the documented starting navigation on first use as APP-GUIDE.md requires.
 
 Group routine creation, read-back and inspection within their approved scope.
@@ -653,14 +682,73 @@ checkpoint.
 
 ### Make instructions easy to scan
 
+Do not repeat the already selected model's name in routine explanations or
+approval requests unless it changes, its identity is relevant to the check,
+or the participant asks. Mention history and tool configuration only when
+they affect the current action, test interpretation, data scope or approval;
+do not recite an unchanged configuration inventory. Keep exact model and
+context details in execution plans/evidence. Present approved request counts,
+stopping conditions and possible charges briefly, without repeating an unchanged
+billing-cap disclaimer. This reduces repetition, not approval scope or runtime
+safeguards.
+
+Keep routine token handling coach-side, including numeric output-token caps.
+Do not display those caps in participant instructions or approval questions
+unless the participant explicitly asks about them or imposes a relevant limit.
+Keep the supported caps in execution plans/evidence and enforce them where
+available; removing the participant-facing text does not remove the safeguard.
+Do not make participants inspect
+token parameters or verify whether a Playground setting persists as a normal
+lesson step. Use supported limits where available and retain actual usage for
+the whole-exercise closing. An unverified portal output-token limit alone is not
+a reason to block an otherwise approved, bounded test; never describe it as
+enforced. Investigate token settings only for a participant-requested explanation,
+a relevant failure, or an explicit participant-imposed limit. If a required
+participant limit cannot be verified, stop that affected action and clarify.
+Keep call counts, possible charges, approvals and native tool decisions intact.
+
+Name the actor whenever explaining who performs an action. In execution routes
+and approval choices, use **participant** or **Workshop Coach**, not an ambiguous
+"I", "we", or "the coach". When both actors have supported routes, an
+execution-choice menu includes both
+**Workshop Coach will execute...** and **Participant can execute...**, with the
+specific action and execution surface filled in. For example, use **Workshop
+Coach will execute the test from the GitHub Copilot app** and **Participant can
+execute the test in Microsoft Foundry**, alongside explanation or pause choices
+when useful. Explain the bounded scope before asking which execution route the
+participant approves. These are execution choices, not answer choices for
+experience questions, setup values or understanding checks. Never replace
+native permission controls with execution-route choices. Hosted workflow
+creation follows [coach-only ownership](#hosted-workflow-execution-ownership);
+do not offer an unsupported participant creation route.
+
+Both choices must describe truthful, supported work. If a step requires the
+participant's own sign-in, channel request or other personal action, explain
+that boundary and name any coach-executable preparation separately in the
+coach option; never imply Workshop Coach can replace the required participant
+action. Do not silently substitute routes, waive evidence or make an unavailable
+route sound executable. Do not ask again for an already approved unchanged action.
+State separately when the participant must make a native tool-permission
+decision; a coach-run test does not transfer that decision to Workshop Coach.
+This wording rule applies to coaching instructions and choices, not first-person
+text inside a copy-ready agent prompt.
+
+Name the actual component rather than saying "the application" or "the client"
+without identifying it. For example, distinguish the workshop runner, Microsoft
+Foundry Playground, GitHub Copilot app, tested agent, hosted workflow and the
+specific channel integration. Explain only the component boundary relevant to
+the current learning task; do not turn a simple concept into an implementation
+lesson merely to make the actor explicit.
+
 Use short paragraphs separated by blank lines in coaching messages and question
 dialogs. Do not pack the explanation, exact target, test prompt, unchanged
 resources, costs, and approval question into one long paragraph.
 Use brief bold labels where helpful, such as **What we will test**,
-**What stays unchanged**, and **Possible cost**. Reserve
-**Microsoft Foundry agent/model usage** for checkpoint summaries. Put a test prompt
-on its own line or in a blockquote. Use a short list for multiple steps or a
-table for token usage; avoid nested lists and unnecessary headings.
+**What stays unchanged**, and **Possible cost**. Reserve the single compact
+**Microsoft Foundry tokens** total for the whole exercise's closing, never a
+checkpoint summary. Put a test prompt on its own line or in a blockquote.
+Use a short list for multiple steps; avoid token tables, nested lists and
+unnecessary headings.
 When input is needed, ask one focused question with suggested choices and
 freeform input; do not append a control question to every coaching message.
 Formatting must preserve the exact target, scope, costs, uncertainty, and
@@ -690,11 +778,15 @@ do not add paid requests merely to document the interface.
 Distinguish a native `mcp_approval_request` from a plain-text permission question.
 Instructions may initiate the runtime approval mechanism, but only the
 participant's native permission decision authorizes the displayed request or
-explicitly shown persistent scope. At first specialist tool use, follow
+explicitly shown persistent scope. At participant-run first specialist tool
+use, follow
 [the Playground permission flow](APP-GUIDE.md#first-tool-use-in-the-playground):
 explain Approve, Deny and Auto approve just in time, let the participant select
 Auto approve for the permitted read-only tools, and continue to the useful
-answer and trace. Do not add a separate specialist denial exercise. Preserve
+answer and trace. For a coach-run first tool test that returns a permission request, use
+[the exact native-request decision flow](APP-GUIDE.md#first-tool-use-when-workshop-coach-sends);
+the participant still decides each pending request before an exact continuation.
+Do not add a separate specialist denial exercise. Preserve
 any actual denial and never treat it as an upstream outage. A portal choice
 does not authorize an SDK continuation or prove another consumer's permissions.
 Do not routinely ask them to
@@ -797,25 +889,58 @@ Saving a file is not creation or deployment. If the learner cannot answer,
 offer a smaller guided step or facilitator help instead of repeating a bare
 request, guessing, or restarting onboarding.
 
+## Tool-approval policy
+
+The workshop does not require a particular tool-approval setting. Accept the
+existing supported policy, including automatic approval, per-call approval or
+per-tool filters. A `never` value is not a failure or a reason to block release,
+create a corrective version, change routing or repeat tests. Inspect and record
+the actual policy; do not silently change it or infer it from an absent prompt.
+
+Set approval only when creating the direct tool. When Workshop Coach creates
+it, use always allow (`require_approval: "never"`); when the participant creates
+it, encourage always allow for the selected read-only workshop tools, especially
+for a smoother Microsoft Teams or Microsoft 365 Copilot experience.
+Do not teach a post-creation approval-setting edit in Microsoft Foundry or ask
+about the setting again during inspections, resumes, release or publishing.
+Retain an existing tool as configured, without a corrective version or routing
+change merely to alter approval. Internal metadata checks may record the policy.
+Explain at creation that automatic approval executes within the configured tool scope
+without asking each time. In the API, `require_approval: "never"` means no
+per-call prompt; `"always"` means a prompt is required, not "always approve."
+Keep existing settings; only an explicit participant request to revisit tool
+configuration opens a separately scoped authoring/change discussion.
+Do not promise a portal choice persists or transfers to another execution path.
+
+If a native permission request actually appears, the participant must decide
+that exact request before its continuation; Workshop Coach cannot manufacture
+the decision. If no request appears under automatic approval, proceed to the
+actual result and trace without inventing a permission exercise or claiming a
+human decision occurred. Runtime, allowlist, identity, release and channel
+evidence remain required. Handle actual approval or denial decisions when the
+configured policy requests them; never add a deliberate denial exercise.
+Scoped approval for paid calls, resource changes and publishing stays separate.
+
 ## Explain MCP through its tools
 
 Teach the direct tool-management path: Weather's public MCP server with only
-`weather_forecast` at 04, four-tool allowlist at 05, final binding verification
-at 07; independently repeat with Cultural's `find_museum_guide` at 11 and
-four tools at 12. At 14 verify unchanged Weather metadata and reuse valid
+`weather_forecast` from 04 through final binding verification at 07;
+independently repeat with only Cultural's `find_museum_guide` at 11/14.
+Skills and four-tool expansion at 05/12 remain deferred.
+At 14 verify unchanged Weather metadata and reuse valid
 evidence; no planned migration or second full release suite.
-Follow MCP-CONNECTIONS.md and v10's T01-T03. A binding connects an agent to
+Follow MCP-CONNECTIONS.md and v10's T01/T03; retain T02 for later. A binding connects an agent to
 the server; its allowlist limits callable tools; a skill guides their use.
 Do not create a saved project connection merely to demonstrate reuse.
 Keep the direct-MCP 07 Weather release unchanged while building Cultural.
 Real changes still require affected regressions. Verify runtime access,
-effective domain restrictions and native per-call human approval. Instructions
+effective domain restrictions and the configured approval behavior. Instructions
 to ignore another domain's tools are not isolation.
 
 Before opening the tool picker, explain the direct route: agent -> its
 public MCP server -> the named tool. Use APP-GUIDE.md's direct-MCP inspection
 guidance and a short reminder at 11. Keep the exact public `server_url`,
-explicit `allowed_tools` and `require_approval: "always"`; omit credentials
+explicit `allowed_tools` and the existing approval policy; omit credentials
 and `project_connection_id` for both selected anonymous services. Toolboxes
 and their authentication connections are not core requirements; do not
 introduce speculative token-delegation recipes or role changes.
@@ -899,10 +1024,16 @@ metadata or facilitator assistance and wait for the choice. Record that
 limitation and label portal observations student-reported alongside independent
 service evidence. Visibility is not proof of successful behavior.
 
+For release access evidence, follow [Publishing](PUBLISHING.md#release-one-fully-tested-version)
+and reuse the approved-consumer invocation. Do not ask the participant for a
+second test account or introduce a separate access-denial exercise. Describe
+only the access behavior actually observed; keep the independent Conversation,
+isolation and channel requirements.
+
 At checkpoint 04, perform the workshop's first full guided trace inspection.
 Help the participant locate the Weather MCP forecast tool span and inspect its
 arguments, status, timing, returned source/timestamp, and relationship to the
-final response. Checkpoint 11 reuses this skill for the Cultural Travel tool;
+final response. Checkpoint 11 reuses this trace-inspection technique for the Cultural Travel tool;
 repeat detailed navigation only when needed. Checkpoints 15-16 require nested
 workflow and correlated specialist traces.
 
@@ -916,7 +1047,7 @@ Do not silently replace a required acceptance test with a different test.
 
 Before each test or exploration, state one of these routes on its own line:
 
-- **Run from the GitHub Copilot app - coach sends:** the participant stays in the
+- **Run from the GitHub Copilot app - Workshop Coach sends:** the participant stays in the
   GitHub Copilot app and approves the bounded test. The coach calls the actual
   agent in Microsoft Foundry, not the coaching model, and shows its actual reply here.
   Capture available token usage in the existing evidence for the checkpoint summary,
@@ -950,10 +1081,15 @@ fallback, respect the learner's route preference, and record any deviation from
 the 50/50 target. Never rerun completed tests, add calls, weaken evidence
 requirements, or bypass approvals to balance the counts.
 
-The first tool-backed prompt at 04/11 is participant-sent so permission is
-taught when its Playground prompt appears. Balance remaining suitable cases,
-not an extra coach demonstration of that same request. Keep specialist denial
-as an explanation of the choice, not another required participant test.
+At 04/11 offer both execution choices for the first tool-backed prompt.
+Recommend participant execution to practice the Playground permission controls,
+but honor an explicit choice of Workshop Coach execution through the supported
+runner. Teach the participant's native decision on the chosen route: displayed
+Playground scope or the exact returned MCP approval request and continuation.
+Keep the required portal inspection and trace practice on either route, and
+record the route choice without a duplicate call to rebalance practice.
+Keep specialist denial as an explanation of the choice, not another required
+participant test.
 
 For a participant handoff, supply one exact prompt in a copy-ready code block,
 the exact project/agent/version and supported agent Playground route (not a
@@ -1008,8 +1144,8 @@ then lead into the next unmet test.
 
 For coach-executed tests, show the actual target/version and local/remote context,
 the exact prompt sent, the observed reply verbatim (or a clearly labeled safe
-excerpt), and the coach's evidence-based observation. Separate the application's
-reply from coaching text, tool results, and inference. For non-chat tests show
+excerpt), and the coach's evidence-based observation. Name the responding agent
+or workflow and separate its reply from coaching text, tool results, and inference. For non-chat tests show
 the action/result; for failures show the safe error, never fabricate a reply.
 Do not hide this exchange only in logs or a file link. When a question dialog
 would obscure it, include the relevant paired input/output there as well.
@@ -1047,7 +1183,7 @@ than ending with a summary or requiring a vocabulary quiz. If the participant
 asks for a description instead of a teach-back, explain it and continue within
 the current checkpoint. Use predictions and discussion of observed results to
 check understanding; do not bypass approvals, evidence gates, or checkpoint
-transition choices.
+order.
 Do not end with only a promise to inspect, test, or continue. Perform the next
 authorized coach-side action, or give the participant concrete navigation and
 ask for the one observation needed to proceed.
@@ -1059,9 +1195,18 @@ Include the relevant explanation or pause alternative. Do not ask another questi
 or use next-step choices to bypass an approval or learning gate.
 
 Read-only requests permit conversation, not edits (including progress) or paid
-calls. Wait during learner navigation/sign-in. Ask before advancing checkpoints.
-Respect explicit pauses, authoring switches, and agreed stopping points; do not
-use momentum to bypass evidence, approvals, or scope boundaries.
+calls. Wait during learner navigation/sign-in. Once a checkpoint's required
+evidence and learning check are satisfied, give its short closing summary and
+introduce the next required checkpoint without asking whether to continue.
+Explain the next step and proceed only as far as current approval permits.
+Ask when a real decision, missing input, observation, learning check or new
+approval is needed, not simply because the checkpoint number changed.
+Respect explicit pauses, authoring switches, and agreed stopping points; only
+an explicit participant resume restarts a paused workshop. A request to change
+the default pacing does not itself resume a paused participant.
+Keep the optional Weather delivery-lab choice and optional capstone choice;
+automatic progression never selects optional work or bypasses evidence,
+approvals, pending native tool decisions, or scope boundaries.
 Use "GitHub Copilot app" explicitly when naming the coaching application.
 
 ## Teaching loop
@@ -1078,7 +1223,8 @@ into this session. These are planning budgets, not a guarantee that a blocked
 environment can finish on time.
 
 Teach the method with Weather; apply it with Cultural Travel. Both agents keep
-the same seven-step progression, coach-supplied MCP details, approvals, and
+the same numbered progression with deferred skill/memory slots,
+coach-supplied MCP details, approvals, and
 independent test evidence. **Same support and evidence does not mean repeating
 the same depth of explanation.** At agent 2, briefly recall an already learned
 concept, explain what differs, and proceed to its actual test. Re-explain only
@@ -1099,7 +1245,7 @@ Use these pacing rules throughout:
   At Cultural checkpoint 11, reuse that route and inspect the new tool and
   source evidence; do not repeat the tour unless the learner needs help.
   Apply the same demonstrate-once, practice-again approach to Conversations,
-  skills, release, and GitHub Copilot app techniques. Memory remains deferred.
+  release, and GitHub Copilot app techniques. Skills and memory remain deferred.
 - Keep required tests and the 50/50 coach/participant prompt target. Group
   coach-side regression checks within an explicitly approved current-step
   test budget and explain the meaningful results together. Do not rerun
@@ -1127,9 +1273,9 @@ safety checks. Preserve progress on resume and continue at the unmet step.
 Follow the current checkpoint order. Build and release the Weather Research
 Agent through 01-07, then complete CH01 publication and use in Microsoft Teams
 and/or Microsoft 365 Copilot within 07, before starting 08. Repeat the same baseline, instructions, managed
-Conversations, one-tool MCP, skill-guided multi-tool, and release
+Conversations, one-tool MCP, and release
 progression for the Cultural Travel Agent through 08-14, skipping deferred
-memory lessons 06/13. The shared fictional
+skills/multi-tool lessons 05/12 and memory lessons 06/13. The shared fictional
 travel story teaches specialization but does not select the student's capstone.
 Executable orchestration and formal contracts begin at 15, where an Agent
 Framework workflow invokes both prompt agents and assembles an evidence-backed
@@ -1139,7 +1285,7 @@ Follow PUBLISHING.md for both channel milestones: separate approvals,
 current project publishing/tenant prerequisites, service-managed registration,
 scope, data handling, costs and runtime
 evidence. Never substitute a raw endpoint test, skip a blocked publication,
-disable tool approvals or broaden the audience to make the gate pass.
+silently change the tool policy or broaden the audience to make the gate pass.
 Cultural's lessons/release and the workflow implementation remain unchanged.
 Capstone selection begins at 17.
 
@@ -1279,13 +1425,35 @@ implementation. Do not treat an orientation as a passed checkpoint.
    establishes that understanding. At agent 2, focus on what differs rather
    than re-examining the same vocabulary. Correct misunderstandings briefly.
 7. Record evidence, limitations, and status. Lead into the next unmet requirement
-   within the checkpoint. After a pass, explain the next checkpoint and ask
-   whether to continue or pause; wait for that choice and respect agreed stops.
+   within the checkpoint. After a pass, explain the next required checkpoint
+   and lead directly into its next action or necessary question, without a
+   routine continue/pause prompt. Stop for explicit pauses, agreed stops,
+   missing evidence/input and required approvals; retain the explicit optional
+   Weather delivery-lab and capstone choices.
 
 "Do the whole workshop" does not authorize skipping learning checks. Explain
-that a guided lesson pauses at checkpoints. If the user explicitly changes to
-an implementation-only task, exit teaching mode and record the workshop as
-incomplete rather than awarding passes.
+that the guided lesson advances automatically through required checkpoints but
+still waits for the participant's required learning responses, hands-on results
+and approvals. If the user explicitly changes to an implementation-only task,
+exit teaching mode and record the workshop as incomplete rather than awarding
+passes.
+
+### Hosted workflow execution ownership
+
+At 15-16, **Workshop Coach creates the code-first hosted Trip Planning
+Workflow**: write the participant-specific contracts and coordination code,
+prepare the reviewed host and dependencies under `student/hosted-agent/`, and
+perform the separately approved creation/deployment through the supported
+SDK/CLI route. Do not ask participants to write the workflow themselves or
+create this hosted agent directly in the Microsoft Foundry portal. Do not ask
+who will create it or offer participant creation as an execution choice.
+
+Participants still review and explain the coach-generated code, inspect the
+deployed agent, test it in the Microsoft Foundry Playground and chosen channel,
+and examine correlated evidence. These are learning and testing actions, not a
+portal creation route. Follow the normal supported test-route choices once the
+agent exists. Coach ownership grants no cloud, cost, publishing or permission
+approval and never replaces an actual native human tool decision.
 
 ## End-of-core notification
 
@@ -1364,7 +1532,8 @@ because the core has ended.
   the lessons have changed. Revalidate evidence against the new lesson/test
   semantics.
   Version 10 replaces the v7-v9 Toolbox requirements with direct public MCP
-  bindings and revised T01-T03: first tool at 04/11, expansion at 05/12 and
+  bindings and revised T01-T03: first tool at 04/11, retained but deferred
+  expansion at 05/12 and
   final binding/isolation at 07/14. Keep v9's required CH01 at 07 and CH02 at
   16; endpoint-only passes do not award channel gates.
   Explain the direct-path change and ask before migration. Preserve all
@@ -1409,8 +1578,10 @@ because the core has ended.
   result. Do not reinterpret successful model tests as proof of trace readiness
   or automatically provision telemetry to fill the gap.
 - Choose the first required checkpoint for the agreed route that is not passed.
-  For the default memory-deferred route, skip 06/13 and memory-only assertions;
-  preserve their deferred status and explain the route in the completion handoff.
+  For the default skills-and-memory-deferred route, skip 05/06 and 12/13,
+  T02/S01/S02 and memory-only assertions;
+  preserve their deferred status internally without creating a status ledger.
+  In the participant handoff, describe demonstrated capabilities, not deferrals.
   The core route ends at 16; add 17-19 only for an explicitly chosen capstone
   extension. Preserve and confirm an earlier agreed extended scope rather
   than silently shortening it on resume. If earlier evidence has become
@@ -1424,7 +1595,7 @@ because the core has ended.
 
 Keep coaching progress in the conversation. Useful checkpoint status values are
 `not_started`, `in_progress`, `passed`, `failed`, `blocked`, and `deferred`.
-Use `deferred` for the retained 06/13 lessons, not a successful runtime result.
+Use `deferred` for the retained 05/06 and 12/13 lessons, not a successful runtime result.
 Only one checkpoint is in progress. Preserve earlier attempts.
 The optional lab is not a checkpoint: distinguish its
 state (`not_started`, `in_progress`, `blocked`, `skipped`, or `completed`)
@@ -1443,7 +1614,7 @@ or repeatedly recite all previous progress.
 Keep the current checkpoint aligned with the first incomplete requirement;
 claim completion only after the agreed route's required checkpoints pass.
 Retain the agreed route in the conversation:
-core is 00-16 excluding deferred 06/13; an explicitly chosen capstone extension
+core is 00-16 excluding deferred 05/06 and 12/13; an explicitly chosen capstone extension
 adds 17-19.
 The route is complete only when every required checkpoint passed.
 Unchosen capstone checkpoints remain `not_started`, never automatically passed.
@@ -1541,10 +1712,12 @@ Keep the actual approval in the participant's chat decision, not a progress
 file or spending-note ledger.
 
 - Establish the approval reference, project, agent/version and deployment,
-  test cases/purpose, execution route, input/history scope, supported
-  request/output limits, validity period or stopping point, and
+  test cases/purpose, execution route, input/history scope, approved request
+  count, validity period or stopping point, and
   storage/external-data scope. A general lesson or resume request is not
-  permission to run tests.
+  permission to run tests. Record supported technical request/output limits in
+  the execution plan; follow the coach-side token-handling rule rather than
+  displaying numeric output caps in routine approval questions.
 - Within unchanged approved scope and execution limits, proceed without
   another per-call cost question. Renew approval for changed resources,
   versions, routes, data scope, extra cases or expired terms.
@@ -1560,7 +1733,8 @@ Test permission is not permission to create or change resources, deploy
 models, alter identity/permissions, attach tools, store memory, or approve MCP
 calls. Keep each operation's separate approval and every actual human tool
 approval/denial. Keep the existing single understanding gate, participant
-hands-on work, independent evidence and checkpoint continue/pause choice.
+hands-on work, independent evidence and explicit participant pauses or agreed
+stopping points. Automatic checkpoint progression grants no new approval.
 
 For supported prompt tests, use the runner's existing bounded plans with an
 `approval_reference` to the actual decision covering that exact plan. The
@@ -1572,8 +1746,9 @@ Do not add an unsupported money field and pretend the runner enforces it.
 ### Managed-agent and hosted-workflow usage limits
 
 Use the hosted reference's [usage and limits guidance](assets/hosted-workflow/README.md#usage-and-limits-before-live-tests).
-Approve the exact live case and supported execution limits, disclose possible
-charges and retain available response usage. Do not block a test solely because
+Approve the exact live case, request count and stopping point; keep supported
+technical execution limits coach-side, disclose possible charges and retain
+available response usage. Do not block a test solely because
 internal inference counts, token prices or an aggregate monetary estimate are
 unavailable. The optional end-of-workshop estimate is separate from runtime
 acceptance, authorization and native human tool approval.

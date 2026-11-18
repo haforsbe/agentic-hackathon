@@ -6,9 +6,15 @@ It is not a completed participant exercise or a deployment command.
 `src/trip_server.py` provides reusable Microsoft Foundry hosting plumbing;
 `trip_responses.py` connects chat input and exact native tool decisions to a
 workflow. `trip_workflow.py` is a **facilitator reference implementation**:
-participants must still implement and explain their own versioned contracts,
+Workshop Coach must still create participant-specific versioned contracts,
 specialist invocation, failure isolation and sourced aggregation at checkpoint
-15. Copying or running this reference is not participant completion.
+15. Participants review and explain the generated implementation and test the
+actual workflow; they do not write it themselves or create this code-first
+hosted agent directly in the Microsoft Foundry portal. Local preparation and
+creation/deployment below are coach-executed under the
+[execution ownership rule](../../COACH.md#hosted-workflow-execution-ownership)
+and its separate approvals. Copying or running this reference is not
+participant completion.
 The host imports no workshop runner modules or unpublished author tooling.
 
 The reference intentionally accepts only the Metropolitan Museum of Art in
@@ -25,6 +31,19 @@ and qualified tool name; each continuation binds the exact pending request and
 arguments. Prose never grants approval. Denial remains denial, with no replacement
 tool, fabricated evidence or model retry.
 
+No particular specialist approval setting is required. Automatic execution
+and mixed per-tool policies are valid: a completed tool call must still match
+the configured specialist, tool and source evidence, without an invented human
+decision. Actual pending requests still require their exact decisions.
+The always-allow recommendation belongs at direct-tool creation, especially
+for Microsoft Teams; retain existing settings without later configuration
+questions or corrective versions.
+
+Align specialist instructions with the saved policy when authoring the
+definition. Do not retain a blanket human-approval prerequisite for a tool
+configured for automatic execution. A prose claim of pending approval without
+a native request is a failed result, not a permission card to invent or approve.
+
 One graph is exposed through Responses and Invocations. Request-scoped clients,
 trusted user/session scope, SDK-owned checkpoints and separate run storage prevent
 shared conversation history. The runtime verifies token tenant/principal claims
@@ -40,6 +59,12 @@ removed or treated as success. Historical, conditional and policy discussion of
 approval remains allowed. Sources and uncertainty from the other valid specialist
 remain visible. This narrow narrative check cannot prove the truth of every
 natural-language claim; live quality review remains necessary.
+
+Keep specialist summaries concise and their output allowance large enough for
+all required sections, sources and uncertainty. A completed tool call followed
+by an incomplete model reply is not a successful specialist result. Preserve
+the service's incomplete-response reason, reject the truncated reply and obtain
+fresh scoped approval before another paid attempt; do not retry automatically.
 
 Outer Responses `include` selectors are validated against the installed public
 SDK contract and never forwarded to specialists. Caller model, tool, instruction
@@ -70,6 +95,11 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --index-url <approved-feed> -r .\src\requirements.txt
 ```
 
+Use that environment's interpreter for every local check below. A global
+installation can expose incompatible preview APIs even when its packages are
+newer. Restore the pinned environment instead of changing the imports, upgrading
+global packages or substituting dependency versions.
+
 There is one non-secret runtime configuration: `WORKFLOW_CONFIG_JSON`. Make a
 local copy of `config.example.json` as `config.local.json`. Fill every field from
 the participant-confirmed project, deployed runtime identity and independently
@@ -91,7 +121,7 @@ $env:WORKFLOW_CONFIG_JSON = Get-Content -Raw .\config.local.json
 ```
 
 That command only renders local deployment plumbing from the same configuration;
-it creates no cloud resource and generates no participant graph implementation.
+it creates no cloud resource and generates no workflow graph.
 Inspect the resulting ignored `azure.yaml`. The exact project endpoint, workflow
 name and runtime JSON all come from that one validated setting. Do not separately
 edit its targets. Invalid, missing, unknown or unconfirmed settings fail explicitly
@@ -99,7 +129,7 @@ before real credentials or clients are created.
 
 Actual deployment remains a separate approved operation using the current
 Microsoft Foundry skill and workshop instructions. Do not deploy the facilitator
-reference in place of the participant's implementation, copy someone else's
+reference in place of the reviewed coach-created workflow, copy someone else's
 configuration, change runtime identity to make a check pass, or automatically
 create missing dependencies.
 
@@ -136,7 +166,9 @@ response just to populate usage. The journal's usage is not proof of inclusion
 of separately processed memory work or a full account bill. Do not add a
 workflow aggregate to the same specialist usage twice; retain the actual
 model/deployment/version, checkpoint and execution route where available.
-Keep summaries in chat; do not create a separate cost-readiness ledger.
+Keep detailed accounting in existing execution evidence and follow the
+[exercise-end token policy](../../COACH.md#checkpoint-usage-summaries) for the
+single participant-facing total. Do not create a separate cost-readiness ledger.
 
 An optional monetary estimate is on request, never a completion gate. Follow
 the coach's [usage-summary policy](../../COACH.md#checkpoint-usage-summaries)
@@ -161,7 +193,7 @@ From this asset directory:
 .\.venv\Scripts\python.exe -m unittest discover -s .\tests -p "test_*.py" -v
 ```
 
-The nine tests use **small synthetic fixtures**. Clients are patched; no
+The tests use **small synthetic fixtures**. Clients are patched; no
 Microsoft Foundry account, model request, MCP tool execution or human decision
 is needed or claimed.
 
@@ -179,18 +211,26 @@ or any live gate below.
 | `test_required_evidence_fields_and_source_sections` | G01: required versioned fields and both evidence domains |
 | `test_invalid_or_contradictory_final_evidence_is_not_success` | G02/W02: invalid, instruction-shaped extra fields or contradictory final evidence cannot become success |
 | `test_release_version_and_tool_origin_match_contract` | G03: configured origin/version/domain agree with synthetic evidence |
-| `test_supported_trip_combines_both_specialists` | W01: both invocations, sources, uncertainty and conflicting considerations survive assembly |
-| `test_failed_or_invalid_specialist_preserves_other_evidence` | W02/W03: each isolated failure/invalid result preserves the other domain without retry or fabrication |
-| `test_ambiguous_request_requires_clarification` | W03: unsupported constraints do not trigger calls or silent coercion |
+| `test_supported_trip_combines_both_specialists` | W01/W03: both invocations, sources, uncertainty and traveler preferences survive assembly |
+| `test_automatic_and_mixed_policies_preserve_completed_tool_evidence` | Automatic and mixed policies retain both domains' completed tool evidence without invented decisions |
+| `test_automatic_execution_still_checks_tool_origin_and_approval_linkage` | Automatic execution still validates the selected tool, origin, completion and any approval reference |
+| `test_failed_or_invalid_specialist_preserves_other_evidence` | Automated W02 coverage: each isolated failure/invalid result preserves the other domain without retry or fabrication |
+| `test_ambiguous_request_requires_clarification` | Automated clarification guard: unsupported constraints do not trigger calls or silent coercion |
 | `test_two_separate_decisions_produce_sourced_reply` | Checkpoint 15 local W04 prerequisite: ordinary chat input, current native decisions, continuation and assembly |
-| `test_denial_stays_partial_without_executing_denied_tool` | W02/local W04 prerequisite: each separate denial remains effective |
+| `test_automatic_tool_execution_needs_no_synthetic_permission_cards` | The Responses adapter returns sourced output without permission cards when both tools execute automatically |
+| `test_denial_stays_partial_without_executing_denied_tool` | Automated safety coverage: actual denials remain effective; not a participant denial exercise |
 | `test_native_submission_limits_and_uncertain_attempts` | Request/output limits, disabled client retries, recorded-response reuse and unknown usage remain distinct from a model-cost cap; a fifth or uncertain submission cannot be sent |
 
+These defensive fixtures remain ordinary automated implementation coverage.
+Do not ask participants to inject failures, submit malformed trips or decline
+a request to demonstrate them. The learner path builds the workflow and tests
+a supported result, with actual decisions only when the runtime requests them.
+
 These are not full live G03/W01 execution proofs. **W04 requires the participant's
-actual Microsoft Foundry chat exchange**, separate native tool decisions, correct
-final reply and correlated same-run specialist/validation/assembly traces on the
-exact deployed version. Synthetic tests, an Invocations reply or a successful
-response schema cannot pass that gate.
+actual Microsoft Foundry chat exchange**, completed native tool execution and any
+requested human decisions, correct final reply and correlated same-run
+specialist/validation/assembly traces on the exact deployed version. Synthetic
+tests, an Invocations reply or a successful response schema cannot pass that gate.
 
 Stable consumer/release assertions and CH01/CH02 require their own real,
 approved consumption and channel evidence in the required checkpoint order.
