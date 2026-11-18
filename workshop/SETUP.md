@@ -59,7 +59,7 @@ it does not create a Foundry agent or grant Azure permissions.
 | Weather MCP | Selected public endpoint `https://weather.datakoot.com/mcp`; no authentication | Current Streamable HTTP schemas; `weather_forecast` first, approved four-tool expansion later; US coverage, upstream provenance, and Foundry runtime evidence |
 | Cultural Travel MCP | Selected public endpoint `https://mcp.travel.art/`; no authentication | Current Streamable HTTP schemas; `find_museum_guide` first, approved four-tool expansion later; actual catalogue coverage, guide attribution/freshness, and Foundry runtime evidence |
 | Direct MCP bindings (04/05, 11/12; verification at 07/14) | Supported public MCP attachment on each ordinary prompt agent, with explicit allowlists and participant-selected native permission scope | Verify the exact direct URL, required upstream schemas/names, candidate read-back, effective restrictions, actual first-use Playground permission choice and runtime execution; no separate connectivity/denial exercise; portal Auto approve does not establish SDK/endpoint/channel permission; see MCP-CONNECTIONS.md |
-| Memory | Chat and embedding deployments, memory capability | Store permissions, identity scope, retention, update behavior |
+| Memory (temporarily deferred) | No memory store or embedding deployment needed on the default route | Skip 06/13; retain the lesson for later separately approved reintroduction |
 | Skills | Skills API and compatible client/provider | Upload/version/retrieve support; MCP resources support is distinct from tools |
 | Hosted workflow | Azure Developer CLI (`azd`), Agent Framework, supported Foundry extensions/runtime, and tracing | Reviewed [shared scaffold](assets/hosted-workflow/README.md) revision, fully pinned dependencies and verified feed/runtime availability, Responses portal approval flow plus required Invocations path, intended G/W tests, both downstream endpoints/contracts, deployment support and quota/cost boundary; require the [pre-cohort workflow readiness gate](FACILITATOR.md#hosted-workflow-readiness-before-the-cohort) |
 | Consumer access | Approved test caller identities | Endpoint invocation permission and a caller without permission for the negative test |
@@ -182,7 +182,7 @@ generating model usage. See [runner scope and setup](runner/README.md).
 Arrange tools in an isolated environment before the cohort when possible;
 otherwise install only when a prerequisite check identifies a missing tool.
 Then, with participant-confirmed account/project and agreed read-only scope,
-verify direct access, telemetry readiness and later memory/skill, consumer
+verify direct access, telemetry readiness and later skill, consumer
 identity and hosted-runtime prerequisites. Mark each available, unavailable
 or unverified; metadata alone does not demonstrate runtime behavior.
 No project/model creation, memory-store write, deployment, paid test or role
@@ -219,6 +219,9 @@ Do not create new infrastructure or change IAM to bypass missing access.
 
 The facilitator must preflight all later capabilities. At checkpoint 00, mark
 each capability `available`, `unavailable`, or `unverified`, with evidence.
+Persistent memory is temporarily deferred, not a missing-capability blocker;
+do not probe or provision it for the default route. See the
+[memory deferral policy](README.md#temporary-memory-deferral).
 Initial prompt access must work to pass 00. Later capabilities can be unverified
 at this point, but their own checkpoints cannot pass until verified.
 

@@ -19,6 +19,7 @@ Workshop Coach profile.
 | How to begin or select Workshop Coach | [Participant start guide](workshop/START.md); orientation is not a lesson or cloud approval |
 | Start, resume or participate | [Coach protocol](workshop/COACH.md), including welcome, setup, teaching, approvals, progress and recovery |
 | Current checkpoint and required tests | [Curriculum](workshop/README.md), current lesson and [acceptance cases](workshop/TESTS.md) |
+| Temporarily deferred memory lessons and completion scope | [Memory deferral policy](workshop/README.md#temporary-memory-deferral): skip 06/13 on the default route; retain the lessons for later |
 | Edit the workshop, examples or coach | Perform the repository task; read only the guidance relevant to the edit; do not start/resume a participant or deploy resources |
 
 Load the full coach protocol when entering coaching or when it changes, then

@@ -55,7 +55,8 @@ An optional advance readiness session checks installed tools and, after you
 confirm your account/project and agree to read-only checks, access and later
 lesson prerequisites. It does not build your agents, send paid test prompts
 or authorize resource changes. The live workshop still confirms your account
-and exact project. Flag missing memory, release or hosting support early rather
+and exact project. Persistent memory is temporarily deferred and needs no
+advance setup. Flag missing skills, release or hosting support early rather
 than discovering it near the end.
 
 ## 2. Prepare your Microsoft account and Azure access

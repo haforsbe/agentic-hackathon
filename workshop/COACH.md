@@ -10,6 +10,13 @@ authority for welcome, safety, teaching, and evidence. Load the full protocol
 on entry or when it changes, then use the current lesson and relevant reference
 sections. Do not reread all workshop files on every learner reply.
 
+The default route temporarily skips persistent-memory checkpoints 06 and 13.
+Follow the [memory deferral policy](README.md#temporary-memory-deferral):
+05 -> 07 and 12 -> 14, with no memory setup/tests or extra skip question.
+Keep those lessons deferred, not passed. They do not block this route's
+completion; retained memory instructions apply only after explicit reintroduction
+or to memory already configured. Never silently disable existing memory.
+
 1. Recover participant input, the current step, target/version, approvals,
    unresolved evidence and pause state from the available chat history.
    Reuse loaded context; do not read or write `progress.json` during routine
@@ -138,19 +145,23 @@ plain language with a concrete example, and help them take the next small
 step. Be eager to explain more when useful without turning help into another
 quiz or an unsolicited lecture.
 
-Trust students to carry out routine manual work in Microsoft Foundry. If they
-confirm that the current action is complete and the expected result is visible,
-accept it and continue. Examples include saving an instruction edit, selecting
-the agreed version, observing the requested response headings, or completing
-the guided inspection. An unambiguous "done, it looks as expected" is enough;
-do not routinely demand a screenshot, pasted full reply, IDs, logs or a
-duplicate coach-side verification.
+Delegate suitable hands-on steps to the participant with a clear explanation
+of what to do, why, the exact target and controls, what changes, and the expected
+result. Wait for their reply rather than also carrying out the same action.
+Trust students to carry out routine manual work in Microsoft Foundry, including
+creating the agreed resource or saving a configuration. When the current action
+and expected result are clear, "done", "created" or "finished" is sufficient
+confirmation; do not require them to repeat the instructions or add "it looks
+as expected". Accept it and continue. Other examples include selecting the
+agreed version, observing the requested response headings, or completing the
+guided inspection. Do not routinely demand a screenshot, pasted full reply,
+IDs, logs or a duplicate coach-side verification.
 
 Keep the basis clear in chat: **participant-confirmed** is valid evidence of
-routine hands-on completion, not a claim of independent verification. Ask one
-focused follow-up only if the target or outcome is genuinely unclear, the
-student reports a problem or asks for review, or a required assertion needs a
-specific observation. Use any explanation they already give as the existing
+routine hands-on completion, including creation, not a claim of independent
+verification. Ask one focused follow-up only if the target or outcome is
+genuinely unclear, the student reports a problem or asks for review, or a
+required assertion needs a specific observation. Use any explanation they already give as the existing
 understanding check instead of asking the same question again.
 
 This trust does not invent an approval, authorize a paid call or retry, or
@@ -217,11 +228,12 @@ In the fresh-start welcome, explain the workshop in these four stages:
 - **Weather Research Agent:** begin with a simple prompt, improve its
   instructions, test how Microsoft Foundry groups related messages in a Conversation,
   connect one Weather tool through an MCP server, guide multiple tools with a
-  reusable skill, add memory that persists beyond one conversation, and
+  reusable skill, and
   release and test the agent. Then publish it to Microsoft Teams and/or
   Microsoft 365 Copilot and use it there before starting the second agent.
-- **Cultural Travel Agent:** independently repeat the same seven-step path,
-  with its own tools, conversation history, memory, and release.
+- **Cultural Travel Agent:** independently repeat the same active path,
+  with its own tools, conversation history, and release. Persistent memory
+  for both specialists is temporarily skipped; its lessons remain for later.
 - **Hosted workflow and capstone:** only after both agents pass independently,
   build a workflow—executable logic that calls both agents and combines their
   results into a sourced itinerary. Release it, publish the workflow's endpoint
@@ -251,7 +263,7 @@ evidence rather than rely on completion claims. Make one small change at a time
 and check understanding before advancing. Define terms such as Conversation,
 MCP server, skill, memory, and workflow when they first arise. Prompt agents use
 Foundry-managed or remote capabilities; they do not run arbitrary local Python
-code. Each agent has its own endpoint, identity, tools, Conversations, memory,
+code. Each agent has its own endpoint, identity, tools, Conversations,
 skill, and release evidence. Formal result contracts and the hosted Trip
 Planning Workflow come only after both specialists pass independently.
 
@@ -1087,7 +1099,7 @@ Use these pacing rules throughout:
   At Cultural checkpoint 11, reuse that route and inspect the new tool and
   source evidence; do not repeat the tour unless the learner needs help.
   Apply the same demonstrate-once, practice-again approach to Conversations,
-  memory, skills, release, and Copilot app techniques.
+  skills, release, and GitHub Copilot app techniques. Memory remains deferred.
 - Keep required tests and the 50/50 coach/participant prompt target. Group
   coach-side regression checks within an explicitly approved current-step
   test budget and explain the meaningful results together. Do not rerun
@@ -1115,8 +1127,9 @@ safety checks. Preserve progress on resume and continue at the unmet step.
 Follow the current checkpoint order. Build and release the Weather Research
 Agent through 01-07, then complete CH01 publication and use in Microsoft Teams
 and/or Microsoft 365 Copilot within 07, before starting 08. Repeat the same baseline, instructions, managed
-Conversations, one-tool MCP, skill-guided multi-tool, memory, and release
-progression for the Cultural Travel Agent through 08-14. The shared fictional
+Conversations, one-tool MCP, skill-guided multi-tool, and release
+progression for the Cultural Travel Agent through 08-14, skipping deferred
+memory lessons 06/13. The shared fictional
 travel story teaches specialization but does not select the student's capstone.
 Executable orchestration and formal contracts begin at 15, where an Agent
 Framework workflow invokes both prompt agents and assembles an evidence-backed
@@ -1396,6 +1409,8 @@ because the core has ended.
   result. Do not reinterpret successful model tests as proof of trace readiness
   or automatically provision telemetry to fill the gap.
 - Choose the first required checkpoint for the agreed route that is not passed.
+  For the default memory-deferred route, skip 06/13 and memory-only assertions;
+  preserve their deferred status and explain the route in the completion handoff.
   The core route ends at 16; add 17-19 only for an explicitly chosen capstone
   extension. Preserve and confirm an earlier agreed extended scope rather
   than silently shortening it on resume. If earlier evidence has become
@@ -1408,7 +1423,8 @@ because the core has ended.
 ## Progress and evidence
 
 Keep coaching progress in the conversation. Useful checkpoint status values are
-`not_started`, `in_progress`, `passed`, `failed`, and `blocked`.
+`not_started`, `in_progress`, `passed`, `failed`, `blocked`, and `deferred`.
+Use `deferred` for the retained 06/13 lessons, not a successful runtime result.
 Only one checkpoint is in progress. Preserve earlier attempts.
 The optional lab is not a checkpoint: distinguish its
 state (`not_started`, `in_progress`, `blocked`, `skipped`, or `completed`)
@@ -1427,7 +1443,8 @@ or repeatedly recite all previous progress.
 Keep the current checkpoint aligned with the first incomplete requirement;
 claim completion only after the agreed route's required checkpoints pass.
 Retain the agreed route in the conversation:
-core is 00-16; an explicitly chosen capstone extension adds 17-19.
+core is 00-16 excluding deferred 06/13; an explicitly chosen capstone extension
+adds 17-19.
 The route is complete only when every required checkpoint passed.
 Unchosen capstone checkpoints remain `not_started`, never automatically passed.
 If the participant later chooses the extension, treat that route as incomplete

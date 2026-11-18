@@ -2,7 +2,7 @@
 
 Learn to build and test Microsoft Foundry agents with **GitHub Copilot as your
 coach**. Create a **Weather Research Agent**, test it, add managed conversations,
-a remote Weather MCP, skills, and memory, then release it and **publish it to
+a remote Weather MCP and skills, then release it and **publish it to
 Microsoft Teams and/or Microsoft 365 Copilot**. Use the Weather agent there
 before moving on. Next create and
 enhance a separate **Cultural Travel Agent** backed by the public **travel.art
@@ -14,6 +14,10 @@ Connect each agent **directly to its own public MCP server**, starting with
 one allowed tool and then expanding to four with a skill. Verify the actual
 tool calls, human approval and denial, and domain isolation before release.
 Toolboxes and their authentication setup are not part of this core workshop.
+Persistent Microsoft Foundry memory is also temporarily deferred: skip
+checkpoints 06 and 13, retaining their lessons for later reintroduction.
+Managed Conversations remain in the workshop. See the
+[memory deferral policy](workshop/README.md#temporary-memory-deferral).
 Each specialist keeps only its own tools; a skill guides their use rather
 than granting access.
 After both agents pass independently, deploy a hosted
@@ -91,8 +95,8 @@ the starter message does not authorize creating paid resources.
 | Stage | Agent concepts | GitHub Copilot app practice |
 |-------|----------------|----------------------|
 | 00 | Verify or create the participant's dedicated project, then reuse or explicitly approve a workshop model deployment | Read repository context; understand approvals and cost boundaries |
-| 01-07 | Weather Research Agent: create, test, add conversations, Weather MCP, skills, memory, release, then publish and use in Microsoft Teams and/or Microsoft 365 Copilot | Explain vs implement; inspect evidence; resume sessions; compare connections and channel results |
-| 08-14 | Cultural Travel Agent: repeat baseline, instructions, conversations, MCP, skill, memory, and release | Reinforce the full lifecycle with separate evidence |
+| 01-07 | Weather Research Agent: create, test, add conversations, Weather MCP, skills, release, then publish and use in Microsoft Teams and/or Microsoft 365 Copilot; 06 deferred | Explain vs implement; inspect evidence; resume sessions; compare connections and channel results |
+| 08-14 | Cultural Travel Agent: repeat baseline, instructions, conversations, MCP, skill, and release; 13 deferred | Reinforce the lifecycle with separate evidence |
 | 15-16 | Hosted Trip Planning Workflow: define contracts, orchestrate, trace, release, update, and roll back; then publish and use the workflow in Microsoft Teams and/or Microsoft 365 Copilot | Inspect generated files and nested traces; connect a channel request to both specialists' execution |
 | 17-19 (optional follow-on) | Choose, implement, and release a two-specialist capstone | Write a scoped brief; review changes; demonstrate and hand off |
 

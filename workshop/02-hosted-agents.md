@@ -72,7 +72,10 @@ Start with a workflow orientation:
 Continue the [shared story](MCP-SERVICES.md) with a fictional New York art trip.
 Use dates inside the actual weather forecast horizon and museum/event coverage
 returned by travel.art. Each specialist keeps its own MCP connection, skill,
-memory scope, and release. The coach supplies both existing agent release
+any configured memory scope, and release. Persistent memory is temporarily
+deferred, not a prerequisite for either specialist or this workflow; follow
+the [deferral policy](README.md#temporary-memory-deferral).
+The coach supplies both existing agent release
 details and guides their connection into workflow code; the participant does
 not need another MCP server. A travel.art `recommend_art_trip` result alone is
 not the final workflow, because it does not invoke our Weather Research Agent.

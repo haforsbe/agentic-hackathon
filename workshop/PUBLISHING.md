@@ -60,8 +60,14 @@ agent endpoint.
 
 ## Release one fully tested version
 
+Apply the [temporary memory deferral](README.md#temporary-memory-deferral).
+For the default memory-free candidates, memory stores, M tests and post-memory
+D variants are not release or channel prerequisites. Keep ordinary Conversation
+and identity isolation checks. Memory references below apply only when memory
+is actually configured; never silently disable existing memory to avoid checks.
+
 1. **Review the candidate.** Run every required pre-release test. Record agent name/version, instructions, model,
-   tools/allowlist, memory store/scoping, skill version/delivery strategy, and
+   tools/allowlist, memory store/scoping if configured, skill version/delivery strategy, and
    the passing test evidence. For a hosted update, identify the current
    known-good running deployment and the separately tested candidate source/
    configuration revision.
@@ -81,7 +87,7 @@ agent endpoint.
    rather than creating duplicate release resources.
 4. **Configure least-privilege access.** Confirm the consumer identity can
    invoke the endpoint and the agent identity can access downstream tools,
-   memory, and skills. Developer credentials succeeding locally do not prove
+   configured memory, and skills. Developer credentials succeeding locally do not prove
    the deployed identity has permission. Use current role/permission guidance;
    do not substitute an owner role for diagnosis.
 5. **Invoke as a consumer.** Use a separate client configured for the returned
@@ -100,7 +106,7 @@ results are not consumer-path passes. Keep model usage/cost and unavailable
 usage clearly labeled. Helpers do not approve operations or grade results.
 
 For the Weather Research Agent, verify its managed conversation behavior,
-memory, Weather MCP server and forecast tool connection, instructions,
+Weather MCP server and forecast tool connection, instructions,
 evidence-aware weather output and skill-guided tool behavior through the released
 endpoint. It does not rely on a
 local custom-function executor or client-side workflow.
@@ -112,7 +118,7 @@ routing change or repeat publication.
 
 At checkpoint 14, release the Cultural Travel Agent through its own stable
 endpoint. Verify its instructions, conversation isolation, selected travel.art MCP,
-skill-guided multi-tool behavior, and memory. Record both specialist versions
+skill-guided multi-tool behavior, and memory only if configured. Record both specialist versions
 and prove neither claims the other's
 tools or evidence domain.
 

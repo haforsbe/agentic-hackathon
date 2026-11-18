@@ -456,10 +456,13 @@ def run(plan, config):
             record["phase"] = "project-access-check"
             save()
             next(project.connections.list().by_page(), None)
-            record["phase"] = "openai-client-initialization"
-            save()
-            with project.get_openai_client(max_retries=0, timeout=60) as client:
-                execute(project, client, plan, config, record, save)
+            if plan["operation"] in ("inspect", "create-version"):
+                execute(project, None, plan, config, record, save)
+            else:
+                record["phase"] = "openai-client-initialization"
+                save()
+                with project.get_openai_client(max_retries=0, timeout=60) as client:
+                    execute(project, client, plan, config, record, save)
         if record["state"] != "awaiting_separate_tool_approval":
             record["state"] = "operation_completed_not_graded"
         record["finished_at"] = now()
@@ -495,6 +498,39 @@ def run(plan, config):
     return evidence, record
 
 
+def console_summary(evidence, record):
+    summary = {"evidence": str(evidence), **{
+        key: record[key] for key in (
+            "state", "requests_started", "created_version", "conversation_id",
+            "definition_readback_matches", "elapsed_seconds",
+        ) if key in record
+    }}
+    if record["plan"]["operation"] == "continue":
+        summary["tool_decision"] = {
+            key: record["plan"][key] for key in (
+                "response_id", "approval_request_id", "server_label", "tool_name", "arguments", "approve",
+            )
+        }
+    summary["results"] = []
+    for result in record["results"]:
+        compact = {key: value for key, value in result.items() if key not in ("case", "output")}
+        if "case" in result:
+            compact["case_id"] = result["case"]["id"]
+        compact["output_types"] = list(dict.fromkeys(item["type"] for item in result["output"]))
+        compact["tool_activity"] = []
+        for item in result["output"]:
+            if not item["type"].startswith("mcp_"):
+                continue
+            activity = {key: value for key, value in item.items() if key not in ("output", "tools")}
+            if "tools" in item:
+                activity["tool_names"] = [tool["name"] for tool in item["tools"]]
+            if "output" in item:
+                activity["output_in_evidence"] = True
+            compact["tool_activity"].append(activity)
+        summary["results"].append(compact)
+    return summary
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("readiness", "execute"))
@@ -506,8 +542,7 @@ def main():
     require(args.plan, "An approved local plan is required")
     plan, config = load_plan(args.plan)
     evidence, record = run(plan, config)
-    print(json.dumps({"evidence": str(evidence), "state": record["state"],
-                      "requests_started": record["requests_started"], "results": record["results"]}, indent=2))
+    print(json.dumps(console_summary(evidence, record), indent=2))
 
 
 if __name__ == "__main__":

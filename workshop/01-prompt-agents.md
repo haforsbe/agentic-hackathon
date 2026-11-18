@@ -277,6 +277,11 @@ checkpoint 15, when workflow code needs to validate two agent results.
 
 ## 06: Add and test Weather memory
 
+**Temporarily deferred.** Do not execute this checkpoint on the default route;
+continue from 05 to 07. The material below is retained for later reintroduction
+under the [memory deferral policy](README.md#temporary-memory-deferral).
+Do not create memory resources or run memory tests merely to complete this slot.
+
 **Concept:** managed Conversation history and persistent memory solve different
 problems.
 
@@ -328,9 +333,12 @@ a release task. Finalize any separately approved correction before the suite
 below, so the checks cover the actual release path once.
 
 Follow [PUBLISHING.md](PUBLISHING.md). Run the complete Weather Agent regression
-suite, verify its exact agent version, skill revision, tool allowlist, memory
-configuration, and Microsoft Foundry Model Deployment, then run P01-P03 through
+suite, verify its exact agent version, skill revision, tool allowlist, and
+Microsoft Foundry Model Deployment, then run P01-P03 through
 the Stable Agent Endpoint.
+For the default memory-deferred route, omit M01-M03 and post-memory variants;
+memory is not a release prerequisite. If memory is already configured, retain
+its applicable safety checks rather than silently disabling it.
 
 Before moving to checkpoint 08, follow
 [channel publication at 07](PUBLISHING.md#required-channel-publication-at-07-and-16).
@@ -583,6 +591,11 @@ requests to exercise tool roles rather than calling all four for every question.
 
 ## 13: Add and test Cultural memory
 
+**Temporarily deferred.** Do not execute this checkpoint on the default route;
+continue from 12 to 14. The material below is retained for later reintroduction
+under the [memory deferral policy](README.md#temporary-memory-deferral).
+Do not create memory resources or run memory tests merely to complete this slot.
+
 **Concept:** repeat the persistent-memory lifecycle with an independent,
 low-risk cultural preference.
 
@@ -612,9 +625,10 @@ scope change invalidates evidence, explain it and approve the affected
 regressions separately. Keep the two direct domain bindings independent.
 
 Run the complete Cultural Agent regression suite. Verify its exact version,
-skill revision, travel.art tool allowlist, memory configuration, source
+skill revision, travel.art tool allowlist, source
 attribution, and freshness caveats. Promote only a fully passing candidate to
 its own Stable Agent Endpoint and run P01-P03.
+Apply the same memory-deferred release rules as at 07.
 
 Apply the same pre-release handoff checklist to actual Cultural results:
 owning agent/version, destination/constraints, findings, guide/source
@@ -626,7 +640,7 @@ Runtime agent/version identity comes from service metadata, not a model guess.
 Invoke both stable specialists independently for the same destination. The
 Weather Research Agent must not claim cultural retrieval; the Cultural Travel
 Agent must not claim weather retrieval. Record both names, versions, endpoints,
-identities, tool connections, skill revisions, memory scopes, and release
+identities, tool connections, skill revisions, any configured memory scopes, and release
 evidence.
 Include each direct server URL/label, effective tool selection and native
 approval policy. Require T03-at-14. Verify neither agent is configured with

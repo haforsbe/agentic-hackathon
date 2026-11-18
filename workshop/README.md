@@ -55,7 +55,7 @@ offer the [optional advance readiness check](SETUP.md#optional-advance-readiness
 | Managed conversations | 03 | 10 | Workflow passes explicit request/correlation state |
 | First MCP tool | 04: `weather_forecast` | 11: `find_museum_guide` | Workflow invokes agents, not their tools |
 | Skills and multiple tools | 05: weather research procedure | 12: cultural research procedure | 15 validates formal result contracts |
-| Persistent memory | 06 | 13 | Workflow does not merge memory stores |
+| Persistent memory (temporarily deferred) | Skip 06 | Skip 13 | Lessons retained for later; no memory prerequisite |
 | Independent release | 07 | 14 | 16 releases the hosted workflow |
 | Publish and use in Microsoft Teams and/or Microsoft 365 Copilot | 07, after release and before 08 | No additional channel publication required | 16, after final release/update checks |
 | Agent collaboration | Specialists stay independently callable | Specialists stay independently callable | 15-16 coordinate both releases |
@@ -125,6 +125,32 @@ this as a vocabulary test. It introduces each term immediately before use:
 | Trace | A timeline showing calls, tools, durations, and failures |
 | Contract | A versioned machine-readable definition of data the workflow can validate |
 
+## Temporary memory deferral
+
+Persistent Microsoft Foundry memory is temporarily outside the default workshop
+route, not deleted from the curriculum. Skip 06 and 13: continue from 05 to 07
+and from 12 to 14 without creating memory stores, adding embedding deployments,
+storing preferences, or running M01-M03. Keep managed Conversations at 03/10.
+Explain the deferral briefly at the transition; do not turn it into another
+participant decision, exercise or understanding check.
+
+Record 06/13 and memory-only assertions as **deferred, not passed**, in the
+normal chat handoff. They do not block release, channel publication, the hosted
+workflow or completion of this memory-deferred route. All other applicable
+tests, identity/Conversation isolation and native approvals remain required.
+Use the ordinary D tests, not post-memory variants, when no memory is attached.
+Report core completion as the memory-deferred route, not a memory capability
+pass. Checkpoint numbering and the retained lesson/test identifiers stay stable.
+
+Reintroduce the retained lessons only after an explicit scope decision and
+approval for the required configuration, data retention and possible costs.
+Then run M01-M03 and the affected specialist, consumer, workflow and channel
+regressions on the changed versions/paths before claiming memory support.
+Do not silently remove or disable memory on an existing participant's agents,
+erase previous evidence, migrate legacy progress, or resume a paused participant
+during authoring. An existing memory-enabled candidate still needs its applicable
+safety/isolation evidence; changing it requires separate approval.
+
 ## Checkpoints
 
 | ID | Lesson | Required test evidence | App practice |
@@ -135,14 +161,14 @@ this as a vocabulary test. It introduces each term immediately before use:
 | 03 | [Weather conversations](01-prompt-agents.md#03-test-weather-managed-conversations) | D01-D02 | App session vs runtime Conversation |
 | 04 | [First Weather MCP tool](01-prompt-agents.md#04-connect-the-first-weather-mcp-tool) | T01 direct forecast-only binding, participant-sent C01, C03a and guided trace inspection | First-use Playground permission choice, scoped Auto approve and forecast evidence |
 | 05 | [Weather skill and multiple tools](01-prompt-agents.md#05-guide-multiple-weather-tools-with-a-skill) | T02 four-tool direct allowlist, S01 | Review skill delivery, candidate binding and tool routing |
-| 06 | [Weather memory](01-prompt-agents.md#06-add-and-test-weather-memory) | M01-M03 | Chat resume vs agent memory |
+| 06 | [Weather memory (deferred)](01-prompt-agents.md#06-add-and-test-weather-memory) | Not run or passed; continue 05 -> 07 | Retained for later |
 | 07 | [Release and publish Weather Research Agent](01-prompt-agents.md#07-release-the-weather-research-agent) | T03 final direct binding, final-path regressions, P01-P03, then CH01 channel publication/use before 08 | Distinguish release from publishing; review the participant's channel test evidence |
 | 08 | [Cultural baseline](01-prompt-agents.md#08-create-the-cultural-travel-agent) | B01-B02 | Compare independent agent definitions |
 | 09 | [Cultural instructions](01-prompt-agents.md#09-refine-cultural-instructions) | I01 | Review a focused instruction diff |
 | 10 | [Cultural conversations](01-prompt-agents.md#10-test-cultural-managed-conversations) | D01-D02 | Verify isolated runtime state |
 | 11 | [First Cultural Travel MCP tool](01-prompt-agents.md#11-connect-the-first-cultural-travel-mcp-tool) | T01 direct museum-guide-only binding, participant-sent C02, C03a | First-use Playground permission reminder, scoped Auto approve and guide evidence |
 | 12 | [Cultural skill and multiple tools](01-prompt-agents.md#12-guide-multiple-cultural-tools-with-a-skill) | T02 four-tool direct allowlist, S02 | Review skill delivery and tool routing |
-| 13 | [Cultural memory](01-prompt-agents.md#13-add-and-test-cultural-memory) | M01-M03 | Verify separate memory scope |
+| 13 | [Cultural memory (deferred)](01-prompt-agents.md#13-add-and-test-cultural-memory) | Not run or passed; continue 12 -> 14 | Retained for later |
 | 14 | [Release Cultural Travel Agent](01-prompt-agents.md#14-release-the-cultural-travel-agent) | Cultural final-path regressions/P01-P03, unchanged Weather release/dependency verification, T03 isolation and two-agent comparison | Review two independent direct-MCP releases without a planned Weather migration |
 | 15 | [Build Trip Planning Workflow](02-hosted-agents.md#15-build-and-test-the-trip-planning-workflow) | Reviewed portal-compatible scaffold, G01-G03 and W01-W03 locally | Review contracts, request-owned state, approval bindings and traces |
 | 16 | [Deploy, release and publish workflow](02-hosted-agents.md#16-hosted-release) | W01-W03 remotely, actual portal W04 success/denial, P01-P04, then CH02 on the final version | Review sequential tool cards and sourced output; send a channel request and inspect both specialist calls |
@@ -150,7 +176,8 @@ this as a vocabulary test. It introduces each term immediately before use:
 | 18 | [Build capstone specialists](CAPSTONE.md#18-build-and-release-the-specialists) | K02 and applicable specialist regressions | Small tasks, diff review, focused debugging |
 | 19 | [Build and release capstone workflow](CAPSTONE.md#19-build-release-and-demonstrate-the-workflow) | K03, G01-G03, W01-W03, P01-P04 | Handoff with evidence and cleanup choices |
 
-Each checkpoint depends on the preceding checkpoint. Both prompt agents must
+Each active checkpoint depends on the preceding active checkpoint; 06 and 13
+are temporarily deferred under the policy above. Both prompt agents must
 pass and be released independently before checkpoint 15 introduces executable
 orchestration. Where a checkpoint has substeps, test and pause between them.
 The optional Weather delivery lab is offered only after 07; skipping or

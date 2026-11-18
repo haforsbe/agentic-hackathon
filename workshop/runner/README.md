@@ -106,6 +106,9 @@ access. An empty successful page is valid access evidence, not proof of any
 particular connection. Request failures still stop before operation execution.
 Checks for an approved batch share one process/client; CLI identity is checked
 again before each model request or resource write. No global sign-in changes.
+`inspect` and `create-version` use only the project client and do not initialize
+an OpenAI response client. The other operations initialize it with the existing
+timeout and disabled retries; all preflight and evidence checks still apply.
 
 The verified credential reuses an Azure management token only in process
 memory, for the exact same ARM scope with no request options, the same process,
@@ -215,6 +218,21 @@ The record includes prompts, response IDs, reported agent/version, actual
 replies, tool/approval output, Conversation linkage and available usage.
 The coach shows the meaningful paired results together, judges them against
 TESTS.md, then records progress once per result/status boundary.
+
+Console output is a compact view, not a second full evidence dump. It keeps
+each complete reply once, response/agent/Conversation identifiers, status,
+usage, timing and case ID. `tool_activity` retains MCP call identifiers,
+arguments, approval requests and errors; continuations include their exact
+approval or denial scope in `tool_decision`. Discovery lists tool names
+without their schemas, and tool result bodies are marked `output_in_evidence`.
+Created versions, new Conversation IDs and definition read-back results are
+also returned when applicable. Full prompts, message blocks, discovery schemas
+and tool results remain in the evidence file named by `evidence`, under
+`results[index].case`, `results[index].output` and the existing raw response
+record. Read the relevant saved fields when judging tool grounding, an
+omitted output type, or another assertion needing detail; do not invoke the
+agent again to recover output. Pending approvals still stop execution and
+require a separate exact human decision; compact output does not grade tests.
 
 Failure records retain `stopped_at_phase` and `stopped_at_state`, distinguishing
 preflight/client-initialization failures from a possibly started resource write

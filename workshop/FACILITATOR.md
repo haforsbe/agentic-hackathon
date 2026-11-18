@@ -24,9 +24,9 @@ publication/use is required at 16 after final release/update checks. The
 Cultural build and workflow implementation remain in their current order.
 
 Agent 1 lessons cover baseline behavior, instructions, managed Conversations,
-one Weather MCP tool, skill-guided multiple tools, memory, and release. Agent 2
-repeats the same seven-step evidence loop with separate instructions, state, a
-public travel.art Cultural Travel MCP server, skill, memory, and
+one Weather MCP tool, skill-guided multiple tools, and release. Agent 2
+repeats the same active evidence loop with separate instructions, state, a
+public travel.art Cultural Travel MCP server, skill, and
 release. Formal contracts begin with the hosted workflow. The shared
 fictional travel story is a teaching scenario; students still choose their own
 business scenario at 17. The Agent Framework workflow begins only after both
@@ -37,6 +37,11 @@ Teach [direct MCP connections](MCP-CONNECTIONS.md) within that progression:
 Weather forecast-only at 04, four-tool allowlist at 05 and final-binding
 verification at 07, then independent Cultural one-tool/four-tool practice
 at 11/12. Toolboxes and their authentication setup are not core requirements.
+Persistent memory is also temporarily deferred under the
+[memory deferral policy](README.md#temporary-memory-deferral): skip 06/13
+without awarding passes, retain their lessons/tests for later, and omit
+memory-only preparation and release/channel assertions for memory-free agents.
+Do not silently remove memory from existing resources.
 Finalize Weather's binding before its already-required final suite; do not
 plan a migration or re-release at 14. At handoff verify unchanged Weather
 metadata and reuse valid evidence, preserving required two-agent comparison
@@ -81,7 +86,7 @@ single-project setup as an educational compromise, not production isolation;
 do not reduce the core agenda or skip a learning gate to fit it in. The
 offline contract workflow is available, but a full live rehearsal is not yet
 verified; do not schedule the lab as a completed cloud delivery exercise until
-the identity, exact tool approval/denial, isolated memory and stable consumer
+the identity, exact tool approval/denial, state isolation and stable consumer
 path are rehearsed.
 
 Rehearse agent 2 as an application exercise, not a second introductory lecture.
@@ -160,13 +165,13 @@ Before the cohort:
 
 - Offer the optional readiness slot in SETUP.md. Check tools in the actual
   coach execution environment; arrange isolated dependencies, chosen-identity
-  access and later memory/skill/release/hosting prerequisites within approved
+  access and later skill/release/hosting prerequisites within approved
   scope. Do not silently provision resources or run paid probes.
 - Rehearse the helper's supported SDK version and operations. Run its offline
-  tests, then separately approved integration checks. Record gaps for memory,
+  tests, then separately approved integration checks. Record gaps for
   consumer endpoints or hosted runtime rather than claiming the narrow prompt
   runner implements those capabilities.
-- Resolve exact current managed Conversation, direct MCP, memory, release and
+- Resolve exact current managed Conversation, direct MCP, release and
   channel operation/permission mappings in the facilitator rehearsal. Record
   the supported route, tested SDK/API revision, scope and outstanding blockers
   in reusable sanitized preparation evidence. A guessed provider-operation
@@ -263,7 +268,7 @@ bypasses.
 | Repository and optional CI/CD | Agreed writable destination, preserved existing work, verified branch/Actions access, accurate package-vs-code coverage report and separately rehearsed manual promotion if offered |
 | Direct MCP integration | Both specialists' direct public endpoints, exact allowlists, runtime access, participant-selected Playground permission scope, supported same-run continuation and correlated tool execution; verify the reported first-use Auto approve control and its actual persistence/scope before the cohort; SDK/runner native decisions remain separate; no upstream credential connection or Toolbox prerequisite; a saved definition or local discovery is insufficient |
 | Memory | Operation-specific permissions, approved retention/deletion/cost scope, working retrieval and positive/negative isolation evidence; separate Conversations alone do not prove isolation |
-| Telemetry | Read permission, data/retention/cost agreement and correlated model/tool/memory evidence; missing telemetry is unknown, not zero usage |
+| Telemetry | Read permission, data/retention/cost agreement and correlated model/tool evidence, plus memory evidence only if configured; missing telemetry is unknown, not zero usage |
 | Release and channels | Version/selector read-back, tested consumer authorization and rollback, CH01 and CH02 evidence with both specialists traced as required |
 | Full participant rehearsal | Fresh participant route through 16 in order, actual Coach discovery, hands-on/teach-back and approval gates, scoped test limits, token capture and failure recovery; no mandatory pricing calculations; time the optional delivery lab separately |
 
@@ -412,7 +417,7 @@ deterministic or that this repository enforces access control.
 | Corrupt progress JSON | Reports the error and asks to recover; does not overwrite it |
 | Older curriculum progress | Detects curriculum version mismatch; preserves attempts and asks to migrate; no numeric pass remapping |
 | Instructions changed after release | Retains historical attempts, invalidates affected gates, re-runs tests |
-| Missing memory/skills preview | Blocks the affected milestone and requests facilitator intervention |
+| Missing memory/skills preview | Deferred memory does not block the default route; missing required skills support blocks its affected milestone |
 | Prompt skills unsupported dynamically | Labels versioned static composition accurately; reserves runtime loading for hosted |
 | Candidate fails a release test | Keeps it outside Stable Agent Endpoint routing or hosted deployment; fixes and retests rather than deploying a known failure |
 | "Edit the workshop README" | Performs repository maintenance without starting a student lesson |
@@ -443,10 +448,12 @@ dead-end status summary.
 ## Reviewing student evidence
 
 Ask the student to demonstrate the baseline, instruction change, conversation
-isolation, memory recall/isolation/forget, both specialist MCP integrations and
+isolation, both specialist MCP integrations and
 skill-guided tool routing, independent state boundaries, workflow result
 contracts, hosted multi-agent workflow execution and traces, and each stable
 endpoint. Include a declined action for capstones with writes.
+Memory recall/isolation/correction/deletion is required only for a separately
+reintroduced or already configured memory capability, not the deferred route.
 Ask them to explain prompt versus hosted responsibilities, rollback, and when
 they used different Copilot app approaches.
 

@@ -90,6 +90,9 @@ runtime passes. Rehearse with synthetic targets/usage and no cloud calls:
 | Finish a module | Relate actual results to learning, name gaps, use the existing single understanding gate or an explanation already demonstrating it, then offer the next checkpoint or pause |
 | Student gets stuck or asks about technology | Respond warmly and patiently, explain with a concrete example and help with the next small action; no blame, proof demand or extra quiz |
 | Student confirms a routine Microsoft Foundry manual step is done and looks correct | Accept it, mark it participant-confirmed in chat and move on; no default screenshot, full reply, IDs or duplicate coach inspection |
+| Default route reaches 06/13, release, channels or core completion | Briefly note memory is deferred, continue 05 -> 07 or 12 -> 14 without a skip question or memory operations, and omit memory-only gates for memory-free candidates; report completion of the memory-deferred route, never an M pass |
+| Participant asks to add memory later or resumes with memory already attached | Obtain explicit scope/configuration/data/cost approvals for additions, run retained memory and affected downstream tests; preserve existing resources/evidence and do not silently disable memory |
+| Coach explains an agreed manual creation/configuration step and student replies "created", "done" or "finished" | Accept the reply as completion of that action and continue; do not repeat the write, demand "looks as expected", or request a proof package. Obtain a service-returned identifier only when the next operation needs it; separate required runtime/identity assertions remain unchanged |
 | Student report concerns a specific required identity, permission, isolation, runtime, release or channel assertion | Ask only for that assertion's needed evidence or inspect the same run within approved read-only scope; preserve provenance and uncertainty, not another paid call or an invented independent pass |
 | Enter checkpoint 16 | Explain that this is the final core checkpoint, including release/update and channel requirements; 17-19 are optional |
 | All core gates pass, including CH01/CH02 | Proactively announce core completion and provide the evidence-based handoff; do not wait for "are we done?" or automatically start the capstone |
@@ -113,6 +116,14 @@ runtime passes. Rehearse with synthetic targets/usage and no cloud calls:
 | Auto approve is reported or selected in the Playground | Record the actual scope and observed behavior; do not infer SDK/runner, endpoint, hosted-workflow or channel permission, a saved `never` policy, or persistence across chats/versions |
 
 ## Checkpoint execution matrix
+
+The default route follows the [temporary memory deferral](README.md#temporary-memory-deferral).
+Skip 06/13 and M01-M03 without awarding passes. For memory-free candidates,
+omit M coverage and post-memory D variants from all later regressions,
+release and channel gates; ordinary Conversation and identity isolation tests
+remain required. Existing memory-enabled candidates retain their applicable
+checks until a separately approved configuration change. Adding memory later
+requires the retained tests and affected path regressions.
 
 Plan the following required coverage before asking for the step's approval.
 A case may satisfy several assertions in one exchange: label each assertion
@@ -138,7 +149,7 @@ final version/path; never infer a channel pass from project tests.
 | 03, 10 | D01 two turns in Conversation A; D02 dependent follow-up in new Conversation B | B01-B02/I01 coverage: reuse valid evidence on the unchanged version/path/scope; run only missing or invalidated checks if Conversation invocation changes that path or scope. B02 can share D02 when exact input/assertions match |
 | 04, 11 | T01 direct one-tool binding; participant-sent C01 or C02 first-tool request, permission choice and trace; C03a | B01-B02/I01 and D01-D02; no separate denial drill, memory or later skill tests yet |
 | 05, 12 | T02 four-tool direct allowlist and unchanged server; S01 or S02 routing/provenance and partial failure, shared with C03b | B01-B02/I01, D01-D02, C01R or C02R and C03a; a skill scenario may also satisfy a matching forecast/museum regression |
-| 06, 13 | M01-M03, consented synthetic preference, trusted-scope isolation/correction/deletion | Previous applicable coverage, using C01R/C02R and the post-memory D variant below; the required skill/MCP personalization run may satisfy overlapping assertions |
+| 06, 13 | Temporarily deferred; no memory setup or M01-M03 on the default route | Continue 05 -> 07 and 12 -> 14; retained tests apply only when memory is explicitly reintroduced or already configured |
 | 07 | T03 final Weather direct binding; P01-P03, then CH01 channel publication/use before 08 | Full applicable B/I/D/C/S/M coverage on the final direct-MCP candidate/path, counted once; new channel-path access/approval/isolation evidence cannot be inferred from endpoint tests |
 | 14 | T03 final Cultural direct binding and two-domain isolation; Cultural P01-P03 and two-specialist comparison | Full applicable Cultural B/I/D/C/S/M coverage; verify unchanged Weather release, publication and dependencies and reuse valid evidence, not a second Weather suite or publication |
 | 15 | G01-G03 and W01-W03: local fixtures for validation/failure branches and approved live calls to both released specialists | Specialist release evidence must match the versions invoked; no specialist rewrite or full rerun merely to scaffold the workflow |
@@ -227,6 +238,10 @@ a verified forecast. C01 later needs the Weather MCP server's
 `weather_forecast` invocation, source/result and trace evidence.
 
 ## Persistent memory
+
+**Retained for later, not run on the default memory-deferred route.** These
+tests do not block that route's completion and must not be marked passed
+without execution. See the [deferral policy](README.md#temporary-memory-deferral).
 
 | ID | Input/procedure | Pass conditions |
 |----|-----------------|-----------------|
@@ -371,8 +386,9 @@ silently waived because it passed in Microsoft Foundry.
 | P03 | Run all applicable feature tests through the consumer path | Tools, Conversations, memory, skill delivery, errors, identity, and downstream access still behave as tested |
 | P04 | Promote a fully passing update, invoke it, and verify the previous known-good version remains an available documented recovery target | Stable endpoint remains unchanged; metadata and behavior prove the update; recovery target and procedure are verified without routing traffic to a known-failing version |
 
-At 07, P03 covers Weather B, I, post-memory D, C01R/C03, S01, and M tests.
-At 14, repeat Cultural B, I, post-memory D, C02R/C03, S02, and M tests.
+At 07, P03 covers Weather B, I, D, C01R/C03, and S01.
+At 14, repeat Cultural B, I, D, C02R/C03, and S02.
+Only when memory is configured, use post-memory D and add the M tests.
 Retain the original single-tool C01/C02 milestone evidence separately.
 At 16 add G and W tests.
 At 19 use the capstone equivalents.
