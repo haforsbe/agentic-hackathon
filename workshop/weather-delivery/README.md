@@ -19,6 +19,17 @@ configuration history, review, automated checks, and controlled promotion
 without requiring a second project. Explain that production environments
 normally separate projects/resources and access more strongly.
 
+Use the [whole-workshop teaching standard](../COACH.md#explain-what-and-why-before-every-step)
+throughout this optional lab. Before each meaningful step, explain why Git
+tracks a captured definition rather than live Conversations, why reviewing a
+diff differs from running offline checks, and why a reviewed merge differs
+from deployment and runtime verification. Introduce those concepts with their
+corresponding action, not as one large opening checklist.
+After capture, review/checks, deployment and the actual approved runtime test,
+give a short summary of what changed, what its evidence establishes and what
+comes next. A configuration capture or successful deployment is not proof of
+tool execution; do not add another prompt or confirmation just for the summary.
+
 The participant does not need to make an extra Dev edit just to begin this
 lab. The capture uses the exact saved Dev version they select. If they want a
 visible change to review, make and test it during the normal Weather lesson,

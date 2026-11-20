@@ -10,7 +10,27 @@ Trip Planning Workflow. The capstone proves transfer by applying the same
 architecture to a different problem: two complementary prompt-agent
 specialists coordinated by a hosted Agent Framework workflow.
 
+Keep the [same conceptual teaching depth](COACH.md#explain-what-and-why-before-every-step)
+as the guided lessons. Reuse demonstrated knowledge, but explain the chosen
+scenario's new mechanisms, alternatives and tradeoffs before implementation.
+Give a short learning summary after each meaningful decision or observed
+result; adapt it to actual evidence rather than assuming success.
+
 ## 17: Choose and scope
+
+**Teach before practice:** a capstone transfers an architecture to another
+problem rather than changing the names in the travel example. Start with the
+user's needed outcome, then ask which evidence domains genuinely require
+different specialists. Two agents that do the same work add coordination
+without a clear benefit; complementary agents should have distinct
+responsibilities and independently assessable results.
+
+Compare using a single agent with coordinating specialists. A small problem
+may not need a workflow in production; this exercise deliberately selects
+a scenario with two useful evidence domains so the participant can apply
+the learned boundaries. Explain how source coverage, data sensitivity and
+tool impact constrain the design. Choosing a scenario does not authorize
+its integrations, writes or deployment.
 
 | Scenario | Specialist 1 | Specialist 2 | Workflow result |
 |----------|--------------|--------------|-----------------|
@@ -42,11 +62,28 @@ unless the scenario requires them. Use public or synthetic fixtures.
 Run K01 before implementation. Keep the guided Weather, Cultural Travel, and
 Trip Planning releases unchanged for comparison.
 
+**Learning summary:** identify the chosen user outcome, the two distinct
+evidence responsibilities and the reason coordination is useful. Distinguish
+an agreed design from integrations or runtime behavior not yet implemented.
+
 **App practice:** ask for a plan with non-goals and acceptance criteria without authorizing execution.
 **Alternative:** select a preset scenario or propose an equivalent bounded design.
 **Teach-back:** "Why are these specialists complementary rather than duplicate?"
 
 ## 18: Build and release the specialists
+
+**Teach before practice:** apply the same controlled build loop to each
+domain, explaining why the chosen source can answer its questions and which
+claims it cannot support. Keep the distinction between instructions, history,
+external operations and persistent storage visible. A new endpoint or domain
+can introduce unfamiliar authentication or freshness limits even when the
+participant already understands MCP.
+
+Explain why the specialists are tested and released independently before
+coordination: otherwise a combined answer makes it difficult to identify
+whether a problem comes from a source, an agent or the workflow. Reuse
+navigation and concepts already understood, but do not assume travel-specific
+tool policies or evidence guarantees fit the new scenario.
 
 Build each capstone Microsoft Foundry Prompt Agent using the practiced sequence:
 
@@ -66,11 +103,29 @@ evidence. One specialist's success never substitutes for the other's.
 Run K02 and the adapted B, I, D, C, S, M, and P tests appropriate to each
 specialist. A known-failing candidate remains outside stable routing.
 
+**Learning summaries:** after each capability, connect the actual change and
+result to its domain purpose. At release, distinguish the two independently
+verified specialist interfaces from the combined workflow not yet built.
+
 **App practice:** give Copilot one bounded change, inspect its diff and evidence, then debug narrowly.
 **Alternative:** use an isolated experiment branch for one risky design change.
 **Teach-back:** "What did this capability add, and which observed test proves it?"
 
 ## 19: Build, release, and demonstrate the workflow
+
+**Teach before practice:** derive contracts from the new specialists' observed
+outputs, not from assumptions that travel-shaped fields fit every scenario.
+Explain how the workflow validates those agreements, preserves evidence and
+uncertainty, and decides which results can be combined. Compare configuration
+delivery, actual execution and observed user value: deploying code proves
+neither that both specialists executed nor that the result meets the user need.
+
+Review the local-to-hosted boundary and runtime identity for this scenario.
+Workshop Coach creates the code-first hosted workflow under the practiced
+scoped approvals; participants review, explain and test it rather than using
+an unsupported portal creation route. The participant's final explanation
+should connect the user's request to both specialist contributions and the
+validated combined result, using the real correlated execution.
 
 Define versioned result contracts for both capstone specialists. Implement a
 Microsoft Agent Framework workflow that invokes their Stable Agent Endpoints,
@@ -97,17 +152,32 @@ Hand off the three exact released versions, endpoint responsibilities,
 limitations, sanitized evidence locations, recovery target, and all owned
 resources still running. Review cleanup separately.
 
+**Learning summaries:** distinguish local implementation results, actual
+specialist execution and verified hosted behavior as each is established.
+Close with how the architecture met the selected user need and what remains
+limited or unverified, not just a list of deployed resources.
+
 **App practice:** request an evidence-backed handoff and compare it with live metadata and traces.
 **Alternative:** demonstrate the same cases interactively; neither method excuses missing evidence.
 **Teach-back:** "What did Copilot help create, and what runtime evidence did you verify independently?"
 
 ## Optional write actions
 
+**Teach before practice:** a lookup reads information; a write changes another
+system's state. Explain the exact proposed change, whose identity and records
+it affects, and why tool permission, authentication and state verification are
+separate controls. A message saying "ticket created" is not proof of the write.
+Use the synthetic service's resulting state as evidence and distinguish that
+from the agent's narrative. Never transfer an automatic read-only tool policy
+to a write merely because both use MCP.
+
 Read-only capstones are fully valid. If a scenario performs writes, require an
 authenticated, participant-isolated synthetic service. Run A01 with one
 explicitly approved valid action, then verify the exact resulting state.
 Keep A02 in automated implementation coverage, not a participant failure
 exercise. Respect any actual decline without executing the action.
+After the approved action, summarize the exact observed state change and
+the control that bounded it; do not imply approval for another write.
 Never introduce real payments, bookings,
 production tickets, or sensitive personal data.
 

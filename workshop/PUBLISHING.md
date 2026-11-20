@@ -14,6 +14,45 @@ Cultural's independent endpoint release at 14 remains unchanged; a separate
 Cultural channel app is not required. Keep checkpoint numbering and order.
 The GitHub Copilot app is the coaching application, not this distribution target.
 
+## Teach release and publishing before the procedure
+
+Use the [whole-workshop teaching standard](COACH.md#explain-what-and-why-before-every-step)
+at each meaningful stage below, not only in the opening. Explain the relevant
+mechanism before asking for configuration or approval.
+
+**Candidate, release and rollback.** A candidate is a version being evaluated.
+Release selects a tested version for consumers through the stable endpoint;
+creating a newer candidate does not establish that it receives consumer
+traffic. Explain the current selector and the proposed change using actual
+service metadata. A rollback changes the selected known-good release; it
+does not undo changes made to an external tool's service or data.
+
+**Caller and runtime identity.** The participant's permission to edit an agent,
+a consumer's permission to invoke it and the running agent's permission to
+reach its dependencies are different relationships. Explain which one the
+next check establishes. Tool approval is another boundary: agreeing to one
+proposed operation does not grant broad access or authorize publication.
+This is why a developer's successful test is not sufficient consumer evidence.
+
+**Endpoint release versus channel publication.** A stable endpoint gives
+authorized software an address for the released agent. Publishing makes it
+available through a chosen user-facing surface, such as Microsoft Teams or
+Microsoft 365 Copilot. The channel route adds its app registration,
+audience and user-to-state mapping; it should use the existing tested agent,
+not recreate its reasoning or copy its tools. Compare that with a Playground
+test so the participant understands what genuinely new path is being tested.
+For the hosted workflow, the channel calls the orchestrator, which still
+invokes the two released specialists.
+
+**Learning summaries:** after verified routing, name the selected version
+and why it is the consumer release. After a successful consumer request,
+state what that identity and endpoint actually demonstrated. After the
+participant's channel request, connect the reply to its correlated execution
+and explain the added distribution boundary. A completed publish dialog,
+installed app or endpoint-only test does not justify a channel success summary.
+Keep summaries short and use the same required requests, not another test or
+confirmation after each procedure step.
+
 ## Tool dependencies are part of the release
 
 Follow [Direct MCP connections](MCP-CONNECTIONS.md). Record each direct server

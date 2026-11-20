@@ -47,6 +47,71 @@ specific change. Starting the workshop does not grant blanket permission to
 change Azure resources. Selecting Workshop Coach chooses the coaching profile;
 it does not create a Foundry agent or grant Azure permissions.
 
+## Teach the environment before configuring it
+
+Introduce these concepts just before their setup actions, not as a glossary
+dump during the welcome or experience questions.
+
+**Two products, two responsibilities.** The GitHub Copilot app is where
+Workshop Coach explains, helps prepare changes and reviews evidence. Microsoft
+Foundry is where the workshop agents are configured and run. Selecting a
+coaching profile does not deploy an agent, and adding a tool to the coach
+does not add it to a Microsoft Foundry agent. Keeping those roles separate
+helps the participant understand where a change takes effect.
+
+**Project, identity and endpoint.** A Microsoft Foundry Project is the cloud
+workspace for this participant's agent work and related configuration. The
+Project Endpoint tells a supported client which project to address; it is
+an address, not a password or proof of access. Authentication establishes
+which identity is calling, while authorization determines which operations
+that identity may perform. Explain why the participant's browser sign-in and
+Workshop Coach's execution identity need separate verification: seeing a
+project in one interface does not grant another caller access.
+
+**Catalog model versus deployment versus agent.** A model is the underlying
+AI capability. A Model Catalog entry describes an available model and its
+capabilities; browsing or selecting that entry does not by itself establish
+a usable deployment for our workshop agents.
+
+Explain **deploying a model** as making a selected model/version available
+for applications to send inputs and receive generated outputs. That processing
+is called **inference**. Deployment creates the serving configuration, not
+new training: choose the supported target, deployment option, name and
+capacity settings applicable to that model. Exact options vary; do not imply
+every deployment creates a dedicated server, requires a model download or
+has the same charging model. A deployment name alone does not establish that
+the deployment is ready or the caller has access.
+
+For this workshop, a usable model deployment must exist before our agents
+can use that model. An agent references the chosen deployment and adds its
+instructions and, later, tools. Distinguish the catalog's model name/version,
+the participant's deployment name and the separately created agent name.
+For example, one deployment named `workshop-model` could serve both the
+Weather and Cultural agents; the name is illustrative, not a selected resource.
+
+We need a usable deployment, **not necessarily a new deployment**. Inspect
+existing options first and let the participant explicitly choose a suitable
+one or a new supported deployment. Explain quota as an available capacity
+allowance, not a spending budget. Compare compatibility, ownership, capacity
+and possible charges without routine pricing calculations. New deployment
+requires scoped approval; reuse can still incur inference charges.
+Creating a project or model deployment does not create an agent, and deploying
+the model is separate from releasing an agent or hosting workflow code.
+
+**Conversations and tracing are separate.** A Conversation maintains related
+messages. A trace records what executed and can help explain why a response
+was produced. Application Insights provides the telemetry destination used
+for required portal trace exercises. Explain this relationship when checking
+tracing readiness; a successful sign-in or model reply does not establish
+trace visibility. Do not turn routine setup into a telemetry-query lesson.
+
+**Learning summaries:** after verified project access, summarize which
+workspace and identity are established and why an endpoint alone was
+insufficient. After model selection, distinguish a selected usable deployment
+from an agent that has not yet been created. Report tracing readiness as its
+own outcome. Close setup by explaining what is ready for agent creation and
+any remaining blocker, without implying that later capabilities were tested.
+
 ## Minimum environment, then just-in-time additions
 
 | When | Needed | What the coach verifies |

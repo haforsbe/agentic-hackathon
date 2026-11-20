@@ -8,7 +8,12 @@ several new UI concepts while also debugging an agent.
 Use the [core workshop time budget](FACILITATOR.md#five-to-six-hour-core-agenda).
 Demonstrate an app technique when first introduced, then use it naturally
 while building agent 2 rather than repeating the full tour. Keep the 50/50
-test-prompt mix and required hands-on evidence. Ask for deeper exploration only
+test-prompt mix and required hands-on evidence. Teach what each app technique
+does, why it fits the current task and how it differs from Microsoft Foundry
+runtime behavior, using the
+[whole-workshop teaching standard](COACH.md#explain-what-and-why-before-every-step).
+Foundational explanation is included, not optional exploration.
+Ask for additional exploration only
 at a natural checkpoint when time allows or the participant requests it; do
 not add two optional prompts after every result.
 
@@ -65,7 +70,11 @@ describe what is visible instead of guessing labels.
 ## Where tests and exploration happen
 
 Each module starts with where you are (plain-language stage and checkpoint),
-its goal, a short plan and what will change or stay unchanged. Before a test,
+its goal, a short plan and what will change or stay unchanged. Before practice,
+explain the concept, purpose, mechanism and relevant alternatives, not only
+where to click. After each meaningful learning step, give a
+[short evidence-based learning summary](COACH.md#close-each-meaningful-learning-step)
+without another confirmation question. Before a test,
 the coach explains why you are running it, what you should observe and what
 it cannot prove. At module close, review actual evidence and what you learned,
 complete the existing single understanding check, then move directly into the
@@ -89,6 +98,8 @@ When both actors have supported routes, an execution-choice menu includes
 **Workshop Coach will execute...** and **Participant can execute...**, naming
 the actual action and surface. The
 participant chooses a supported route within the stated approval scope.
+Explain the task before this choice; show only the selected route's instructions
+afterward, following [the execution-choice sequence](COACH.md#make-instructions-easy-to-scan).
 If a required personal action cannot be delegated, label the coach option's
 supported preparation and the remaining participant action explicitly.
 Hosted workflow creation is coach-only under the
@@ -211,7 +222,8 @@ estimate is optional, not a bill or completion gate. Scope/resource changes,
 extra cases or expired terms need a new decision; explicit cost restrictions,
 resource-write approvals and each human MCP tool approval remain separate.
 
-For portal navigation, the coach gives a concrete, documented route first:
+After the participant selects portal execution, or when a required personal
+action is the current task, the coach gives a concrete, documented route:
 starting URL, your exact project and resource, control labels, and the expected
 result. You do not need to list sidebar labels or provide a screenshot before
 ordinary guidance. If the documented controls differ from your screen, stop
@@ -325,6 +337,68 @@ Tool-approval dialogs, post-send copy controls, memory operations, and publishin
 flows were not rehearsed. Do not invent their exact labels or treat this
 read-only walkthrough as test evidence for those behaviors. Missing telemetry
 or a different date filter does not authorize another model call or setup change.
+
+### Model deployment and agent creation menus
+
+**Additional observed controls, 2026-11-20:** the English **New Foundry**
+experience in Microsoft Edge, including its narrow side-panel layout.
+An approved author rehearsal inspected existing pages, opened creation
+dialogs without submitting them, and cancelled those dialogs. No model
+request was sent, configuration saved, or resource created or changed.
+
+These findings are saved as reusable **participant-facing text guidance**,
+not browser automation. Use the labels and navigation below to explain what
+participants do themselves during the live workshop. Do not replay author
+clicks, retain browser selectors as live instructions, or copy the author's
+account, project, agent names, deployment choices or permissions. This
+rehearsal establishes neither participant setup nor approval nor a test pass.
+If the participant's view differs, obtain one specific observation and adapt
+the guidance rather than opening Playwright during live coaching.
+
+The routes below supersede older navigation wording for these tasks when
+the participant's screen matches this revision.
+
+| Task | Observed route and participant instruction |
+|------|--------------------------------------------|
+| Open navigation in a narrow panel | Select **Menu** in the header. The navigation exposes **Build**, **Manage**, and **Docs**. Under **Build**, the relevant entries include **Catalog**, **Agents**, **Models**, and **Traces**. Do not require a permanently visible navigation pane. |
+| Browse models | Select **Build -> Catalog**, then the **Models** tab. Use **Search** and open the intended model card. The tab is **Models**, not **Model Catalog**. |
+| Review a model | The model card has **Details**, **Deployments**, **Benchmarks**, **Responsible AI**, and **License**. Inspect **Details** and the displayed version; a catalog entry is not proof of a usable deployment. |
+| Inspect deployment choices | The model card's **Deploy** menu offers **Default settings**, **Custom settings**, and, when an existing deployment is available, **Use an existing deployment**. Defaults are not approval. Reuse requires a verified suitable deployment and explicit participant choice. |
+| Review a new deployment | Select **Deploy -> Custom settings**. Review **Deployment name**, **Deployment type**, **Priority processing**, **Model version settings**, **Tokens per Minute Rate Limit**, and **Guardrails**. Expand **Model version settings** to find **Model version** and **Model version upgrade policy**. Do not select the dialog's final **Deploy** button before approval of the exact target, settings, processing boundary and possible charges. |
+| Locate deployments | Select **Build -> Models**, then **Deployments**. The inspected list included **Serverless** and other deployment categories. Locate the exact deployment and inspect **Model**, **Version**, **Deployment status**, and **Deployment type**. **Succeeded** is the observed creation status, not proof of caller access, agent behavior or participant selection. |
+| Open the agent creation form | Select **Build -> Agents**, stay on the **Agents** tab, then select **New agent -> Build an agent**. Other menu entries were **Code an agent**, **With agent template**, and **Link external agent**; they are not the core Prompt Agent creation route. **Routines** and **Workflows Preview** are separate tabs. |
+| Review agent creation | The **Create an agent** dialog exposes **Agent name**, **Interaction mode** with **Text** and **Voice**, and **Use the Microsoft Copilot harness**, marked **Preview**. The final button is **Create agent and open playground**, not merely **Create**. Use a new agreed agent name, **Text**, and leave **Use the Microsoft Copilot harness** unselected for the core ordinary Prompt Agent. The optional harness is not the GitHub Copilot app. Obtain creation approval before selecting the final button; the dialog states that interaction mode cannot be changed after creation. |
+| Configure the exact agent after approved creation | On the agent's **Playground**, select **Setup** to find **Model:**, **Instructions**, and **Tools**. Confirm the selected model deployment; do not assume the initial model is the participant's choice. The instruction box is **Write your prompt here to give your agent instructions.** **Save** is an agent-configuration control, not a test-send button; save only the agreed configuration. |
+| Find the test input without sending | On **Playground -> Chat**, the message box is **Message the agent...**, with **Send** and **New chat**. Do not put a test message in **Instructions**, and do not send a request merely because agent creation opens the Playground. Test scope and possible charges need their own approval. |
+
+Explain the deployment controls before asking the participant to use them:
+
+- **Deployment type** is the serving arrangement. The inspected
+  **Global Standard** description permits processing globally, outside the
+  resource's Azure geography; review that boundary and charging arrangement.
+- **Priority processing** concerns higher-priority processing and may affect
+  charges; do not enable it automatically.
+- **Model version upgrade policy** governs how the served version may be
+  updated. The policy choices themselves were not exercised.
+- **Tokens per Minute Rate Limit** is a token-processing rate allowance.
+  Tokens are small pieces of text processed by the model. This rate limit
+  and available quota are not spending caps; do not copy the author's capacity.
+- **Guardrails** are safety controls for model requests and responses.
+  Visibility of the field does not prove that any particular policy is enabled.
+
+Use **Choosing and deploying a model** as one participant task only when no
+suitable existing deployment is available or the participant chooses not to
+reuse one. Model selection and exact deployment approval remain distinct
+decisions inside that task. Explicitly selected, verified suitable reuse
+leads directly to **Creating an agent**, not another catalog-selection or
+deployment exercise.
+
+Only navigation, visible labels and configuration sections were inspected.
+The final **Deploy**, **Create agent and open playground**, **Save**, and
+**Send** controls were not selected. Successful creation, saving, model calls,
+version-policy behavior, permissions and channel delivery remain unverified
+by this menu rehearsal. Preserve all required live evidence and native human
+decisions; do not turn the rehearsal into participant progress.
 
 ### Before adding a direct MCP tool
 

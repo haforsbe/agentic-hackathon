@@ -14,6 +14,15 @@ intended local tests. Its graph is a facilitator reference, not a substitute
 for the participant-specific workflow, participant learning or live release
 evidence.
 
+Use the [whole-workshop teaching standard](COACH.md#explain-what-and-why-before-every-step).
+Explain each new mechanism before reviewing generated code or asking for an
+operation, then give a short learning summary after each meaningful step.
+Coach-only creation must not make participants passengers: they need to
+understand what runs, which component owns each responsibility and what the
+observed results demonstrate. Use the existing review and understanding check,
+not extra quizzes or duplicate live requests. Summary wording below must
+reflect actual evidence, not assumed success.
+
 **Creation is coach-only.** Workshop Coach writes the code-first workflow and
 creates/deploys its hosted agent through the supported SDK/CLI route, after the
 required scoped approvals. Participants do not write the workflow themselves
@@ -71,6 +80,65 @@ human approval, release or CH01/CH02 channel evidence.
 
 **Concept:** executable workflow code coordinates released specialists and is
 the first place formal machine-readable result contracts are required.
+
+**Teach before practice:** a prompt agent combines model reasoning,
+instructions and permitted tools. A workflow coordinates steps in executable
+code: it decides what input is required, which specialist is invoked, how its
+result is checked and what can be assembled. Microsoft Agent Framework is the
+library used to express this coordination; Microsoft Foundry will host its
+running service later. A prompt asking one agent to "act like two experts" is
+not the same architecture.
+
+Explain the ownership boundary with the participant's trip. Weather owns
+forecast retrieval and its source; Cultural owns museum-guide retrieval and
+its source. The workflow supplies relevant trip inputs to each and validates
+their outputs. It does not copy their tools or assume a shared Conversation.
+That separation lets the participant trace which specialist contributed a
+claim and keeps domain changes behind independently tested releases.
+
+**Why contracts now?** People can read loosely structured briefings, but code
+needs a predictable agreement to process and combine results. A **result
+contract** is that agreement between a component producing information and
+one consuming it: what is returned, how it is organized, what it means and
+which rules it must satisfy. As an analogy, it is a shared form that one
+component fills in and another knows how to read, not a legal contract.
+
+Explain the building blocks before asking for review. A **field** is a named
+piece of information, such as destination. A **type** describes its form,
+such as text, a date or a list. A contract says which fields are required,
+which may be unavailable and what their values mean. A **schema** is a
+formal, machine-readable description of the structure; **validation** is
+checking a result against the applicable structure and rules.
+
+Use the trip to explain why this matters. "Good weather for a museum visit"
+may be understandable to a person, but does not reliably tell code the
+destination, forecast period or source. The proposed agreement makes that
+information explicit so the workflow can check and combine it.
+This is an application agreement implemented in our workflow, not another
+Microsoft Foundry cloud resource the participant must create.
+
+Before the participant reviews a proposed contract, Workshop Coach shows
+a plain-language field/meaning summary beside a sanitized actual specialist
+result already obtained. Map one field together, naming whether it comes
+from the trip request, tool result or service metadata. Then let the
+participant interpret another relevant field using the existing checkpoint
+understanding check. They review the agreement's meaning and usefulness,
+not audit raw JSON or Python. Workshop Coach owns the technical definition,
+validation code and implementation tests; no extra live call is needed.
+
+Compare a structurally valid result with evidence that its claims came from
+a real tool call. Structural validation establishes shape, while correlated
+runtime evidence establishes execution; additional checks are needed for
+date, destination and source consistency. Neither alone guarantees every
+claim is correct. The workflow must preserve uncertainty rather than fill
+missing evidence with a plausible itinerary.
+
+Walk through one trip request conceptually before showing the implementation:
+validate input -> invoke specialists -> validate results -> assemble a sourced
+answer. Explain why sequential calls are easy to follow, and when independent
+calls could run concurrently with bounded execution and correct request-owned
+state. The participant reviews that tradeoff; parallelism is not an implicit
+instruction to start more operations.
 
 Start with a workflow orientation:
 
@@ -229,10 +297,41 @@ success. Do not inject a failure or ask the participant to demonstrate an outage
 **Alternative:** use Plan mode when available, then return to Chat for evidence review.
 **Teach-back:** "Why does coordinating two released agents need formal result contracts?"
 
+**Learning summaries:** after contract review, explain what each specialist
+must return and why code needs that agreement. After local implementation
+tests, describe which coordination behavior the fixtures establish, not
+hosted or real-tool success. After the approved live local trip, connect the
+actual specialist calls, validations and assembly: "Now we have seen our code
+coordinate both released agents and preserve their evidence. This execution
+was local; next we need to deploy and verify the hosted path."
+
 ## 16: Hosted release
 
 **Concept:** deploy the fully passing workflow as a Microsoft Foundry Hosted
 Agent and prove its end-to-end behavior through nested traces.
+
+**Teach before practice:** a local workflow runs under the local execution
+environment and its identity. A hosted agent runs the prepared service in
+Microsoft Foundry with its deployed dependencies, configuration and runtime
+identity. Deployment makes that service available; it does not prove that the
+running identity can invoke both specialists or that every supported interface
+can complete a request. Explain why local success and deployment success
+are necessary but different from verified hosted behavior.
+
+Compare the interfaces before testing them. The agent Playground exercises
+the hosted service through the portal's supported response protocol. A
+consumer calls its stable endpoint through the supported consumer path.
+A published channel adds user-facing distribution and identity/state mapping.
+Those interfaces should preserve the same sourced trip behavior, but they
+are not interchangeable evidence or copies of the orchestration.
+
+Explain nested tracing using the actual architecture: the outer workflow
+record links validation, specialist requests and assembly; correlated
+specialist records show their individual tool calls. This makes "both agents
+contributed" observable rather than an inference from a convincing itinerary.
+If a saved specialist policy emits a native human decision, the hosted route
+must preserve that exact pending request; automatic tools need no invented
+card. Hosting is not permission to change the specialists' policies.
 
 Before deployment, require passing existing local implementation tests and
 supported G01/G03 and W01/W03 results, compatible
@@ -325,6 +424,14 @@ the reply with live endpoint/version and nested-trace evidence in the GitHub Cop
 **Alternative:** use applicable hosted Canvas controls when available, then return to Chat for validation.
 **Teach-back:** "How can you prove that your request from Microsoft Teams or
 Microsoft 365 Copilot invoked the workflow and both tested specialist versions?"
+
+**Learning summaries:** after deployment, say what is running but still
+untested. After the actual hosted request, distinguish that proof from the
+earlier local result and name the observed specialist contributions.
+After verified release and channel use, explain that the participant's
+channel request reached the tested workflow and both specialist releases
+without rebuilding them. If any stage is blocked, retain earlier successful
+evidence and close only the scope actually demonstrated.
 
 The core route is complete only after both endpoint and channel gates pass,
 including Weather CH01 and workflow CH02. Proceed to [capstone selection](CAPSTONE.md)
