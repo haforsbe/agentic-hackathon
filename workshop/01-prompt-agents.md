@@ -9,8 +9,19 @@ and memory at 05/06 and 12/13 are temporarily deferred under the
 [skills](README.md#temporary-skills-and-multi-tool-deferral) and
 [memory](README.md#temporary-memory-deferral) policies. Keep one tool per
 specialist and continue 04 -> 07 and 11 -> 14.
-Teach the method with the first agent, then use shorter reminders
-and focus on differences with the second; do not repeat introductory lectures.
+Teach the method with the first agent, then apply that understanding with the
+second. Explain domain-specific differences and their rationale; do not
+automatically replace the second agent's teaching with shorter instructions.
+
+Use the [whole-workshop teaching standard](COACH.md#explain-what-and-why-before-every-step).
+The teaching explanations below are the foundation for each practical task,
+not optional reading for participants who ask why. Expand them with the
+participant's actual configuration and observed results. Give a short
+[learning summary](COACH.md#close-each-meaningful-learning-step) after each
+meaningful step within the lesson as well as at its close.
+Summary examples are conditional on actual evidence, never assumed passes;
+adapt them when a step is configured only, participant-reported or blocked.
+Retained deferred sections are taught only after explicit reintroduction.
 
 Keep reproducible definitions and test clients under `student/prompt-agents/`.
 Use current supported APIs and isolated dependencies, not the old root pins.
@@ -55,7 +66,7 @@ after both agents pass independently; do not jump ahead to orchestration.
 
 Use the [five-to-six-hour core agenda](FACILITATOR.md#five-to-six-hour-core-agenda):
 about 110 minutes for Weather and 70 for Cultural Travel. Same support,
-approval boundaries, and test coverage; less repeated explanation on agent 2.
+approval boundaries, and test coverage; reuse understood background on agent 2.
 Coach-side checks may be grouped within the approved current-step test budget.
 Do not add optional exploration or backend debugging to every checkpoint.
 
@@ -63,6 +74,28 @@ Do not add optional exploration or backend debugging to every checkpoint.
 
 **Concept:** a Microsoft Foundry Model Deployment plus instructions creates a
 Microsoft Foundry Prompt Agent.
+
+**Teach before practice:** a callable model supplies language and reasoning
+capabilities. An agent adds instructions describing its role, boundaries and
+expected answers, plus any configured capabilities. Creating a prompt agent
+does not train a new model. The same model can support agents with different
+responsibilities because their instructions and available tools differ.
+
+Compare the two agent approaches used in this workshop. A **Prompt Agent**
+uses a model, saved instructions and supported capabilities with managed
+execution; we do not need to implement its own serving application. A
+**Hosted Agent** runs custom application code deployed to Microsoft Foundry,
+which gives us explicit coordination logic but adds code, dependency and
+hosting responsibilities. We start with Prompt Agents to learn model,
+instruction and evidence boundaries before introducing that extra complexity.
+
+Start without tools so the participant can identify what the model already
+provides. A useful explanation of clouds can come from trained knowledge;
+a current forecast requires an external source. Instructions can require
+honesty about that boundary, but cannot create missing weather observations.
+Explain why the Playground is useful: it lets the participant interact with
+the selected agent/version before publishing it to other users. A good
+Playground answer is not yet a released endpoint or channel result.
 
 Create a minimal Weather Research Agent without tools, persistent memory, or a
 skill. It can explain stable weather concepts from trained model knowledge, but
@@ -102,6 +135,11 @@ request the actual reply only when needed for review or a specific assertion.
 
 **Internal coach validation:** B01-B02, two supported general-knowledge answers.
 
+**Learning summary:** "Now we have seen our tool-free agent explain general
+weather concepts. Its model supplied the knowledge and its instructions
+guided the response; we have not demonstrated current forecast access.
+Next we will change the instructions and compare what that changes."
+
 **App practice:** ask "Explain, don't edit," then separately request the change.
 **Alternative:** ask for a proposed definition diff before implementation.
 **Teach-back:** "What defines this agent, and what has not been added yet?"
@@ -110,6 +148,25 @@ request the actual reply only when needed for review or a specific assertion.
 
 **Concept:** improve one measurable behavior while holding the model and
 capabilities constant.
+
+**Teach before practice:** instructions are written guidance supplied to the
+model when the agent responds. They can influence its role, structure,
+questions and treatment of uncertainty. They are not fine-tuning, new facts,
+an external data connection or an enforced authorization policy. Asking for
+a Source section cannot make an invented citation genuine.
+
+Distinguish an agent's instructions from the user's message: instructions
+describe the saved role and standing guidance; the user supplies the current
+task. A clearer user question and a revised agent definition are different
+changes, so do not change both while trying to learn which caused an effect.
+
+Compare changing instructions with changing the model or adding a tool:
+each affects a different part of the system. Here the problem is how the
+agent communicates its answer, so change only instructions. Saving a new
+candidate version preserves the earlier configuration for comparison rather
+than silently replacing it. Repeating the same question with equivalent fresh
+context helps attribute a visible change to the instructions, not a different
+input, tool or conversation history; it does not guarantee every future reply.
 
 Add headings such as `Answer`, `Source`, and `Uncertainty`. Require general
 knowledge to be labeled accurately and prohibit invented sources, current
@@ -129,6 +186,12 @@ side; do not generate another before-run merely for the comparison.
 
 **Internal coach validation:** I01, using the exact saved baseline inputs.
 
+**Learning summary:** connect the actual before/after answers to the changed
+instruction: "Now we have seen how the new instructions affect the answer's
+structure and treatment of evidence. We changed its behavior, not its model
+knowledge or access to live data. Next we will examine how earlier messages
+affect a follow-up."
+
 **App practice:** review the focused instruction diff before creating the version.
 **Alternative:** request an instruction proposal without applying it.
 **Teach-back:** "Which behavior changed, and what evidence ties it to the instructions?"
@@ -137,6 +200,20 @@ side; do not generate another before-run merely for the comparison.
 
 **Concept:** Microsoft Foundry automatically maintains history within one
 Conversation identifier. Persistent memory is a separate capability.
+
+**Teach before practice:** an isolated prompt contains only the information
+made available for that request. A managed Conversation keeps a related
+message history, so a later question can refer to a destination or interest
+given earlier. The Conversation identifier selects that history; a Response
+identifier names one reply, and a Trace identifier links execution evidence.
+These objects answer different questions and are not interchangeable.
+
+Compare a follow-up within one Conversation with the same follow-up in
+another Conversation containing a different destination. The words of the
+follow-up can stay the same while its context changes. This demonstrates
+why history matters when testing or comparing versions: context can influence
+the answer even when instructions do not change. It is not persistent memory,
+proof of cross-user authorization or the GitHub Copilot app's coaching history.
 
 **Before the tests:** verify the
 [portal trace prerequisite](SETUP.md#portal-trace-prerequisite), including the
@@ -173,6 +250,11 @@ Prefer participant-run messages for the complete sequence when the Playground
 supports the required Conversation behavior and identifier evidence; otherwise
 demonstrate with the supported client without claiming a UI feature exists.
 
+**Learning summary:** "We have now seen each Conversation use its own supplied
+trip context. The latest message was not the agent's only input: the related
+history mattered too. Next we will add an external evidence source rather
+than relying only on model knowledge and messages."
+
 **App practice:** contrast the coaching session with both runtime Conversations.
 **Alternative:** discuss when a separate app session helps isolate another task.
 **Teach-back:** "How did the agent's reply differ between the same Conversation and a new one?"
@@ -181,6 +263,54 @@ demonstrate with the supported client without claiming a UI feature exists.
 
 **Concept:** connect one remote evidence tool, prove its execution, and learn
 the difference between a plausible answer and observed runtime evidence.
+
+**Teach before practice:** tools extend what an agent can do beyond generating
+an answer from the information already available to its model. Depending on
+the tool, it can retrieve external information, perform calculations or ask
+another system to take an action. The model requests an operation; the runtime
+applies the supported authorization and approval rules, executes the permitted
+request and returns the result for use in the answer. Instructions guide the
+model; a tool supplies a concrete operation.
+
+Explain the relevant configuration choices, without adding their setup:
+
+- **Project connections** hold reusable connectivity/authentication
+  configuration where required by a service. A saved connection does not
+  automatically attach a tool to every agent or authorize every caller.
+- **Toolboxes** are centrally managed, named and versioned tool collections
+  exposed through an MCP-compatible endpoint. They can support shared
+  configuration and governance across consumers, at the cost of another
+  resource and lifecycle to manage.
+- **Direct agent tools** configure the capability on the particular agent.
+  This makes our single-purpose binding easy to inspect. Both direct tools
+  and Toolboxes may use project connections where authentication requires one;
+  these concepts are not three mutually exclusive permission levels.
+
+We use a direct MCP binding because this exercise needs one public read-only
+weather operation, not a shared enterprise tool catalogue. MCP, the
+**Model Context Protocol**, lets a service describe its callable operations
+and their input schemas. A server may expose many tools, but our allowlist
+exposes only `weather_forecast` to this agent. Explain Toolboxes as an
+architectural alternative, not a required resource or another exercise.
+See the current [Toolbox overview](https://learn.microsoft.com/azure/foundry/agents/concepts/toolbox-overview)
+for the comparison; do not imply every tool type supports every route.
+
+Explain approval as a separate design choice. **Never require approval**
+allows the permitted MCP operation to run without a per-call human prompt;
+**Always require approval** pauses for a decision on each requested call.
+Supported per-tool filtering can combine policies for different operations.
+The runtime must enforce the policy; writing "ask first" in the instructions
+is not an equivalent control. Read-only lookups can justify automatic
+execution after reviewing their source and data scope; writes or sensitive
+data need a separate risk assessment. Approval is not a substitute for
+authentication, an allowlist or source validation.
+
+For this new Weather binding, explain the existing creation choice:
+**MCP, directly on this agent, Never require approval**
+(`require_approval: "never"`), with only `weather_forecast` allowed.
+That removes its per-call prompt, not current-step configuration approval,
+paid-call approval or required decisions actually emitted by another path.
+Preserve existing saved policies rather than editing them to match the example.
 
 The coach provides the public **Weather MCP server** endpoint
 `https://weather.datakoot.com/mcp` and the documented tool inputs.
@@ -234,13 +364,28 @@ controls were used. Do not send a duplicate demonstration prompt.
 
 Use this same supported exchange for C01 and T01; do not add unsupported-input
 or injected-failure exercises. For this first successful
-MCP call, guide the participant through Microsoft Foundry trace inspection. Locate the forecast
+MCP call, teach tracing before the navigation. A trace is the execution
+timeline; a span records an operation within it, such as a tool call. Linking
+the tool's arguments, status and result to this response helps distinguish
+"a tool is configured" from "this request actually used it." Compare the final
+answer with the returned source as well: successful execution does not
+guarantee the model represented its result faithfully.
+
+Then guide the participant through Microsoft Foundry trace inspection. Locate the forecast
 tool span and inspect its arguments, status, timing, returned source/timestamp,
 and relationship to the final response. The agent must report failure rather
 than invent weather.
 
 Registering an MCP server for the GitHub Copilot app does not attach it to the
 Microsoft Foundry agent. Never disable approvals globally to make a test pass.
+
+**Learning summaries:** after saving and inspecting the binding, explain
+that the agent is configured to request a forecast, but retrieval has not
+yet been demonstrated. After the supported request and trace inspection:
+"We have now followed the request from the agent's tool arguments to the
+weather service's result and the final answer. The model composed the reply;
+the service supplied the forecast evidence." Include the observed source,
+date coverage and cache/freshness limits rather than promising real-time data.
 
 **App practice:** inspect the direct server URL and one-tool allowlist; compare the agent binding with the GitHub Copilot app's separate MCP registration without another approval-setting question.
 **Alternative:** inspect a sanitized direct MCP response before the agent call.
@@ -257,6 +402,15 @@ or run T02/S01 on this route.
 
 **Concept:** a skill can guide how an agent selects and sequences already
 available tools; it does not connect tools or grant authorization.
+
+**Teach before practice, only when reintroduced:** adding more tools increases
+the number of possible operations, not the agent's knowledge of the right
+research process. A skill supplies a reusable procedure for deciding which
+operation to request, in what order and when to stop. Compare an allowlist,
+which limits available operations, with a skill, which guides how already
+permitted operations are used. Neither replaces runtime authorization.
+Explain the actual supported delivery mechanism rather than implying that a
+local skill file is automatically loaded by a deployed agent.
 
 Review the selected server's documented tools and resolve any required schema
 details during configuration. Repeat the brief free-service and coverage
@@ -300,6 +454,9 @@ Do not inject a partial failure or add a participant denial exercise.
 Formal machine-readable result contracts are intentionally deferred until
 checkpoint 15, when workflow code needs to validate two agent results.
 
+**Learning summary:** relate the observed selected sequence to the procedure
+and distinguish it from the separately configured tool permissions.
+
 **App practice:** review the skill diff, exact version, delivery strategy, and allowlist change.
 **Alternative:** validate the procedure against recorded fixtures before a paid call.
 **Teach-back:** "How can a skill guide tool use without granting access?"
@@ -313,6 +470,15 @@ Do not create memory resources or run memory tests merely to complete this slot.
 
 **Concept:** managed Conversation history and persistent memory solve different
 problems.
+
+**Teach before practice, only when reintroduced:** Conversation history answers
+"what was said in this exchange?" Persistent memory can retain selected
+information for a later exchange, such as a consented temperature-unit
+preference. That convenience introduces a storage and privacy lifecycle:
+what is retained, whose scope it belongs to, how it is corrected and how it
+is deleted. Compare retaining a useful preference with retaining an entire
+conversation or an unnecessary reason for the preference. Memory personalizes
+presentation; it does not supply current weather or grant tool access.
 
 Add a student-owned persistent-memory capability using the
 [current memory guide](https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/memory-usage).
@@ -345,6 +511,10 @@ Re-run one MCP response, and skill-guided behavior only if a skill is configured
 to prove memory personalizes presentation without changing tool authorization,
 provenance or factual data. Reintroducing memory alone does not require adding a skill.
 
+**Learning summary:** distinguish what was recalled from what the weather
+source supplied, and describe only the storage, correction and deletion
+behavior actually verified.
+
 **App practice:** save and resume workshop progress; identify where it is stored.
 **Alternative:** discuss progress import into another worktree without confusing it with agent memory.
 **Teach-back:** "What came from memory, and what still had to come from the Weather MCP server?"
@@ -353,6 +523,21 @@ provenance or factual data. Reintroducing memory alone does not require adding a
 
 **Concept:** release selects a fully tested candidate behind a Stable Agent
 Endpoint. A known-failing candidate is never promoted as the stable release.
+
+**Teach before practice:** creating a candidate lets us inspect and test a
+configuration without declaring it ready for consumers. Release selects
+which tested version the Stable Agent Endpoint serves. A stable address
+therefore does not mean "whatever version was edited most recently."
+Explain the selected version using service metadata, not the model's claim
+about its own identity.
+
+Compare testing a candidate in the Playground, invoking the released
+endpoint as a consumer and publishing to Microsoft Teams or Microsoft 365
+Copilot. They exercise different paths and identities. A successful answer
+in one does not prove access or correct routing in another. Publishing
+connects the tested agent to its user-facing destination; it does not create
+a second weather implementation. Keeping the same release matters because
+the later workflow must also invoke this independently working specialist.
 
 The candidate already connects directly to the Weather MCP server introduced
 at 04, with only `weather_forecast` on the default skills-deferred route. Follow
@@ -400,6 +585,12 @@ ask the model to invent its version or treat a self-reported version as proof.
 Retain failed candidate test evidence for diagnosis, but keep that candidate
 out of stable routing. Rollback is reserved for an unforeseen issue discovered
 after a fully passing version was promoted.
+
+**Learning summaries:** after endpoint verification, name the exact tested
+version now selected and explain why release differs from candidate creation.
+After the actual channel exchange, explain what that request demonstrated
+about the published route. If publishing is blocked, preserve the endpoint
+result and say explicitly that channel use remains unverified.
 
 **App practice:** distinguish endpoint release from channel publication; send
 the Weather test in the chosen channel and review its evidence in the GitHub Copilot app.
@@ -459,11 +650,20 @@ separate commit-confirmed manual deployment allow GitHub Actions to do?"
 **Concept:** the second specialist repeats the same lifecycle with a different
 evidence responsibility.
 
-Start with a short reminder: "We'll use the method you learned with Weather,
-but this agent owns museum and art-trip evidence." Supply its new target and
-MCP information when needed. Reuse familiar navigation and explain only
-differences; the repeated tests prove independence, not a need to repeat the
-full introduction. Apply this pacing through checkpoint 14.
+**Teach before practice:** reuse the distinction between model, instructions
+and tools, then explain the new design decision: one large agent could be
+given both domains, but separate specialists make responsibilities, evidence
+sources and changes easier to inspect independently. This agent owns cultural
+guidance, not weather. Sharing a model deployment does not require sharing
+instructions, Conversations or tool bindings.
+
+Apply the participant's earlier understanding to the cultural baseline:
+general museum-planning advice is different from verified opening hours or
+ticket availability. Explain why a separate tool-free baseline is useful
+before adding travel.art: it shows what this specialist contributes and what
+still requires an external source. Reuse familiar navigation, but teach
+domain-specific choices rather than assuming that remembering clicks proves
+understanding. Apply this transfer approach through checkpoint 14.
 
 Require the Weather endpoint release and CH01 channel milestone at 07 first.
 Weather remains available in its chosen channel while Cultural is built.
@@ -498,6 +698,11 @@ only when it helps the participant or a specific assertion needs it.
 For returning participants, reuse their saved cultural baseline inputs.
 
 **Internal coach validation:** B01-B02, two supported general-knowledge answers.
+
+**Learning summary:** "Now we have a second agent with its own responsibility
+and baseline behavior. We reused the build method, not Weather's conversation
+state or evidence. Next we will refine how this specialist separates guidance
+from unsupported venue-specific claims."
 
 **App practice:** compare the two minimal agent definitions.
 **Alternative:** request a proposed definition before implementation.
@@ -534,6 +739,12 @@ actually make the advice clearer and easier to assess.
 **We're changing how the agent explains its answers - not adding live museum
 information or changing its model.**
 
+Connect this to the mechanism learned with Weather: instructions are context
+for the model, not retraining or an authorization boundary. Compare the same
+saved questions with equivalent fresh context so the participant can identify
+the effect of this instruction change. Explain why source labels and
+uncertainty matter especially for venue information that can become outdated.
+
 **Coach execution:** obtain scoped approval before the version update or tests.
 Change only the instructions, including respectful language, stereotype
 avoidance, missing-context questions and the distinction between general
@@ -543,6 +754,10 @@ on their original execution routes with equivalent fresh context.
 
 **Internal coach validation:** I01, using the exact saved baseline inputs.
 
+**Learning summary:** point to the actual changed guidance, attribution or
+uncertainty in the matched replies. Explain that clearer source labeling
+improves assessability, but does not itself verify current museum facts.
+
 **App practice:** review the focused instruction diff and matched tests.
 **Alternative:** keep the change proposal-only until expectations are clear.
 **Teach-back:** "What can this tool-free version explain, and what can it not verify?"
@@ -550,6 +765,18 @@ on their original execution routes with equivalent fresh context.
 ## 10: Test Cultural managed Conversations
 
 **Concept:** repeat Conversation continuity and isolation for the second agent.
+
+**Teach before practice:** apply the earlier context model to a cultural trip.
+A follow-up about a destination or museum interest should use the history
+of its selected Conversation, not a different test's messages. The important
+choice is which history accompanies the request, not simply which agent name
+appears on screen. Compare two supplied contexts to make that distinction
+observable again for this independent specialist.
+
+Explain why this matters before collaboration: having two useful agents does
+not automatically pass context between them. Later workflow code will supply
+the relevant trip inputs explicitly. Separate test Conversations demonstrate
+their own history behavior, not the authorization of every possible caller.
 
 Recheck the [portal trace prerequisite](SETUP.md#portal-trace-prerequisite) for
 this project's current connection and inspection identity before the tests.
@@ -564,6 +791,10 @@ supported cultural-travel prompts.
 The Cultural Travel Agent has its own authorized Conversation mapping. It
 cannot read the Weather Research Agent's Conversation history.
 
+**Learning summary:** relate each observed follow-up to its own earlier
+destination and interest, then explain which context the later workflow will
+need to supply instead of assuming the specialists share a conversation.
+
 **App practice:** keep one coaching session while testing separate runtime Conversations.
 **Alternative:** use a separate app session only for a genuinely separate task.
 **Teach-back:** "How did each Conversation keep track of its own destination?"
@@ -572,6 +803,20 @@ cannot read the Weather Research Agent's Conversation history.
 
 **Concept:** independently connect the second agent directly to one curated
 cultural-evidence tool before introducing multi-tool routing.
+
+**Teach before practice:** reuse the model -> permitted tool request ->
+external result -> answer mechanism from Weather, then explain the source
+difference. A museum guide is published reference material, not necessarily
+an official venue's current record. `guideUrl` gives attribution;
+`lastVerified`, when returned, describes catalogue freshness rather than
+proving today's opening hours or available tickets.
+
+The direct one-tool binding keeps this specialist's evidence responsibility
+visible and separate from Weather's. Explain why the same connection pattern
+does not imply the same data guarantees: a weather forecast and a published
+museum guide have different coverage and freshness limits. Reuse understood
+approval concepts and the existing creation policy without adding another
+configuration-choice question or requiring a permission card to appear.
 
 Repeat the checkpoint 04 coaching behavior for agent 2. The coach provides
 the public **travel.art MCP server** endpoint `https://mcp.travel.art/`,
@@ -619,6 +864,11 @@ require an invented dataset version. Reuse the trace-inspection knowledge
 from checkpoint 04: verify the tool span and result without repeating the full
 navigation lesson unless the participant needs it.
 
+**Learning summaries:** distinguish saving the museum-tool binding from
+observing it execute. After the supported result, connect the actual guide
+and its metadata to the response: the tool supplied attributable cultural
+evidence, but did not establish live booking availability or weather.
+
 **App practice:** inspect the direct server URL and agent version; verify the one-tool effective allowlist without another approval-setting question.
 **Alternative:** inspect a sanitized direct MCP response before the agent call.
 **Teach-back:** "What proves the museum-guide tool supplied the attributed facts?"
@@ -633,6 +883,13 @@ Do not add skills or tools, create a skill-only candidate or run T02/S02
 on this route.
 
 **Concept:** repeat skill-guided tool routing in a new evidence domain.
+
+**Teach before practice, only when reintroduced:** explain why several
+operations need selection and restraint rather than calling everything.
+A museum lookup, event lookup and itinerary catalogue query serve different
+questions. The cultural skill guides their use and treatment of missing
+information; the allowlist and saved approval policy still control access.
+An upstream itinerary result is not coordination of our two released agents.
 
 The coach supplies the live schemas and separately requests approval to expand
 to the four selected travel.art tools: `find_museum_guide`, `find_art_events`,
@@ -660,6 +917,9 @@ cultural trip recommendations. Report any genuinely missing information
 honestly, without manufacturing a failure or denial exercise. Use separate
 requests to exercise tool roles rather than calling all four for every question.
 
+**Learning summary:** use the observed request to explain why its selected
+operation matched the question and which unrequested tools were unnecessary.
+
 **App practice:** review the skill and allowlist diffs separately.
 **Alternative:** validate recorded tool results before live agent calls.
 **Teach-back:** "How did the skill choose only the tools needed for this request?"
@@ -674,6 +934,13 @@ Do not create memory resources or run memory tests merely to complete this slot.
 **Concept:** repeat the persistent-memory lifecycle with an independent,
 low-risk cultural preference.
 
+**Teach before practice, only when reintroduced:** apply the distinction
+between current Conversation context, a retained preference and external
+cultural evidence. A museum preference might help later personalization,
+but a reason for that preference may be sensitive and unnecessary to store.
+Explain whose scope owns the fact and how the participant can inspect,
+correct and delete it; useful recall alone is not the whole lifecycle.
+
 Use a preference such as museums over nightlife. Obtain consent, store the
 minimum fact, inspect its scope, verify retrieval in a new Conversation, correct
 it, delete it, and prove the deleted value is no longer applied. Run M01-M03
@@ -683,6 +950,9 @@ Memory supplies the preference; travel.art MCP tools supply the published
 museum, event, or cultural-trip facts. Do not store an unnecessary reason that
 could reveal sensitive information.
 
+**Learning summary:** identify the actual preference behavior and verified
+lifecycle outcomes separately from the facts returned by travel.art.
+
 **App practice:** pause, resume, and recheck the exact agent and memory scope.
 **Alternative:** explain why a stateless design would be safer when memory adds no value.
 **Teach-back:** "Which evidence came from memory, and which came from the MCP tools?"
@@ -691,6 +961,20 @@ could reveal sensitive information.
 
 **Concept:** the second specialist must independently pass the same release
 discipline before orchestration begins.
+
+**Teach before practice:** reuse candidate-versus-release terminology, then
+explain why collaboration needs two independently dependable interfaces.
+The workflow will call each specialist's stable endpoint; it should not need
+to know how to configure that specialist's MCP tools or copy its instructions.
+That separation allows a specialist to evolve behind its own tested release
+while preserving the information its consumer needs.
+
+Compare verifying unchanged Weather metadata with rerunning every earlier
+Weather lesson. We need evidence that its release and dependencies still
+match, not another demonstration of unchanged behavior. Cultural still needs
+its own complete release evidence. Examine real outputs for the trip details,
+provenance and uncertainty that orchestration will later validate formally;
+releasing two agents does not yet execute a workflow.
 
 Weather's release from 07 already uses direct MCP. Check its current
 release/version and recorded dependencies read-only, and reuse its valid
@@ -722,6 +1006,11 @@ Include each direct server URL/label, effective tool selection and native
 approval policy. Require T03-at-14. Verify neither agent is configured with
 or can invoke the other domain's tools; do not mistake a shared instruction
 for an enforced allowlist.
+
+**Learning summary:** "Now both specialists have independently tested releases
+with different evidence responsibilities. We can identify the inputs and
+evidence each contributes, but have not yet demonstrated coordination.
+Next we will build the workflow that invokes and validates both."
 
 **App practice:** request a two-agent handoff table backed by live metadata.
 **Alternative:** inspect sanitized raw responses from both endpoints.

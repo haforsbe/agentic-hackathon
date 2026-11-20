@@ -214,9 +214,13 @@ prompts, cost boundaries, approval stops, actual evidence, and teach-backs.
 Students choose their own capstone only after this shared workflow.
 
 Follow the five-to-six-hour core agenda: teach the method with Weather and
-use shorter reminders for Cultural Travel. Supply MCP details and require
-independent evidence for both without repeating the full explanation or trace
-tour. The student-chosen capstone is an optional separate follow-on.
+apply that understanding to Cultural Travel. Supply MCP details, explain
+domain-specific mechanisms and source limits, and require independent
+evidence for both. Reuse background and trace navigation already understood,
+not the conceptual teaching needed for the new task. Follow each meaningful
+step with the coach protocol's short learning summary, without another
+confirmation or test. The student-chosen capstone is an optional separate
+follow-on.
 
 ## Coach recovery when connection details appear missing
 

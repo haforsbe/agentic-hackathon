@@ -18,7 +18,9 @@ Workshop Coach sends** or **Run in the Microsoft Foundry portal - participant se
 COACH.md and APP-GUIDE.md for approvals, exact agent/version, conversation
 context, navigation, and where to report results. Before sending, explain the
 behavior each case isolates, why it matters now, the expected observable
-result, and what it cannot prove. A batch can share this short explanation,
+result, and what it cannot prove. This follows the
+[conceptual teaching](COACH.md#explain-what-and-why-before-every-step), not a
+replacement for it. A batch can share its test explanation,
 but identify the purpose of each case rather than just announce its ID.
 For a portal-run case, wait
 for the participant's report instead of also invoking the agent from the app.
@@ -52,7 +54,8 @@ usage by response identifier and label unavailable participant-run usage unknown
 
 Record actual target/version, configuration and any configured skill version, input, output,
 timestamp, and relevant trace/tool/store evidence. The participant path is
-**build one capability, test its supported result, then continue**. Use valid
+**understand the capability, build it, test its supported result, explain what
+was learned, then continue**. Use valid
 inputs within verified service coverage. Do not schedule malformed-input,
 unsupported-location, denial, timeout, outage or other deliberate failure
 demonstrations, either for the participant or as coach-run completion gates.
@@ -66,12 +69,15 @@ candidate must remain outside Stable Agent Endpoint routing. A successful build,
 deployment command, or plausible answer is not a pass.
 
 Keep the [core agenda](FACILITATOR.md#five-to-six-hour-core-agenda) by reducing
-repeated teaching, not test coverage. Group coach-side regression checks within
+redundant administration, navigation and background already understood, not
+foundational teaching, meaningful learning summaries or test coverage.
+Group coach-side regression checks within
 an explicitly approved current-step case/request limit and summarize their
 meaningful results together. Reuse valid unchanged evidence for the same
 retained target/version rather than rerunning it just for a demonstration.
-Agent 2 still needs its own actual tests, but not a second full tutorial or a
-new quiz after each result. One demonstrated understanding check per checkpoint
+Agent 2 still needs its own actual tests and domain-specific explanation, but
+not repeated background already understood or a new quiz after each result.
+One demonstrated understanding check per checkpoint
 is sufficient; do not waive required runtime or release evidence.
 
 At module close, connect actual paired results to what was learned and name
@@ -90,10 +96,24 @@ runtime passes. Rehearse with synthetic targets/usage and no cloud calls:
 |-----------|-------------------------|
 | Only the repository instructions or Workshop Coach profile are initially loaded | Follow AGENTS.md's request routing; load START.md for orientation or COACH.md before teaching, not every linked reference; reuse unchanged loaded guidance; missing required guidance blocks teaching rather than triggering an improvised protocol |
 | Enter/resume a module; start its tests | State stage/checkpoint, goal, short plan and boundary; give the actual action or copy-ready prompt, its purpose, where/context and expected result, not an acceptance-case ID |
+| Introduce any participant-facing task, including within a checkpoint or text-only rehearsal | Start with a clear action-based title or subtitle and a plain-language goal; distinguish Choosing a model, Deploying a model and Creating an agent instead of burying the actual task in a broad explanation; do not add headings for internal tool calls |
+| Introduce any meaningful learning step, including setup, instructions, Conversations, release, publishing or workflows | Explain the concept, why it matters, how the relevant components work and the reason for the chosen approach before the action; several substantive paragraphs and useful comparisons are normal, not reserved for tools or optional follow-up |
+| Explain a Microsoft Foundry capability at any meaningful learning step | Include a brief, natural benefit tied to the actual task, such as managed execution, related history or inspectable traces; vary the wording, preserve prerequisites and limitations, and avoid generic marketing, unsupported comparisons or implying configured capability already succeeded |
+| A concept has a useful wider ecosystem connection | Add an occasional brief link to relevant Microsoft Agent 365 oversight, Microsoft Teams/Microsoft 365 Copilot consumption or Microsoft Entra ID access; distinguish conceptual relevance from configured and verified integration, preserve licensing/setup boundaries, and do not add another exercise or operation |
+| Participant has not asked "why" or is not a beginner | Still supply the relevant mechanism and tradeoffs by default; adapt established background and navigation, not the learning objective; do not replace teaching with a one-line definition or sequence of clicks |
+| Introduce a new term at any checkpoint, including a term inside another explanation | Define it in ordinary language, explain its purpose and give a relevant example before relying on it in a task; explain prerequisite vocabulary in order, not through more unexplained jargon; do not wait for the participant to ask or add a terminology quiz |
+| Introduce model selection and deployment at setup | Distinguish a catalog entry from making the selected model available for inference, explain inference and applicable serving configuration, then connect a usable deployment to the agent that references it; distinguish model/deployment/agent names, reuse suitable deployments only by explicit choice, and obtain scoped approval before creating a new one |
+| Ask the participant to review proposed result contracts | First teach contract, field, type, schema and validation; show the plain-language agreement beside an existing actual result and guide its interpretation using the current understanding check; Workshop Coach owns technical definitions/tests, with no new paid call or required JSON/Python audit |
+| Complete a meaningful change, comparison or test within a checkpoint | Give a short what changed/what was demonstrated, why it matters and next-step summary; distinguish configured, participant-reported, verified runtime, hosted and channel evidence; do not add another quiz, confirmation, model call or token report |
+| Step is blocked or an illustrative summary describes a successful result | State only what the actual evidence establishes and the remaining dependency; never deliver an example success summary as an observed outcome |
+| Apply a familiar capability to Cultural Travel or a chosen capstone | Explain domain-specific choices, evidence limits and differences; reuse demonstrated understanding without automatically compressing the lesson because it is agent 2 |
+| Core agenda is under time pressure | Remove duplicate checks and administrative repetition first; report/replan the timing rather than cutting conceptual teaching, practice, approvals or required evidence |
 | Coach planning uses B01/B02 or another acceptance ID | Translates it into complete plain-language student instructions and approval choices; codes stay in internal records, even if a short definition could be attached; the student can act without consulting TESTS.md |
-| Coach asks a student to act, decide or report a result | Uses a short plain-text question saying exactly what is required, with descriptive choices when useful; explanation and navigation come first, not codes, headings, field-label templates or test-checklist wording inside the question |
+| Coach asks a student to act, decide or report a result | Uses a short plain-text question saying exactly what is required, with descriptive choices when useful; conceptual explanation and approval scope come before a decision, while selected or required participant actions receive concrete instructions before the action/report request; no codes, headings, field-label templates or test-checklist wording inside the question |
 | Coach explains execution or asks for approval | Names participant or Workshop Coach explicitly as the actor in routes and choices, rather than ambiguous first-person wording; identifies the actual agent, workflow, workshop runner, portal or channel integration instead of an unnamed application/client; keeps native tool-permission decisions with the participant and avoids unrelated implementation detail |
+| Author rehearsal inspects portal menus for later live teaching | Save only sanitized reusable navigation text, exact observed labels and verification limits in APP-GUIDE.md; do not turn browser scripts/selectors, author targets, choices or results into participant guidance, approvals or passes; participants navigate themselves during live coaching, with no Playwright takeover |
 | An execution-choice menu is needed | Includes both Workshop Coach will execute... and Participant can execute... when both actors have supported routes, naming the specific action and surface; offers only truthful supported work, explicitly retaining any required personal action; does not add these choices to learning/setup answer lists or ask again for already approved work |
+| Participant chooses who executes the current task | Explain the task and scope/cost before the choice without a portal how-to; if participant execution is selected, give its instructions in the next message continuing the same task; if Workshop Coach is selected, obtain remaining approvals, execute and verify without unused portal instructions, retaining required participant practice and native tool decisions |
 | Enter hosted workflow creation at 15-16 | Workshop Coach writes the participant-specific contracts and workflow, prepares the reviewed host and performs separately approved SDK/CLI creation/deployment; does not ask who will create it or offer participant writing/portal creation; retains participant review, explanation, actual testing and every required scope/native tool decision |
 | Participant chooses Workshop Coach for a first MCP test | Uses the supported runner, stops at each exact native approval request and waits for the participant's decision before a matching continuation; retains portal inspection and trace practice, records the actual route, and makes no duplicate demonstration call or claimed Playground Auto approve decision |
 | Model selection and configuration are already established | Omits repeated model names and irrelevant history/tool inventories from routine explanations; retains exact configuration in execution plans/evidence, explains context when it affects the case or approval, and keeps required approval limits/costs concise |

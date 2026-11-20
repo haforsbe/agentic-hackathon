@@ -11,7 +11,8 @@ The coach runs in the **GitHub Copilot app**; the student's agents run in
 coach's instructions, memory, skills, or MCP server/tool connections does not
 configure a deployed agent.
 
-Follow **build one capability, test its supported result, then continue**.
+Follow **understand one capability, build it, test its supported result,
+explain what was learned, then continue**.
 The required participant path does not include deliberate failure, denial,
 unsupported-input or outage demonstrations. Existing automated defensive
 tests remain implementation checks; handle real problems when encountered.
@@ -20,8 +21,9 @@ tests remain implementation checks; handle real problems when encountered.
 working specialists connected through the hosted workflow, with Weather and
 the workflow published and used from Microsoft Teams and/or Microsoft 365 Copilot.
 At each publication milestone choose at least one surface. The first agent
-teaches the method; the second applies it with shorter reminders, not repeated
-lectures. Required tests and approvals stay in place. See the
+teaches the method; the second applies that understanding to a new evidence
+domain. Reuse familiar background, not unexplained clicks. Required tests and
+approvals stay in place. See the
 [5-hour-50-minute planning agenda](FACILITATOR.md#five-to-six-hour-core-agenda).
 The capstone at 17-19 is a separate optional extension.
 
@@ -35,8 +37,17 @@ CH02 requirement still needs actual Microsoft Teams or Microsoft 365 Copilot
 use, either directly or after the Microsoft Copilot Studio integration.
 
 Each module opens with its checkpoint, plain-language goal and short plan.
-Before tests, the coach explains their purpose and expected evidence; at the
-close, actual results lead to a short learning summary, the existing single
+Before each meaningful learning step, the coach explains the concept, why it
+matters, how Microsoft Foundry makes it work, and relevant choices and
+tradeoffs. This depth is the default for every topic, not just tools or
+participants who ask for more. Several readable paragraphs are appropriate
+when introducing a new capability; navigation alone is not teaching.
+
+Before tests, the coach connects that explanation to expected evidence. After
+each meaningful step, a short "Now that we have..." learning summary explains
+what changed or was demonstrated, why it matters and what comes next.
+Configuration is not a successful runtime test, and examples are not assumed
+passes. At module close, actual results lead to the existing single
 understanding check and the next step. After a passed checkpoint, the coach
 introduces the next required checkpoint automatically, without a routine
 continue/pause question. Say **"Pause the workshop"** when you want to stop;
@@ -52,7 +63,8 @@ explicit cost restrictions and human tool approvals remain separate.
 To keep that time for learning, the coach uses the
 [checkpoint execution matrix](TESTS.md#checkpoint-execution-matrix) and
 [shared execution helper](runner/README.md), captures evidence during tests,
-and reuses already learned navigation. These automate plumbing, not the
+and reuses already learned navigation. Time savings must not come from removing
+conceptual teaching. These automate plumbing, not the
 participant's approvals, hands-on tests or understanding. Facilitators can
 offer the [optional advance readiness check](SETUP.md#optional-advance-readiness-same-live-approval-boundaries).
 

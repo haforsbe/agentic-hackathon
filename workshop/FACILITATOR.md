@@ -61,10 +61,15 @@ supported UI alternatives. Missing optional UI controls should have a Chat
 fallback, not force students back to VS Code.
 
 Assume participants can be completely new to agent and cloud terminology.
-Before every action, the coach must explain what is happening, why it matters,
-new terms in plain language, what changes, what stays unchanged, and the
-evidence that would prove success. Treat unexplained jargon as a coaching defect
-even when the technical instructions are correct.
+Use the [whole-workshop teaching standard](COACH.md#explain-what-and-why-before-every-step):
+before every meaningful learning step, teach the concept, why it matters,
+how the relevant Microsoft Foundry components work together, and which
+alternatives and tradeoffs explain this choice. Give substantive explanations
+by default across all topics, not only tools. A participant should not need
+to ask the right question to receive the foundation.
+Follow each meaningful step with the short learning summary, without adding
+another quiz or confirmation. Treat unexplained jargon or correct clicks
+without an explanation of the mechanism as a coaching defect.
 
 ## Five-to-six-hour core agenda
 
@@ -85,6 +90,12 @@ finish time. Keep prerequisite access, supported capabilities, quota, and
 public-service reachability ready; a blocked environment cannot be made
 complete by removing safety gates.
 
+The agenda must include this conceptual teaching and its learning summaries.
+Rehearse that delivery depth, not a fast command-only walkthrough. Reduce
+duplicate checks, repeated navigation and administrative narration first.
+If the teaching does not fit, report and replan the timing rather than silently
+cut explanations, practice or required evidence.
+
 The optional Weather GitHub delivery lab is offered only after Weather 07 and
 before Cultural 08. It is not included in the 330-minute budget. Treat its
 single-project setup as an educational compromise, not production isolation;
@@ -96,7 +107,8 @@ path are rehearsed.
 
 Rehearse agent 2 as an application exercise, not a second introductory lecture.
 The coach still supplies its selected MCP endpoint/tool information and guides
-all independent tests. Use shorter reminders and a single checkpoint
+all independent tests. Explain domain-specific differences and their rationale;
+reuse only understanding already established. Use a single checkpoint
 understanding check, not repeated glossary questions, full menu tours, or
 extra demonstrations. Keep the 50/50 prompt mix and required regressions;
 batch approved coach-side checks instead of narrating every internal call.
@@ -306,6 +318,8 @@ to rehearse the participant-facing Foundry menus. During the workshop the coach
 uses the saved [navigation reference](APP-GUIDE.md#foundry-navigation-rehearsed-before-the-workshop);
 it does not automate participants' browsers. Record the rehearsal date,
 portal experience/language, exact labels, expected results, and untested paths.
+Save reusable findings as sanitized teaching text in that shared reference,
+not browser scripts, selectors or recordings to replay during live coaching.
 Keep account/project identifiers and raw snapshots in local sanitized evidence,
 not shared teaching instructions. Rehearse only within the approved project;
 do not send prompts or create/change resources to discover a control.
@@ -455,10 +469,11 @@ Use the [supported custom-agent schema](https://docs.github.com/en/copilot/refer
 for the repository profile. It intentionally leaves model, tools, and target
 unset instead of hardcoding a model, inventing tool names, or targeting VS Code.
 
-Also rehearse the preserved coaching behavior: what -> why -> terms -> change
-boundary -> evidence -> one question, paired actual prompts/replies, read-only
-Foundry inspection after cloud changes, and a guided next step rather than a
-dead-end status summary.
+Also rehearse the [whole-workshop teaching standard](COACH.md#explain-what-and-why-before-every-step):
+conceptual explanation before practice, paired actual prompts/replies,
+read-only Microsoft Foundry inspection after cloud changes, and short
+evidence-based learning summaries leading into the next action rather than
+a dead-end status summary.
 
 ## Reviewing student evidence
 
